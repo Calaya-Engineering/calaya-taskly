@@ -1,0 +1,766 @@
+// pages/dashboards/HOD/HODDocumentDetail.jsx
+import { useMemo, useState } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import Layout, { 
+  DashboardIcon, TaskIcon, DocumentIcon, ReportIcon, 
+  CalendarIcon, AnnouncementIcon, UserIcon, 
+  BellIcon, ApprovalIcon, AlertIcon, TenderIcon 
+} from '../../../components/Layout';
+
+const HODMenuItems = [
+  { label: 'Dashboard', path: '/hod-dashboard', icon: <DashboardIcon /> },
+  { label: 'Department Tasks', path: '/hod-dashboard/tasks', icon: <TaskIcon />, badge: '18' },
+  { label: 'My Tasks', path: '/hod-dashboard/my-tasks', icon: <TaskIcon />, badge: '5' },
+  { label: 'Documents', path: '/hod-dashboard/documents', icon: <DocumentIcon /> },
+  { label: 'Daily Reports', path: '/hod-dashboard/reports', icon: <ReportIcon /> },
+  { label: 'Meetings/Events', path: '/hod-dashboard/events', icon: <CalendarIcon /> },
+  { label: 'Tenders', path: '/hod-dashboard/tenders', icon: <TenderIcon />, badge: '3' },
+  { label: 'Tender Documents', path: '/hod-dashboard/tender-documents', icon: <TenderIcon /> },
+  { label: 'Announcements', path: '/hod-dashboard/announcements', icon: <AnnouncementIcon /> },
+  { label: 'Approvals', path: '/hod-dashboard/approvals', icon: <ApprovalIcon />, badge: '4' },
+  { label: 'Escalations/Overdue', path: '/hod-dashboard/escalations', icon: <AlertIcon />, badge: '2' },
+  { label: 'Notifications', path: '/hod-dashboard/notifications', icon: <BellIcon />, badge: '8' },
+  { label: 'Profile', path: '/hod-dashboard/profile', icon: <UserIcon /> },
+];
+
+/* ---------- UI helpers ---------- */
+const Card = ({ className = "", children }) => (
+  <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-sm ${className}`}>{children}</div>
+);
+
+const SectionTitle = ({ title, subtitle, action }) => (
+  <div className="flex items-start justify-between gap-3">
+    <div>
+      <h2 className="text-lg md:text-xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
+        {title}
+      </h2>
+      {subtitle ? <p className="text-sm text-gray-500 mt-1">{subtitle}</p> : null}
+    </div>
+    {action}
+  </div>
+);
+
+const Pill = ({ children, tone = "default" }) => {
+  const styles =
+    tone === "danger"
+      ? "bg-red-50 text-red-700 ring-red-100"
+      : tone === "success"
+      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+      : tone === "warn"
+      ? "bg-amber-50 text-amber-800 ring-amber-100"
+      : tone === "info"
+      ? "bg-blue-50 text-blue-700 ring-blue-100"
+      : tone === "purple"
+      ? "bg-purple-50 text-purple-700 ring-purple-100"
+      : "bg-gray-50 text-gray-700 ring-gray-100";
+
+  return (
+    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
+      {children}
+    </span>
+  );
+};
+
+const btnBase = "px-5 py-3 rounded-2xl font-semibold active:scale-[0.99] transition";
+const btnOutline = `${btnBase} border bg-white hover:bg-gray-50`;
+const btnSolid = `${btnBase} text-white shadow-sm`;
+
+const scopeTone = (scope) => {
+  switch (scope) {
+    case "PUBLIC":
+      return "success";
+    case "PRIVATE":
+      return "danger";
+    case "ALL_HODS":
+      return "info";
+    case "SPECIFIC_HODS":
+      return "purple";
+    case "SPECIFIC_DEPARTMENTS":
+      return "warn";
+    default:
+      return "default";
+  }
+};
+
+const accessTone = (accessType) => {
+  if (accessType === "Owner") return "purple";
+  if (accessType === "Full Access") return "success";
+  return "info";
+};
+
+const fileEmoji = (fileType) => {
+  const t = (fileType || "").toLowerCase();
+  if (t.includes("pdf")) return "📕";
+  if (t.includes("doc")) return "📘";
+  if (t.includes("xls") || t.includes("csv")) return "📗";
+  if (t.includes("ppt")) return "📙";
+  if (t.includes("png") || t.includes("jpg") || t.includes("jpeg")) return "🖼️";
+  return "📄";
+};
+
+const fmtDateTime = (iso) => {
+  if (!iso) return "-";
+  try {
+    return new Date(iso).toLocaleString();
+  } catch {
+    return iso;
+  }
+};
+
+const fmtDate = (iso) => {
+  if (!iso) return "-";
+  try {
+    return new Date(iso).toLocaleDateString();
+  } catch {
+    return iso;
+  }
+};
+
+const formatScope = (scope) => scope.replace(/_/g, " ");
+
+export default function HODDocumentDetail() {
+  const { docId } = useParams();
+  const navigate = useNavigate();
+
+  const [activeTab, setActiveTab] = useState("details");
+
+  const documentData = {
+    id: docId || 'DOC-001',
+    title: 'Pipeline Safety Inspection Report',
+    description: 'Quarterly safety inspection report for pipeline infrastructure covering visual inspection, pressure testing, and compliance verification.',
+    type: 'Report',
+    department: 'Technical',
+    scope: 'PUBLIC',
+    uploadedBy: 'Alex Johnson',
+    uploadedAt: '2024-12-10T14:30:00',
+    fileSize: '2.4 MB',
+    fileType: 'PDF',
+    versionLabel: 'v2.1',
+    expiryDate: '2025-06-10',
+    isEncrypted: false,
+    downloads: 24,
+    lastDownloaded: '2024-12-11T09:30:00',
+    attachedTask: 'TASK-2024-00123',
+    tags: ['safety', 'inspection', 'pipeline', 'q4'],
+    versions: [
+      { version: 'v2.1', date: '2024-12-10', uploadedBy: 'Alex Johnson', changes: 'Updated inspection results' },
+      { version: 'v2.0', date: '2024-09-15', uploadedBy: 'Alex Johnson', changes: 'Added new compliance sections' },
+      { version: 'v1.0', date: '2024-06-20', uploadedBy: 'Maria Garcia', changes: 'Initial report' },
+    ],
+    downloadHistory: [
+      { user: 'HOD - Technical', downloadedAt: '2024-12-11T10:15:00', department: 'Technical' },
+      { user: 'MD', downloadedAt: '2024-12-11T09:30:00', department: 'Executive' },
+      { user: 'Alex Johnson', downloadedAt: '2024-12-10T15:45:00', department: 'Technical' },
+      { user: 'Emma Wilson', downloadedAt: '2024-12-10T16:20:00', department: 'Technical' },
+    ],
+    accessList: [
+      { user: 'Alex Johnson', accessType: 'Owner', department: 'Technical' },
+      { user: 'HOD - Technical', accessType: 'Full Access', department: 'Technical' },
+      { user: 'All HODs', accessType: 'View Only', department: 'Various' },
+    ],
+    comments: [
+      { user: 'HOD - Technical', date: '2024-12-11', comment: 'Good report. Please ensure next version includes more detailed compliance metrics.' },
+      { user: 'Alex Johnson', date: '2024-12-10', comment: 'Updated with latest inspection data from North Field.' },
+    ],
+  };
+
+  const downloadsToday = useMemo(() => {
+    const today = new Date().toDateString();
+    return documentData.downloadHistory.filter((d) => new Date(d.downloadedAt).toDateString() === today).length;
+  }, [documentData.downloadHistory]);
+
+  const uniqueDepartments = useMemo(
+    () => [...new Set(documentData.downloadHistory.map((d) => d.department))].length,
+    [documentData.downloadHistory]
+  );
+
+  const handleDownload = () => alert("Document download started!");
+  const handleShare = () => alert("Share modal would open here");
+  const handleUploadNewVersion = () => alert("Upload new version flow would open here");
+  const handleArchive = () => alert("Archive document flow would open here");
+
+  return (
+    <Layout menuItems={HODMenuItems} userRole="HOD">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Header */}
+        <Card className="overflow-hidden">
+          <div
+            className="p-6 md:p-8"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(44,75,155,0.10) 0%, rgba(109,198,223,0.18) 50%, rgba(237,50,55,0.06) 100%)",
+            }}
+          >
+            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-5">
+              <div className="min-w-0">
+                <button
+                  onClick={() => navigate("/hod-dashboard/documents")}
+                  className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 mb-4"
+                >
+                  ← Back to Documents
+                </button>
+
+                <div className="flex flex-wrap items-center gap-2 mb-2">
+                  <Pill tone="info">{documentData.id}</Pill>
+                  <Pill tone={scopeTone(documentData.scope)}>{formatScope(documentData.scope)}</Pill>
+                  <Pill>{documentData.type}</Pill>
+                  {documentData.isEncrypted ? <Pill tone="danger">Encrypted</Pill> : <Pill>Not encrypted</Pill>}
+                  {documentData.expiryDate ? <Pill tone="warn">Expires {fmtDate(documentData.expiryDate)}</Pill> : <Pill>No expiry</Pill>}
+                </div>
+
+                <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 truncate">
+                  {documentData.title}
+                </h1>
+                <p className="text-gray-700 mt-2 max-w-3xl">{documentData.description}</p>
+
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {documentData.tags?.map((t) => (
+                    <Pill key={t} tone="info">
+                      #{t}
+                    </Pill>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3 shrink-0">
+                <button
+                  onClick={handleDownload}
+                  className={btnSolid}
+                  style={{ backgroundColor: "var(--secondary-blue)" }}
+                >
+                  📥 Download
+                </button>
+
+                <button
+                  onClick={handleShare}
+                  className={btnOutline}
+                  style={{ borderColor: "rgba(44, 75, 155, 0.25)", color: "var(--primary-blue)" }}
+                >
+                  🔗 Share
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Tabs */}
+          <div className="bg-white border-t border-gray-200/70">
+            <div className="flex flex-wrap">
+              {[
+                { id: "details", label: "Details" },
+                { id: "versions", label: `Versions (${documentData.versions.length})` },
+                { id: "access", label: "Access Control" },
+                { id: "history", label: "Download History" },
+              ].map((t) => {
+                const active = activeTab === t.id;
+                return (
+                  <button
+                    key={t.id}
+                    type="button"
+                    onClick={() => setActiveTab(t.id)}
+                    className={`px-6 py-4 text-sm font-semibold transition border-b-2 ${
+                      active ? "text-gray-900" : "text-gray-500 hover:text-gray-700"
+                    }`}
+                    style={{ borderBottomColor: active ? "var(--primary-blue)" : "transparent" }}
+                  >
+                    {t.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </Card>
+
+        {/* DETAILS */}
+        {activeTab === "details" && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Left: preview + info */}
+            <Card className="lg:col-span-2">
+              <div className="p-6">
+                <h2 className="text-xl font-extrabold mb-5" style={{ color: "var(--primary-blue)" }}>
+                  Document Overview
+                </h2>
+
+                {/* Preview */}
+                <div className="border border-gray-200 rounded-2xl p-6 md:p-8 bg-gray-50">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+                    <div className="flex items-center gap-4 min-w-0">
+                      <div
+                        className="w-14 h-14 rounded-2xl flex items-center justify-center ring-1 ring-black/5"
+                        style={{ backgroundColor: "rgba(44, 75, 155, 0.10)" }}
+                      >
+                        <span className="text-3xl">{fileEmoji(documentData.fileType)}</span>
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-semibold text-gray-900 truncate">
+                          {documentData.title}.{documentData.fileType?.toLowerCase()}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          {documentData.fileType} • {documentData.fileSize} • Version: {documentData.versionLabel}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-3">
+                      <button
+                        onClick={handleDownload}
+                        className={btnSolid}
+                        style={{ backgroundColor: "var(--accent-red)" }}
+                      >
+                        Download Now
+                      </button>
+
+                      <button
+                        onClick={() => setActiveTab("versions")}
+                        className={btnOutline}
+                        style={{ borderColor: "rgba(44, 75, 155, 0.25)", color: "var(--primary-blue)" }}
+                      >
+                        View Versions
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Key stats */}
+                <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {[
+                    { label: "Total Downloads", value: documentData.downloads, tone: "info" },
+                    { label: "Last Downloaded", value: fmtDateTime(documentData.lastDownloaded), tone: "success" },
+                    { label: "Uploaded", value: fmtDateTime(documentData.uploadedAt), tone: "warn" },
+                  ].map((x) => (
+                    <div key={x.label} className="p-4 rounded-2xl border border-gray-200/70">
+                      <div className="text-xs text-gray-500">{x.label}</div>
+                      <div className="mt-1 text-sm font-semibold text-gray-900">{x.value}</div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Footer actions */}
+                <div className="mt-6 flex flex-col sm:flex-row gap-3">
+                  <button
+                    onClick={handleUploadNewVersion}
+                    className={btnOutline}
+                    style={{ borderColor: "rgba(44, 75, 155, 0.25)", color: "var(--primary-blue)" }}
+                  >
+                    📤 Upload New Version
+                  </button>
+                </div>
+              </div>
+            </Card>
+
+            {/* Right: metadata */}
+            <Card>
+              <div className="p-6">
+                <h2 className="text-xl font-extrabold mb-5" style={{ color: "var(--primary-blue)" }}>
+                  Metadata
+                </h2>
+
+                <div className="space-y-4 text-sm">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-gray-500">Type</span>
+                    <span className="font-semibold text-gray-900">{documentData.type}</span>
+                  </div>
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-gray-500">Department</span>
+                    <span className="font-semibold text-gray-900">{documentData.department}</span>
+                  </div>
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-gray-500">File</span>
+                    <span className="font-semibold text-gray-900">
+                      {documentData.fileType} • {documentData.fileSize}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-gray-500">Scope</span>
+                    <Pill tone={scopeTone(documentData.scope)}>{formatScope(documentData.scope)}</Pill>
+                  </div>
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-gray-500">Encryption</span>
+                    <span className="font-semibold text-gray-900">{documentData.isEncrypted ? "Enabled" : "Disabled"}</span>
+                  </div>
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-gray-500">Expiry</span>
+                    <span className="font-semibold text-gray-900">{documentData.expiryDate ? fmtDate(documentData.expiryDate) : "No expiry"}</span>
+                  </div>
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-gray-500">Attached Task</span>
+                    {documentData.attachedTask ? (
+                      <Link to={`/hod-dashboard/task/${documentData.attachedTask}`} className="font-semibold text-blue-600 hover:underline">
+                        {documentData.attachedTask}
+                      </Link>
+                    ) : (
+                      <span className="font-semibold text-gray-900">None</span>
+                    )}
+                  </div>
+                </div>
+
+                <div className="mt-6 pt-6 border-t border-gray-200/70">
+                  <div className="text-xs text-gray-500 mb-3">Uploaded By</div>
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="w-10 h-10 rounded-2xl flex items-center justify-center text-white font-bold ring-1 ring-black/5"
+                      style={{ backgroundColor: "var(--secondary-blue)" }}
+                    >
+                      {documentData.uploadedBy.charAt(0)}
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-sm font-semibold text-gray-900">{documentData.uploadedBy}</div>
+                      <div className="text-xs text-gray-500">{fmtDateTime(documentData.uploadedAt)}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 pt-6 border-t border-gray-200/70">
+                  <div className="text-xs text-gray-500 mb-2">Quick Links</div>
+                  <div className="flex flex-col gap-2">
+                    <Link
+                      to="/hod-dashboard/documents"
+                      className="text-sm font-semibold hover:underline"
+                      style={{ color: "var(--primary-blue)" }}
+                    >
+                      View All Documents
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab("access")}
+                      className="text-left text-sm font-semibold hover:underline"
+                      style={{ color: "var(--primary-blue)" }}
+                    >
+                      Manage Access Control
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab("history")}
+                      className="text-left text-sm font-semibold hover:underline"
+                      style={{ color: "var(--primary-blue)" }}
+                    >
+                      View Download History
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          </div>
+        )}
+
+        {/* VERSIONS */}
+        {activeTab === "versions" && (
+          <Card>
+            <div className="p-6">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-5">
+                <h2 className="text-xl font-extrabold" style={{ color: "var(--primary-blue)" }}>
+                  Document Versions
+                </h2>
+                <button
+                  onClick={handleUploadNewVersion}
+                  className={btnOutline}
+                  style={{ borderColor: "rgba(44, 75, 155, 0.25)", color: "var(--primary-blue)" }}
+                >
+                  📤 Upload New Version
+                </button>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      {["Version", "Date", "Uploaded By", "Changes", "Actions"].map((h) => (
+                        <th
+                          key={h}
+                          className="px-6 py-3 text-left text-xs font-extrabold text-gray-500 uppercase tracking-wider"
+                        >
+                          {h}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {documentData.versions.map((v, idx) => {
+                      const isCurrent = documentData.versionLabel?.includes(v.version);
+                      return (
+                        <tr key={idx} className="hover:bg-gray-50">
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex items-center gap-2">
+                              <span className="font-semibold text-gray-900">{v.version}</span>
+                              {isCurrent ? <Pill tone="success">Current</Pill> : null}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">{fmtDate(v.date)}</td>
+                          <td className="px-6 py-4 whitespace-nowrap">{v.uploadedBy}</td>
+                          <td className="px-6 py-4 text-gray-700">{v.changes}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold">
+                            <button
+                              type="button"
+                              className="px-3 py-1.5 rounded-xl text-white mr-2"
+                              style={{ backgroundColor: "var(--secondary-blue)" }}
+                              onClick={() => alert(`Viewing ${v.version} (demo)`)}
+                            >
+                              View
+                            </button>
+                            <button
+                              type="button"
+                              className="px-3 py-1.5 rounded-xl border bg-white hover:bg-gray-50"
+                              style={{ borderColor: "rgba(44, 75, 155, 0.25)", color: "var(--primary-blue)" }}
+                              onClick={handleDownload}
+                            >
+                              Download
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="mt-8 border-2 border-dashed border-gray-200 rounded-2xl p-8 text-center bg-gray-50">
+                <div className="text-4xl mb-2">📤</div>
+                <p className="font-semibold text-lg mb-2">Upload New Version</p>
+                <p className="text-gray-600 mb-4">Upload an updated version of this document</p>
+                <button
+                  type="button"
+                  onClick={handleUploadNewVersion}
+                  className={btnOutline}
+                  style={{ borderColor: "rgba(44, 75, 155, 0.25)", color: "var(--primary-blue)" }}
+                >
+                  Choose File
+                </button>
+              </div>
+            </div>
+          </Card>
+        )}
+
+        {/* ACCESS CONTROL */}
+        {activeTab === "access" && (
+          <Card>
+            <div className="p-6">
+              <h2 className="text-xl font-extrabold mb-5" style={{ color: "var(--primary-blue)" }}>
+                Access Control
+              </h2>
+
+              <div className="space-y-6">
+                <div className="p-5 rounded-2xl border border-gray-200/70 bg-gray-50">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                    <div>
+                      <div className="text-sm font-extrabold" style={{ color: "var(--primary-blue)" }}>
+                        Current Access Scope
+                      </div>
+                      <div className="text-sm text-gray-600 mt-1">
+                        {documentData.scope === "PUBLIC" && "All users can view and download this document."}
+                        {documentData.scope === "ALL_HODS" && "All Heads of Department can access this document."}
+                        {documentData.scope === "SPECIFIC_HODS" && "Only selected HODs can access this document."}
+                        {documentData.scope === "SPECIFIC_DEPARTMENTS" && "Only selected departments can access this document."}
+                        {documentData.scope === "PRIVATE" && "Only you can access this document."}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Pill tone={scopeTone(documentData.scope)}>{formatScope(documentData.scope)}</Pill>
+                      {documentData.isEncrypted ? <Pill tone="danger">Encrypted</Pill> : null}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Access list */}
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        {["User", "Department", "Access Type", "Actions"].map((h) => (
+                          <th
+                            key={h}
+                            className="px-6 py-3 text-left text-xs font-extrabold text-gray-500 uppercase tracking-wider"
+                          >
+                            {h}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {documentData.accessList.map((a, idx) => (
+                        <tr key={idx} className="hover:bg-gray-50">
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex items-center gap-3">
+                              <div
+                                className="w-9 h-9 rounded-2xl flex items-center justify-center text-white font-bold ring-1 ring-black/5"
+                                style={{ backgroundColor: "var(--secondary-blue)" }}
+                              >
+                                {a.user.charAt(0)}
+                              </div>
+                              <div className="font-semibold text-gray-900">{a.user}</div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <Pill tone="info">{a.department}</Pill>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <Pill tone={accessTone(a.accessType)}>{a.accessType}</Pill>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold">
+                            {a.accessType !== "Owner" ? (
+                              <button
+                                type="button"
+                                className="px-3 py-1.5 rounded-xl border bg-white hover:bg-red-50 transition"
+                                style={{ borderColor: "rgba(239,68,68,0.25)", color: "#DC2626" }}
+                                onClick={() => alert(`Remove access for ${a.user} (demo)`)}
+                              >
+                                Remove
+                              </button>
+                            ) : (
+                              <span className="text-gray-400">—</span>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Modify access (demo UI) */}
+                <div className="p-5 rounded-2xl border border-gray-200/70">
+                  <div className="text-sm font-extrabold" style={{ color: "var(--primary-blue)" }}>
+                    Modify Access (Demo)
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                    <div className="md:col-span-2">
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Change Access Scope
+                      </label>
+                      <select className="w-full px-4 py-3 border border-gray-200 rounded-2xl bg-white">
+                        <option value="PUBLIC">Public - All users</option>
+                        <option value="ALL_HODS">All HODs</option>
+                        <option value="SPECIFIC_HODS">Specific HODs</option>
+                        <option value="SPECIFIC_DEPARTMENTS">Specific Departments</option>
+                        <option value="PRIVATE">Private - Only me</option>
+                      </select>
+                      <p className="text-xs text-gray-500 mt-2">
+                        Hook this to your API to update the scope + regenerate access list.
+                      </p>
+                    </div>
+                    <div className="flex items-end">
+                      <button
+                        type="button"
+                        className="w-full px-5 py-3 rounded-2xl font-semibold text-white shadow-sm active:scale-[0.99] transition"
+                        style={{ backgroundColor: "var(--accent-red)" }}
+                        onClick={() => alert("Access updated (demo)")}
+                      >
+                        Update Access
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Card>
+        )}
+
+        {/* DOWNLOAD HISTORY */}
+        {activeTab === "history" && (
+          <Card>
+            <div className="p-6">
+              <h2 className="text-xl font-extrabold mb-5" style={{ color: "var(--primary-blue)" }}>
+                Download History
+              </h2>
+
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      {["User", "Department", "Downloaded At", "Time"].map((h) => (
+                        <th
+                          key={h}
+                          className="px-6 py-3 text-left text-xs font-extrabold text-gray-500 uppercase tracking-wider"
+                        >
+                          {h}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {documentData.downloadHistory.map((d, idx) => (
+                      <tr key={idx} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center gap-3">
+                            <div
+                              className="w-9 h-9 rounded-2xl flex items-center justify-center text-white font-bold ring-1 ring-black/5"
+                              style={{ backgroundColor: "var(--secondary-blue)" }}
+                            >
+                              {d.user.charAt(0)}
+                            </div>
+                            <div className="font-semibold text-gray-900">{d.user}</div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <Pill tone="info">{d.department}</Pill>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">{fmtDate(d.downloadedAt)}</td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          {new Date(d.downloadedAt).toLocaleTimeString()}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Stats */}
+              <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="p-6 rounded-2xl border border-gray-200/70 bg-blue-50">
+                  <p className="text-3xl font-extrabold text-center" style={{ color: "var(--primary-blue)" }}>
+                    {documentData.downloads}
+                  </p>
+                  <p className="text-sm text-gray-600 text-center mt-2">Total Downloads</p>
+                </div>
+                <div className="p-6 rounded-2xl border border-gray-200/70 bg-emerald-50">
+                  <p className="text-3xl font-extrabold text-center" style={{ color: "#10B981" }}>
+                    {downloadsToday}
+                  </p>
+                  <p className="text-sm text-gray-600 text-center mt-2">Downloads Today</p>
+                </div>
+                <div className="p-6 rounded-2xl border border-gray-200/70 bg-purple-50">
+                  <p className="text-3xl font-extrabold text-center" style={{ color: "#8B5CF6" }}>
+                    {uniqueDepartments}
+                  </p>
+                  <p className="text-sm text-gray-600 text-center mt-2">Departments Downloaded</p>
+                </div>
+              </div>
+            </div>
+          </Card>
+        )}
+
+        {/* Quick Actions */}
+        <Card>
+          <div className="p-6">
+            <h2 className="text-xl font-extrabold mb-5" style={{ color: "var(--primary-blue)" }}>
+              Quick Actions
+            </h2>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {[
+                { icon: "📤", label: "Upload New Version", onClick: handleUploadNewVersion, color: "var(--primary-blue)" },
+                { icon: "🔗", label: "Share Document", onClick: handleShare, color: "var(--secondary-blue)" },
+                { icon: "📧", label: "Email Document", onClick: () => alert("Email document"), color: "#10B981" },
+                { icon: "🗑️", label: "Archive Document", onClick: handleArchive, color: "var(--accent-red)" },
+              ].map((a) => (
+                <button
+                  key={a.label}
+                  type="button"
+                  onClick={a.onClick}
+                  className="group p-5 rounded-2xl border border-gray-200/70 hover:shadow-md hover:-translate-y-0.5 transition-all text-center"
+                >
+                  <div
+                    className="w-12 h-12 mx-auto rounded-2xl flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition"
+                    style={{ backgroundColor: `${a.color}18` }}
+                  >
+                    <span style={{ color: a.color }}>{a.icon}</span>
+                  </div>
+                  <p className="font-extrabold text-sm" style={{ color: a.color }}>
+                    {a.label}
+                  </p>
+                </button>
+              ))}
+            </div>
+          </div>
+        </Card>
+      </div>
+    </Layout>
+  );
+}
