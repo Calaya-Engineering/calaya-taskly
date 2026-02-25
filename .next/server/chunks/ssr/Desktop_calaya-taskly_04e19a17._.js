@@ -1,0 +1,3 @@
+module.exports=[2636,(a,b,c)=>{"use strict";b.exports=a.r(9576).vendored["react-ssr"].ReactServerDOMTurbopackClient},27476,(a,b,c)=>{"use strict";Object.defineProperty(c,"__esModule",{value:!0});var d={getDeploymentId:function(){return f},getDeploymentIdQueryOrEmptyString:function(){return g}};for(var e in d)Object.defineProperty(c,e,{enumerable:!0,get:d[e]});function f(){return!1}function g(){return""}},92705,(a,b,c)=>{"use strict";c._=function(a){return a&&a.__esModule?a:{default:a}}},33548,a=>{"use strict";var b=a.i(42248),c=a.i(43250);function d(){return(0,b.jsx)(c.default,{})}a.s(["default",()=>d])}];
+
+//# sourceMappingURL=Desktop_calaya-taskly_04e19a17._.js.map

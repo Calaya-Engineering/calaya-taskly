@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///Users/admin/Desktop/calaya-taskly/src/app/hod-dashboard/layout.jsx"],"sourcesContent":["export const dynamic = \"force-dynamic\";\n\nexport default function HODDashboardLayout({ children }) {\n  return children;\n}\n"],"names":[],"mappings":";;;;;;AAAO,MAAM,UAAU;AAER,SAAS,mBAAmB,EAAE,QAAQ,EAAE;IACrD,OAAO;AACT"}}]
+}

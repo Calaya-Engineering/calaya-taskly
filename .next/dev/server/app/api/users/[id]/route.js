@@ -1,0 +1,10 @@
+var R=require("../../../../chunks/[turbopack]_runtime.js")("server/app/api/users/[id]/route.js")
+R.c("server/chunks/[externals]__7902a441._.js")
+R.c("server/chunks/a96cc_next_db43afee._.js")
+R.c("server/chunks/a96cc_mariadb_1af40092._.js")
+R.c("server/chunks/a96cc_iconv-lite_124d46ee._.js")
+R.c("server/chunks/[root-of-the-server]__e5f1868e._.js")
+R.c("server/chunks/[root-of-the-server]__bfcbad5c._.js")
+R.c("server/chunks/3d860_calaya-taskly__next-internal_server_app_api_users_[id]_route_actions_744c2e33.js")
+R.m("[project]/Desktop/calaya-taskly/node_modules/next/dist/esm/build/templates/app-route.js { INNER_APP_ROUTE => \"[project]/Desktop/calaya-taskly/src/app/api/users/[id]/route.ts [app-route] (ecmascript)\" } [app-route] (ecmascript)")
+module.exports=R.m("[project]/Desktop/calaya-taskly/node_modules/next/dist/esm/build/templates/app-route.js { INNER_APP_ROUTE => \"[project]/Desktop/calaya-taskly/src/app/api/users/[id]/route.ts [app-route] (ecmascript)\" } [app-route] (ecmascript)").exports

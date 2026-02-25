@@ -1,0 +1,3 @@
+module.exports=[49723,(a,b,c)=>{let{createClientModuleProxy:d}=a.r(51656);a.n(d("[project]/Desktop/calaya-taskly/node_modules/next/dist/client/components/builtin/global-error.js <module evaluation>"))},63176,(a,b,c)=>{let{createClientModuleProxy:d}=a.r(51656);a.n(d("[project]/Desktop/calaya-taskly/node_modules/next/dist/client/components/builtin/global-error.js"))},28345,a=>{"use strict";a.i(49723);var b=a.i(63176);a.n(b)}];
+
+//# sourceMappingURL=a96cc_next_dist_client_components_builtin_global-error_3bdd87a9.js.map

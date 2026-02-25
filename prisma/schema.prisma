@@ -1,0 +1,106 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model Department {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Role {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  role      String
+  name      String?
+  department String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tasksAssigned   TaskAssignment[] @relation("AssignedTo")
+  tasksCreated    Task[]           @relation("CreatedBy")
+  assignmentsMade TaskAssignment[] @relation("AssignedBy")
+}
+
+model Task {
+  id             Int       @id @default(autoincrement())
+  title          String
+  description    String?   @db.Text
+  department     String?
+  priority       String    @default("MEDIUM")
+  status         String    @default("PENDING")
+  type           String    @default("TASK")
+  createdById    Int
+  startDate      DateTime?
+  dueDate        DateTime?
+  estimatedHours Int?
+  visibility     String    @default("ASSIGNED_ONLY")
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  createdBy   User             @relation("CreatedBy", fields: [createdById], references: [id])
+  assignments TaskAssignment[]
+
+  @@index([createdById])
+  @@index([status])
+  @@index([department])
+  @@index([createdAt])
+}
+
+model Document {
+  id          Int      @id @default(autoincrement())
+  title       String
+  type        String   // Report, Procedure, Policy, etc.
+  department  String
+  uploadedBy  String
+  scope       String   // PUBLIC, PRIVATE, ALL_HODS, SPECIFIC_HODS, SPECIFIC_DEPARTMENTS
+  fileSize    String?  // e.g. "2.4 MB"
+  fileUrl     String?  // path or URL to file
+  downloads   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([type])
+  @@index([department])
+  @@index([scope])
+  @@index([createdAt])
+}
+
+model TaskAssignment {
+  id           Int      @id @default(autoincrement())
+  taskId       Int
+  userId       Int
+  assignedById Int
+  status       String   @default("PENDING")
+  assignedAt   DateTime @default(now())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  task       Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user       User @relation("AssignedTo", fields: [userId], references: [id], onDelete: Cascade)
+  assignedBy User @relation("AssignedBy", fields: [assignedById], references: [id])
+
+  @@unique([taskId, userId])
+  @@index([userId])
+  @@index([taskId])
+}

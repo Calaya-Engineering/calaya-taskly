@@ -1,0 +1,13 @@
+var R=require("../../chunks/ssr/[turbopack]_runtime.js")("server/app/_not-found/page.js")
+R.c("server/chunks/ssr/[root-of-the-server]__a0577da6._.js")
+R.c("server/chunks/ssr/a96cc_next_dist_5d0c5b42._.js")
+R.c("server/chunks/ssr/a96cc_next_dist_esm_build_templates_app-page_cefcc9d6.js")
+R.c("server/chunks/ssr/[root-of-the-server]__43fe0c64._.js")
+R.c("server/chunks/ssr/a96cc_next_dist_122df6d8._.js")
+R.c("server/chunks/ssr/a96cc_next_dist_52094506._.js")
+R.c("server/chunks/ssr/Desktop_calaya-taskly_e756b47f._.js")
+R.c("server/chunks/ssr/a96cc_next_dist_client_components_34bd9943._.js")
+R.c("server/chunks/ssr/a96cc_next_dist_client_components_builtin_forbidden_324b7cf9.js")
+R.c("server/chunks/ssr/Desktop_calaya-taskly__next-internal_server_app__not-found_page_actions_ab32a0c5.js")
+R.m(80862)
+module.exports=R.m(80862).exports

@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///Users/admin/Desktop/calaya-taskly/src/app/layout.jsx"],"sourcesContent":["import \"./globals.css\";\nimport { connection } from \"next/server\";\n\nexport const metadata = {\n  title: \"Calaya\",\n  description: \"Oil & Gas Task Management System\",\n  icons: {\n    icon: \"/image.png\",\n  },\n};\n\nexport default async function RootLayout({ children }) {\n  await connection();\n  return (\n    <html lang=\"en\">\n      <body>{children}</body>\n    </html>\n  );\n}\n"],"names":[],"mappings":";;;;;;;AACA;;;;AAEO,MAAM,WAAW;IACtB,OAAO;IACP,aAAa;IACb,OAAO;QACL,MAAM;IACR;AACF;AAEe,eAAe,WAAW,EAAE,QAAQ,EAAE;IACnD,MAAM,IAAA,2KAAU;IAChB,qBACE,6QAAC;QAAK,MAAK;kBACT,cAAA,6QAAC;sBAAM;;;;;;;;;;;AAGb"}}]
+}

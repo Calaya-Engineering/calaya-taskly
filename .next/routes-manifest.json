@@ -1,0 +1,695 @@
+{
+  "version": 3,
+  "pages404": true,
+  "appType": "app",
+  "caseSensitive": false,
+  "basePath": "",
+  "redirects": [
+    {
+      "source": "/:path+/",
+      "destination": "/:path+",
+      "internal": true,
+      "priority": true,
+      "statusCode": 308,
+      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
+    }
+  ],
+  "headers": [],
+  "rewrites": {
+    "beforeFiles": [],
+    "afterFiles": [],
+    "fallback": []
+  },
+  "dynamicRoutes": [
+    {
+      "page": "/api/tasks/[id]",
+      "regex": "^/api/tasks/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/tasks/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/tasks/[id]/assign",
+      "regex": "^/api/tasks/([^/]+?)/assign(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/tasks/(?<nxtPid>[^/]+?)/assign(?:/)?$"
+    },
+    {
+      "page": "/hod-dashboard/announcement/[announcementId]",
+      "regex": "^/hod\\-dashboard/announcement/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPannouncementId": "nxtPannouncementId"
+      },
+      "namedRegex": "^/hod\\-dashboard/announcement/(?<nxtPannouncementId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/hod-dashboard/document/[docId]",
+      "regex": "^/hod\\-dashboard/document/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPdocId": "nxtPdocId"
+      },
+      "namedRegex": "^/hod\\-dashboard/document/(?<nxtPdocId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/hod-dashboard/edit-event/[eventId]",
+      "regex": "^/hod\\-dashboard/edit\\-event/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPeventId": "nxtPeventId"
+      },
+      "namedRegex": "^/hod\\-dashboard/edit\\-event/(?<nxtPeventId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/hod-dashboard/event/[eventId]",
+      "regex": "^/hod\\-dashboard/event/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPeventId": "nxtPeventId"
+      },
+      "namedRegex": "^/hod\\-dashboard/event/(?<nxtPeventId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/hod-dashboard/task/[taskId]",
+      "regex": "^/hod\\-dashboard/task/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPtaskId": "nxtPtaskId"
+      },
+      "namedRegex": "^/hod\\-dashboard/task/(?<nxtPtaskId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/hod-dashboard/tender/edit/[tenderId]",
+      "regex": "^/hod\\-dashboard/tender/edit/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPtenderId": "nxtPtenderId"
+      },
+      "namedRegex": "^/hod\\-dashboard/tender/edit/(?<nxtPtenderId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/hod-dashboard/tender/[tenderId]",
+      "regex": "^/hod\\-dashboard/tender/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPtenderId": "nxtPtenderId"
+      },
+      "namedRegex": "^/hod\\-dashboard/tender/(?<nxtPtenderId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/hod-dashboard/tender-documents/[tenderId]",
+      "regex": "^/hod\\-dashboard/tender\\-documents/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPtenderId": "nxtPtenderId"
+      },
+      "namedRegex": "^/hod\\-dashboard/tender\\-documents/(?<nxtPtenderId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/md-dashboard/announcement/[announcementId]",
+      "regex": "^/md\\-dashboard/announcement/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPannouncementId": "nxtPannouncementId"
+      },
+      "namedRegex": "^/md\\-dashboard/announcement/(?<nxtPannouncementId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/md-dashboard/document/[docId]",
+      "regex": "^/md\\-dashboard/document/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPdocId": "nxtPdocId"
+      },
+      "namedRegex": "^/md\\-dashboard/document/(?<nxtPdocId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/md-dashboard/edit-event/[eventId]",
+      "regex": "^/md\\-dashboard/edit\\-event/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPeventId": "nxtPeventId"
+      },
+      "namedRegex": "^/md\\-dashboard/edit\\-event/(?<nxtPeventId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/md-dashboard/edit-task/[taskId]",
+      "regex": "^/md\\-dashboard/edit\\-task/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPtaskId": "nxtPtaskId"
+      },
+      "namedRegex": "^/md\\-dashboard/edit\\-task/(?<nxtPtaskId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/md-dashboard/event/[eventId]",
+      "regex": "^/md\\-dashboard/event/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPeventId": "nxtPeventId"
+      },
+      "namedRegex": "^/md\\-dashboard/event/(?<nxtPeventId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/md-dashboard/task/[taskId]",
+      "regex": "^/md\\-dashboard/task/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPtaskId": "nxtPtaskId"
+      },
+      "namedRegex": "^/md\\-dashboard/task/(?<nxtPtaskId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/md-dashboard/tender/[tenderId]",
+      "regex": "^/md\\-dashboard/tender/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPtenderId": "nxtPtenderId"
+      },
+      "namedRegex": "^/md\\-dashboard/tender/(?<nxtPtenderId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/md-dashboard/tender-documents/[tenderId]",
+      "regex": "^/md\\-dashboard/tender\\-documents/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPtenderId": "nxtPtenderId"
+      },
+      "namedRegex": "^/md\\-dashboard/tender\\-documents/(?<nxtPtenderId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/secretary-dashboard/announcement/[announcementId]",
+      "regex": "^/secretary\\-dashboard/announcement/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPannouncementId": "nxtPannouncementId"
+      },
+      "namedRegex": "^/secretary\\-dashboard/announcement/(?<nxtPannouncementId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/secretary-dashboard/document/[docId]",
+      "regex": "^/secretary\\-dashboard/document/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPdocId": "nxtPdocId"
+      },
+      "namedRegex": "^/secretary\\-dashboard/document/(?<nxtPdocId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/secretary-dashboard/event/[eventId]",
+      "regex": "^/secretary\\-dashboard/event/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPeventId": "nxtPeventId"
+      },
+      "namedRegex": "^/secretary\\-dashboard/event/(?<nxtPeventId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/secretary-dashboard/tender/[tenderId]",
+      "regex": "^/secretary\\-dashboard/tender/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPtenderId": "nxtPtenderId"
+      },
+      "namedRegex": "^/secretary\\-dashboard/tender/(?<nxtPtenderId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/staff-dashboard/announcement/[announcementId]",
+      "regex": "^/staff\\-dashboard/announcement/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPannouncementId": "nxtPannouncementId"
+      },
+      "namedRegex": "^/staff\\-dashboard/announcement/(?<nxtPannouncementId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/staff-dashboard/document/[docId]",
+      "regex": "^/staff\\-dashboard/document/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPdocId": "nxtPdocId"
+      },
+      "namedRegex": "^/staff\\-dashboard/document/(?<nxtPdocId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/staff-dashboard/event/[eventId]",
+      "regex": "^/staff\\-dashboard/event/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPeventId": "nxtPeventId"
+      },
+      "namedRegex": "^/staff\\-dashboard/event/(?<nxtPeventId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/staff-dashboard/task/[taskId]",
+      "regex": "^/staff\\-dashboard/task/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPtaskId": "nxtPtaskId"
+      },
+      "namedRegex": "^/staff\\-dashboard/task/(?<nxtPtaskId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/staff-dashboard/tender/[tenderId]",
+      "regex": "^/staff\\-dashboard/tender/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPtenderId": "nxtPtenderId"
+      },
+      "namedRegex": "^/staff\\-dashboard/tender/(?<nxtPtenderId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/staff-dashboard/tender-documents/[tenderId]",
+      "regex": "^/staff\\-dashboard/tender\\-documents/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPtenderId": "nxtPtenderId"
+      },
+      "namedRegex": "^/staff\\-dashboard/tender\\-documents/(?<nxtPtenderId>[^/]+?)(?:/)?$"
+    }
+  ],
+  "staticRoutes": [
+    {
+      "page": "/",
+      "regex": "^/(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/(?:/)?$"
+    },
+    {
+      "page": "/_global-error",
+      "regex": "^/_global\\-error(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_global\\-error(?:/)?$"
+    },
+    {
+      "page": "/_not-found",
+      "regex": "^/_not\\-found(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/api/auth/send-otp",
+      "regex": "^/api/auth/send\\-otp(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/auth/send\\-otp(?:/)?$"
+    },
+    {
+      "page": "/api/auth/verify-otp",
+      "regex": "^/api/auth/verify\\-otp(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/auth/verify\\-otp(?:/)?$"
+    },
+    {
+      "page": "/api/departments",
+      "regex": "^/api/departments(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/departments(?:/)?$"
+    },
+    {
+      "page": "/api/tasks",
+      "regex": "^/api/tasks(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/tasks(?:/)?$"
+    },
+    {
+      "page": "/api/tasks/events",
+      "regex": "^/api/tasks/events(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/tasks/events(?:/)?$"
+    },
+    {
+      "page": "/api/users",
+      "regex": "^/api/users(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/users(?:/)?$"
+    },
+    {
+      "page": "/hod-dashboard",
+      "regex": "^/hod\\-dashboard(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/hod\\-dashboard(?:/)?$"
+    },
+    {
+      "page": "/hod-dashboard/announcements",
+      "regex": "^/hod\\-dashboard/announcements(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/hod\\-dashboard/announcements(?:/)?$"
+    },
+    {
+      "page": "/hod-dashboard/approvals",
+      "regex": "^/hod\\-dashboard/approvals(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/hod\\-dashboard/approvals(?:/)?$"
+    },
+    {
+      "page": "/hod-dashboard/approvals/history",
+      "regex": "^/hod\\-dashboard/approvals/history(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/hod\\-dashboard/approvals/history(?:/)?$"
+    },
+    {
+      "page": "/hod-dashboard/create-announcement",
+      "regex": "^/hod\\-dashboard/create\\-announcement(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/hod\\-dashboard/create\\-announcement(?:/)?$"
+    },
+    {
+      "page": "/hod-dashboard/create-document",
+      "regex": "^/hod\\-dashboard/create\\-document(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/hod\\-dashboard/create\\-document(?:/)?$"
+    },
+    {
+      "page": "/hod-dashboard/create-event",
+      "regex": "^/hod\\-dashboard/create\\-event(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/hod\\-dashboard/create\\-event(?:/)?$"
+    },
+    {
+      "page": "/hod-dashboard/create-task",
+      "regex": "^/hod\\-dashboard/create\\-task(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/hod\\-dashboard/create\\-task(?:/)?$"
+    },
+    {
+      "page": "/hod-dashboard/documents",
+      "regex": "^/hod\\-dashboard/documents(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/hod\\-dashboard/documents(?:/)?$"
+    },
+    {
+      "page": "/hod-dashboard/escalations",
+      "regex": "^/hod\\-dashboard/escalations(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/hod\\-dashboard/escalations(?:/)?$"
+    },
+    {
+      "page": "/hod-dashboard/events",
+      "regex": "^/hod\\-dashboard/events(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/hod\\-dashboard/events(?:/)?$"
+    },
+    {
+      "page": "/hod-dashboard/my-tasks",
+      "regex": "^/hod\\-dashboard/my\\-tasks(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/hod\\-dashboard/my\\-tasks(?:/)?$"
+    },
+    {
+      "page": "/hod-dashboard/notifications",
+      "regex": "^/hod\\-dashboard/notifications(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/hod\\-dashboard/notifications(?:/)?$"
+    },
+    {
+      "page": "/hod-dashboard/profile",
+      "regex": "^/hod\\-dashboard/profile(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/hod\\-dashboard/profile(?:/)?$"
+    },
+    {
+      "page": "/hod-dashboard/reports",
+      "regex": "^/hod\\-dashboard/reports(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/hod\\-dashboard/reports(?:/)?$"
+    },
+    {
+      "page": "/hod-dashboard/tasks",
+      "regex": "^/hod\\-dashboard/tasks(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/hod\\-dashboard/tasks(?:/)?$"
+    },
+    {
+      "page": "/hod-dashboard/tender-documents",
+      "regex": "^/hod\\-dashboard/tender\\-documents(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/hod\\-dashboard/tender\\-documents(?:/)?$"
+    },
+    {
+      "page": "/hod-dashboard/tenders",
+      "regex": "^/hod\\-dashboard/tenders(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/hod\\-dashboard/tenders(?:/)?$"
+    },
+    {
+      "page": "/hod-dashboard/tenders/create",
+      "regex": "^/hod\\-dashboard/tenders/create(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/hod\\-dashboard/tenders/create(?:/)?$"
+    },
+    {
+      "page": "/login",
+      "regex": "^/login(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/login(?:/)?$"
+    },
+    {
+      "page": "/md-dashboard",
+      "regex": "^/md\\-dashboard(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/md\\-dashboard(?:/)?$"
+    },
+    {
+      "page": "/md-dashboard/announcements",
+      "regex": "^/md\\-dashboard/announcements(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/md\\-dashboard/announcements(?:/)?$"
+    },
+    {
+      "page": "/md-dashboard/approvals",
+      "regex": "^/md\\-dashboard/approvals(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/md\\-dashboard/approvals(?:/)?$"
+    },
+    {
+      "page": "/md-dashboard/approvals/bulk",
+      "regex": "^/md\\-dashboard/approvals/bulk(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/md\\-dashboard/approvals/bulk(?:/)?$"
+    },
+    {
+      "page": "/md-dashboard/approvals/history",
+      "regex": "^/md\\-dashboard/approvals/history(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/md\\-dashboard/approvals/history(?:/)?$"
+    },
+    {
+      "page": "/md-dashboard/create-announcement",
+      "regex": "^/md\\-dashboard/create\\-announcement(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/md\\-dashboard/create\\-announcement(?:/)?$"
+    },
+    {
+      "page": "/md-dashboard/create-document",
+      "regex": "^/md\\-dashboard/create\\-document(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/md\\-dashboard/create\\-document(?:/)?$"
+    },
+    {
+      "page": "/md-dashboard/create-event",
+      "regex": "^/md\\-dashboard/create\\-event(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/md\\-dashboard/create\\-event(?:/)?$"
+    },
+    {
+      "page": "/md-dashboard/create-task",
+      "regex": "^/md\\-dashboard/create\\-task(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/md\\-dashboard/create\\-task(?:/)?$"
+    },
+    {
+      "page": "/md-dashboard/documents",
+      "regex": "^/md\\-dashboard/documents(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/md\\-dashboard/documents(?:/)?$"
+    },
+    {
+      "page": "/md-dashboard/escalations",
+      "regex": "^/md\\-dashboard/escalations(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/md\\-dashboard/escalations(?:/)?$"
+    },
+    {
+      "page": "/md-dashboard/events",
+      "regex": "^/md\\-dashboard/events(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/md\\-dashboard/events(?:/)?$"
+    },
+    {
+      "page": "/md-dashboard/jobs",
+      "regex": "^/md\\-dashboard/jobs(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/md\\-dashboard/jobs(?:/)?$"
+    },
+    {
+      "page": "/md-dashboard/notifications",
+      "regex": "^/md\\-dashboard/notifications(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/md\\-dashboard/notifications(?:/)?$"
+    },
+    {
+      "page": "/md-dashboard/profile",
+      "regex": "^/md\\-dashboard/profile(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/md\\-dashboard/profile(?:/)?$"
+    },
+    {
+      "page": "/md-dashboard/reports",
+      "regex": "^/md\\-dashboard/reports(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/md\\-dashboard/reports(?:/)?$"
+    },
+    {
+      "page": "/md-dashboard/tasks",
+      "regex": "^/md\\-dashboard/tasks(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/md\\-dashboard/tasks(?:/)?$"
+    },
+    {
+      "page": "/md-dashboard/tender-documents",
+      "regex": "^/md\\-dashboard/tender\\-documents(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/md\\-dashboard/tender\\-documents(?:/)?$"
+    },
+    {
+      "page": "/md-dashboard/tenders",
+      "regex": "^/md\\-dashboard/tenders(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/md\\-dashboard/tenders(?:/)?$"
+    },
+    {
+      "page": "/md-dashboard/tenders/create",
+      "regex": "^/md\\-dashboard/tenders/create(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/md\\-dashboard/tenders/create(?:/)?$"
+    },
+    {
+      "page": "/request-access",
+      "regex": "^/request\\-access(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/request\\-access(?:/)?$"
+    },
+    {
+      "page": "/secretary-dashboard",
+      "regex": "^/secretary\\-dashboard(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/secretary\\-dashboard(?:/)?$"
+    },
+    {
+      "page": "/secretary-dashboard/announcements",
+      "regex": "^/secretary\\-dashboard/announcements(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/secretary\\-dashboard/announcements(?:/)?$"
+    },
+    {
+      "page": "/secretary-dashboard/documents",
+      "regex": "^/secretary\\-dashboard/documents(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/secretary\\-dashboard/documents(?:/)?$"
+    },
+    {
+      "page": "/secretary-dashboard/events",
+      "regex": "^/secretary\\-dashboard/events(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/secretary\\-dashboard/events(?:/)?$"
+    },
+    {
+      "page": "/secretary-dashboard/notifications",
+      "regex": "^/secretary\\-dashboard/notifications(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/secretary\\-dashboard/notifications(?:/)?$"
+    },
+    {
+      "page": "/secretary-dashboard/profile",
+      "regex": "^/secretary\\-dashboard/profile(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/secretary\\-dashboard/profile(?:/)?$"
+    },
+    {
+      "page": "/secretary-dashboard/reports-archive",
+      "regex": "^/secretary\\-dashboard/reports\\-archive(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/secretary\\-dashboard/reports\\-archive(?:/)?$"
+    },
+    {
+      "page": "/secretary-dashboard/task-reports",
+      "regex": "^/secretary\\-dashboard/task\\-reports(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/secretary\\-dashboard/task\\-reports(?:/)?$"
+    },
+    {
+      "page": "/secretary-dashboard/tenders",
+      "regex": "^/secretary\\-dashboard/tenders(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/secretary\\-dashboard/tenders(?:/)?$"
+    },
+    {
+      "page": "/secretary-dashboard/upload-report",
+      "regex": "^/secretary\\-dashboard/upload\\-report(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/secretary\\-dashboard/upload\\-report(?:/)?$"
+    },
+    {
+      "page": "/staff-dashboard",
+      "regex": "^/staff\\-dashboard(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/staff\\-dashboard(?:/)?$"
+    },
+    {
+      "page": "/staff-dashboard/announcements",
+      "regex": "^/staff\\-dashboard/announcements(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/staff\\-dashboard/announcements(?:/)?$"
+    },
+    {
+      "page": "/staff-dashboard/daily-reports",
+      "regex": "^/staff\\-dashboard/daily\\-reports(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/staff\\-dashboard/daily\\-reports(?:/)?$"
+    },
+    {
+      "page": "/staff-dashboard/documents",
+      "regex": "^/staff\\-dashboard/documents(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/staff\\-dashboard/documents(?:/)?$"
+    },
+    {
+      "page": "/staff-dashboard/events",
+      "regex": "^/staff\\-dashboard/events(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/staff\\-dashboard/events(?:/)?$"
+    },
+    {
+      "page": "/staff-dashboard/notifications",
+      "regex": "^/staff\\-dashboard/notifications(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/staff\\-dashboard/notifications(?:/)?$"
+    },
+    {
+      "page": "/staff-dashboard/profile",
+      "regex": "^/staff\\-dashboard/profile(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/staff\\-dashboard/profile(?:/)?$"
+    },
+    {
+      "page": "/staff-dashboard/submit-reports",
+      "regex": "^/staff\\-dashboard/submit\\-reports(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/staff\\-dashboard/submit\\-reports(?:/)?$"
+    },
+    {
+      "page": "/staff-dashboard/tasks",
+      "regex": "^/staff\\-dashboard/tasks(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/staff\\-dashboard/tasks(?:/)?$"
+    },
+    {
+      "page": "/staff-dashboard/tender-documents",
+      "regex": "^/staff\\-dashboard/tender\\-documents(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/staff\\-dashboard/tender\\-documents(?:/)?$"
+    },
+    {
+      "page": "/staff-dashboard/tenders",
+      "regex": "^/staff\\-dashboard/tenders(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/staff\\-dashboard/tenders(?:/)?$"
+    }
+  ],
+  "dataRoutes": [],
+  "rsc": {
+    "header": "rsc",
+    "varyHeader": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "prefetchHeader": "next-router-prefetch",
+    "didPostponeHeader": "x-nextjs-postponed",
+    "contentTypeHeader": "text/x-component",
+    "suffix": ".rsc",
+    "prefetchSegmentHeader": "next-router-segment-prefetch",
+    "prefetchSegmentSuffix": ".segment.rsc",
+    "prefetchSegmentDirSuffix": ".segments",
+    "clientParamParsing": false,
+    "dynamicRSCPrerender": false
+  },
+  "rewriteHeaders": {
+    "pathHeader": "x-nextjs-rewritten-path",
+    "queryHeader": "x-nextjs-rewritten-query"
+  }
+}
