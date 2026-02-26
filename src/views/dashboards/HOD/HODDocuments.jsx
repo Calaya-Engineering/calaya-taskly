@@ -4,7 +4,7 @@
 import { useMemo, useState } from 'react';
 import Link from "next/link";
 import Layout from "@/components/Layout";
-import { TaskIcon, DocumentIcon } from "@/lib/icons";
+import { TaskIcon, DocumentIcon, LockIcon, DownloadIcon, ClockIcon, getDocIconComponent } from "@/lib/icons";
 import { HODMenuItems } from "@/utils/menus";
 import { fetchWithAuth, getAuthToken } from "@/lib/api";
 import { toast } from "@/lib/toast";

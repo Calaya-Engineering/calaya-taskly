@@ -1,12 +1,13 @@
 "use client";
 
 // pages/dashboards/HOD/HODProfile.jsx
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Layout from "@/components/Layout";
 import { CancelIcon, EditIcon, BadgeIcon, CalendarTodayIcon, ClockIcon } from "@/lib/icons";
 import { HODMenuItems } from "@/utils/menus";
 import { PasswordInput } from "@/components/ui/password-input";
 import { toast } from "@/lib/toast";
+import { fetchWithAuth } from "@/lib/api";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -29,12 +30,12 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "info"
-      ? "bg-blue-50 text-blue-700 ring-blue-100"
-      : "bg-gray-50 text-gray-700 ring-gray-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "info"
+            ? "bg-blue-50 text-blue-700 ring-blue-100"
+            : "bg-gray-50 text-gray-700 ring-gray-100";
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
       {children}
@@ -42,72 +43,58 @@ const Pill = ({ children, tone = "default" }) => {
   );
 };
 
-const userProfile = {
-  fullName: 'John Smith',
-  email: 'john.smith@calaya.com',
-  phone: '+234 123 456 7890',
-  jobTitle: 'Technical Department Head',
-  location: 'Lagos Office',
-  role: 'Head of Department',
-  employeeId: 'EMP-2020-045',
-  department: 'Technical',
-  secondaryDepartment: 'Workshop',
-  joinDate: '2020-03-15',
-  lastLogin: '2024-12-15T14:30:00',
-  status: 'Active',
-  notifications: 8,
-  pendingApprovals: 4,
-  activeTasks: 5,
-  departmentTasks: 18,
-  completedTasks: 156,
-  teamSize: 24,
-  documentsReviewed: 67,
-  meetingsAttended: 32,
-  recentActivity: [
-    { action: 'Approved task completion: Pipeline Inspection', time: '2 hours ago', type: 'APPROVAL', status: 'completed' },
-    { action: 'Uploaded document: Safety Protocol v2.1', time: '1 day ago', type: 'DOCUMENT', status: 'completed' },
-    { action: 'Assigned new task: Workshop Maintenance', time: '2 days ago', type: 'TASK', status: 'pending' },
-    { action: 'Created announcement: Q4 Planning Meeting', time: '3 days ago', type: 'ANNOUNCEMENT', status: 'upcoming' },
-    { action: 'Reviewed tender: Equipment Procurement', time: '5 days ago', type: 'APPROVAL', status: 'completed' },
-  ]
-};
+// Removed static mock data
 
-const departmentMembers = [
-  { id: 1, name: 'Alex Johnson', role: 'Senior Engineer', status: 'Active', tasks: 8, email: 'alex.j@calaya.com' },
-  { id: 2, name: 'Emma Wilson', role: 'Project Manager', status: 'Active', tasks: 12, email: 'emma.w@calaya.com' },
-  { id: 3, name: 'Michael Brown', role: 'Technical Lead', status: 'Active', tasks: 15, email: 'michael.b@calaya.com' },
-  { id: 4, name: 'Sarah Taylor', role: 'Safety Officer', status: 'On Leave', tasks: 3, email: 'sarah.t@calaya.com' },
-  { id: 5, name: 'Robert Lee', role: 'Field Engineer', status: 'Active', tasks: 10, email: 'robert.l@calaya.com' },
-];
-
-const performanceStats = {
-  tasksAssigned: 45,
-  tasksCompleted: 38,
-  approvalRate: '92%',
-  avgResponseTime: '4.2 hours',
-  teamSize: 24,
-  departmentProgress: 78,
-  overdueTasks: 3,
-  pendingApprovals: 7,
-};
+const Skeleton = ({ className = "" }) => (
+  <div className={`animate-pulse bg-gray-100 rounded-xl ${className}`} />
+);
 
 const fmtDate = (iso) =>
   iso ? new Date(iso).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" }) : "Not set";
 
 const fmtDateTime = (iso) =>
-  iso ? new Date(iso).toLocaleString(undefined, { 
-    hour: '2-digit', 
+  iso ? new Date(iso).toLocaleString(undefined, {
+    hour: '2-digit',
     minute: '2-digit',
     month: 'short',
     day: 'numeric',
-    hour12: true 
+    hour12: true
   }) : "Not set";
 
 export default function HODProfile() {
   const [activeTab, setActiveTab] = useState('profile');
-  const [profileData, setProfileData] = useState(userProfile);
+  const [profileData, setProfileData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState({ fullName: "", department: "" });
+  const [saving, setSaving] = useState(false);
   const [showPasswordForm, setShowPasswordForm] = useState(false);
+
+  // ── Fetch profile ─────────────────────────────────────────────────────────
+  const fetchProfile = useCallback(async () => {
+    try {
+      const res = await fetchWithAuth("/api/profile/me");
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to load profile");
+      setProfileData(data);
+      setEditForm({ fullName: data.fullName, department: data.department ?? "" });
+      setError(null);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchProfile();
+    // refresh when tab regains focus
+    const onFocus = () => fetchProfile();
+    window.addEventListener("focus", onFocus);
+    return () => window.removeEventListener("focus", onFocus);
+  }, [fetchProfile]);
+
   const [notificationPreferences, setNotificationPreferences] = useState([
     { category: 'Email Notifications', description: 'Receive notifications via email', enabled: true },
     { category: 'Push Notifications', description: 'Receive in-app notifications', enabled: true },
@@ -129,10 +116,29 @@ export default function HODProfile() {
     { category: 'Auto-refresh Dashboard', description: 'Automatically refresh data every 5 minutes', enabled: true },
   ]);
 
-  const handleSaveProfile = (e) => {
+  const handleSaveProfile = async (e) => {
     e.preventDefault();
-    setIsEditing(false);
-    toast.success('Profile updated successfully!');
+    setSaving(true);
+    try {
+      const res = await fetchWithAuth("/api/profile/me", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: editForm.fullName, department: editForm.department }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Save failed");
+      toast.success("Profile updated successfully!");
+      setProfileData((prev) => ({
+        ...prev,
+        fullName: data.name || prev.fullName,
+        department: data.department || prev.department,
+      }));
+      setIsEditing(false);
+    } catch (err) {
+      toast.error(err.message);
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handlePasswordChange = (e) => {
@@ -158,7 +164,7 @@ export default function HODProfile() {
   };
 
   const getActivityTone = (status) => {
-    switch(status) {
+    switch (status) {
       case 'completed': return 'success';
       case 'pending': return 'warn';
       case 'upcoming': return 'info';
@@ -167,7 +173,7 @@ export default function HODProfile() {
   };
 
   const getActivityIcon = (type) => {
-    switch(type) {
+    switch (type) {
       case 'APPROVAL': return '✅';
       case 'TASK': return '📋';
       case 'DOCUMENT': return '📄';
@@ -177,7 +183,7 @@ export default function HODProfile() {
   };
 
   const getActivityBg = (type) => {
-    switch(type) {
+    switch (type) {
       case 'APPROVAL': return 'rgba(16, 185, 129, 0.1)';
       case 'TASK': return 'rgba(59, 130, 246, 0.1)';
       case 'DOCUMENT': return 'rgba(139, 92, 246, 0.1)';
@@ -185,6 +191,51 @@ export default function HODProfile() {
       default: return 'rgba(107, 114, 128, 0.1)';
     }
   };
+
+  // ── Loading state ─────────────────────────────────────────────────────────
+  if (loading) {
+    return (
+      <Layout menuItems={HODMenuItems} userRole="HOD">
+        <div className="space-y-6">
+          <Card className="overflow-hidden">
+            <div className="p-6 md:p-8" style={{ background: "linear-gradient(135deg, rgba(44,75,155,0.10) 0%, rgba(109,198,223,0.18) 50%, rgba(237,50,55,0.06) 100%)" }}>
+              <Skeleton className="h-8 w-48 mb-3" />
+              <Skeleton className="h-5 w-64" />
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 md:p-5 bg-white border-t border-gray-200/70">
+              {[...Array(4)].map((_, i) => <Skeleton key={i} className="h-24 rounded-2xl" />)}
+            </div>
+          </Card>
+          <Card className="p-8">
+            <Skeleton className="h-6 w-40 mb-6" />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {[...Array(6)].map((_, i) => <Skeleton key={i} className="h-16 rounded-2xl" />)}
+            </div>
+          </Card>
+        </div>
+      </Layout>
+    );
+  }
+
+  // ── Error state ───────────────────────────────────────────────────────────
+  if (error) {
+    return (
+      <Layout menuItems={HODMenuItems} userRole="HOD">
+        <Card className="p-12 text-center">
+          <div className="text-4xl mb-4">⚠️</div>
+          <h2 className="text-xl font-extrabold text-gray-900 mb-2">Unable to load profile</h2>
+          <p className="text-gray-500 mb-6">{error}</p>
+          <button
+            onClick={() => { setLoading(true); fetchProfile(); }}
+            className="px-6 py-3 rounded-2xl font-semibold text-white"
+            style={{ backgroundColor: "var(--primary-blue)" }}
+          >
+            Try Again
+          </button>
+        </Card>
+      </Layout>
+    );
+  }
 
   return (
     <Layout menuItems={HODMenuItems} userRole="HOD">
@@ -261,9 +312,8 @@ export default function HODProfile() {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`px-6 py-4 text-sm font-semibold transition border-b-2 ${
-                      active ? "text-gray-900" : "text-gray-500 hover:text-gray-700"
-                    }`}
+                    className={`px-6 py-4 text-sm font-semibold transition border-b-2 ${active ? "text-gray-900" : "text-gray-500 hover:text-gray-700"
+                      }`}
                     style={{ borderBottomColor: active ? "var(--primary-blue)" : "transparent" }}
                   >
                     <span className="flex items-center gap-2">
@@ -300,9 +350,8 @@ export default function HODProfile() {
                 </p>
                 <p className="text-sm text-gray-500 mt-2">
                   {profileData.department}
-                  {profileData.secondaryDepartment && ` / ${profileData.secondaryDepartment}`}
                 </p>
-                
+
                 {/* Edit Button */}
                 <button
                   onClick={() => setIsEditing(!isEditing)}
@@ -327,7 +376,7 @@ export default function HODProfile() {
               <div className="text-sm text-gray-500 text-right">
                 <p className="flex items-center gap-1 justify-end">
                   <BadgeIcon className="w-4 h-4" />
-                  <span>ID: {profileData.employeeId}</span>
+                  <span>ID: EMP-{profileData.id}</span>
                 </p>
                 <p className="flex items-center gap-1 justify-end mt-1">
                   <CalendarTodayIcon className="w-4 h-4" />
@@ -335,7 +384,7 @@ export default function HODProfile() {
                 </p>
                 <p className="flex items-center gap-1 justify-end mt-1">
                   <ClockIcon className="w-4 h-4" />
-                  <span>Last login: {fmtDateTime(profileData.lastLogin)}</span>
+                  <span>Last login: {fmtDateTime(new Date().toISOString())}</span>
                 </p>
               </div>
             </div>
@@ -356,58 +405,31 @@ export default function HODProfile() {
                         <input
                           type="text"
                           className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-100"
-                          value={profileData.fullName}
-                          onChange={(e) => setProfileData({...profileData, fullName: e.target.value})}
-                        />
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
-                        <input
-                          type="email"
-                          className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-100"
-                          value={profileData.email}
-                          onChange={(e) => setProfileData({...profileData, email: e.target.value})}
-                        />
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Phone Number</label>
-                        <input
-                          type="tel"
-                          className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-100"
-                          value={profileData.phone}
-                          onChange={(e) => setProfileData({...profileData, phone: e.target.value})}
-                        />
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Job Title</label>
-                        <input
-                          type="text"
-                          className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-100"
-                          value={profileData.jobTitle}
-                          onChange={(e) => setProfileData({...profileData, jobTitle: e.target.value})}
+                          value={editForm.fullName}
+                          onChange={(e) => setEditForm({ ...editForm, fullName: e.target.value })}
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Location</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
                         <input
-                          type="text"
-                          className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-100"
-                          value={profileData.location}
-                          onChange={(e) => setProfileData({...profileData, location: e.target.value})}
+                          type="email"
+                          className="w-full px-4 py-3 border border-gray-200 rounded-2xl bg-gray-50"
+                          value={profileData.email}
+                          disabled
+                          readOnly
                         />
                       </div>
-                      
+
+
+
                       <div>
                         <label className="block text-sm font-semibold text-gray-700 mb-2">Department</label>
                         <input
                           type="text"
                           className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-100"
-                          value={profileData.department}
-                          onChange={(e) => setProfileData({...profileData, department: e.target.value})}
+                          value={editForm.department}
+                          onChange={(e) => setEditForm({ ...editForm, department: e.target.value })}
                         />
                       </div>
 
@@ -416,7 +438,7 @@ export default function HODProfile() {
                         <input
                           type="text"
                           className="w-full px-4 py-3 border border-gray-200 rounded-2xl bg-gray-50"
-                          value={profileData.employeeId}
+                          value={`EMP-${profileData.id}`}
                           disabled
                           readOnly
                         />
@@ -433,7 +455,7 @@ export default function HODProfile() {
                         />
                       </div>
                     </div>
-                    
+
                     <div className="flex justify-end gap-3 pt-6 border-t border-gray-200/70">
                       <button
                         type="button"
@@ -445,10 +467,11 @@ export default function HODProfile() {
                       </button>
                       <button
                         type="submit"
-                        className="px-6 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition"
+                        disabled={saving}
+                        className="px-6 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition disabled:opacity-60"
                         style={{ backgroundColor: "var(--secondary-blue)" }}
                       >
-                        Save Changes
+                        {saving ? "Saving…" : "Save Changes"}
                       </button>
                     </div>
                   </form>
@@ -456,11 +479,9 @@ export default function HODProfile() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <InfoRow label="Full Name" value={profileData.fullName} />
                     <InfoRow label="Email Address" value={profileData.email} />
-                    <InfoRow label="Phone Number" value={profileData.phone} />
-                    <InfoRow label="Job Title" value={profileData.jobTitle} />
-                    <InfoRow label="Location" value={profileData.location} />
+                    <InfoRow label="Role" value={profileData.role} />
                     <InfoRow label="Department" value={profileData.department} />
-                    <InfoRow label="Employee ID" value={profileData.employeeId} />
+                    <InfoRow label="Employee ID" value={`EMP-${profileData.id}`} />
                     <InfoRow label="Join Date" value={fmtDate(profileData.joinDate)} />
                   </div>
                 )}
@@ -470,13 +491,13 @@ export default function HODProfile() {
             {/* Team Tab */}
             {activeTab === 'team' && (
               <div className="space-y-6">
-                <SectionTitle 
-                  title="Team Members" 
-                  subtitle={`${performanceStats.teamSize} members in your department`}
+                <SectionTitle
+                  title="Team Members"
+                  subtitle={`${profileData.teamSize} members in your department`}
                 />
 
                 <div className="space-y-3">
-                  {departmentMembers.map((member) => (
+                  {(profileData.team || []).map((member) => (
                     <div key={member.id} className="flex items-center justify-between p-4 rounded-2xl border border-gray-200/70 hover:bg-gray-50 transition">
                       <div className="flex items-center gap-4">
                         <div
@@ -512,10 +533,10 @@ export default function HODProfile() {
 
                 <div className="grid grid-cols-2 gap-4">
                   {[
-                    { label: 'Tasks Assigned', value: performanceStats.tasksAssigned, color: 'var(--primary-blue)' },
-                    { label: 'Tasks Completed', value: performanceStats.tasksCompleted, color: '#10B981' },
-                    { label: 'Approval Rate', value: performanceStats.approvalRate, color: '#8B5CF6' },
-                    { label: 'Avg Response', value: performanceStats.avgResponseTime, color: '#F59E0B' },
+                    { label: 'Tasks Assigned', value: profileData.performanceStats?.tasksAssigned || 0, color: 'var(--primary-blue)' },
+                    { label: 'Tasks Completed', value: profileData.performanceStats?.tasksCompleted || 0, color: '#10B981' },
+                    { label: 'Approval Rate', value: profileData.performanceStats?.approvalRate || 'N/A', color: '#8B5CF6' },
+                    { label: 'Avg Response', value: profileData.performanceStats?.avgResponseTime || 'N/A', color: '#F59E0B' },
                   ].map((stat, index) => (
                     <div key={index} className="p-5 rounded-2xl border border-gray-200/70">
                       <p className="text-sm text-gray-500 mb-2">{stat.label}</p>
@@ -529,14 +550,14 @@ export default function HODProfile() {
                     <div className="flex justify-between mb-2">
                       <span className="text-sm font-semibold text-gray-700">Department Progress</span>
                       <span className="text-sm font-semibold" style={{ color: "var(--primary-blue)" }}>
-                        {performanceStats.departmentProgress}%
+                        {profileData.performanceStats?.departmentProgress || 0}%
                       </span>
                     </div>
                     <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
                       <div
                         className="h-full rounded-full"
                         style={{
-                          width: `${performanceStats.departmentProgress}%`,
+                          width: `${profileData.performanceStats?.departmentProgress || 0}%`,
                           backgroundColor: "var(--primary-blue)",
                         }}
                       />
@@ -546,12 +567,12 @@ export default function HODProfile() {
                   <div>
                     <div className="flex justify-between mb-2">
                       <span className="text-sm font-semibold text-gray-700">Overdue Tasks</span>
-                      <span className="text-sm font-semibold text-red-600">{performanceStats.overdueTasks}</span>
+                      <span className="text-sm font-semibold text-red-600">{profileData.performanceStats?.overdueTasks || 0}</span>
                     </div>
                     <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
                       <div
                         className="h-full rounded-full bg-red-500"
-                        style={{ width: `${(performanceStats.overdueTasks / performanceStats.tasksAssigned) * 100}%` }}
+                        style={{ width: `${((profileData.performanceStats?.overdueTasks || 0) / Math.max(1, profileData.performanceStats?.tasksAssigned || 1)) * 100}%` }}
                       />
                     </div>
                   </div>
@@ -572,9 +593,9 @@ export default function HODProfile() {
                         <p className="text-sm text-gray-500 mt-1">{pref.description}</p>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
-                        <input 
-                          type="checkbox" 
-                          className="sr-only peer" 
+                        <input
+                          type="checkbox"
+                          className="sr-only peer"
                           checked={pref.enabled}
                           onChange={() => handlePreferenceToggle(index, 'notification')}
                         />
@@ -592,9 +613,9 @@ export default function HODProfile() {
                         <p className="text-sm text-gray-500 mt-1">{pref.description}</p>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
-                        <input 
-                          type="checkbox" 
-                          className="sr-only peer" 
+                        <input
+                          type="checkbox"
+                          className="sr-only peer"
                           checked={pref.enabled}
                           onChange={() => handlePreferenceToggle(index, 'display')}
                         />
@@ -682,7 +703,7 @@ export default function HODProfile() {
                         placeholder="Enter current password"
                       />
                     </div>
-                    
+
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-2">New Password</label>
                       <PasswordInput
@@ -694,7 +715,7 @@ export default function HODProfile() {
                         Password must be at least 8 characters with 1 number and 1 special character
                       </p>
                     </div>
-                    
+
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-2">Confirm New Password</label>
                       <PasswordInput
@@ -703,7 +724,7 @@ export default function HODProfile() {
                         placeholder="Confirm new password"
                       />
                     </div>
-                    
+
                     <div className="flex justify-end gap-3 pt-4">
                       <button
                         type="button"
@@ -730,8 +751,8 @@ export default function HODProfile() {
 
         {/* Recent Activity Section */}
         <Card className="p-6">
-          <SectionTitle 
-            title="Recent Activity" 
+          <SectionTitle
+            title="Recent Activity"
             subtitle="Your latest actions and updates"
             action={
               <button className="text-sm font-semibold" style={{ color: "var(--primary-blue)" }}>

@@ -19,6 +19,7 @@
   "/api/documents/route": "app/api/documents/route.js",
   "/api/me/route": "app/api/me/route.js",
   "/api/notifications/route": "app/api/notifications/route.js",
+  "/api/profile/me/route": "app/api/profile/me/route.js",
   "/api/roles/[id]/route": "app/api/roles/[id]/route.js",
   "/api/roles/route": "app/api/roles/route.js",
   "/api/tasks/[id]/assign/route": "app/api/tasks/[id]/assign/route.js",

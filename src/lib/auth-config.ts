@@ -37,8 +37,8 @@ export const ADMIN_PASSWORD = "admin123";
 // These are intentionally non-secret and only for demo environments.
 export const DEMO_CREDENTIALS: DemoCredential[] = [
   { email: "admin@calaya.com", password: "admin123", role: "Admin", route: "/admin-dashboard" },
-  { email: "md@calaya.com", password: "demo123", role: "MD", route: "/md-dashboard" },
-  { email: "hod@calaya.com", password: "demo123", role: "HOD", route: "/hod-dashboard" },
+  { email: "izuchukwuonuoha6@gmail.com", password: "admin123", role: "MD", route: "/md-dashboard" },
+  { email: "izuchukwuonuoha6+HOD@gmail.com", password: "admin123", role: "HOD", route: "/hod-dashboard" },
   { email: "staff@calaya.com", password: "demo123", role: "Staff", route: "/staff-dashboard" },
   { email: "personnel@calaya.com", password: "demo123", role: "Personnel", route: "/staff-dashboard" },
   { email: "corp@calaya.com", password: "demo123", role: "Corp Member", route: "/staff-dashboard" },

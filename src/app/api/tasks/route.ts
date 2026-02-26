@@ -22,9 +22,13 @@ export async function GET(req: NextRequest) {
   const limit = Math.min(parseInt(searchParams.get("limit") ?? "50", 10) || 50, 100);
 
   try {
-    const where: Record<string, unknown> = {};
+    const currentUser = await prisma.user.findUnique({
+      where: { email: auth.email },
+      select: { id: true, role: true, department: true }
+    });
+
+    const where: any = {};
     if (status) where.status = status;
-    if (department) where.department = department;
     if (type) {
       if (type.includes(",")) {
         where.type = { in: type.split(",") };
@@ -34,9 +38,34 @@ export async function GET(req: NextRequest) {
     } else {
       where.type = { not: "EVENT" };
     }
-    if (assigneeId) {
-      const uid = parseInt(assigneeId, 10);
-      if (!Number.isNaN(uid)) where.assignments = { some: { userId: uid } };
+
+    if (currentUser?.role === "HOD") {
+      const hodOrConditions = [
+        { department: currentUser.department },
+        { assignments: { some: { userId: currentUser.id } } }
+      ];
+
+      const additionalAnds: any[] = [];
+      if (department) additionalAnds.push({ department });
+      if (assigneeId) {
+        const uid = parseInt(assigneeId, 10);
+        if (!Number.isNaN(uid)) additionalAnds.push({ assignments: { some: { userId: uid } } });
+      }
+
+      if (additionalAnds.length > 0) {
+        where.AND = [
+          { OR: hodOrConditions },
+          ...additionalAnds
+        ];
+      } else {
+        where.OR = hodOrConditions;
+      }
+    } else {
+      if (department) where.department = department;
+      if (assigneeId) {
+        const uid = parseInt(assigneeId, 10);
+        if (!Number.isNaN(uid)) where.assignments = { some: { userId: uid } };
+      }
     }
 
     const tasks = await prisma.task.findMany({

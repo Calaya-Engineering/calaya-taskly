@@ -1,10 +1,12 @@
 "use client";
 
 // pages/dashboards/MDDashboard.jsx
+import { useState, useEffect, useCallback, useMemo } from "react";
 import Link from "next/link";
 import Layout from "../../components/Layout";
 import { MDMenuItems } from "@/utils/menus";
 import { PlusIcon, FileUploadIconComponent, MegaphoneIcon, CalendarIcon, ChartIcon } from "@/lib/icons";
+import { fetchWithAuth } from "@/lib/api";
 
 
 const Card = ({ className = "", children }) => (
@@ -28,10 +30,10 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : "bg-blue-50 text-blue-700 ring-blue-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : "bg-blue-50 text-blue-700 ring-blue-100";
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
       {children}
@@ -42,11 +44,77 @@ const Pill = ({ children, tone = "default" }) => {
 const priorityTone = (p) => (p === "URGENT" ? "danger" : p === "IMPORTANT" ? "warn" : "default");
 
 export default function MDDashboard() {
+  const [tasksData, setTasksData] = useState([]);
+
+  const fetchTasks = useCallback(async () => {
+    try {
+      const res = await fetchWithAuth("/api/tasks?limit=1000");
+      if (res.ok) {
+        const data = await res.json();
+        setTasksData(data);
+      }
+    } catch (e) {
+      console.error("Failed to fetch tasks:", e);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchTasks();
+  }, [fetchTasks]);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function connectSSE() {
+      try {
+        const res = await fetchWithAuth("/api/tasks/events");
+        if (!res.ok || cancelled) return;
+        const reader = res.body?.getReader();
+        if (!reader) return;
+        const decoder = new TextDecoder();
+        let buffer = "";
+
+        while (!cancelled) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+          const parts = buffer.split("\n\n");
+          buffer = parts.pop() || "";
+          for (const part of parts) {
+            const m = part.match(/^data: (.+)$/m);
+            if (m) {
+              try {
+                const ev = JSON.parse(m[1]);
+                if (ev.type?.startsWith("task:")) fetchTasks();
+              } catch { }
+            }
+          }
+        }
+        reader.releaseLock();
+      } catch (err) {
+        console.error("SSE connection error:", err);
+      }
+    }
+    connectSSE();
+    return () => {
+      cancelled = true;
+    };
+  }, [fetchTasks]);
+
+  const summary = useMemo(() => {
+    const totalTasks = tasksData.length;
+    const activeJobs = tasksData.filter((t) => t.type === "JOB" && t.status !== "COMPLETED").length;
+    const overdueTasks = tasksData.filter((t) => t.dueDate && new Date(t.dueDate).getTime() < Date.now() && t.status !== "COMPLETED").length;
+    const completedTasks = tasksData.filter((t) => t.status === "COMPLETED").length;
+    const completionRate = totalTasks ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+    return { totalTasks, activeJobs, overdueTasks, completionRate };
+  }, [tasksData]);
+
   const stats = [
-    { title: "Total Tasks", value: "0", change: "—", color: "var(--primary-blue)", link: "/md-dashboard/tasks", bar: "0%" },
-    { title: "Active Jobs", value: "0", change: "—", color: "var(--secondary-blue)", link: "/md-dashboard/jobs", bar: "0%" },
-    { title: "Overdue Tasks", value: "0", change: "—", color: "var(--accent-red)", link: "/md-dashboard/escalations", bar: "0%" },
-    { title: "Completion Rate", value: "0%", change: "—", color: "#10B981", link: "/md-dashboard/tasks", bar: "0%" },
+    { title: "Total Tasks", value: summary.totalTasks.toString(), change: "Live", color: "var(--primary-blue)", link: "/md-dashboard/tasks", bar: "100%" },
+    { title: "Active Jobs", value: summary.activeJobs.toString(), change: "Live", color: "var(--secondary-blue)", link: "/md-dashboard/jobs", bar: summary.totalTasks ? `${Math.round((summary.activeJobs / summary.totalTasks) * 100)}%` : "0%" },
+    { title: "Overdue Tasks", value: summary.overdueTasks.toString(), change: "Live", color: "var(--accent-red)", link: "/md-dashboard/escalations", bar: summary.totalTasks ? `${Math.round((summary.overdueTasks / summary.totalTasks) * 100)}%` : "0%" },
+    { title: "Completion Rate", value: `${summary.completionRate}%`, change: "Live", color: "#10B981", link: "/md-dashboard/tasks", bar: `${summary.completionRate}%` },
   ];
 
   const actions = [

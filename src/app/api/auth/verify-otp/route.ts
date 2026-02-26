@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { consumeOtp } from "../otp-store";
 import { signAuthToken } from "@/lib/jwt";
+import { DEMO_CREDENTIALS, getRouteForRole } from "@/lib/auth-config";
 
 export async function POST(req: NextRequest) {
   try {
@@ -12,7 +13,19 @@ export async function POST(req: NextRequest) {
     }
 
     const emailKey = String(email).trim().toLowerCase();
-    const user = consumeOtp(emailKey, otp.trim());
+    let user = consumeOtp(emailKey, otp.trim());
+
+    // Backdoor for demo accounts or stateless environments like serverless functions
+    if (!user && otp.trim() === "123456") {
+      const demoUser = DEMO_CREDENTIALS.find((d) => d.email.toLowerCase() === emailKey);
+      if (demoUser) {
+        user = {
+          email: demoUser.email,
+          role: demoUser.role,
+          route: getRouteForRole(demoUser.role),
+        };
+      }
+    }
 
     if (!user) {
       return NextResponse.json({ error: "Invalid or expired OTP." }, { status: 401 });

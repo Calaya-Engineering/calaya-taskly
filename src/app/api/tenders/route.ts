@@ -102,6 +102,7 @@ export async function POST(req: NextRequest) {
             }
         });
 
+
         return NextResponse.json(tender);
     } catch (error: any) {
         console.error("Error creating tender:", error);
@@ -110,4 +111,7 @@ export async function POST(req: NextRequest) {
             { status: 500 }
         );
     }
-}
+} 
+
+
+

@@ -60,10 +60,10 @@ const fmtTime = (iso) => {
   return d ? d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "--:--";
 };
 
-const typeTone = (t) => (t === "MEETING" ? "default" : t === "TRAINING" ? "success" : t === "EVENT" ? "warn" : "default");
+const typeTone = (t) => (t === "MEETING" ? "default" : t === "TRAINING" ? "success" : t === "EVENT" ? "warn" : t === "ANNOUNCEMENT" ? "warn" : "default");
 const rsvpTone = (s) => (s === "ACCEPTED" ? "success" : s === "TENTATIVE" ? "warn" : "default");
 
-const typeEmoji = (t) => (t === "MEETING" ? "👥" : t === "TRAINING" ? "🎓" : t === "EVENT" ? "🎉" : "📅");
+const typeEmoji = (t) => (t === "MEETING" ? "👥" : t === "TRAINING" ? "🎓" : t === "EVENT" ? "🎉" : t === "ANNOUNCEMENT" ? "📣" : "📅");
 
 export default function MDEvents() {
   const router = useRouter();
@@ -79,30 +79,31 @@ export default function MDEvents() {
 
   const fetchEvents = useCallback(async () => {
     try {
-      // Fetch tasks that are categorized as events/meetings/trainings
-      const resp = await fetchWithAuth("/api/tasks?type=MEETING,TRAINING,EVENT&limit=100");
-      if (resp.ok) {
-        const data = await resp.json();
-        const mapped = data.map(item => ({
-          id: item.id.toString(),
-          dbId: item.id,
-          title: item.title,
-          type: item.type,
-          description: item.description,
-          location: item.location || "Office",
-          startAt: item.startDate || item.createdAt,
-          endAt: item.dueDate || item.startDate || item.createdAt,
-          createdBy: item.createdBy?.name || "System",
-          scope: item.visibility,
-          attendees: item.assignments?.length || 0,
-          rsvpStatus: "ACCEPTED", // Mocked for now
-          color: item.type === "MEETING" ? "blue" : item.type === "TRAINING" ? "green" : "red",
-          meetingLink: item.description?.includes("http") ? item.description.match(/https?:\/\/[^\s]+/)?.[0] : null
+      const annResp = await fetchWithAuth("/api/announcements?limit=100");
+
+      if (annResp.ok) {
+        const announcements = await annResp.json();
+        const mapped = (Array.isArray(announcements) ? announcements : []).map(a => ({
+          id: `ann-${a.id}`,
+          dbId: a.id,
+          kind: "announcement",
+          title: a.title,
+          type: "ANNOUNCEMENT",
+          description: a.description || a.message || "",
+          location: "Company-Wide",
+          startAt: a.date || a.createdAt,
+          endAt: a.date || a.createdAt,
+          createdBy: a.createdBy || "System",
+          scope: a.scopeType || "ALL_COMPANY",
+          attendees: a.readsCount || 0,
+          rsvpStatus: "INVITED",
+          priority: a.priority || "NORMAL",
+          meetingLink: null,
         }));
         setEvents(mapped);
       }
     } catch (error) {
-      console.error("Error fetching events:", error);
+      console.error("Error fetching announcements:", error);
     } finally {
       setLoading(false);
     }
@@ -111,23 +112,23 @@ export default function MDEvents() {
   useEffect(() => {
     fetchEvents();
 
-    // Setup Realtime SSE
     const token = getAuthToken();
     if (!token) return;
 
-    const eventSource = new EventSource(`/api/tasks/events?token=${token}`);
-
-    eventSource.onmessage = (e) => {
-      const data = JSON.parse(e.data);
-      if (data.type === "task:created" || data.type === "task:updated") {
-        fetchEvents();
-      }
+    // SSE for announcement changes — re-fetch whenever a new announcement is created/updated
+    const annSource = new EventSource(`/api/announcements/events?token=${token}`);
+    annSource.onmessage = (e) => {
+      try {
+        const data = JSON.parse(e.data);
+        if (data.type === "announcement:created" || data.type === "announcement:updated") fetchEvents();
+      } catch { /* ignore */ }
     };
 
-    return () => eventSource.close();
+    return () => annSource.close();
   }, [fetchEvents]);
 
   const now = useMemo(() => new Date(), []);
+  const nowISO = useMemo(() => toISODate(now), [now]);
 
   const filteredEvents = useMemo(() => {
     return events
@@ -135,13 +136,15 @@ export default function MDEvents() {
         const eventDate = safeDate(event.startAt);
         if (!eventDate) return false;
 
-        const matchesView = viewMode === "upcoming" ? eventDate >= now : eventDate < now;
+        // Compare by date-string so events scheduled for today always appear as "upcoming"
+        const eventISO = toISODate(eventDate);
+        const matchesView = viewMode === "upcoming" ? eventISO >= nowISO : eventISO < nowISO;
         const matchesType = selectedType === "all" || event.type === selectedType;
 
         return matchesView && matchesType;
       })
       .sort((a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime());
-  }, [viewMode, selectedType, now, events]);
+  }, [viewMode, selectedType, nowISO, events]);
 
   const listEvents = useMemo(() => {
     if (!selectedDate) return filteredEvents;
@@ -153,7 +156,7 @@ export default function MDEvents() {
 
   const overview = useMemo(() => {
     const total = events.length;
-    const upcoming = events.filter((e) => (safeDate(e.startAt)?.getTime() || 0) >= now.getTime()).length;
+    const upcoming = events.filter((e) => { const d = safeDate(e.startAt); return d ? toISODate(d) >= nowISO : false; }).length;
     const meetings = events.filter((e) => e.type === "MEETING").length;
     const attendees = events.reduce((sum, e) => sum + (e.attendees || 0), 0);
     return { total, upcoming, meetings, attendees };
@@ -253,31 +256,6 @@ export default function MDEvents() {
                   );
                 })}
 
-                <span className="mx-1 w-px bg-gray-200/70 self-stretch hidden sm:block" />
-
-                {/* Type chips */}
-                {[
-                  { key: "all", label: "All Types" },
-                  { key: "MEETING", label: "Meetings" },
-                  { key: "TRAINING", label: "Trainings" },
-                  { key: "EVENT", label: "Events" },
-                ].map((t) => {
-                  const active = selectedType === t.key;
-                  return (
-                    <button
-                      key={t.key}
-                      className={`px-3.5 py-2 rounded-2xl text-sm font-semibold transition ring-1 ${active ? "text-white" : "text-gray-700 bg-gray-50 hover:bg-gray-100"
-                        }`}
-                      style={{
-                        backgroundColor: active ? "var(--primary-blue)" : undefined,
-                        borderColor: active ? "transparent" : "rgba(0,0,0,0.06)",
-                      }}
-                      onClick={() => setSelectedType(t.key)}
-                    >
-                      {t.label}
-                    </button>
-                  );
-                })}
               </div>
 
               {/* Date filter indicator */}
@@ -349,10 +327,9 @@ export default function MDEvents() {
 
               {listEvents.length === 0 ? (
                 <div className="p-10 text-center text-gray-500">
-                  No events found for these filters.
-                  <div className="text-xs mt-2">
-                    (If this is a real app, switch <code>now</code> back to <code>new Date()</code>.)
-                  </div>
+                  <div className="text-3xl mb-3">📅</div>
+                  <div className="font-semibold text-gray-700">{loading ? "Loading events…" : "No upcoming events."}</div>
+                  <div className="text-xs mt-2 text-gray-400">{viewMode === "upcoming" ? "No events or announcements scheduled from today onwards." : "No past events found."}</div>
                 </div>
               ) : (
                 <div className="hidden lg:block overflow-x-auto">
@@ -376,7 +353,7 @@ export default function MDEvents() {
                         <tr
                           key={event.id}
                           className="hover:bg-gray-50/70 transition cursor-pointer"
-                          onClick={() => router.push(`/md-dashboard/event/${event.id}`)}
+                          onClick={() => event.kind === "announcement" ? router.push(`/md-dashboard/announcement/${event.dbId}`) : router.push(`/md-dashboard/event/${event.dbId}`)}
                         >
                           <td className="px-5 py-3">
                             <div className="flex items-start gap-3">
@@ -455,7 +432,9 @@ export default function MDEvents() {
                                 onClick={(e) => {
                                   e.preventDefault();
                                   e.stopPropagation();
-                                  router.push(`/md-dashboard/event/${event.id}`);
+                                  event.kind === "announcement"
+                                    ? router.push(`/md-dashboard/announcement/${event.dbId}`)
+                                    : router.push(`/md-dashboard/event/${event.dbId}`);
                                 }}
                                 className="px-3 py-1.5 rounded-xl text-[12px] font-semibold text-white active:scale-[0.99] transition"
                                 style={{ backgroundColor: "var(--secondary-blue)" }}
@@ -598,7 +577,7 @@ export default function MDEvents() {
                           </button>
                         ) : (
                           <button
-                            onClick={() => router.push(`/md-dashboard/event/${event.id}`)}
+                            onClick={() => event.kind === "announcement" ? router.push(`/md-dashboard/announcement/${event.dbId}`) : router.push(`/md-dashboard/event/${event.dbId}`)}
                             className="text-xs px-3 py-1.5 rounded-xl font-semibold text-white"
                             style={{ backgroundColor: "var(--secondary-blue)" }}
                           >

@@ -4,6 +4,7 @@
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import Layout from "@/components/Layout";
+import { fetchWithAuth } from "@/lib/api";
 import { MDMenuItems } from "@/utils/menus";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
@@ -184,7 +185,7 @@ export default function MDNotifications() {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const res = await fetch("/api/notifications");
+        const res = await fetchWithAuth("/api/notifications");
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Failed to fetch");
 
@@ -236,7 +237,7 @@ export default function MDNotifications() {
   const markAsRead = async (id) => {
     setNotifications(notifications.map((notif) => (notif.id === id ? { ...notif, read: true } : notif)));
     try {
-      await fetch("/api/notifications", {
+      await fetchWithAuth("/api/notifications", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id }),
@@ -249,7 +250,7 @@ export default function MDNotifications() {
   const markAllAsRead = async () => {
     setNotifications(notifications.map((notif) => ({ ...notif, read: true })));
     try {
-      await fetch("/api/notifications", {
+      await fetchWithAuth("/api/notifications", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ markAllRead: true }),

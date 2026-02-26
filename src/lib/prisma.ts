@@ -18,8 +18,8 @@ if (!globalForPrisma.adapter) {
   });
 }
 
-// Force a new instance if the cached one is missing the 'announcementRead' model
-const useCached = globalForPrisma.prisma && (globalForPrisma.prisma as any).document && (globalForPrisma.prisma as any).announcementRead;
+// Force a new instance if the cached one is missing models
+const useCached = globalForPrisma.prisma && (globalForPrisma.prisma as any).document && (globalForPrisma.prisma as any).announcementRead && (globalForPrisma.prisma as any).notification;
 
 export const prisma = useCached ? globalForPrisma.prisma : new PrismaClient({ adapter: globalForPrisma.adapter });
 

@@ -122,6 +122,18 @@ async function main() {
   });
   console.log("Seeded MD user: izuchukwuonuoha6@gmail.com");
 
+  await prisma.user.upsert({
+    where: { email: "izuchukwuonuoha6+HOD@gmail.com" },
+    update: { password: passwordHash, role: "HOD", name: "Tony Junior" },
+    create: {
+      email: "izuchukwuonuoha6+HOD@gmail.com",
+      password: passwordHash,
+      name: "Tony Junior",
+      role: "HOD",
+    },
+  });
+  console.log("Seeded HOD user: izuchukwuonuoha6+HOD@gmail.com");
+
   const demoHash = hashPassword(DEMO_PASSWORD);
   for (const u of HOD_USERS) {
     await prisma.user.upsert({

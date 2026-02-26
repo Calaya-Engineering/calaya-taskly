@@ -19,6 +19,7 @@
   "/api/documents/route": "/api/documents",
   "/api/me/route": "/api/me",
   "/api/notifications/route": "/api/notifications",
+  "/api/profile/me/route": "/api/profile/me",
   "/api/roles/[id]/route": "/api/roles/[id]",
   "/api/roles/route": "/api/roles",
   "/api/tasks/[id]/assign/route": "/api/tasks/[id]/assign",

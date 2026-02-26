@@ -408,6 +408,12 @@
       "namedRegex": "^/api/notifications(?:/)?$"
     },
     {
+      "page": "/api/profile/me",
+      "regex": "^/api/profile/me(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/profile/me(?:/)?$"
+    },
+    {
       "page": "/api/roles",
       "regex": "^/api/roles(?:/)?$",
       "routeKeys": {},

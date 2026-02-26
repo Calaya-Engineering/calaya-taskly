@@ -23,13 +23,13 @@ export default function Login() {
 
   // Demo login credentials
   const demoCredentials = [
-    { email: "md@calaya.com", password: "demo123", role: "MD", route: "/md-dashboard" },
-    { email: "hod@calaya.com", password: "demo123", role: "HOD", route: "/hod-dashboard" },
+    { email: "izuchukwuonuoha6@gmail.com", password: "admin123", role: "MD", route: "/md-dashboard" },
+    { email: "izuchukwuonuoha6+HOD@gmail.com", password: "admin123", role: "HOD", route: "/hod-dashboard" },
     { email: "staff@calaya.com", password: "demo123", role: "Staff", route: "/staff-dashboard" },
     { email: "personnel@calaya.com", password: "demo123", role: "Personnel", route: "/staff-dashboard" },
     { email: "corp@calaya.com", password: "demo123", role: "Corp Member", route: "/staff-dashboard" },
     { email: "secretary@calaya.com", password: "demo123", role: "Secretary", route: "/secretary-dashboard" },
-   
+
   ];
 
   // Show success message if redirected from request access
@@ -79,7 +79,7 @@ export default function Login() {
   };
 
   return (
-      <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: "#2C4B9B" }}>
+    <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: "#2C4B9B" }}>
       {/* Success Notification */}
       {showSuccess && (
         <div className="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg z-50 animate-fade-in">
@@ -95,10 +95,10 @@ export default function Login() {
       {/* Main Container */}
       <div className="w-full max-w-4xl bg-white/95 backdrop-blur-sm rounded-2xl overflow-hidden transition-all duration-300 flex flex-col md:flex-row">
         <div className="h-2 md:hidden bg-[#2C4B9B]"></div>
-        
+
         {/* Left Side - Login Form */}
         <div className="w-full md:w-1/2 p-8 md:p-10">
-          
+
           {/* Logo Section */}
           <div className="text-center mb-10">
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4" style={{ backgroundColor: "#2C4B9B" }}>
@@ -118,7 +118,7 @@ export default function Login() {
               {/* Email Field */}
               <div className="space-y-2">
                 <label className="block text-sm font-semibold"
-                       style={{ color: "#2C4B9B" }}>
+                  style={{ color: "#2C4B9B" }}>
                   Email Address
                 </label>
                 <div className="relative">
@@ -136,7 +136,7 @@ export default function Login() {
                     required
                   />
                   <div className="absolute left-4 top-1/2 transform -translate-y-1/2"
-                       style={{ color: "#6DC6DF" }}>
+                    style={{ color: "#6DC6DF" }}>
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
                     </svg>
@@ -148,11 +148,11 @@ export default function Login() {
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
                   <label className="block text-sm font-semibold"
-                         style={{ color: "#2C4B9B" }}>
+                    style={{ color: "#2C4B9B" }}>
                     Password
                   </label>
                   <Link href="/forgot-password" className="text-sm hover:underline transition-colors"
-                        style={{ color: "#6DC6DF" }}>
+                    style={{ color: "#6DC6DF" }}>
                     Forgot password?
                   </Link>
                 </div>
@@ -171,7 +171,7 @@ export default function Login() {
                     required
                   />
                   <div className="absolute left-4 top-1/2 transform -translate-y-1/2"
-                       style={{ color: "#6DC6DF" }}>
+                    style={{ color: "#6DC6DF" }}>
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
@@ -265,7 +265,7 @@ export default function Login() {
             <p className="text-sm text-gray-600">
               Don't have an account?{' '}
               <Link href="/request-access" className="font-semibold hover:underline transition-colors"
-                 style={{ color: "#2C4B9B" }}>
+                style={{ color: "#2C4B9B" }}>
                 Request access
               </Link>
             </p>
@@ -274,7 +274,7 @@ export default function Login() {
 
         {/* Right Side - Demo Logins */}
         <div className="w-full md:w-1/2 p-8 md:p-10"
-             style={{ backgroundColor: "#1a2c66" }}>
+          style={{ backgroundColor: "#1a2c66" }}>
           <div className="h-full flex flex-col justify-center">
             <h2 className="text-2xl font-bold text-white mb-6 text-center">
               Demo Access
@@ -282,7 +282,7 @@ export default function Login() {
             <p className="text-gray-300 mb-8 text-center">
               Click any role below to instantly login and explore the dashboard
             </p>
-            
+
             <div className="space-y-4">
               {demoCredentials.map((demo, index) => (
                 <button
@@ -292,7 +292,7 @@ export default function Login() {
                 >
                   <div className="flex items-center">
                     <div className="w-10 h-10 rounded-full flex items-center justify-center mr-4"
-                         style={{ backgroundColor: "#ED3237" }}>
+                      style={{ backgroundColor: "#ED3237" }}>
                       <span className="text-white font-bold">
                         {demo.role.charAt(0)}
                       </span>
@@ -301,8 +301,8 @@ export default function Login() {
                       <h3 className="text-white font-semibold">{demo.role}</h3>
                       <p className="text-gray-300 text-sm">{demo.email}</p>
                     </div>
-                    <svg className="w-5 h-5 text-white/50 group-hover:text-white transition-colors" 
-                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-white/50 group-hover:text-white transition-colors"
+                      fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </div>

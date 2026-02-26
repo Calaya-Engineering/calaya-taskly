@@ -1,88 +1,15 @@
 "use client";
 
-// pages/dashboards/HOD/HODAllTasks.jsx
-import { useMemo, useState } from 'react';
+// pages/dashboards/MD/HODAllTasks.jsx
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import { HODMenuItems } from "@/utils/menus";
 import { SearchIcon, getIconByKey, FolderIcon } from "@/lib/icons";
 import { NativeSelect } from "@/components/ui/native-select";
-const tasksData = [
-  {
-    id: 'TASK-2024-00123',
-    title: 'Pipeline Inspection - North Field',
-    department: 'Technical',
-    assignee: 'Alex Johnson',
-    priority: 'HIGH',
-    status: 'IN_PROGRESS',
-    dueDate: '2024-12-20',
-    progress: 75,
-    createdBy: 'HOD - Technical',
-    type: 'TASK',
-  },
-  {
-    id: 'TASK-2024-00124',
-    title: 'Safety Equipment Maintenance',
-    department: 'HSE',
-    assignee: 'Maria Garcia',
-    priority: 'MEDIUM',
-    status: 'PENDING',
-    dueDate: '2024-12-22',
-    progress: 20,
-    createdBy: 'HOD - HSE',
-    type: 'TASK',
-  },
-  {
-    id: 'TASK-2024-00125',
-    title: 'Workshop Tools Calibration',
-    department: 'Workshop',
-    assignee: 'David Chen',
-    priority: 'CRITICAL',
-    status: 'OVERDUE',
-    dueDate: '2024-12-15',
-    progress: 40,
-    createdBy: 'HOD - Workshop',
-    type: 'TASK',
-  },
-  {
-    id: 'TASK-2024-00126',
-    title: 'Monthly Safety Audit Report',
-    department: 'HSE',
-    assignee: 'Emma Wilson',
-    priority: 'HIGH',
-    status: 'COMPLETED',
-    dueDate: '2024-12-10',
-    progress: 100,
-    createdBy: 'HOD - HSE',
-    type: 'TASK',
-  },
-  {
-    id: 'TASK-2024-00127',
-    title: 'Equipment Procurement - Phase 2',
-    department: 'Technical',
-    assignee: 'Michael Brown',
-    priority: 'MEDIUM',
-    status: 'IN_PROGRESS',
-    dueDate: '2024-12-30',
-    progress: 60,
-    createdBy: 'HOD - Technical',
-    type: 'JOB',
-  },
-  {
-    id: 'TASK-2024-00128',
-    title: 'Fire Safety Training Session',
-    department: 'HSE',
-    assignee: 'Sarah Taylor',
-    priority: 'HIGH',
-    status: 'PENDING',
-    dueDate: '2024-12-25',
-    progress: 0,
-    createdBy: 'HOD - HSE',
-    type: 'TASK',
-  },
-];
+import { fetchWithAuth } from "@/lib/api";
 
-
+/* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
 );
@@ -115,39 +42,98 @@ const Pill = ({ children, tone = "default" }) => {
   );
 };
 
-const statusTone = (s) => {
-  if (s === "COMPLETED") return "success";
-  if (s === "IN_PROGRESS") return "default";
-  if (s === "OVERDUE") return "danger";
-  if (s === "PENDING") return "warn";
-  return "default";
-};
+const statusTone = (s) =>
+  s === "COMPLETED" ? "success" : s === "IN_PROGRESS" ? "default" : s === "ON_HOLD" ? "warn" : "default";
 
-const priorityTone = (p) => {
-  if (p === "CRITICAL") return "danger";
-  if (p === "HIGH") return "warn";
-  if (p === "MEDIUM") return "default";
-  if (p === "LOW") return "success";
-  return "default";
-};
-
-const progressTone = (v) => (v >= 80 ? "success" : v >= 50 ? "default" : "warn");
+const priorityTone = (p) =>
+  p === "CRITICAL" ? "danger" : p === "HIGH" ? "warn" : p === "MEDIUM" ? "default" : "success";
 
 const fmtDate = (iso) =>
   new Date(iso).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
 
-const isOverdue = (task) => new Date(task.dueDate).getTime() < Date.now() && task.status !== "COMPLETED";
+const isOverdue = (task) =>
+  task.dueDate && new Date(task.dueDate).getTime() < Date.now() && task.status !== "COMPLETED";
+
+const taskDisplayId = (task) => (task.type === "JOB" ? `JOB-${task.id}` : `TSK-${task.id}`);
+const taskAssigneeLabel = (task) => {
+  const a = task.assignments;
+  if (!a?.length) return "Unassigned";
+  if (a.length === 1) return a[0].user?.name || a[0].user?.email || "—";
+  return `${a.length} assignees`;
+};
+const taskCreatedByLabel = (task) =>
+  task.createdBy?.role || task.createdBy?.name || "—";
 
 export default function HODAllTasks() {
+  const [tasksData, setTasksData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
     department: "all",
     status: "all",
     priority: "all",
+    type: "all",
     search: "",
   });
 
-  const departments = useMemo(() => [...new Set(tasksData.map((t) => t.department))], []);
-  const statuses = ["PENDING", "IN_PROGRESS", "COMPLETED", "OVERDUE"];
+  const fetchTasks = useCallback(async () => {
+    try {
+      const res = await fetchWithAuth("/api/tasks?limit=100");
+      if (res.ok) {
+        const data = await res.json();
+        setTasksData(data);
+      }
+    } catch (e) {
+      console.error("Failed to fetch tasks:", e);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchTasks();
+  }, [fetchTasks]);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function connectSSE() {
+      const res = await fetchWithAuth("/api/tasks/events");
+      if (!res.ok || cancelled) return;
+      const reader = res.body?.getReader();
+      if (!reader) return;
+      const decoder = new TextDecoder();
+      let buffer = "";
+      try {
+        while (!cancelled) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+          const parts = buffer.split("\n\n");
+          buffer = parts.pop() || "";
+          for (const part of parts) {
+            const m = part.match(/^data: (.+)$/m);
+            if (m) {
+              try {
+                const ev = JSON.parse(m[1]);
+                if (ev.type?.startsWith("task:")) fetchTasks();
+              } catch {}
+            }
+          }
+        }
+      } finally {
+        reader.releaseLock();
+      }
+    }
+    connectSSE();
+    return () => {
+      cancelled = true;
+    };
+  }, [fetchTasks]);
+
+  const departments = useMemo(
+    () => [...new Set(tasksData.map((t) => t.department).filter(Boolean))],
+    [tasksData]
+  );
+  const statuses = ["PENDING", "IN_PROGRESS", "ON_HOLD", "COMPLETED"];
   const priorities = ["LOW", "MEDIUM", "HIGH", "CRITICAL"];
 
   const filteredTasks = useMemo(() => {
@@ -157,10 +143,14 @@ export default function HODAllTasks() {
         (filters.department === "all" || task.department === filters.department) &&
         (filters.status === "all" || task.status === filters.status) &&
         (filters.priority === "all" || task.priority === filters.priority) &&
-        (!q || task.title.toLowerCase().includes(q) || task.id.toLowerCase().includes(q));
+        (filters.type === "all" || task.type === filters.type) &&
+        (!q ||
+          task.title?.toLowerCase().includes(q) ||
+          String(task.id).includes(q) ||
+          taskDisplayId(task).toLowerCase().includes(q));
       return matches;
     });
-  }, [filters]);
+  }, [tasksData, filters]);
 
   const summary = useMemo(() => {
     const total = tasksData.length;
@@ -169,10 +159,10 @@ export default function HODAllTasks() {
     const completed = tasksData.filter((t) => t.status === "COMPLETED").length;
     const rate = total ? Math.round((completed / total) * 100) : 0;
     return { total, inProgress, overdue, rate };
-  }, []);
+  }, [tasksData]);
 
   const clearFilters = () =>
-    setFilters({ department: "all", status: "all", priority: "all", search: "" });
+    setFilters({ department: "all", status: "all", priority: "all", type: "all", search: "" });
 
   return (
     <Layout menuItems={HODMenuItems} userRole="HOD">
@@ -191,7 +181,7 @@ export default function HODAllTasks() {
                 <div className="flex flex-wrap items-center gap-2 mb-2">
                   <Pill>Department Tasks</Pill>
                   <Pill tone="success">{summary.rate}% Completion</Pill>
-                  {summary.overdue > 0 ? <Pill tone="danger">{summary.overdue} Overdue</Pill> : <Pill tone="default">No Overdue</Pill>}
+                  {summary.overdue > 0 ? <Pill tone="danger">{summary.overdue} Overdue</Pill> : <Pill tone="default">No Critical Escalations</Pill>}
                 </div>
 
                 <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
@@ -208,7 +198,7 @@ export default function HODAllTasks() {
                     className="w-full sm:w-auto px-5 py-3 rounded-2xl font-semibold active:scale-[0.99] transition"
                     style={{ backgroundColor: "var(--accent-red)", color: "white" }}
                   >
-                    + Assign New Task
+                    + Create Task
                   </button>
                 </Link>
                 <button
@@ -225,7 +215,7 @@ export default function HODAllTasks() {
           {/* Summary mini stats */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3 p-4 md:p-5 bg-white border-t border-gray-200/70">
             {[
-              { label: "Total Tasks", value: summary.total, tone: "default" },
+              { label: "Total Items", value: summary.total, tone: "default" },
               { label: "In Progress", value: summary.inProgress, tone: "default" },
               { label: "Overdue", value: summary.overdue, tone: summary.overdue ? "danger" : "success" },
               { label: "Completion Rate", value: `${summary.rate}%`, tone: "success" },
@@ -247,7 +237,7 @@ export default function HODAllTasks() {
         <Card className="p-6">
           <SectionTitle
             title="Filters"
-            subtitle="Refine results by department, status, priority, and search"
+            subtitle="Refine results by department, status, priority, type, and search"
             action={
               <div className="text-sm text-gray-500">
                 Showing <span className="font-semibold text-gray-800">{filteredTasks.length}</span> of{" "}
@@ -256,7 +246,7 @@ export default function HODAllTasks() {
             }
           />
 
-          <div className="mt-5 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+          <div className="mt-5 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1">Department</label>
               <NativeSelect
@@ -306,6 +296,19 @@ export default function HODAllTasks() {
             </div>
 
             <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Type</label>
+              <NativeSelect
+                className="w-full px-3 py-2.5 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100"
+                value={filters.type}
+                onChange={(e) => setFilters({ ...filters, type: e.target.value })}
+              >
+                <option value="all">All Types</option>
+                <option value="TASK">Task</option>
+                <option value="JOB">Job</option>
+              </NativeSelect>
+            </div>
+
+            <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1">Search</label>
               <div className="relative">
                 <input
@@ -323,6 +326,10 @@ export default function HODAllTasks() {
 
         {/* TABLE (Desktop) + CARDS (Mobile) */}
         <Card className="overflow-hidden">
+          {loading ? (
+            <div className="p-12 text-center text-gray-500">Loading tasks…</div>
+          ) : (
+          <>
           {/* Desktop table */}
           <div className="hidden lg:block overflow-x-auto">
             <table className="min-w-full">
@@ -334,7 +341,6 @@ export default function HODAllTasks() {
                   <th className="px-5 py-3 text-left">Priority</th>
                   <th className="px-5 py-3 text-left">Status</th>
                   <th className="px-5 py-3 text-left">Due</th>
-                  <th className="px-5 py-3 text-left">Progress</th>
                   <th className="px-5 py-3 text-right">Actions</th>
                 </tr>
               </thead>
@@ -343,9 +349,10 @@ export default function HODAllTasks() {
                 {filteredTasks.map((task) => (
                   <tr key={task.id} className="hover:bg-gray-50/70 transition">
                     <td className="px-5 py-3">
+                      {/* inside content */}
                       <div className="flex items-start gap-3">
                         <div
-                          className="w-9 h-9 rounded-2xl flex items-center justify-center  shrink-0"
+                          className="w-9 h-9 rounded-2xl flex items-center justify-center "
                           style={{ backgroundColor: "rgba(109, 198, 223, 0.18)" }}
                         >
                           {getIconByKey(task.type === "JOB" ? "job" : "check", "w-5 h-5")}
@@ -354,7 +361,7 @@ export default function HODAllTasks() {
                         <div className="min-w-0">
                           <div className="flex flex-wrap items-center gap-2">
                             <span className="text-[13px] font-extrabold" style={{ color: "var(--primary-blue)" }}>
-                              {task.id}
+                              {taskDisplayId(task)}
                             </span>
                             <Pill>{task.type}</Pill>
                             {isOverdue(task) ? <Pill tone="danger">Overdue</Pill> : null}
@@ -363,13 +370,13 @@ export default function HODAllTasks() {
                           <p className="text-[13px] font-semibold text-gray-900 mt-1 truncate max-w-[520px]">
                             {task.title}
                           </p>
-                          <p className="text-[11px] text-gray-500 mt-0.5">Created by: {task.createdBy}</p>
+                          <p className="text-[11px] text-gray-500 mt-0.5">Created by: {taskCreatedByLabel(task)}</p>
                         </div>
                       </div>
                     </td>
 
                     <td className="px-5 py-3">
-                      <Pill>{task.department}</Pill>
+                      <Pill>{task.department || "—"}</Pill>
                     </td>
 
                     <td className="px-5 py-3">
@@ -378,10 +385,10 @@ export default function HODAllTasks() {
                           className="w-8 h-8 rounded-2xl flex items-center justify-center text-white font-bold "
                           style={{ backgroundColor: "var(--secondary-blue)" }}
                         >
-                          <span className="text-[12px]">{task.assignee.charAt(0)}</span>
+                          <span className="text-[12px]">{taskAssigneeLabel(task).charAt(0)}</span>
                         </div>
                         <div>
-                          <div className="text-[13px] font-semibold text-gray-900">{task.assignee}</div>
+                          <div className="text-[13px] font-semibold text-gray-900">{taskAssigneeLabel(task)}</div>
                           <div className="text-[11px] text-gray-500">Assignee</div>
                         </div>
                       </div>
@@ -396,27 +403,8 @@ export default function HODAllTasks() {
                     </td>
 
                     <td className="px-5 py-3">
-                      <div className="text-[13px] font-semibold text-gray-900">{fmtDate(task.dueDate)}</div>
+                      <div className="text-[13px] font-semibold text-gray-900">{task.dueDate ? fmtDate(task.dueDate) : "—"}</div>
                       <div className="text-[11px] text-gray-500">Due date</div>
-                    </td>
-
-                    <td className="px-5 py-3">
-                      <div className="flex items-center gap-2">
-                        <div className="w-16 h-2 rounded-full bg-gray-100 overflow-hidden">
-                          <div
-                            className="h-full rounded-full"
-                            style={{
-                              width: `${task.progress}%`,
-                              backgroundColor: task.progress >= 80
-                                ? "#10B981"
-                                : task.progress >= 50
-                                ? "var(--primary-blue)"
-                                : "#F59E0B",
-                            }}
-                          />
-                        </div>
-                        <span className="text-xs font-medium">{task.progress}%</span>
-                      </div>
                     </td>
 
                     <td className="px-5 py-3">
@@ -429,12 +417,14 @@ export default function HODAllTasks() {
                             View
                           </button>
                         </Link>
-                        <button
-                          className="px-3 py-1.5 rounded-xl text-[12px] font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
-                          style={{ borderColor: "rgba(44, 75, 155, 0.35)", color: "var(--primary-blue)" }}
-                        >
-                          Update
-                        </button>
+                        <Link href={`/hod-dashboard/edit-task/${task.id}`}>
+                          <button
+                            className="px-3 py-1.5 rounded-xl text-[12px] font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
+                            style={{ borderColor: "rgba(44, 75, 155, 0.35)", color: "var(--primary-blue)" }}
+                          >
+                            Edit
+                          </button>
+                        </Link>
                       </div>
                     </td>
                   </tr>
@@ -442,6 +432,7 @@ export default function HODAllTasks() {
               </tbody>
             </table>
           </div>
+
 
           {/* Mobile cards */}
           <div className="lg:hidden p-4 space-y-3">
@@ -451,13 +442,13 @@ export default function HODAllTasks() {
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="text-sm font-extrabold" style={{ color: "var(--primary-blue)" }}>
-                        {task.id}
+                        {taskDisplayId(task)}
                       </span>
                       <Pill>{task.type}</Pill>
                       {isOverdue(task) ? <Pill tone="danger">Overdue</Pill> : null}
                     </div>
                     <p className="mt-2 font-semibold text-gray-900">{task.title}</p>
-                    <p className="text-xs text-gray-500 mt-1">Created by: {task.createdBy}</p>
+                    <p className="text-xs text-gray-500 mt-1">Created by: {taskCreatedByLabel(task)}</p>
                   </div>
                   <div
                     className="w-10 h-10 rounded-2xl flex items-center justify-center  shrink-0"
@@ -468,28 +459,15 @@ export default function HODAllTasks() {
                 </div>
 
                 <div className="mt-3 flex flex-wrap gap-2">
-                  <Pill>{task.department}</Pill>
+                  <Pill>{task.department || "—"}</Pill>
                   <Pill tone={priorityTone(task.priority)}>{task.priority}</Pill>
                   <Pill tone={statusTone(task.status)}>{task.status.replace("_", " ")}</Pill>
-                </div>
-
-                <div className="mt-3 flex items-center gap-2">
-                  <div
-                    className="w-9 h-9 rounded-2xl flex items-center justify-center text-white font-bold "
-                    style={{ backgroundColor: "var(--secondary-blue)" }}
-                  >
-                    {task.assignee.charAt(0)}
-                  </div>
-                  <div className="min-w-0">
-                    <div className="text-sm font-semibold text-gray-900 truncate">{task.assignee}</div>
-                    <div className="text-xs text-gray-500">Assignee</div>
-                  </div>
                 </div>
 
                 <div className="mt-3 flex items-center justify-between">
                   <div className="text-sm text-gray-700">
                     <span className="text-xs text-gray-500">Due:</span>{" "}
-                    <span className="font-semibold">{fmtDate(task.dueDate)}</span>
+                    <span className="font-semibold">{task.dueDate ? fmtDate(task.dueDate) : "—"}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Link href={`/hod-dashboard/task/${task.id}`}>
@@ -500,26 +478,27 @@ export default function HODAllTasks() {
                         View
                       </button>
                     </Link>
+                    <Link href={`/hod-dashboard/edit-task/${task.id}`}>
+                      <button
+                        className="px-3.5 py-2 rounded-xl text-sm font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
+                        style={{ borderColor: "rgba(44, 75, 155, 0.35)", color: "var(--primary-blue)" }}
+                      >
+                        Edit
+                      </button>
+                    </Link>
                   </div>
                 </div>
 
-                <div className="mt-3">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-gray-600">Progress</span>
-                    <Pill tone={progressTone(task.progress)}>{task.progress}%</Pill>
+                <div className="mt-3 flex items-center gap-2">
+                  <div
+                    className="w-9 h-9 rounded-2xl flex items-center justify-center text-white font-bold "
+                    style={{ backgroundColor: "var(--secondary-blue)" }}
+                  >
+                    {taskAssigneeLabel(task).charAt(0)}
                   </div>
-                  <div className="mt-2 h-2 rounded-full bg-gray-100 overflow-hidden">
-                    <div
-                      className="h-full rounded-full"
-                      style={{
-                        width: `${task.progress}%`,
-                        backgroundColor: task.progress >= 80
-                          ? "#10B981"
-                          : task.progress >= 50
-                          ? "var(--primary-blue)"
-                          : "#F59E0B",
-                      }}
-                    />
+                  <div className="min-w-0">
+                    <div className="text-sm font-semibold text-gray-900 truncate">{taskAssigneeLabel(task)}</div>
+                    <div className="text-xs text-gray-500">Assignee</div>
                   </div>
                 </div>
               </div>
@@ -566,6 +545,8 @@ export default function HODAllTasks() {
               </div>
             </div>
           </div>
+          </>
+          )}
         </Card>
       </div>
     </Layout>

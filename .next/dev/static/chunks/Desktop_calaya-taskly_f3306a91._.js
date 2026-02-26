@@ -37,14 +37,14 @@ const DEMO_CREDENTIALS = [
         route: "/admin-dashboard"
     },
     {
-        email: "md@calaya.com",
-        password: "demo123",
+        email: "izuchukwuonuoha6@gmail.com",
+        password: "admin123",
         role: "MD",
         route: "/md-dashboard"
     },
     {
-        email: "hod@calaya.com",
-        password: "demo123",
+        email: "izuchukwuonuoha6+HOD@gmail.com",
+        password: "admin123",
         role: "HOD",
         route: "/hod-dashboard"
     },

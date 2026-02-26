@@ -3,7 +3,7 @@
 
 __turbopack_context__.v((parentImport) => {
     return Promise.all([
-  "static/chunks/Desktop_calaya-taskly_src_4e993a5f._.js",
+  "static/chunks/Desktop_calaya-taskly_src_71a58aad._.js",
   "static/chunks/a96cc_72c1d040._.js",
   "static/chunks/Desktop_calaya-taskly_src_views_dashboards_MDDashboard_jsx_e115c6c0._.js"
 ].map((chunk) => __turbopack_context__.l(chunk))).then(() => {

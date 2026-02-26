@@ -12,6 +12,10 @@ import { toast } from "@/lib/toast";
 import { EditIcon, DeleteIcon, PlusIcon, UserIcon } from "@/lib/icons";
 import { Checkbox } from "@/components/ui/checkbox";
 
+const Skeleton = ({ className = "" }) => (
+  <div className={`animate-pulse bg-gray-200 rounded-xl ${className}`} />
+);
+
 export default function AdminUsers() {
   const [users, setUsers] = useState([]);
   const [roles, setRoles] = useState([]);
@@ -173,6 +177,36 @@ export default function AdminUsers() {
     }
   };
 
+  if (loading) {
+    return (
+      <AdminLayout>
+        <div className="max-w-7xl mx-auto space-y-6">
+          <Card className="overflow-hidden">
+            <div className="p-6 md:p-8" style={{ background: "linear-gradient(135deg, rgba(44,75,155,0.10) 0%, rgba(109,198,223,0.18) 50%, rgba(237,50,55,0.06) 100%)" }}>
+              <Skeleton className="h-4 w-32 mb-4" />
+              <Skeleton className="h-8 w-64 mb-3" />
+              <Skeleton className="h-5 w-96" />
+            </div>
+          </Card>
+          <Card className="p-6">
+            <div className="flex justify-between mb-6">
+              <div>
+                <Skeleton className="h-6 w-48 mb-2" />
+                <Skeleton className="h-4 w-72" />
+              </div>
+              <Skeleton className="h-10 w-32" />
+            </div>
+            <div className="space-y-4">
+              {[1, 2, 3, 4, 5].map(i => (
+                <Skeleton key={i} className="h-12 w-full" />
+              ))}
+            </div>
+          </Card>
+        </div>
+      </AdminLayout>
+    );
+  }
+
   return (
     <AdminLayout>
       <div className="max-w-7xl mx-auto space-y-6">
@@ -215,18 +249,16 @@ export default function AdminUsers() {
                 <div className="flex rounded-xl border border-gray-200 overflow-hidden">
                   <button
                     onClick={() => setViewMode("table")}
-                    className={`px-3 py-2 text-sm font-semibold transition ${
-                      viewMode === "table" ? "text-white" : "bg-white text-gray-600 hover:bg-gray-50"
-                    }`}
+                    className={`px-3 py-2 text-sm font-semibold transition ${viewMode === "table" ? "text-white" : "bg-white text-gray-600 hover:bg-gray-50"
+                      }`}
                     style={viewMode === "table" ? { backgroundColor: "var(--primary-blue)" } : {}}
                   >
                     Table
                   </button>
                   <button
                     onClick={() => setViewMode("cards")}
-                    className={`px-3 py-2 text-sm font-semibold transition ${
-                      viewMode === "cards" ? "text-white" : "bg-white text-gray-600 hover:bg-gray-50"
-                    }`}
+                    className={`px-3 py-2 text-sm font-semibold transition ${viewMode === "cards" ? "text-white" : "bg-white text-gray-600 hover:bg-gray-50"
+                      }`}
                     style={viewMode === "cards" ? { backgroundColor: "var(--primary-blue)" } : {}}
                   >
                     Cards
@@ -272,9 +304,7 @@ export default function AdminUsers() {
             subtitle="Create, edit, or remove user accounts. Select rows to bulk delete."
           />
 
-          {loading ? (
-            <p className="text-gray-500 mt-5">Loading...</p>
-          ) : viewMode === "table" ? (
+          {viewMode === "table" ? (
             <div className="mt-5 overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>

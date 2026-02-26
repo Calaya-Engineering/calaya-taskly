@@ -39,7 +39,7 @@ export async function GET(req: NextRequest) {
     } catch (error) {
         console.error("Error fetching notifications:", error);
         return NextResponse.json(
-            { error: "Failed to fetch notifications" },
+            { error: error instanceof Error ? error.message : "Failed to fetch notifications" },
             { status: 500 }
         );
     }

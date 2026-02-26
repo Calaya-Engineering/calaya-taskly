@@ -33,6 +33,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
+
     // 1. Check User database first
     const dbUser = await prisma.user.findUnique({
       where: { email: emailLower },
@@ -53,7 +54,7 @@ export async function POST(req: NextRequest) {
       saveOtp(userInfo.email, otp, userInfo);
 
       if (!process.env.RESEND_API_KEY) {
-        // eslint-disable-next-line no-console
+
         console.log(`OTP for ${userInfo.email}: ${otp} (RESEND_API_KEY not set, email not sent)`);
       } else {
         const { data, error } = await resend.emails.send({
@@ -63,7 +64,7 @@ export async function POST(req: NextRequest) {
           text: `Your one-time verification code is ${otp}. It expires in 5 minutes.`,
         });
         if (error) {
-          // eslint-disable-next-line no-console
+
           console.error("Resend error:", error);
           return NextResponse.json(
             { error: `Email failed: ${error.message}. Check Resend dashboard and domain verification.` },
@@ -108,7 +109,7 @@ export async function POST(req: NextRequest) {
         text: `Your one-time verification code is ${otp}. It expires in 5 minutes.`,
       });
       if (error) {
-        // eslint-disable-next-line no-console
+
         console.error("Resend error:", error);
         return NextResponse.json(
           { error: `Email failed: ${error.message}. Check Resend dashboard and domain verification.` },
@@ -123,9 +124,13 @@ export async function POST(req: NextRequest) {
       route: userInfo.route,
     });
   } catch (error: any) {
-    // eslint-disable-next-line no-console
+
+
+
     console.error("Error in send-otp route:", error);
     return NextResponse.json({ error: error?.message || "Failed to send OTP." }, { status: 500 });
+
   }
+
 }
 

@@ -7,7 +7,12 @@ export type OtpRecord = {
 };
 
 // In-memory OTP store keyed by email. Suitable for demo/dev environments only.
-const store = new Map<string, OtpRecord>();
+const globalForOtp = globalThis as unknown as { __otpStore?: Map<string, OtpRecord> };
+
+if (!globalForOtp.__otpStore) {
+  globalForOtp.__otpStore = new Map<string, OtpRecord>();
+}
+const store = globalForOtp.__otpStore;
 
 export function saveOtp(email: string, otp: string, user: AuthUserInfo, ttlMs = 5 * 60 * 1000) {
   const expiresAt = Date.now() + ttlMs;

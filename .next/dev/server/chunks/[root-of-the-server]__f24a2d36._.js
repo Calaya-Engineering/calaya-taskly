@@ -562,8 +562,8 @@ if (!globalForPrisma.adapter) {
         connectionLimit: ("TURBOPACK compile-time falsy", 0) ? "TURBOPACK unreachable" : 5
     });
 }
-// Force a new instance if the cached one is missing the 'announcementRead' model
-const useCached = globalForPrisma.prisma && globalForPrisma.prisma.document && globalForPrisma.prisma.announcementRead;
+// Force a new instance if the cached one is missing models
+const useCached = globalForPrisma.prisma && globalForPrisma.prisma.document && globalForPrisma.prisma.announcementRead && globalForPrisma.prisma.notification;
 const prisma = useCached ? globalForPrisma.prisma : new __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$generated$2f$prisma$2f$client$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__$3c$locals$3e$__["PrismaClient"]({
     adapter: globalForPrisma.adapter
 });
@@ -693,7 +693,7 @@ async function GET(req) {
     } catch (error) {
         console.error("Error fetching notifications:", error);
         return __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
-            error: "Failed to fetch notifications"
+            error: error instanceof Error ? error.message : "Failed to fetch notifications"
         }, {
             status: 500
         });

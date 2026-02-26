@@ -1,7 +1,8 @@
 "use client";
 
 // pages/dashboards/HOD/HODMyTasks.jsx
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
+import { fetchWithAuth } from "@/lib/api";
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import { HODMenuItems } from "@/utils/menus";
@@ -27,12 +28,12 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "info"
-      ? "bg-blue-50 text-blue-700 ring-blue-100"
-      : "bg-gray-50 text-gray-700 ring-gray-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "info"
+            ? "bg-blue-50 text-blue-700 ring-blue-100"
+            : "bg-gray-50 text-gray-700 ring-gray-100";
 
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
@@ -72,70 +73,73 @@ export default function HODMyTasks() {
     sortBy: "dueDate",
   });
 
-  const myTasks = [
-    {
-      id: 'TASK-2024-00129',
-      title: 'Review Monthly Department Report',
-      department: 'Technical',
-      priority: 'HIGH',
-      status: 'IN_PROGRESS',
-      dueDate: '2024-12-18',
-      progress: 60,
-      assignedBy: 'MD',
-      description: 'Review and approve monthly performance report for Technical department',
-    },
-    {
-      id: 'TASK-2024-00130',
-      title: 'Approve Safety Equipment Purchase',
-      department: 'HSE',
-      priority: 'CRITICAL',
-      status: 'PENDING',
-      dueDate: '2024-12-20',
-      progress: 0,
-      assignedBy: 'HSE Manager',
-      description: 'Review and approve purchase order for new safety equipment',
-    },
-    {
-      id: 'TASK-2024-00131',
-      title: 'Workshop Budget Review',
-      department: 'Workshop',
-      priority: 'MEDIUM',
-      status: 'IN_PROGRESS',
-      dueDate: '2024-12-25',
-      progress: 40,
-      assignedBy: 'Finance',
-      description: 'Review workshop budget and submit recommendations',
-    },
-    {
-      id: 'TASK-2024-00132',
-      title: 'Team Performance Evaluation',
-      department: 'Technical',
-      priority: 'HIGH',
-      status: 'PENDING',
-      dueDate: '2024-12-22',
-      progress: 0,
-      assignedBy: 'HR',
-      description: 'Complete quarterly performance evaluations for team members',
-    },
-    {
-      id: 'TASK-2024-00133',
-      title: 'Training Program Approval',
-      department: 'All',
-      priority: 'MEDIUM',
-      status: 'COMPLETED',
-      dueDate: '2024-12-15',
-      progress: 100,
-      assignedBy: 'Training Manager',
-      description: 'Review and approve new safety training program',
-    },
-  ];
+  const [tasksData, setTasksData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  
+  const fetchTasks = useCallback(async () => {
+    try {
+      const meRes = await fetchWithAuth("/api/me");
+      if (!meRes.ok) return;
+      const me = await meRes.json();
+      
+      const res = await fetchWithAuth(`/api/tasks?assigneeId=${me.id}&limit=100`);
+      if (res.ok) {
+        const data = await res.json();
+        setTasksData(data);
+      }
+    } catch (e) {
+      console.error("Failed to fetch tasks:", e);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchTasks();
+  }, [fetchTasks]);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function connectSSE() {
+      const res = await fetchWithAuth("/api/tasks/events");
+      if (!res.ok || cancelled) return;
+      const reader = res.body?.getReader();
+      if (!reader) return;
+      const decoder = new TextDecoder();
+      let buffer = "";
+      try {
+        while (!cancelled) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+          const parts = buffer.split("\n\n");
+          buffer = parts.pop() || "";
+          for (const part of parts) {
+            const m = part.match(/^data: (.+)$/m);
+            if (m) {
+              try {
+                const ev = JSON.parse(m[1]);
+                if (ev.type?.startsWith("task:")) fetchTasks();
+              } catch {}
+            }
+          }
+        }
+      } finally {
+        reader.releaseLock();
+      }
+    }
+    connectSSE();
+    return () => {
+      cancelled = true;
+    };
+  }, [fetchTasks]);
 
   const summary = useMemo(() => {
-    const total = myTasks.length;
-    const inProgress = myTasks.filter(t => t.status === 'IN_PROGRESS').length;
-    const pending = myTasks.filter(t => t.status === 'PENDING').length;
-    const completed = myTasks.filter(t => t.status === 'COMPLETED').length;
-    const dueSoon = myTasks.filter(t => {
+    const total = tasksData.length;
+    const inProgress = tasksData.filter(t => t.status === 'IN_PROGRESS').length;
+    const pending = tasksData.filter(t => t.status === 'PENDING').length;
+    const completed = tasksData.filter(t => t.status === 'COMPLETED').length;
+    const dueSoon = tasksData.filter(t => {
       const dueDate = new Date(t.dueDate);
       const today = new Date();
       const diffDays = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
@@ -145,7 +149,7 @@ export default function HODMyTasks() {
   }, []);
 
   const filteredTasks = useMemo(() => {
-    let filtered = myTasks.filter(task => {
+    let filtered = tasksData.filter(task => {
       if (filters.status !== 'all' && task.status !== filters.status) return false;
       if (filters.priority !== 'all' && task.priority !== filters.priority) return false;
       return true;
@@ -252,7 +256,7 @@ export default function HODMyTasks() {
             action={
               <div className="text-sm text-gray-500">
                 Showing <span className="font-semibold text-gray-800">{filteredTasks.length}</span> of{" "}
-                <span className="font-semibold text-gray-800">{myTasks.length}</span>
+                <span className="font-semibold text-gray-800">{tasksData.length}</span>
               </div>
             }
           />
@@ -304,14 +308,14 @@ export default function HODMyTasks() {
         {/* Tasks List */}
         <div className="space-y-4">
           {filteredTasks.map((task) => (
-            <Card key={task.id} className="overflow-hidden transition">
+            <Card key={task.type === "JOB" ? `JOB-${task.id}` : `TSK-${task.id}`} className="overflow-hidden transition">
               <div className="p-6">
                 <div className="flex flex-col xl:flex-row xl:items-start xl:justify-between gap-6">
                   {/* Left side - Task Info */}
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-2 mb-3">
                       <code className="text-xs font-mono bg-gray-100 px-2 py-1 rounded" style={{ color: "var(--primary-blue)" }}>
-                        {task.id}
+                        {task.type === "JOB" ? `JOB-${task.id}` : `TSK-${task.id}`}
                       </code>
                       <Pill tone={priorityTone(task.priority)}>{task.priority}</Pill>
                       <Pill tone={statusTone(task.status)}>{task.status.replace('_', ' ')}</Pill>
@@ -324,7 +328,7 @@ export default function HODMyTasks() {
                     <div className="flex flex-wrap items-center gap-4 text-sm">
                       <div className="flex items-center gap-2">
                         <span className="text-gray-500">Assigned By:</span>
-                        <span className="font-semibold">{task.assignedBy}</span>
+                        <span className="font-semibold">{(task.createdBy?.name || task.createdBy?.role || "MD")}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="text-gray-500">Due:</span>
@@ -341,18 +345,18 @@ export default function HODMyTasks() {
                     <div>
                       <div className="flex items-center justify-between text-sm mb-1">
                         <span className="text-gray-600">Progress</span>
-                        <Pill tone={progressTone(task.progress)}>{task.progress}%</Pill>
+                        <Pill tone={progressTone(((task.progress || 0) || 0))}>{((task.progress || 0) || 0)}%</Pill>
                       </div>
                       <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
                         <div
                           className="h-full rounded-full transition-all"
                           style={{
-                            width: `${task.progress}%`,
-                            backgroundColor: task.progress >= 80
+                            width: `${((task.progress || 0) || 0)}%`,
+                            backgroundColor: ((task.progress || 0) || 0) >= 80
                               ? "#10B981"
-                              : task.progress >= 50
-                              ? "var(--primary-blue)"
-                              : "#F59E0B",
+                              : ((task.progress || 0) || 0) >= 50
+                                ? "var(--primary-blue)"
+                                : "#F59E0B",
                           }}
                         />
                       </div>
@@ -360,7 +364,7 @@ export default function HODMyTasks() {
 
                     {/* Actions */}
                     <div className="flex gap-2">
-                      <Link href={`/hod-dashboard/task/${task.id}`} className="flex-1">
+                      <Link href={`/hod-dashboard/task/${task.type === "JOB" ? `JOB-${task.id}` : `TSK-${task.id}`}`} className="flex-1">
                         <button
                           className="w-full px-4 py-2.5 rounded-2xl text-sm font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
                           style={{ borderColor: "rgba(44, 75, 155, 0.35)", color: "var(--primary-blue)" }}
@@ -369,12 +373,14 @@ export default function HODMyTasks() {
                         </button>
                       </Link>
                       {task.status !== 'COMPLETED' && (
-                        <button
-                          className="flex-1 px-4 py-2.5 rounded-2xl text-sm font-semibold text-white active:scale-[0.99] transition"
-                          style={{ backgroundColor: "var(--secondary-blue)" }}
-                        >
-                          Update
-                        </button>
+                        <Link href={`/hod-dashboard/edit-task/${task.type === "JOB" ? `JOB-${task.id}` : `TSK-${task.id}`}`} className="flex-1">
+                          <button
+                            className="w-full px-4 py-2.5 rounded-2xl text-sm font-semibold text-white active:scale-[0.99] transition"
+                            style={{ backgroundColor: "var(--secondary-blue)" }}
+                          >
+                            Update
+                          </button>
+                        </Link>
                       )}
                     </div>
                   </div>
@@ -384,7 +390,7 @@ export default function HODMyTasks() {
               {/* Footer */}
               <div className="px-6 py-3 bg-gray-50/50 border-t border-gray-200/70">
                 <div className="flex items-center justify-between text-xs text-gray-500">
-                  <span>Task ID: {task.id}</span>
+                  <span>Task ID: {task.type === "JOB" ? `JOB-${task.id}` : `TSK-${task.id}`}</span>
                   <span>Department: {task.department}</span>
                 </div>
               </div>
@@ -417,7 +423,7 @@ export default function HODMyTasks() {
               <div>
                 <p className="text-sm text-gray-500">Completion Rate</p>
                 <p className="text-2xl font-extrabold mt-2" style={{ color: "var(--primary-blue)" }}>
-                  {Math.round((summary.completed / summary.total) * 100)}%
+                  {Math.round((summary.total === 0 ? 0 : summary.completed / summary.total) * 100)}%
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-green-50">
@@ -431,7 +437,7 @@ export default function HODMyTasks() {
               <div>
                 <p className="text-sm text-gray-500">Avg Progress</p>
                 <p className="text-2xl font-extrabold mt-2" style={{ color: "var(--primary-blue)" }}>
-                  {Math.round(myTasks.reduce((acc, t) => acc + t.progress, 0) / myTasks.length)}%
+                  {Math.round((tasksData.length === 0 ? 0 : tasksData.reduce((acc, t) => acc + (t.progress || 0), 0) / tasksData.length))}%
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-blue-50">
@@ -445,7 +451,7 @@ export default function HODMyTasks() {
               <div>
                 <p className="text-sm text-gray-500">High Priority</p>
                 <p className="text-2xl font-extrabold mt-2" style={{ color: "var(--primary-blue)" }}>
-                  {myTasks.filter(t => t.priority === 'HIGH' || t.priority === 'CRITICAL').length}
+                  {tasksData.filter(t => t.priority === 'HIGH' || t.priority === 'CRITICAL').length}
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-red-50">
@@ -459,7 +465,7 @@ export default function HODMyTasks() {
               <div>
                 <p className="text-sm text-gray-500">Overdue</p>
                 <p className="text-2xl font-extrabold mt-2" style={{ color: "var(--primary-blue)" }}>
-                  {myTasks.filter(t => new Date(t.dueDate) < new Date() && t.status !== 'COMPLETED').length}
+                  {tasksData.filter(t => new Date(t.dueDate) < new Date() && t.status !== 'COMPLETED').length}
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-amber-50">

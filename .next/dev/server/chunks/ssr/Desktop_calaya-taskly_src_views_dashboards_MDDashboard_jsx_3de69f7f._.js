@@ -3,7 +3,7 @@ module.exports = [
 
 __turbopack_context__.v((parentImport) => {
     return Promise.all([
-  "server/chunks/ssr/Desktop_calaya-taskly_src_a21919d7._.js",
+  "server/chunks/ssr/Desktop_calaya-taskly_src_6713d68f._.js",
   "server/chunks/ssr/a96cc_61364f80._.js"
 ].map((chunk) => __turbopack_context__.l(chunk))).then(() => {
         return parentImport("[project]/Desktop/calaya-taskly/src/views/dashboards/MDDashboard.jsx [app-ssr] (ecmascript, next/dynamic entry)");

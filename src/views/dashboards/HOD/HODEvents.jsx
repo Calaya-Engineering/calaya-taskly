@@ -66,10 +66,10 @@ const fmtTime = (iso) => {
   return d ? d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "--:--";
 };
 
-const typeTone = (t) => (t === "MEETING" ? "info" : t === "TRAINING" ? "success" : t === "EVENT" ? "warn" : "default");
+const typeTone = (t) => (t === "MEETING" ? "info" : t === "TRAINING" ? "success" : t === "EVENT" ? "warn" : t === "ANNOUNCEMENT" ? "warn" : "default");
 const rsvpTone = (s) => (s === "ACCEPTED" ? "success" : s === "TENTATIVE" ? "warn" : s === "DECLINED" ? "danger" : "default");
 
-const typeEmoji = (t) => (t === "MEETING" ? "👥" : t === "TRAINING" ? "🎓" : t === "EVENT" ? "🎉" : "📅");
+const typeEmoji = (t) => (t === "MEETING" ? "👥" : t === "TRAINING" ? "🎓" : t === "EVENT" ? "🎉" : t === "ANNOUNCEMENT" ? "📣" : "📅");
 
 export default function HODEvents() {
   const router = useRouter();
@@ -86,33 +86,31 @@ export default function HODEvents() {
 
   const fetchEvents = useCallback(async () => {
     try {
-      const resp = await fetchWithAuth("/api/tasks?type=MEETING,TRAINING,EVENT&limit=100");
-      if (resp.ok) {
-        const data = await resp.json();
-        const mapped = data.tasks.map(t => {
-          let meetingLink = "";
-          const linkMatch = t.description?.match(/https?:\/\/[^\s]+/);
-          if (linkMatch) meetingLink = linkMatch[0];
+      const annResp = await fetchWithAuth("/api/announcements?limit=100");
 
-          return {
-            id: t.id,
-            title: t.title,
-            description: t.description,
-            type: t.type,
-            location: t.location || "N/A",
-            meetingLink,
-            startAt: t.startDate || t.createdAt,
-            endAt: t.dueDate || t.startDate || t.createdAt,
-            createdBy: (t.creator?.name || t.creator?.email) || "System",
-            department: t.department || "All Company",
-            attendees: t.assignments?.length || 0,
-            rsvpStatus: "ACCEPTED", // Mocked as not in task API
-          };
-        });
+      if (annResp.ok) {
+        const announcements = await annResp.json();
+        const mapped = (Array.isArray(announcements) ? announcements : []).map(a => ({
+          id: `ann-${a.id}`,
+          dbId: a.id,
+          kind: "announcement",
+          title: a.title,
+          description: a.description || a.message || "",
+          type: "ANNOUNCEMENT",
+          location: "Company-Wide",
+          meetingLink: "",
+          startAt: a.date || a.createdAt,
+          endAt: a.date || a.createdAt,
+          createdBy: a.createdBy || "System",
+          department: a.department || "All Company",
+          attendees: a.readsCount || 0,
+          rsvpStatus: "INVITED",
+          priority: a.priority || "NORMAL",
+        }));
         setEvents(mapped);
       }
     } catch (err) {
-      console.error("Fetch events failed", err);
+      console.error("Fetch announcements failed", err);
     } finally {
       setLoading(false);
     }
@@ -121,17 +119,22 @@ export default function HODEvents() {
   useEffect(() => {
     fetchEvents();
     const token = getAuthToken();
-    const eventSource = new EventSource(`/api/tasks/events?token=${token}`);
-    eventSource.onmessage = (e) => {
-      const data = JSON.parse(e.data);
-      if (data.type === "task:created" || data.type === "task:updated") {
-        fetchEvents();
-      }
+    if (!token) return;
+
+    // SSE for announcement changes — re-fetch whenever a new announcement is created/updated
+    const annSource = new EventSource(`/api/announcements/events?token=${token}`);
+    annSource.onmessage = (e) => {
+      try {
+        const data = JSON.parse(e.data);
+        if (data.type === "announcement:created" || data.type === "announcement:updated") fetchEvents();
+      } catch { /* ignore */ }
     };
-    return () => eventSource.close();
+
+    return () => annSource.close();
   }, [fetchEvents]);
 
   const now = useMemo(() => new Date(), []);
+  const nowISO = useMemo(() => toISODate(now), [now]);
 
   const departments = useMemo(() => ['all', ...new Set(events.map(e => e.department))], [events]);
 
@@ -141,14 +144,16 @@ export default function HODEvents() {
         const eventDate = safeDate(event.startAt);
         if (!eventDate) return false;
 
-        const matchesView = viewMode === 'upcoming' ? eventDate >= now : eventDate < now;
+        // Compare by date-string so events on today always appear as "upcoming"
+        const eventISO = toISODate(eventDate);
+        const matchesView = viewMode === 'upcoming' ? eventISO >= nowISO : eventISO < nowISO;
         const matchesType = selectedType === 'all' || event.type === selectedType;
         const matchesDept = departmentFilter === 'all' || event.department === departmentFilter;
 
         return matchesView && matchesType && matchesDept;
       })
       .sort((a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime());
-  }, [events, viewMode, selectedType, departmentFilter, now]);
+  }, [events, viewMode, selectedType, departmentFilter, nowISO]);
 
   const listEvents = useMemo(() => {
     if (!selectedDate) return filteredEvents;
@@ -160,11 +165,11 @@ export default function HODEvents() {
 
   const overview = useMemo(() => {
     const total = events.length;
-    const upcoming = events.filter((e) => (safeDate(e.startAt)?.getTime() || 0) >= now.getTime()).length;
+    const upcoming = events.filter((e) => { const d = safeDate(e.startAt); return d ? toISODate(d) >= nowISO : false; }).length;
     const meetings = events.filter((e) => e.type === 'MEETING').length;
     const attendees = events.reduce((sum, e) => sum + (e.attendees || 0), 0);
     return { total, upcoming, meetings, attendees };
-  }, [events, now]);
+  }, [events, nowISO]);
 
   const todayISO = useMemo(() => toISODate(now), [now]);
   const todaysEvents = useMemo(
@@ -253,32 +258,6 @@ export default function HODEvents() {
                       onClick={() => setViewMode(v.key)}
                     >
                       {v.label}
-                    </button>
-                  );
-                })}
-
-                <span className="mx-1 w-px bg-gray-200/70 self-stretch hidden sm:block" />
-
-                {/* Type chips */}
-                {[
-                  { key: "all", label: "All Types" },
-                  { key: "MEETING", label: "Meetings" },
-                  { key: "TRAINING", label: "Trainings" },
-                  { key: "EVENT", label: "Events" },
-                ].map((t) => {
-                  const active = selectedType === t.key;
-                  return (
-                    <button
-                      key={t.key}
-                      className={`px-3.5 py-2 rounded-2xl text-sm font-semibold transition ring-1 ${active ? "text-white" : "text-gray-700 bg-gray-50 hover:bg-gray-100"
-                        }`}
-                      style={{
-                        backgroundColor: active ? "var(--primary-blue)" : undefined,
-                        borderColor: active ? "transparent" : "rgba(0,0,0,0.06)",
-                      }}
-                      onClick={() => setSelectedType(t.key)}
-                    >
-                      {t.label}
                     </button>
                   );
                 })}
@@ -390,7 +369,7 @@ export default function HODEvents() {
                         <tr
                           key={event.id}
                           className="hover:bg-gray-50/70 transition cursor-pointer"
-                          onClick={() => router.push(`/hod-dashboard/event/${event.id}`)}
+                          onClick={() => event.kind === "announcement" ? router.push(`/hod-dashboard/announcement/${event.dbId}`) : router.push(`/hod-dashboard/event/${event.dbId}`)}
                         >
                           <td className="px-5 py-3">
                             <div className="flex items-start gap-3">
@@ -469,7 +448,9 @@ export default function HODEvents() {
                                 onClick={(e) => {
                                   e.preventDefault();
                                   e.stopPropagation();
-                                  router.push(`/hod-dashboard/event/${event.id}`);
+                                  event.kind === "announcement"
+                                    ? router.push(`/hod-dashboard/announcement/${event.dbId}`)
+                                    : router.push(`/hod-dashboard/event/${event.dbId}`);
                                 }}
                                 className="px-3 py-1.5 rounded-xl text-[12px] font-semibold text-white active:scale-[0.99] transition"
                                 style={{ backgroundColor: "var(--secondary-blue)" }}
@@ -611,7 +592,7 @@ export default function HODEvents() {
                           </button>
                         ) : (
                           <button
-                            onClick={() => router.push(`/hod-dashboard/event/${event.id}`)}
+                            onClick={() => event.kind === "announcement" ? router.push(`/hod-dashboard/announcement/${event.dbId}`) : router.push(`/hod-dashboard/event/${event.dbId}`)}
                             className="text-xs px-3 py-1.5 rounded-xl font-semibold text-white"
                             style={{ backgroundColor: "var(--secondary-blue)" }}
                           >
