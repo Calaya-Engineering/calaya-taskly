@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { emitTaskEvent } from "@/lib/task-events";
+import { createNotification } from "@/lib/notifications";
 
 /**
  * POST /api/tasks/[id]/assign - Assign user(s) to a task.
@@ -59,6 +60,13 @@ export async function POST(
     for (const uid of userIds) {
       emitTaskEvent({ type: "task:assigned", taskId, userId: uid });
     }
+
+    createNotification({
+      actorEmail: auth.email,
+      actionType: 'ASSIGN_TASK',
+      targetId: taskId,
+      message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) assigned a task.`
+    });
 
     return NextResponse.json({
       success: true,

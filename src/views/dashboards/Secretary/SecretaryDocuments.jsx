@@ -5,6 +5,8 @@ import { useState, useEffect } from 'react';
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import { SecretaryMenuItems } from "@/utils/menus";
+import { toast } from "@/lib/toast";
+import { getAuthToken } from "@/lib/api";
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
 );
@@ -26,14 +28,14 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "info"
-      ? "bg-blue-50 text-blue-700 ring-blue-100"
-      : tone === "purple"
-      ? "bg-purple-50 text-purple-700 ring-purple-100"
-      : "bg-gray-50 text-gray-700 ring-gray-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "info"
+            ? "bg-blue-50 text-blue-700 ring-blue-100"
+            : tone === "purple"
+              ? "bg-purple-50 text-purple-700 ring-purple-100"
+              : "bg-gray-50 text-gray-700 ring-gray-100";
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
       {children}
@@ -272,7 +274,13 @@ export default function SecretaryDocuments() {
   });
 
   const handleDownload = (doc) => {
-    toast.info(`Downloading: ${doc.title}\nCategory: ${doc.category}\nScope: ${doc.scope}`);
+    if (!doc.id) {
+      toast.info("No file available for download");
+      return;
+    }
+    const token = getAuthToken();
+    const url = `/api/documents/${doc.id}/download${token ? `?token=${token}` : ""}`;
+    window.open(url, "_blank");
   };
 
   const getScopeTone = (scope) => {
@@ -812,7 +820,7 @@ export default function SecretaryDocuments() {
                   const monthUploads = documents.filter(d => {
                     const date = new Date(d.uploadDate);
                     return date.getMonth() === ['Oct', 'Nov', 'Dec'].indexOf(month.split(' ')[0]) &&
-                           date.getFullYear() === 2024;
+                      date.getFullYear() === 2024;
                   }).length;
                   const maxUploads = 8;
                   const percentage = (monthUploads / maxUploads) * 100;
@@ -980,7 +988,7 @@ export default function SecretaryDocuments() {
                       Document File
                     </h4>
                     <div className="border-2 border-dashed rounded-xl p-8 text-center hover:border-blue-500 transition-colors"
-                         style={{ borderColor: "rgba(109, 198, 223, 0.3)" }}>
+                      style={{ borderColor: "rgba(109, 198, 223, 0.3)" }}>
                       <input
                         type="file"
                         id="document-file-upload"
@@ -989,7 +997,7 @@ export default function SecretaryDocuments() {
                       />
                       <label htmlFor="document-file-upload" className="cursor-pointer">
                         <div className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center "
-                             style={{ backgroundColor: "rgba(109, 198, 223, 0.18)" }}>
+                          style={{ backgroundColor: "rgba(109, 198, 223, 0.18)" }}>
                           <span className="text-3xl">📎</span>
                         </div>
                         {uploadFormData.file ? (
@@ -1111,9 +1119,8 @@ export default function SecretaryDocuments() {
                     <button
                       type="submit"
                       disabled={isUploading}
-                      className={`px-6 py-3 rounded-xl font-semibold text-white transition active:scale-[0.99] ${
-                        isUploading ? 'opacity-75 cursor-not-allowed' : ''
-                      }`}
+                      className={`px-6 py-3 rounded-xl font-semibold text-white transition active:scale-[0.99] ${isUploading ? 'opacity-75 cursor-not-allowed' : ''
+                        }`}
                       style={{ backgroundColor: 'var(--accent-red)' }}
                     >
                       {isUploading ? 'Uploading...' : 'Upload Document'}

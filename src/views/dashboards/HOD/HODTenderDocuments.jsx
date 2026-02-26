@@ -3,9 +3,11 @@
 // pages/dashboards/HOD/HODTenderDocuments.jsx
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { HODMenuItems } from "@/utils/menus";
+import { toast } from "@/lib/toast";
+import { fetchWithAuth } from "@/lib/api";
 const MANAGED_DEPARTMENTS = ["Technical", "Workshop", "HSE"];
 
 const STORAGE_KEYS = {
@@ -22,14 +24,14 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "purple"
-      ? "bg-purple-50 text-purple-700 ring-purple-100"
-      : tone === "info"
-      ? "bg-blue-50 text-blue-700 ring-blue-100"
-      : "bg-gray-50 text-gray-700 ring-gray-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "purple"
+            ? "bg-purple-50 text-purple-700 ring-purple-100"
+            : tone === "info"
+              ? "bg-blue-50 text-blue-700 ring-blue-100"
+              : "bg-gray-50 text-gray-700 ring-gray-100";
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
       {children}
@@ -60,6 +62,7 @@ const EmptyState = ({ icon, title, subtitle }) => (
 export default function HODTenderDocuments() {
   const params = useParams() || {};
   const tenderId = params.tenderId;
+  const router = useRouter();
   const [selectedTender, setSelectedTender] = useState(null);
   const [comment, setComment] = useState("");
   const [activeTab, setActiveTab] = useState("documents");
@@ -76,156 +79,40 @@ export default function HODTenderDocuments() {
     description: "",
   });
 
-  const tenders = [
-    {
-      id: "TEN-001",
-      title: "Supply of Pipeline Inspection Equipment",
-      referenceNo: "CAL/PROC/2024/001",
-      department: "Technical",
-      status: "OPEN",
-      closingDate: "2024-12-20",
-      documents: 8,
-      submissions: 4,
-    },
-    {
-      id: "TEN-002",
-      title: "Annual Safety Training Services",
-      referenceNo: "CAL/HSE/2024/002",
-      department: "HSE",
-      status: "OPEN",
-      closingDate: "2024-12-22",
-      documents: 6,
-      submissions: 3,
-    },
-    {
-      id: "TEN-003",
-      title: "Workshop Equipment Maintenance",
-      referenceNo: "CAL/WORK/2024/004",
-      department: "Workshop",
-      status: "OPEN",
-      closingDate: "2024-12-18",
-      documents: 5,
-      submissions: 2,
-    },
-    {
-      id: "TEN-004",
-      title: "IT Infrastructure Upgrade",
-      referenceNo: "CAL/IT/2024/003",
-      department: "IT",
-      status: "OPEN",
-      closingDate: "2024-12-25",
-      documents: 9,
-      submissions: 5,
-    },
-    {
-      id: "TEN-005",
-      title: "Office Furniture Supply",
-      referenceNo: "CAL/ADMIN/2024/007",
-      department: "Admin",
-      status: "OPEN",
-      closingDate: "2024-12-21",
-      documents: 4,
-      submissions: 3,
-    },
-    {
-      id: "TEN-006",
-      title: "Legal Advisory Services",
-      referenceNo: "CAL/LEG/2024/006",
-      department: "Legal",
-      status: "CLOSED",
-      closingDate: "2024-12-10",
-      documents: 7,
-      submissions: 6,
-    },
-    {
-      id: "TEN-007",
-      title: "Vehicle Fleet Maintenance",
-      referenceNo: "CAL/LOG/2024/005",
-      department: "Logistics",
-      status: "AWARDED",
-      closingDate: "2024-12-15",
-      documents: 5,
-      submissions: 4,
-    },
-  ];
+  const [tenders, setTenders] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const [tenderDocuments, setTenderDocuments] = useState([
-    {
-      id: 1,
-      tenderId: "TEN-001",
-      title: "Tender Document - Pipeline Equipment",
-      fileName: "Tender_Document_Pipeline.pdf",
-      uploadedBy: "Procurement Department",
-      uploadedByRole: "Procurement",
-      uploadedDate: "2024-12-01",
-      fileSize: "2.4 MB",
-      fileType: "PDF",
-      category: "Tender Document",
-      downloads: 24,
-      status: "active",
-      department: "Technical",
-      comments: [
-        { id: 1, user: "MD - Managing Director", comment: "Please ensure all technical specs are included", date: "2024-12-02 10:30", role: "MD" },
-        { id: 2, user: "Procurement Manager", comment: "Technical specs have been added", date: "2024-12-02 14:15", role: "HOD" },
-      ],
-    },
-    {
-      id: 2,
-      tenderId: "TEN-001",
-      title: "Technical Specifications",
-      fileName: "Technical_Specifications_Pipeline.pdf",
-      uploadedBy: "Technical Department",
-      uploadedByRole: "HOD",
-      uploadedDate: "2024-12-02",
-      fileSize: "3.1 MB",
-      fileType: "PDF",
-      category: "Specification",
-      downloads: 18,
-      status: "active",
-      department: "Technical",
-      comments: [
-        { id: 3, user: "MD - Managing Director", comment: "Approved. Ensure ISO standards are met.", date: "2024-12-03 09:45", role: "MD" },
-      ],
-    },
-    {
-      id: 3,
-      tenderId: "TEN-001",
-      title: "Vendor Bid - TechEquip Ltd",
-      fileName: "Bid_TechEquip_Pipeline.pdf",
-      uploadedBy: "TechEquip Ltd",
-      uploadedByRole: "Vendor",
-      uploadedDate: "2024-12-15",
-      fileSize: "5.2 MB",
-      fileType: "PDF",
-      category: "Bid Submission",
-      downloads: 8,
-      status: "active",
-      department: "Technical",
-      comments: [],
-    },
-    {
-      id: 4,
-      tenderId: "TEN-002",
-      title: "Safety Training Tender Document",
-      fileName: "Safety_Training_Tender.pdf",
-      uploadedBy: "HSE Department",
-      uploadedByRole: "HOD",
-      uploadedDate: "2024-12-02",
-      fileSize: "1.8 MB",
-      fileType: "PDF",
-      category: "Tender Document",
-      downloads: 15,
-      status: "active",
-      department: "HSE",
-      comments: [],
-    },
-  ]);
+  useEffect(() => {
+    async function getTenders() {
+      try {
+        const res = await fetchWithAuth("/api/tenders");
+        if (res.ok) {
+          const data = await res.json();
+          setTenders(data);
+          if (tenderId) {
+            const found = data.find(t => t.id === tenderId);
+            if (found) setSelectedTender(found);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch tenders:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    getTenders();
+  }, [tenderId]);
 
-  const [allComments, setAllComments] = useState([
-    { id: 1, tenderId: "TEN-001", documentId: 1, user: "MD - Managing Director", comment: "Please ensure all technical specs are included", date: "2024-12-02 10:30", role: "MD" },
-    { id: 2, tenderId: "TEN-001", documentId: 1, user: "Procurement Manager", comment: "Technical specs have been added", date: "2024-12-02 14:15", role: "HOD" },
-    { id: 3, tenderId: "TEN-001", documentId: 2, user: "MD - Managing Director", comment: "Approved. Ensure ISO standards are met.", date: "2024-12-03 09:45", role: "MD" },
-  ]);
+  const tenderDocuments = useMemo(() => {
+    return selectedTender?.documents || [];
+  }, [selectedTender]);
+
+  const updateTenderDocuments = (newDocs) => {
+    setSelectedTender(prev => prev ? { ...prev, documents: newDocs } : null);
+    setTenders(prev => prev.map(t => t.id === selectedTender?.id ? { ...t, documents: newDocs } : t));
+  };
+
+  const [allComments, setAllComments] = useState([]);
 
   useEffect(() => {
     const saved = sessionStorage.getItem(STORAGE_KEYS.COMMENT_DRAFT);
@@ -237,11 +124,6 @@ export default function HODTenderDocuments() {
     else sessionStorage.removeItem(STORAGE_KEYS.COMMENT_DRAFT);
   }, [comment]);
 
-  useEffect(() => {
-    if (!tenderId) return;
-    const found = tenders.find((t) => t.id === tenderId);
-    if (found) setSelectedTender(found);
-  }, [tenderId]);
 
   const departments = useMemo(() => ["all", ...Array.from(new Set(tenders.map((t) => t.department)))], []);
 
@@ -258,14 +140,12 @@ export default function HODTenderDocuments() {
   }, [searchTerm, statusFilter, departmentFilter]);
 
   const documentsForSelectedTender = useMemo(() => {
-    return selectedTender ? tenderDocuments.filter((doc) => doc.tenderId === selectedTender.id) : [];
-  }, [selectedTender, tenderDocuments]);
+    return selectedTender?.documents || [];
+  }, [selectedTender]);
 
   const submissionsForSelectedTender = useMemo(() => {
-    return selectedTender
-      ? tenderDocuments.filter((doc) => doc.tenderId === selectedTender.id && doc.category === "Bid Submission")
-      : [];
-  }, [selectedTender, tenderDocuments]);
+    return (selectedTender?.documents || []).filter((doc) => doc.category === "Bid Submission" || (doc.type === "SUBMISSION"));
+  }, [selectedTender]);
 
   const handleSelectTender = (tender) => {
     setSelectedTender(tender);
@@ -280,7 +160,8 @@ export default function HODTenderDocuments() {
     const docToDelete = tenderDocuments.find((doc) => doc.id === documentId);
     if (docToDelete && docToDelete.uploadedByRole === "HOD" && MANAGED_DEPARTMENTS.includes(docToDelete.department)) {
       if (window.confirm("Are you sure you want to delete this document?")) {
-        setTenderDocuments(tenderDocuments.filter((doc) => doc.id !== documentId));
+        const newDocs = tenderDocuments.filter((doc) => doc.id !== documentId);
+        updateTenderDocuments(newDocs);
         toast.success("Document deleted successfully");
       }
     } else {
@@ -307,13 +188,12 @@ export default function HODTenderDocuments() {
     };
 
     setAllComments((p) => [...p, newComment]);
-    setTenderDocuments((prev) =>
-      prev.map((doc) =>
-        doc.id === documentId
-          ? { ...doc, comments: [...(doc.comments || []), newComment] }
-          : doc
-      )
+    const newDocs = tenderDocuments.map((doc) =>
+      doc.id === documentId
+        ? { ...doc, comments: [...(doc.comments || []), newComment] }
+        : doc
     );
+    updateTenderDocuments(newDocs);
     setComment("");
   };
 
@@ -362,14 +242,15 @@ export default function HODTenderDocuments() {
             uploadedByRole: "HOD",
             uploadedDate: new Date().toISOString().split("T")[0],
             fileSize: uploadFormData.fileSize,
-            fileType: uploadFormData.fileType,
+            fileType: uploadFormData.fileType || "PDF",
             category: uploadFormData.category,
             downloads: 0,
             status: "active",
             department: selectedTender.department,
             comments: [],
           };
-          setTenderDocuments([...tenderDocuments, newDocument]);
+          const newDocs = [...tenderDocuments, newDocument];
+          updateTenderDocuments(newDocs);
           setIsUploading(false);
           toast.success("Document uploaded successfully!");
           setIsUploadModalOpen(false);
@@ -509,9 +390,8 @@ export default function HODTenderDocuments() {
                     <button
                       key={b.id}
                       onClick={() => setStatusFilter(b.id)}
-                      className={`px-3 py-2 rounded-2xl text-xs font-semibold border transition active:scale-[0.99] ${
-                        statusFilter === b.id ? "bg-white" : "bg-gray-50 hover:bg-gray-100"
-                      }`}
+                      className={`px-3 py-2 rounded-2xl text-xs font-semibold border transition active:scale-[0.99] ${statusFilter === b.id ? "bg-white" : "bg-gray-50 hover:bg-gray-100"
+                        }`}
                       style={{
                         borderColor: statusFilter === b.id ? "rgba(44,75,155,0.35)" : "#e5e7eb",
                         color: statusFilter === b.id ? "var(--primary-blue)" : "#374151",
@@ -524,7 +404,12 @@ export default function HODTenderDocuments() {
               </div>
 
               <div className="mt-5 space-y-3 max-h-[600px] overflow-y-auto pr-1">
-                {filteredTenders.map((tender) => {
+                {loading ? (
+                  <div className="py-10 flex flex-col items-center justify-center">
+                    <div className="w-8 h-8 border-3 border-blue-100 border-t-blue-600 rounded-full animate-spin mb-2"></div>
+                    <p className="text-xs text-gray-500 font-semibold">Fetching tenders...</p>
+                  </div>
+                ) : filteredTenders.map((tender) => {
                   const selected = selectedTender?.id === tender.id;
                   const isMyDept = MANAGED_DEPARTMENTS.includes(tender.department);
 
@@ -532,9 +417,8 @@ export default function HODTenderDocuments() {
                     <button
                       key={tender.id}
                       onClick={() => handleSelectTender(tender)}
-                      className={`w-full text-left p-4 rounded-2xl border transition ${
-                        selected ? "bg-blue-50 border-blue-200" : "bg-white hover:bg-gray-50 border-gray-200/70"
-                      }`}
+                      className={`w-full text-left p-4 rounded-2xl border transition ${selected ? "bg-blue-50 border-blue-200" : "bg-white hover:bg-gray-50 border-gray-200/70"
+                        }`}
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
@@ -550,8 +434,8 @@ export default function HODTenderDocuments() {
                       </div>
 
                       <div className="mt-2 flex items-center justify-between text-xs text-gray-500">
-                        <span>📄 {tender.documents} docs</span>
-                        <span>📥 {tender.submissions} bids</span>
+                        <span>📄 {tender.documents?.length || 0} docs</span>
+                        <span>📥 {tender.submissions || 0} bids</span>
                         <span>⏰ {tender.closingDate}</span>
                       </div>
                     </button>
@@ -563,7 +447,12 @@ export default function HODTenderDocuments() {
 
           {/* RIGHT: CONTENT */}
           <div className="lg:col-span-2 space-y-6">
-            {selectedTender ? (
+            {loading ? (
+              <Card className="p-10 flex flex-col items-center justify-center">
+                <div className="w-10 h-10 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin mb-4"></div>
+                <p className="text-gray-500 font-semibold tracking-wide">Loading workspace...</p>
+              </Card>
+            ) : selectedTender ? (
               <>
                 {/* Tender header */}
                 <Card className="overflow-hidden">
@@ -618,9 +507,8 @@ export default function HODTenderDocuments() {
                       <button
                         key={t.id}
                         onClick={() => setActiveTab(t.id)}
-                        className={`px-6 py-4 text-sm font-semibold transition ${
-                          activeTab === t.id ? "text-blue-700" : "text-gray-500 hover:text-gray-700"
-                        }`}
+                        className={`px-6 py-4 text-sm font-semibold transition ${activeTab === t.id ? "text-blue-700" : "text-gray-500 hover:text-gray-700"
+                          }`}
                         style={{
                           borderBottom: activeTab === t.id ? "2px solid var(--primary-blue)" : "2px solid transparent",
                         }}
@@ -1061,9 +949,8 @@ export default function HODTenderDocuments() {
                     <button
                       type="submit"
                       disabled={isUploading}
-                      className={`px-6 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition ${
-                        isUploading ? "opacity-75 cursor-not-allowed" : ""
-                      }`}
+                      className={`px-6 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition ${isUploading ? "opacity-75 cursor-not-allowed" : ""
+                        }`}
                       style={{ backgroundColor: "var(--accent-red)" }}
                     >
                       {isUploading ? "Uploading..." : "Upload Document"}

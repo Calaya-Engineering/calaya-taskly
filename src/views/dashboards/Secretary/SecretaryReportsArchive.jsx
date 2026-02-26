@@ -1,10 +1,12 @@
 "use client";
 
 // pages/dashboards/Secretary/SecretaryReportsArchive.jsx
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import { SecretaryMenuItems } from "@/utils/menus";
+import { fetchWithAuth } from "@/lib/api";
+import { toast } from "@/lib/toast";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -27,14 +29,14 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "info"
-      ? "bg-blue-50 text-blue-700 ring-blue-100"
-      : tone === "purple"
-      ? "bg-purple-50 text-purple-700 ring-purple-100"
-      : "bg-gray-50 text-gray-700 ring-gray-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "info"
+            ? "bg-blue-50 text-blue-700 ring-blue-100"
+            : tone === "purple"
+              ? "bg-purple-50 text-purple-700 ring-purple-100"
+              : "bg-gray-50 text-gray-700 ring-gray-100";
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
       {children}
@@ -49,50 +51,10 @@ const btnSolid = `${btnBase} text-white`;
 const inputBase =
   "w-full px-4 py-3 rounded-2xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100";
 
-// All users who submit daily reports
-const REPORT_USERS = [
-  { id: 1, name: 'John Doe', department: 'Technical', role: 'Staff' },
-  { id: 2, name: 'Alex Johnson', department: 'Technical', role: 'Senior Engineer' },
-  { id: 3, name: 'Maria Garcia', department: 'HSE', role: 'HSE Officer' },
-  { id: 4, name: 'David Chen', department: 'Workshop', role: 'Workshop Supervisor' },
-  { id: 5, name: 'Emma Wilson', department: 'Technical', role: 'Engineer' },
-  { id: 6, name: 'Robert Lee', department: 'Logistics', role: 'Logistics Coordinator' },
-  { id: 7, name: 'Sarah Taylor', department: 'Accounts', role: 'Accountant' },
-  { id: 8, name: 'Ms. Chen', department: 'Admin', role: 'Secretary' },
-  { id: 9, name: 'James Wilson', department: 'Technical', role: 'HOD' },
-  { id: 10, name: 'Michael Brown', department: 'Workshop', role: 'Technician' },
-];
 
-const allReportsData = [
-  // Staff Reports
-  { id: 1, title: 'Daily Operations Report - Technical', date: '2024-12-15', type: 'Daily', downloads: 24, size: '2.4 MB', uploadedBy: 'John Doe', department: 'Technical', role: 'Staff', status: 'approved', fileFormat: 'pdf' },
-  { id: 2, title: 'Pipeline Inspection Report', date: '2024-12-15', type: 'Daily', downloads: 18, size: '3.1 MB', uploadedBy: 'Alex Johnson', department: 'Technical', role: 'Senior Engineer', status: 'approved', fileFormat: 'docx' },
-  { id: 3, title: 'Safety Compliance Report', date: '2024-12-15', type: 'Daily', downloads: 32, size: '4.2 MB', uploadedBy: 'Maria Garcia', department: 'HSE', role: 'HSE Officer', status: 'approved', fileFormat: 'pdf' },
-  { id: 4, title: 'Workshop Maintenance Log', date: '2024-12-15', type: 'Daily', downloads: 15, size: '1.8 MB', uploadedBy: 'David Chen', department: 'Workshop', role: 'Workshop Supervisor', status: 'approved', fileFormat: 'xlsx' },
-  { id: 5, title: 'Equipment Calibration Report', date: '2024-12-15', type: 'Daily', downloads: 42, size: '5.6 MB', uploadedBy: 'Emma Wilson', department: 'Technical', role: 'Engineer', status: 'approved', fileFormat: 'pdf' },
-  { id: 6, title: 'Logistics Operations Update', date: '2024-12-15', type: 'Daily', downloads: 28, size: '3.4 MB', uploadedBy: 'Robert Lee', department: 'Logistics', role: 'Logistics Coordinator', status: 'approved', fileFormat: 'doc' },
-  { id: 7, title: 'Financial Transaction Report', date: '2024-12-15', type: 'Daily', downloads: 19, size: '2.1 MB', uploadedBy: 'Sarah Taylor', department: 'Accounts', role: 'Accountant', status: 'approved', fileFormat: 'xlsx' },
-  { id: 8, title: 'Secretary Daily Report', date: '2024-12-15', type: 'Daily', downloads: 26, size: '3.9 MB', uploadedBy: 'Ms. Chen', department: 'Admin', role: 'Secretary', status: 'approved', fileFormat: 'pdf' },
-  
-  // Previous day reports
-  { id: 9, title: 'HSE Inspection Report', date: '2024-12-14', type: 'Daily', downloads: 21, size: '2.3 MB', uploadedBy: 'Maria Garcia', department: 'HSE', role: 'HSE Officer', status: 'approved', fileFormat: 'pdf' },
-  { id: 10, title: 'Technical Department Report', date: '2024-12-14', type: 'Daily', downloads: 56, size: '8.7 MB', uploadedBy: 'James Wilson', department: 'Technical', role: 'HOD', status: 'approved', fileFormat: 'docx' },
-  { id: 11, title: 'Workshop Production Report', date: '2024-12-14', type: 'Daily', downloads: 22, size: '2.5 MB', uploadedBy: 'Michael Brown', department: 'Workshop', role: 'Technician', status: 'approved', fileFormat: 'pdf' },
-  { id: 12, title: 'Secretary Daily Report', date: '2024-12-14', type: 'Daily', downloads: 89, size: '12.3 MB', uploadedBy: 'Ms. Chen', department: 'Admin', role: 'Secretary', status: 'approved', fileFormat: 'pdf' },
-  
-  // Additional days
-  { id: 13, title: 'Safety Audit Report', date: '2024-12-13', type: 'Daily', downloads: 34, size: '2.8 MB', uploadedBy: 'Maria Garcia', department: 'HSE', role: 'HSE Officer', status: 'approved', fileFormat: 'pdf' },
-  { id: 14, title: 'Equipment Status Report', date: '2024-12-13', type: 'Daily', downloads: 27, size: '3.2 MB', uploadedBy: 'David Chen', department: 'Workshop', role: 'Workshop Supervisor', status: 'approved', fileFormat: 'xlsx' },
-  { id: 15, title: 'Project Progress Report', date: '2024-12-13', type: 'Daily', downloads: 45, size: '6.1 MB', uploadedBy: 'Alex Johnson', department: 'Technical', role: 'Senior Engineer', status: 'approved', fileFormat: 'doc' },
-  
-  // Weekly/Monthly reports (non-daily)
-  { id: 16, title: 'Weekly Progress Summary', date: '2024-12-10', type: 'Weekly', downloads: 32, size: '4.2 MB', uploadedBy: 'Secretary Dept', department: 'Admin', role: 'Secretary', status: 'uploaded', fileFormat: 'pdf' },
-  { id: 17, title: 'Monthly Financial Summary', date: '2024-12-08', type: 'Monthly', downloads: 42, size: '5.6 MB', uploadedBy: 'Accounts Dept', department: 'Accounts', role: 'HOD', status: 'uploaded', fileFormat: 'xlsx' },
-  { id: 18, title: 'Quarterly Business Review', date: '2024-11-30', type: 'Quarterly', downloads: 56, size: '8.7 MB', uploadedBy: 'Management', department: 'Executive', role: 'MD', status: 'uploaded', fileFormat: 'pdf' },
-];
 
 const getStatusTone = (status) => {
-  switch(status) {
+  switch (status) {
     case 'approved': return 'success';
     case 'pending': return 'warn';
     case 'uploaded': return 'info';
@@ -101,7 +63,7 @@ const getStatusTone = (status) => {
 };
 
 const getFormatTone = (format) => {
-  switch(format) {
+  switch (format) {
     case 'pdf': return 'danger';
     case 'doc':
     case 'docx': return 'info';
@@ -112,7 +74,7 @@ const getFormatTone = (format) => {
 };
 
 const getFileIcon = (format) => {
-  switch(format) {
+  switch (format) {
     case 'pdf': return '📕';
     case 'doc':
     case 'docx': return '📘';
@@ -134,6 +96,8 @@ const getMonthName = (monthIndex) => {
 };
 
 export default function SecretaryReportsArchive() {
+  const [reports, setReports] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [dateFilter, setDateFilter] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
@@ -145,29 +109,64 @@ export default function SecretaryReportsArchive() {
   const [userFilter, setUserFilter] = useState('all');
   const [departmentFilter, setDepartmentFilter] = useState('all');
 
+  useEffect(() => {
+    async function getReports() {
+      try {
+        const resp = await fetchWithAuth("/api/documents?type=Report");
+        if (resp.ok) {
+          const data = await resp.json();
+          // Map API fields if necessary
+          const mapped = data.map(d => ({
+            id: d.id,
+            dbId: d.dbId,
+            title: d.title,
+            date: d.date ? d.date.split('T')[0] : '', // YYYY-MM-DD
+            fullDate: d.date,
+            type: d.title.toLowerCase().includes('weekly') ? 'Weekly' :
+              d.title.toLowerCase().includes('monthly') ? 'Monthly' : 'Daily',
+            downloads: d.downloads || 0,
+            size: d.size || '—',
+            uploadedBy: d.uploadedBy,
+            department: d.department,
+            role: 'Staff', // Default or fetch if needed
+            status: 'approved',
+            fileFormat: d.fileUrl ? d.fileUrl.split('.').pop().toLowerCase() : 'pdf',
+            fileUrl: d.fileUrl
+          }));
+          setReports(mapped);
+        }
+      } catch (err) {
+        console.error("Failed to fetch reports:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    getReports();
+  }, []);
+
   // Get unique departments for filter
-  const departments = useMemo(() => ['all', ...new Set(allReportsData.map(r => r.department))], []);
-  
+  const departments = useMemo(() => ['all', ...new Set(reports.map(r => r.department))], [reports]);
+
   // Get unique users for filter
-  const users = useMemo(() => ['all', ...new Set(allReportsData.map(r => r.uploadedBy))], []);
+  const users = useMemo(() => ['all', ...new Set(reports.map(r => r.uploadedBy))], [reports]);
 
   // Filter reports to show only daily reports from all users
-  const dailyReports = useMemo(() => allReportsData.filter(report => report.type === 'Daily'), []);
+  const dailyReports = useMemo(() => reports.filter(report => report.type === 'Daily'), [reports]);
 
   const filteredReports = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
     return dailyReports.filter(report => {
       const matchesSearch = report.title.toLowerCase().includes(query) ||
-                           report.date.includes(searchTerm) ||
-                           report.uploadedBy.toLowerCase().includes(query) ||
-                           report.department.toLowerCase().includes(query);
+        report.date.includes(searchTerm) ||
+        report.uploadedBy.toLowerCase().includes(query) ||
+        report.department.toLowerCase().includes(query);
       const matchesDate = !dateFilter || report.date === dateFilter;
       const matchesType = typeFilter === 'all' || report.type === typeFilter;
-      const matchesMonthYear = new Date(report.date).getMonth() === selectedMonth && 
-                              new Date(report.date).getFullYear() === selectedYear;
+      const matchesMonthYear = new Date(report.date).getMonth() === selectedMonth &&
+        new Date(report.date).getFullYear() === selectedYear;
       const matchesUser = userFilter === 'all' || report.uploadedBy === userFilter;
       const matchesDepartment = departmentFilter === 'all' || report.department === departmentFilter;
-      
+
       return matchesSearch && matchesDate && matchesType && matchesMonthYear && matchesUser && matchesDepartment;
     });
   }, [dailyReports, searchTerm, dateFilter, typeFilter, selectedMonth, selectedYear, userFilter, departmentFilter]);
@@ -212,15 +211,15 @@ export default function SecretaryReportsArchive() {
     }
 
     const reportsToDownload = reportsByDate[selectedDownloadDate] || [];
-    
+
     if (reportsToDownload.length === 0) {
       toast.warning(`No reports found for ${selectedDownloadDate}`);
       return;
     }
 
     // Filter reports by selected format
-    const filteredByFormat = downloadFormat === 'all' 
-      ? reportsToDownload 
+    const filteredByFormat = downloadFormat === 'all'
+      ? reportsToDownload
       : reportsToDownload.filter(r => r.fileFormat === downloadFormat);
 
     if (filteredByFormat.length === 0) {
@@ -249,6 +248,16 @@ All reports will be downloaded as a ZIP file.`);
     setDepartmentFilter('all');
   };
 
+  if (loading) {
+    return (
+      <Layout menuItems={SecretaryMenuItems} userRole="Secretary">
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div>
+        </div>
+      </Layout>
+    );
+  }
+
   return (
     <Layout menuItems={SecretaryMenuItems} userRole="Secretary">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -266,7 +275,7 @@ All reports will be downloaded as a ZIP file.`);
                 <div className="flex flex-wrap items-center gap-2 mb-2">
                   <Pill>📊 Daily Reports Archive</Pill>
                   <Pill tone="info">{dailyReports.length} Reports</Pill>
-                  <Pill tone="success">{REPORT_USERS.length} Staff</Pill>
+                  <Pill tone="success">{users.length > 1 ? users.length - 1 : 0} Staff</Pill>
                 </div>
 
                 <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
@@ -562,8 +571,8 @@ All reports will be downloaded as a ZIP file.`);
         {/* CALENDAR VIEW */}
         <Card className="p-6">
           <div className="flex items-center justify-between mb-6">
-            <SectionTitle 
-              title={`Daily Reports Calendar - ${getMonthName(selectedMonth)} ${selectedYear}`} 
+            <SectionTitle
+              title={`Daily Reports Calendar - ${getMonthName(selectedMonth)} ${selectedYear}`}
               subtitle="Click on a date to select for batch download"
             />
             <div className="flex items-center gap-4">
@@ -590,17 +599,16 @@ All reports will be downloaded as a ZIP file.`);
               const reportsForDay = reportsByDate[dateStr] || [];
               const reportCount = reportsForDay.length;
               const isSelected = selectedDownloadDate === dateStr;
-              
+
               return (
                 <div
                   key={index}
-                  className={`p-3 rounded-2xl text-center text-sm cursor-pointer transition-all ${
-                    isSelected 
-                      ? 'bg-blue-500 text-white font-semibold' 
-                      : reportCount > 0 
-                        ? 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200' 
-                        : 'hover:bg-gray-100 text-gray-600 border border-gray-200/70'
-                  }`}
+                  className={`p-3 rounded-2xl text-center text-sm cursor-pointer transition-all ${isSelected
+                    ? 'bg-blue-500 text-white font-semibold'
+                    : reportCount > 0
+                      ? 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200'
+                      : 'hover:bg-gray-100 text-gray-600 border border-gray-200/70'
+                    }`}
                   onClick={() => setSelectedDownloadDate(dateStr)}
                 >
                   <div className="font-semibold">{day}</div>
@@ -700,11 +708,10 @@ All reports will be downloaded as a ZIP file.`);
                           key={format.id}
                           type="button"
                           onClick={() => setDownloadFormat(format.id)}
-                          className={`p-4 rounded-2xl border-2 transition-all ${
-                            downloadFormat === format.id
-                              ? 'bg-white'
-                              : 'bg-gray-50 hover:bg-gray-100'
-                          }`}
+                          className={`p-4 rounded-2xl border-2 transition-all ${downloadFormat === format.id
+                            ? 'bg-white'
+                            : 'bg-gray-50 hover:bg-gray-100'
+                            }`}
                           style={{
                             borderColor: downloadFormat === format.id ? format.color : '#e5e7eb',
                           }}
@@ -728,17 +735,17 @@ All reports will be downloaded as a ZIP file.`);
                         <Row label="Date" value={selectedDownloadDate} />
                         <Row label="Total Reports" value={reportsByDate[selectedDownloadDate].length} />
                         <Row label="Selected Format" value={downloadFormat === 'all' ? 'All Formats' : downloadFormat.toUpperCase()} />
-                        <Row 
-                          label="Reports to Download" 
-                          value={downloadFormat === 'all' 
+                        <Row
+                          label="Reports to Download"
+                          value={downloadFormat === 'all'
                             ? reportsByDate[selectedDownloadDate].length
-                            : reportsByDate[selectedDownloadDate].filter(r => r.fileFormat === downloadFormat).length} 
+                            : reportsByDate[selectedDownloadDate].filter(r => r.fileFormat === downloadFormat).length}
                         />
-                        <Row 
-                          label="Total Size" 
+                        <Row
+                          label="Total Size"
                           value={`~${reportsByDate[selectedDownloadDate]
                             .filter(r => downloadFormat === 'all' || r.fileFormat === downloadFormat)
-                            .reduce((sum, r) => sum + parseFloat(r.size), 0).toFixed(1)} MB`} 
+                            .reduce((sum, r) => sum + parseFloat(r.size), 0).toFixed(1)} MB`}
                         />
                       </div>
                     </div>
@@ -761,9 +768,8 @@ All reports will be downloaded as a ZIP file.`);
                         setIsDownloadModalOpen(false);
                       }}
                       disabled={!selectedDownloadDate}
-                      className={`px-6 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition ${
-                        !selectedDownloadDate ? 'opacity-50 cursor-not-allowed' : ''
-                      }`}
+                      className={`px-6 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition ${!selectedDownloadDate ? 'opacity-50 cursor-not-allowed' : ''
+                        }`}
                       style={{ backgroundColor: "var(--accent-red)" }}
                     >
                       Download Now

@@ -122,10 +122,10 @@ export async function POST(req: NextRequest) {
       role: userInfo.role,
       route: userInfo.route,
     });
-  } catch (error) {
+  } catch (error: any) {
     // eslint-disable-next-line no-console
     console.error("Error in send-otp route:", error);
-    return NextResponse.json({ error: "Failed to send OTP." }, { status: 500 });
+    return NextResponse.json({ error: error?.message || "Failed to send OTP." }, { status: 500 });
   }
 }
 

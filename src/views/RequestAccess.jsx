@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { toast } from "@/lib/toast";
 
 export default function RequestAccess() {
   const router = useRouter();
@@ -25,7 +26,7 @@ export default function RequestAccess() {
   // Department options based on your database schema
   const departments = [
     "Technical",
-    "Workshop", 
+    "Workshop",
     "Logistics",
     "Contract and Procurement",
     "Legal and Compliances",
@@ -41,7 +42,7 @@ export default function RequestAccess() {
   // Role options based on your database schema
   const roles = [
     "Staff",
-    "Personnel", 
+    "Personnel",
     "Corp Member",
     "Secretary/Admin Officer"
   ];
@@ -56,7 +57,7 @@ export default function RequestAccess() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Validate required fields
     if (!formData.agreeTerms) {
       toast.warning("You must agree to the terms and conditions");
@@ -69,13 +70,13 @@ export default function RequestAccess() {
       // In a real app, you would make an API call here
       // For demo, we'll simulate API call
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
+
       // Log the request (in real app, send to backend)
       console.log("Access Request Submitted:", formData);
-      
+
       // Show success message
       setSubmitSuccess(true);
-      
+
       // Reset form after 3 seconds and redirect
       setTimeout(() => {
         setFormData({
@@ -117,7 +118,7 @@ export default function RequestAccess() {
               Your access request has been sent to the administrator for review.
             </p>
           </div>
-          
+
           <div className="space-y-4">
             <div className="p-4 rounded-lg bg-blue-50 text-left">
               <p className="text-sm text-gray-700">
@@ -144,11 +145,11 @@ export default function RequestAccess() {
                 </li>
               </ul>
             </div>
-            
+
             <p className="text-sm text-gray-500">
               Redirecting to login page...
             </p>
-            
+
             <div className="pt-4">
               <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
                 <div className="h-full rounded-full bg-green-500 animate-progress"></div>
@@ -174,7 +175,7 @@ export default function RequestAccess() {
       {/* Main Container */}
       <div className="w-full max-w-4xl bg-white/95 backdrop-blur-sm rounded-2xl overflow-hidden z-10">
         <div className="h-2 bg-[#2C4B9B]"></div>
-        
+
         <div className="p-8 md:p-10">
           {/* Header with Back Button */}
           <div className="mb-8">
@@ -188,7 +189,7 @@ export default function RequestAccess() {
               </svg>
               Back to Login
             </Link>
-            
+
             <div className="text-center">
               <div className="inline-flex items-center justify-center mb-4">
                 <Image
@@ -210,7 +211,7 @@ export default function RequestAccess() {
 
           {/* Information Box */}
           <div className="mb-8 p-6 rounded-xl"
-               style={{ backgroundColor: "rgba(109, 198, 223, 0.1)" }}>
+            style={{ backgroundColor: "rgba(109, 198, 223, 0.1)" }}>
             <div className="flex items-start">
               <svg className="w-6 h-6 mr-3 flex-shrink-0" style={{ color: "#2C4B9B" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -218,7 +219,7 @@ export default function RequestAccess() {
               <div>
                 <h3 className="font-semibold" style={{ color: "#2C4B9B" }}>Important Information</h3>
                 <p className="text-sm text-gray-600 mt-1">
-                  Your request will be reviewed by an administrator. Once approved, you'll receive login credentials via email. 
+                  Your request will be reviewed by an administrator. Once approved, you'll receive login credentials via email.
                   Please ensure all information provided is accurate.
                 </p>
               </div>
@@ -419,14 +420,14 @@ export default function RequestAccess() {
                   <a href="#" className="font-semibold hover:underline" style={{ color: "#2C4B9B" }}>
                     Terms and Conditions
                   </a>{" "}
-                  and confirm that all information provided is accurate. I understand that access will be 
+                  and confirm that all information provided is accurate. I understand that access will be
                   granted only after administrative approval.
                 </label>
               </div>
 
               <div className="p-4 rounded-xl border-2" style={{ borderColor: "#6DC6DF" }}>
                 <p className="text-sm text-gray-600">
-                  <strong>Note:</strong> HOD, MD, and SuperAdmin roles cannot be requested through this form. 
+                  <strong>Note:</strong> HOD, MD, and SuperAdmin roles cannot be requested through this form.
                   Please contact the system administrator directly for these roles.
                 </p>
               </div>

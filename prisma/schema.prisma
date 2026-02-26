@@ -40,6 +40,9 @@ model User {
   tasksAssigned   TaskAssignment[] @relation("AssignedTo")
   tasksCreated    Task[]           @relation("CreatedBy")
   assignmentsMade TaskAssignment[] @relation("AssignedBy")
+  announcementsRead AnnouncementRead[]
+  notificationsReceived Notification[] @relation("ReceivedNotifications")
+  actionsPerformed      Notification[] @relation("PerformedActions")
 }
 
 model Task {
@@ -67,23 +70,50 @@ model Task {
   @@index([createdAt])
 }
 
+
+
+model Tender {
+  id          Int      @id @default(autoincrement())
+  title       String
+  referenceNo String   @unique
+  description String?  @db.Text
+  issuedDate  DateTime @default(now())
+  closingDate DateTime
+  department  String
+  category    String?
+  status      String   @default("OPEN") // OPEN, CLOSED, AWARDED
+  createdBy   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  documents   Document[]
+
+  @@index([status])
+  @@index([department])
+  @@index([createdAt])
+}
+
 model Document {
   id          Int      @id @default(autoincrement())
   title       String
-  type        String   // Report, Procedure, Policy, etc.
+  type        String   // Report, Procedure, Policy, Tender Document, Bid Submission, etc.
   department  String
   uploadedBy  String
   scope       String   // PUBLIC, PRIVATE, ALL_HODS, SPECIFIC_HODS, SPECIFIC_DEPARTMENTS
   fileSize    String?  // e.g. "2.4 MB"
   fileUrl     String?  // path or URL to file
   downloads   Int      @default(0)
+  tenderId    Int?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  tender      Tender?  @relation(fields: [tenderId], references: [id])
 
   @@index([type])
   @@index([department])
   @@index([scope])
   @@index([createdAt])
+  @@index([tenderId])
 }
 
 model TaskAssignment {
@@ -104,3 +134,58 @@ model TaskAssignment {
   @@index([userId])
   @@index([taskId])
 }
+
+model Announcement {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String   @db.Text
+  date        DateTime @default(now())
+  department  String?
+  targetRole  String?
+  priority    String   @default("NORMAL")
+  scopeType   String   @default("ALL_COMPANY")
+  expiresAt   DateTime?
+  createdBy   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  reads       AnnouncementRead[]
+
+  @@index([date])
+  @@index([department])
+  @@index([createdAt])
+}
+
+model AnnouncementRead {
+  id             Int          @id @default(autoincrement())
+  announcementId Int
+  userId         Int
+  readAt         DateTime     @default(now())
+
+  announcement   Announcement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([announcementId, userId])
+  @@index([userId])
+  @@index([announcementId])
+}
+
+model Notification {
+  id          Int      @id @default(autoincrement())
+  recipientId Int
+  actorId     Int
+  actorRole   String
+  actionType  String
+  targetId    Int?
+  message     String   @db.Text
+  createdAt   DateTime @default(now())
+  read        Boolean  @default(false)
+
+  recipient   User     @relation("ReceivedNotifications", fields: [recipientId], references: [id], onDelete: Cascade)
+  actor       User     @relation("PerformedActions", fields: [actorId], references: [id], onDelete: Cascade)
+
+  @@index([recipientId])
+  @@index([createdAt])
+  @@index([read])
+}
+

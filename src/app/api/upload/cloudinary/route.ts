@@ -45,6 +45,8 @@ export async function POST(req: NextRequest) {
         {
           resource_type: "raw",
           folder: "calaya-documents",
+          use_filename: true,
+          unique_filename: true,
         },
         (error, result) => {
           if (error) reject(error);

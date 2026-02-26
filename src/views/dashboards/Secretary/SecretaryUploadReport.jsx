@@ -5,6 +5,7 @@ import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import { SecretaryMenuItems } from "@/utils/menus";
+import { toast } from "@/lib/toast";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -27,14 +28,14 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "info"
-      ? "bg-blue-50 text-blue-700 ring-blue-100"
-      : tone === "purple"
-      ? "bg-purple-50 text-purple-700 ring-purple-100"
-      : "bg-gray-50 text-gray-700 ring-gray-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "info"
+            ? "bg-blue-50 text-blue-700 ring-blue-100"
+            : tone === "purple"
+              ? "bg-purple-50 text-purple-700 ring-purple-100"
+              : "bg-gray-50 text-gray-700 ring-gray-100";
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
       {children}
@@ -74,7 +75,7 @@ const getStatusTone = (status) => {
 
 const getFileIcon = (fileName) => {
   const ext = fileName?.split('.').pop().toLowerCase();
-  switch(ext) {
+  switch (ext) {
     case 'pdf': return '📕';
     case 'doc':
     case 'docx': return '📘';
@@ -99,7 +100,7 @@ export default function SecretaryUploadReport() {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
+
   // Report entries with dynamic rows for personal daily report
   const [reportEntries, setReportEntries] = useState([
     {
@@ -225,11 +226,11 @@ export default function SecretaryUploadReport() {
     }
   }, [reportEntries, reportTitle, notes, isModalOpen]);
 
-  const today = new Date().toLocaleDateString('en-US', { 
-    weekday: 'long', 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric' 
+  const today = new Date().toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
   });
 
   const handleFileChange = (e) => {
@@ -239,7 +240,7 @@ export default function SecretaryUploadReport() {
         toast.error('File size exceeds 100MB limit. Please choose a smaller file.');
         return;
       }
-      
+
       const allowedTypes = [
         'application/pdf',
         'application/msword',
@@ -250,12 +251,12 @@ export default function SecretaryUploadReport() {
         'image/jpeg',
         'image/png'
       ];
-      
+
       if (!allowedTypes.includes(file.type)) {
         toast.warning('Please upload a valid file type (PDF, DOC, DOCX, XLS, XLSX, TXT, JPG, PNG)');
         return;
       }
-      
+
       setReportFile(file);
     }
   };
@@ -295,12 +296,12 @@ export default function SecretaryUploadReport() {
       target: '',
       nextDayTask: ''
     }];
-    
+
     setReportEntries(defaultEntries);
     setReportTitle('');
     setNotes('');
     setReportFile(null);
-    
+
     sessionStorage.removeItem(STORAGE_KEYS.REPORT_ENTRIES);
     sessionStorage.removeItem(STORAGE_KEYS.REPORT_TITLE);
     sessionStorage.removeItem(STORAGE_KEYS.REPORT_DESCRIPTION);
@@ -322,7 +323,7 @@ export default function SecretaryUploadReport() {
   // Handle submit from modal (personal daily report)
   const handleModalSubmit = (e) => {
     e.preventDefault();
-    
+
     if (!reportTitle.trim()) {
       toast.warning('Please enter a report title');
       return;
@@ -336,13 +337,13 @@ export default function SecretaryUploadReport() {
 
     setIsUploading(true);
     setUploadProgress(0);
-    
+
     // Simulate API call
     const interval = setInterval(() => {
       setUploadProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
-          
+
           // Create new personal report
           const newReport = {
             id: `REP-${new Date().toISOString().split('T')[0]}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`,
@@ -353,7 +354,7 @@ export default function SecretaryUploadReport() {
             entries: reportEntries.filter(entry => entry.taskName.trim() !== ''),
             status: 'Pending'
           };
-          
+
           setPersonalReports([newReport, ...personalReports]);
           setIsUploading(false);
           toast.success('Personal daily report submitted successfully!');
@@ -370,7 +371,7 @@ export default function SecretaryUploadReport() {
   const simulateUpload = () => {
     setIsUploading(true);
     setUploadProgress(0);
-    
+
     const interval = setInterval(() => {
       setUploadProgress((prev) => {
         if (prev >= 100) {
@@ -389,17 +390,17 @@ export default function SecretaryUploadReport() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if (!reportTitle.trim()) {
       toast.warning('Please enter a report title');
       return;
     }
-    
+
     if (!reportFile) {
       toast.warning('Please select a file to upload');
       return;
     }
-    
+
     simulateUpload();
   };
 
@@ -517,8 +518,8 @@ export default function SecretaryUploadReport() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Left Column - Company Report Upload */}
           <Card className="p-6">
-            <SectionTitle 
-              title="🏢 Company Report Upload" 
+            <SectionTitle
+              title="🏢 Company Report Upload"
               subtitle="Upload company-wide daily reports for distribution"
               action={
                 <div className="w-10 h-10 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(44,75,155,0.1)" }}>
@@ -628,8 +629,8 @@ export default function SecretaryUploadReport() {
 
           {/* Right Column - Personal Reports */}
           <Card className="p-6">
-            <SectionTitle 
-              title="📋 My Personal Daily Reports" 
+            <SectionTitle
+              title="📋 My Personal Daily Reports"
               subtitle="Track your daily tasks, objectives, and next day plans"
               action={
                 <div className="w-10 h-10 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(237,50,55,0.1)" }}>
@@ -927,11 +928,10 @@ export default function SecretaryUploadReport() {
                                   type="button"
                                   onClick={() => removeRow(entry.id)}
                                   disabled={reportEntries.length === 1}
-                                  className={`text-sm font-semibold px-3 py-1.5 rounded-xl transition ${
-                                    reportEntries.length === 1
+                                  className={`text-sm font-semibold px-3 py-1.5 rounded-xl transition ${reportEntries.length === 1
                                       ? 'text-gray-400 cursor-not-allowed'
                                       : 'text-red-600 hover:bg-red-50'
-                                  }`}
+                                    }`}
                                 >
                                   Remove
                                 </button>
@@ -991,9 +991,8 @@ export default function SecretaryUploadReport() {
                     <button
                       type="submit"
                       disabled={isUploading}
-                      className={`px-6 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition ${
-                        isUploading ? 'opacity-75 cursor-not-allowed' : ''
-                      }`}
+                      className={`px-6 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition ${isUploading ? 'opacity-75 cursor-not-allowed' : ''
+                        }`}
                       style={{ backgroundColor: "var(--accent-red)" }}
                     >
                       {isUploading ? 'Submitting...' : 'Submit My Daily Report'}

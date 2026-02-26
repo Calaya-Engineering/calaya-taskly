@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { emitTaskEvent } from "@/lib/task-events";
+import { createNotification } from "@/lib/notifications";
 
 const taskInclude = {
   createdBy: { select: { id: true, email: true, name: true, role: true } },
@@ -39,6 +40,13 @@ export async function GET(
     if (!task) {
       return NextResponse.json({ error: "Task not found" }, { status: 404 });
     }
+
+    createNotification({
+      actorEmail: auth.email,
+      actionType: 'VIEW_TASK',
+      targetId: task.id,
+      message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) viewed task: ${task.title}`
+    });
 
     return NextResponse.json(task);
   } catch (error) {
@@ -149,6 +157,13 @@ export async function PATCH(
     });
 
     emitTaskEvent({ type: "task:updated", taskId });
+
+    createNotification({
+      actorEmail: auth.email,
+      actionType: 'UPDATE_TASK',
+      targetId: task.id,
+      message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) updated task: ${task.title}`
+    });
 
     return NextResponse.json(task);
   } catch (error) {

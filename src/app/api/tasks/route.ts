@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { emitTaskEvent } from "@/lib/task-events";
+import { createNotification } from "@/lib/notifications";
 
 /**
  * GET /api/tasks - List tasks with optional filters.
@@ -24,7 +25,15 @@ export async function GET(req: NextRequest) {
     const where: Record<string, unknown> = {};
     if (status) where.status = status;
     if (department) where.department = department;
-    if (type) where.type = type;
+    if (type) {
+      if (type.includes(",")) {
+        where.type = { in: type.split(",") };
+      } else {
+        where.type = type;
+      }
+    } else {
+      where.type = { not: "EVENT" };
+    }
     if (assigneeId) {
       const uid = parseInt(assigneeId, 10);
       if (!Number.isNaN(uid)) where.assignments = { some: { userId: uid } };
@@ -117,11 +126,11 @@ export async function POST(req: NextRequest) {
         assignments:
           Array.isArray(assigneeIds) && assigneeIds.length > 0
             ? {
-                create: assigneeIds.map((userId: number) => ({
-                  userId,
-                  assignedById: creator.id,
-                })),
-              }
+              create: assigneeIds.map((userId: number) => ({
+                userId,
+                assignedById: creator.id,
+              })),
+            }
             : undefined,
       },
       include: {
@@ -138,6 +147,13 @@ export async function POST(req: NextRequest) {
     for (const a of task.assignments) {
       emitTaskEvent({ type: "task:assigned", taskId: task.id, userId: a.userId });
     }
+
+    createNotification({
+      actorEmail: auth.email,
+      actionType: 'CREATE_TASK',
+      targetId: task.id,
+      message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) created a new task: ${task.title}`
+    });
 
     return NextResponse.json(task);
   } catch (error) {

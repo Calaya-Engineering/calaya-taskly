@@ -1,101 +1,13 @@
 "use client";
 
 // pages/dashboards/MD/MDDailyReports.jsx
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import { MDMenuItems } from "@/utils/menus";
+import { fetchWithAuth } from "@/lib/api";
 import { toast } from "@/lib/toast";
-const reportsData = [
-  { 
-    id: "REP-001", 
-    date: "2024-12-15", 
-    department: "All", 
-    title: "Company Daily Report", 
-    uploadedBy: "Secretary", 
-    size: "4.2 MB", 
-    downloads: 45,
-    summary: "Daily summary of all company operations, including production metrics, safety incidents, and key achievements.",
-    content: "This is a comprehensive daily report covering all departments. It includes production numbers from Technical department, safety statistics from HSE, logistics updates, workshop productivity, and financial summaries. The report indicates overall positive performance with 98% of targets met."
-  },
-  { 
-    id: "REP-002", 
-    date: "2024-12-14", 
-    department: "Technical", 
-    title: "Technical Department Report", 
-    uploadedBy: "Technical HOD", 
-    size: "2.8 MB", 
-    downloads: 32,
-    summary: "Technical department daily operations, project progress, and equipment status.",
-    content: "The Technical department completed pipeline inspection at Site A with 85% progress. Equipment maintenance schedules are on track. Three minor issues were identified and are being addressed. Team productivity at 92%."
-  },
-  { 
-    id: "REP-003", 
-    date: "2024-12-13", 
-    department: "HSE", 
-    title: "Safety Compliance Report", 
-    uploadedBy: "HSE HOD", 
-    size: "3.1 MB", 
-    downloads: 28,
-    summary: "Daily safety metrics, incidents, and compliance status.",
-    content: "Zero lost time incidents reported. Safety audits conducted at Site B and Workshop. All compliance requirements met. One near-miss reported and investigated. Safety training completed for 15 staff members."
-  },
-  { 
-    id: "REP-004", 
-    date: "2024-12-12", 
-    department: "Workshop", 
-    title: "Workshop Production Report", 
-    uploadedBy: "Workshop HOD", 
-    size: "1.9 MB", 
-    downloads: 21,
-    summary: "Workshop production output, maintenance activities, and resource utilization.",
-    content: "Workshop produced 45 units with 98% quality rate. Preventive maintenance completed on 3 major equipment. Resource utilization at 87%. One equipment breakdown reported and repaired."
-  },
-  { 
-    id: "REP-005", 
-    date: "2024-12-11", 
-    department: "Logistics", 
-    title: "Logistics Operations Report", 
-    uploadedBy: "Logistics HOD", 
-    size: "2.5 MB", 
-    downloads: 24,
-    summary: "Logistics operations, fleet status, and delivery performance.",
-    content: "All deliveries completed on time. Fleet availability at 92%. Fuel consumption within budget. One vehicle under maintenance. Route optimization implemented saving 15% in fuel costs."
-  },
-  { 
-    id: "REP-006", 
-    date: "2024-12-10", 
-    department: "Accounts", 
-    title: "Financial Daily Summary", 
-    uploadedBy: "Accounts HOD", 
-    size: "5.7 MB", 
-    downloads: 18,
-    summary: "Daily financial transactions, budget utilization, and forecasts.",
-    content: "Daily transactions processed: 156 invoices, 89 payments. Budget utilization at 78% YTD. Cash flow positive. Projections for next quarter show 12% growth."
-  },
-  { 
-    id: "REP-007", 
-    date: "2024-12-09", 
-    department: "All", 
-    title: "Company Daily Report", 
-    uploadedBy: "Secretary", 
-    size: "4.0 MB", 
-    downloads: 42,
-    summary: "Consolidated company performance report.",
-    content: "All departments reporting normal operations. Overall company performance index at 8.7/10. Highlights: Technical department completed major milestone, HSE reported zero incidents, Accounts processed month-end closing."
-  },
-  { 
-    id: "REP-008", 
-    date: "2024-12-08", 
-    department: "HR", 
-    title: "HR Daily Activities", 
-    uploadedBy: "HR HOD", 
-    size: "2.1 MB", 
-    downloads: 15,
-    summary: "HR daily operations, attendance, and recruitment updates.",
-    content: "Attendance rate: 94%. Three new candidates interviewed for Technical positions. One resignation processed. Training sessions conducted for 25 employees. Payroll processing completed."
-  },
-];
+
 
 /* ---------------- UI helpers ---------------- */
 const Card = ({ className = "", children }) => (
@@ -119,14 +31,14 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "purple"
       ? "bg-purple-50 text-purple-700 ring-purple-100"
       : tone === "info"
-      ? "bg-blue-50 text-blue-700 ring-blue-100"
-      : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "danger"
-      ? "bg-red-50 text-red-700 ring-red-100"
-      : "bg-gray-50 text-gray-700 ring-gray-100";
+        ? "bg-blue-50 text-blue-700 ring-blue-100"
+        : tone === "success"
+          ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+          : tone === "warn"
+            ? "bg-amber-50 text-amber-800 ring-amber-100"
+            : tone === "danger"
+              ? "bg-red-50 text-red-700 ring-red-100"
+              : "bg-gray-50 text-gray-700 ring-gray-100";
 
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
@@ -178,10 +90,43 @@ const toISO = (d) => {
 };
 
 export default function MDDailyReports() {
+  const [reportsData, setReportsData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function getReports() {
+      try {
+        const resp = await fetchWithAuth("/api/documents?type=Report");
+        if (resp.ok) {
+          const data = await resp.json();
+          const mapped = data.map(d => ({
+            id: d.id,
+            dbId: d.dbId,
+            date: d.date ? d.date.split('T')[0] : '',
+            department: d.department,
+            title: d.title,
+            uploadedBy: d.uploadedBy,
+            size: d.size || '—',
+            downloads: d.downloads || 0,
+            summary: d.title, // Use title as fallback for summary
+            content: "Real document from archive.",
+            fileUrl: d.fileUrl
+          }));
+          setReportsData(mapped);
+        }
+      } catch (err) {
+        console.error("Failed to fetch reports:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    getReports();
+  }, []);
+
   const latestDate = useMemo(() => {
     const sorted = [...reportsData].sort((a, b) => (a.date < b.date ? 1 : -1));
     return sorted?.[0]?.date || "";
-  }, []);
+  }, [reportsData]);
 
   const yesterdayOfLatest = useMemo(() => {
     if (!latestDate) return "";
@@ -202,12 +147,12 @@ export default function MDDailyReports() {
   const [selectedDepartment, setSelectedDepartment] = useState("all");
   const [search, setSearch] = useState("");
   const [viewMode, setViewMode] = useState("table");
-  
+
   // Modal states
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
   const [selectedReport, setSelectedReport] = useState(null);
-  
+
   // Download options
   const [downloadOptions, setDownloadOptions] = useState({
     dateFrom: "",
@@ -218,7 +163,7 @@ export default function MDDailyReports() {
 
   const departments = useMemo(
     () => ["All", ...new Set(reportsData.map((r) => r.department).filter((d) => d !== "All"))],
-    []
+    [reportsData]
   );
 
   const filteredReports = useMemo(() => {
@@ -245,13 +190,13 @@ export default function MDDailyReports() {
 
   const topDownloaded = useMemo(() => {
     return [...reportsData].sort((a, b) => b.downloads - a.downloads).slice(0, 3);
-  }, []);
+  }, [reportsData]);
 
   const deptCounts = useMemo(() => {
     const map = new Map();
     reportsData.forEach((r) => map.set(r.department, (map.get(r.department) || 0) + 1));
     return Array.from(map.entries()).sort((a, b) => b[1] - a[1]);
-  }, []);
+  }, [reportsData]);
 
   // Calendar (December 2024)
   const calYear = 2024;
@@ -301,6 +246,16 @@ export default function MDDailyReports() {
   const handleDownloadReport = (report) => {
     toast.info(`Downloading ${report.title} (${report.id}) in PDF format`);
   };
+
+  if (loading) {
+    return (
+      <Layout menuItems={MDMenuItems} userRole="MD">
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout menuItems={MDMenuItems} userRole="MD">
@@ -446,9 +401,8 @@ export default function MDDailyReports() {
                       key={v.id}
                       type="button"
                       onClick={() => setViewMode(v.id)}
-                      className={`px-4 py-2 text-sm font-semibold rounded-xl border transition ${
-                        active ? "bg-white" : "bg-gray-50 hover:bg-white"
-                      }`}
+                      className={`px-4 py-2 text-sm font-semibold rounded-xl border transition ${active ? "bg-white" : "bg-gray-50 hover:bg-white"
+                        }`}
                       style={{
                         borderColor: active ? "rgba(44, 75, 155, 0.35)" : "rgba(0,0,0,0.08)",
                         color: active ? "var(--primary-blue)" : "#6B7280",
@@ -669,9 +623,8 @@ export default function MDDailyReports() {
                   <button
                     key={c.key}
                     type="button"
-                    className={`h-14 rounded-2xl flex flex-col items-center justify-center border transition ${
-                      c.hasReport ? "bg-blue-50 border-blue-200" : "bg-gray-50 border-gray-100"
-                    } ${active ? "ring-2" : ""}`}
+                    className={`h-14 rounded-2xl flex flex-col items-center justify-center border transition ${c.hasReport ? "bg-blue-50 border-blue-200" : "bg-gray-50 border-gray-100"
+                      } ${active ? "ring-2" : ""}`}
                     style={{ ringColor: active ? "var(--primary-blue)" : "transparent" }}
                     onClick={() => setSelectedDate(c.iso)}
                     title={c.hasReport ? "Has report" : "No report"}
@@ -778,8 +731,8 @@ export default function MDDailyReports() {
       {isDownloadModalOpen && (
         <div className="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
           <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div 
-              className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" 
+            <div
+              className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
               onClick={() => setIsDownloadModalOpen(false)}
             ></div>
 
@@ -820,7 +773,7 @@ export default function MDDailyReports() {
                             type="date"
                             className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-100"
                             value={downloadOptions.dateFrom}
-                            onChange={(e) => setDownloadOptions({...downloadOptions, dateFrom: e.target.value})}
+                            onChange={(e) => setDownloadOptions({ ...downloadOptions, dateFrom: e.target.value })}
                           />
                         </div>
                         <div>
@@ -829,7 +782,7 @@ export default function MDDailyReports() {
                             type="date"
                             className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-100"
                             value={downloadOptions.dateTo}
-                            onChange={(e) => setDownloadOptions({...downloadOptions, dateTo: e.target.value})}
+                            onChange={(e) => setDownloadOptions({ ...downloadOptions, dateTo: e.target.value })}
                           />
                         </div>
                       </div>
@@ -895,12 +848,11 @@ export default function MDDailyReports() {
                           <button
                             key={source.id}
                             type="button"
-                            onClick={() => setDownloadOptions({...downloadOptions, source: source.id})}
-                            className={`p-4 rounded-2xl border text-left transition ${
-                              downloadOptions.source === source.id
+                            onClick={() => setDownloadOptions({ ...downloadOptions, source: source.id })}
+                            className={`p-4 rounded-2xl border text-left transition ${downloadOptions.source === source.id
                                 ? 'bg-blue-50 border-blue-200'
                                 : 'hover:bg-gray-50'
-                            }`}
+                              }`}
                           >
                             <div className="flex items-center gap-3 mb-2">
                               <span className="text-2xl">{source.icon}</span>
@@ -927,12 +879,11 @@ export default function MDDailyReports() {
                           <button
                             key={format.id}
                             type="button"
-                            onClick={() => setDownloadOptions({...downloadOptions, format: format.id})}
-                            className={`p-4 rounded-2xl border text-center transition ${
-                              downloadOptions.format === format.id
+                            onClick={() => setDownloadOptions({ ...downloadOptions, format: format.id })}
+                            className={`p-4 rounded-2xl border text-center transition ${downloadOptions.format === format.id
                                 ? 'bg-blue-50 border-blue-200'
                                 : 'hover:bg-gray-50'
-                            }`}
+                              }`}
                           >
                             <span className="text-2xl block mb-2">{format.icon}</span>
                             <span className="font-extrabold text-sm block">{format.label}</span>
@@ -971,8 +922,8 @@ export default function MDDailyReports() {
       {isPreviewModalOpen && selectedReport && (
         <div className="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
           <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div 
-              className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" 
+            <div
+              className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
               onClick={() => setIsPreviewModalOpen(false)}
             ></div>
 

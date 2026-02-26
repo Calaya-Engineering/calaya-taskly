@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
+import { createNotification } from "@/lib/notifications";
 
 /**
  * GET /api/documents - List documents (MD, HOD, Secretary, Staff - authenticated)
@@ -103,12 +104,6 @@ export async function POST(req: NextRequest) {
 
     try {
       const body = await req.json().catch(() => ({}));
-      console.log("POST /api/documents - Body:", JSON.stringify(body));
-      console.log("POST /api/documents - Auth:", JSON.stringify(auth));
-
-      console.log("Prisma instance check - keys:", Object.keys(prisma || {}));
-      console.log("Prisma document property exists:", !!(prisma as any).document);
-
       const { title, type, department, scope, fileSize, fileUrl, uploadedBy } = body as {
         title?: string;
         type?: string;
@@ -132,9 +127,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: "Scope is required" }, { status: 400 });
       }
 
-      console.log("POST /api/documents - Validated fields. Creating in DB...");
-
-      const doc = await (prisma as any).document.create({
+      const doc = await prisma.document.create({
         data: {
           title: title.trim(),
           type: type.trim(),
@@ -148,7 +141,13 @@ export async function POST(req: NextRequest) {
         },
       });
 
-      console.log("POST /api/documents - Created successfully:", doc.id);
+      // Fire and forget notification
+      createNotification({
+        actorEmail: auth.email,
+        actionType: 'UPLOAD_DOCUMENT',
+        targetId: doc.id,
+        message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) uploaded a document: ${doc.title}`,
+      });
 
       return NextResponse.json({
         id: `DOC-${String(doc.id).padStart(3, "0")}`,

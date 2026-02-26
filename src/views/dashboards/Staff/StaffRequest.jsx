@@ -1,11 +1,12 @@
 "use client";
 
 // pages/dashboards/Staff/StaffRequest.jsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { StaffMenuItems } from "@/utils/menus";
+import { fetchWithAuth } from "@/lib/api";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children, ...props }) => (
   <div
@@ -33,12 +34,12 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "info"
-      ? "bg-blue-50 text-blue-700 ring-blue-100"
-      : "bg-gray-50 text-gray-700 ring-gray-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "info"
+            ? "bg-blue-50 text-blue-700 ring-blue-100"
+            : "bg-gray-50 text-gray-700 ring-gray-100";
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
       {children}
@@ -49,6 +50,26 @@ const Pill = ({ children, tone = "default" }) => {
 export default function StaffRequest() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
+  const [departments, setDepartments] = useState([]);
+  const [loadingDepts, setLoadingDepts] = useState(true);
+
+  useEffect(() => {
+    async function loadDepts() {
+      try {
+        const res = await fetchWithAuth("/api/departments");
+        if (res.ok) {
+          const data = await res.json();
+          setDepartments(data.map(d => d.name));
+        }
+      } catch (err) {
+        console.error("Failed to load departments:", err);
+      } finally {
+        setLoadingDepts(false);
+      }
+    }
+    loadDepts();
+  }, []);
+
   const [formData, setFormData] = useState({
     requestType: '',
     title: '',
@@ -78,7 +99,7 @@ export default function StaffRequest() {
     { value: 'OTHER', label: 'Other Request', icon: '📋' },
   ];
 
-  const departments = ['Technical', 'Workshop', 'HSE', 'HR', 'Finance', 'Logistics', 'Admin'];
+
   const priorities = [
     { value: 'LOW', label: 'Low', tone: 'success' },
     { value: 'MEDIUM', label: 'Medium', tone: 'info' },
@@ -196,13 +217,12 @@ export default function StaffRequest() {
               <div key={step.number} className="flex items-center w-full md:w-auto">
                 <div className="flex items-center">
                   <div
-                    className={`w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-white ${
-                      currentStep > step.number
-                        ? 'bg-green-500'
-                        : currentStep === step.number
+                    className={`w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-white ${currentStep > step.number
+                      ? 'bg-green-500'
+                      : currentStep === step.number
                         ? ''
                         : 'bg-gray-200 text-gray-500'
-                    }`}
+                      }`}
                     style={{
                       backgroundColor: currentStep === step.number ? 'var(--primary-blue)' : undefined,
                     }}
@@ -210,13 +230,12 @@ export default function StaffRequest() {
                     {currentStep > step.number ? '✓' : step.number}
                   </div>
                   <span
-                    className={`ml-3 text-sm font-semibold ${
-                      currentStep === step.number
-                        ? 'text-gray-900'
-                        : currentStep > step.number
+                    className={`ml-3 text-sm font-semibold ${currentStep === step.number
+                      ? 'text-gray-900'
+                      : currentStep > step.number
                         ? 'text-green-600'
                         : 'text-gray-400'
-                    }`}
+                      }`}
                   >
                     {step.label}
                   </span>
@@ -267,11 +286,10 @@ export default function StaffRequest() {
                     {requestTypes.map((type) => (
                       <label
                         key={type.value}
-                        className={`p-5 rounded-2xl border-2 cursor-pointer transition-all ${
-                          formData.requestType === type.value
-                            ? 'border-blue-500 bg-blue-50'
-                            : 'border-gray-200 hover:border-gray-300'
-                        }`}
+                        className={`p-5 rounded-2xl border-2 cursor-pointer transition-all ${formData.requestType === type.value
+                          ? 'border-blue-500 bg-blue-50'
+                          : 'border-gray-200 hover:border-gray-300'
+                          }`}
                       >
                         <input
                           type="radio"
@@ -600,8 +618,8 @@ export default function StaffRequest() {
                         <div className="flex flex-wrap items-center gap-2 mt-2">
                           <Pill tone={
                             formData.priority === 'URGENT' ? 'danger' :
-                            formData.priority === 'HIGH' ? 'warn' :
-                            formData.priority === 'MEDIUM' ? 'info' : 'success'
+                              formData.priority === 'HIGH' ? 'warn' :
+                                formData.priority === 'MEDIUM' ? 'info' : 'success'
                           }>
                             {formData.priority}
                           </Pill>

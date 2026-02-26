@@ -1,103 +1,13 @@
 "use client";
 
 // pages/dashboards/MD/MDTenders.jsx
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { MDMenuItems } from "@/utils/menus";
-const tendersData = [
-  {
-    id: "TEN-001",
-    title: "Supply of Pipeline Inspection Equipment",
-    referenceNo: "CAL/PROC/2024/001",
-    description:
-      "Supply of pipeline inspection equipment and tools for Site A project including ultrasonic testing devices, corrosion monitoring equipment, and safety gear.",
-    issuedDate: "2024-12-01",
-    closingDate: "2024-12-20",
-    department: "Procurement",
-    category: "Equipment Supply",
-    documents: 3,
-    fileSize: "4.2 MB",
-    downloads: 24,
-    status: "OPEN",
-  },
-  {
-    id: "TEN-002",
-    title: "Annual Safety Training Services",
-    referenceNo: "CAL/HSE/2024/002",
-    description:
-      "Provision of annual safety training and certification services for all company staff including offshore and onshore personnel.",
-    issuedDate: "2024-12-02",
-    closingDate: "2024-12-22",
-    department: "HSE",
-    category: "Training Services",
-    documents: 2,
-    fileSize: "2.8 MB",
-    downloads: 18,
-    status: "OPEN",
-  },
-  {
-    id: "TEN-003",
-    title: "IT Infrastructure Upgrade",
-    referenceNo: "CAL/TECH/2024/003",
-    description:
-      "Upgrade of company-wide IT infrastructure including network systems, servers, and cybersecurity solutions.",
-    issuedDate: "2024-12-03",
-    closingDate: "2024-12-25",
-    department: "Technical",
-    category: "IT Services",
-    documents: 4,
-    fileSize: "6.5 MB",
-    downloads: 32,
-    status: "OPEN",
-  },
-  {
-    id: "TEN-004",
-    title: "Workshop Equipment Maintenance",
-    referenceNo: "CAL/WORK/2024/004",
-    description:
-      "Annual maintenance contract for workshop machinery and equipment including lathes, milling machines, and fabrication tools.",
-    issuedDate: "2024-12-04",
-    closingDate: "2024-12-18",
-    department: "Workshop",
-    category: "Maintenance Services",
-    documents: 3,
-    fileSize: "3.1 MB",
-    downloads: 15,
-    status: "OPEN",
-  },
-  {
-    id: "TEN-005",
-    title: "Vehicle Fleet Maintenance",
-    referenceNo: "CAL/LOG/2024/005",
-    description:
-      "Maintenance and servicing contract for company vehicle fleet including cars, trucks, and specialized transport vehicles.",
-    issuedDate: "2024-12-05",
-    closingDate: "2024-12-15",
-    department: "Logistics",
-    category: "Maintenance Services",
-    documents: 5,
-    fileSize: "5.3 MB",
-    downloads: 28,
-    status: "CLOSED",
-  },
-  {
-    id: "TEN-006",
-    title: "Legal Advisory Services",
-    referenceNo: "CAL/LEG/2024/006",
-    description:
-      "Retainer for legal advisory and compliance services covering corporate, commercial, and regulatory matters.",
-    issuedDate: "2024-12-06",
-    closingDate: "2024-12-10",
-    department: "Legal",
-    category: "Professional Services",
-    documents: 6,
-    fileSize: "7.2 MB",
-    downloads: 42,
-    status: "AWARDED",
-  },
-];
+import { toast } from "@/lib/toast";
+import { fetchWithAuth } from "@/lib/api";
 
 /* ---------- UI helpers to match your MD dashboards ---------- */
 const Card = ({ className = "", children }) => (
@@ -109,12 +19,12 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "purple"
-      ? "bg-purple-50 text-purple-700 ring-purple-100"
-      : "bg-blue-50 text-blue-700 ring-blue-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "purple"
+            ? "bg-purple-50 text-purple-700 ring-purple-100"
+            : "bg-blue-50 text-blue-700 ring-blue-100";
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
       {children}
@@ -149,14 +59,35 @@ const daysLeftTone = (days) => {
 
 const clamp = (s = "", max = 150) => (s.length > max ? s.slice(0, max).trim() + "…" : s);
 
+
 export default function MDTenders() {
   const router = useRouter();
   const [status, setStatus] = useState("all");
   const [department, setDepartment] = useState("all");
   const [q, setQ] = useState("");
+  const [tendersData, setTendersData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const departments = useMemo(() => ["all", ...Array.from(new Set(tendersData.map((t) => t.department)))], []);
-  const openTenders = useMemo(() => tendersData.filter((t) => t.status === "OPEN"), []);
+  useEffect(() => {
+    async function getTenders() {
+      try {
+        const res = await fetchWithAuth("/api/tenders");
+        if (res.ok) {
+          const data = await res.json();
+          setTendersData(data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch tenders:", err);
+        toast.error("Failed to load tenders");
+      } finally {
+        setLoading(false);
+      }
+    }
+    getTenders();
+  }, []);
+
+  const departments = useMemo(() => ["all", ...Array.from(new Set(tendersData.map((t) => t.department)))], [tendersData]);
+  const openTenders = useMemo(() => tendersData.filter((t) => t.status === "OPEN"), [tendersData]);
 
   const filtered = useMemo(() => {
     const term = q.trim().toLowerCase();
@@ -166,20 +97,20 @@ export default function MDTenders() {
       if (term) {
         const hit =
           t.title.toLowerCase().includes(term) ||
-          t.referenceNo.toLowerCase().includes(term) ||
-          t.category.toLowerCase().includes(term) ||
+          (t.referenceNo || "").toLowerCase().includes(term) ||
+          (t.category || "").toLowerCase().includes(term) ||
           t.department.toLowerCase().includes(term);
         if (!hit) return false;
       }
       return true;
     });
-  }, [status, department, q]);
+  }, [status, department, q, tendersData]);
 
   const getDaysRemaining = (closingDate) => {
     const now = new Date();
     const deadline = new Date(closingDate);
     const diffTime = deadline - now;
-    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
   };
 
   const totals = useMemo(() => {
@@ -188,7 +119,7 @@ export default function MDTenders() {
     const totalDownloads = tendersData.reduce((sum, t) => sum + (Number(t.downloads) || 0), 0);
     const awarded = tendersData.filter((t) => t.status === "AWARDED").length;
     return { totalTenders, totalDocs, totalDownloads, awarded };
-  }, []);
+  }, [tendersData]);
 
   const handleDownload = (tender) => {
     toast.info(`Downloading tender documents for: ${tender.title}`);
@@ -336,7 +267,12 @@ export default function MDTenders() {
           />
 
           <div className="mt-5 grid grid-cols-1 lg:grid-cols-2 gap-5">
-            {filtered.map((t) => {
+            {loading ? (
+              <div className="lg:col-span-2 py-20 flex flex-col items-center justify-center">
+                <div className="w-12 h-12 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin mb-4"></div>
+                <p className="text-gray-500 font-semibold tracking-wide">Loading real-time tender data...</p>
+              </div>
+            ) : filtered.map((t) => {
               const days = getDaysRemaining(t.closingDate);
 
               return (

@@ -1,11 +1,12 @@
 "use client";
 
-// pages/dashboards/HOD/HODAnnouncementDetail.jsx
-import { useMemo, useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { HODMenuItems } from "@/utils/menus";
+import { toast } from "@/lib/toast";
+import { fetchWithAuth } from "@/lib/api";
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
 );
@@ -15,14 +16,14 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "purple"
-      ? "bg-purple-50 text-purple-700 ring-purple-100"
-      : tone === "muted"
-      ? "bg-gray-50 text-gray-700 ring-gray-100"
-      : "bg-blue-50 text-blue-700 ring-blue-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "purple"
+            ? "bg-purple-50 text-purple-700 ring-purple-100"
+            : tone === "muted"
+              ? "bg-gray-50 text-gray-700 ring-gray-100"
+              : "bg-blue-50 text-blue-700 ring-blue-100";
 
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
@@ -48,76 +49,58 @@ export default function HODAnnouncementDetail() {
   const [newComment, setNewComment] = useState("");
   const [isAcknowledged, setIsAcknowledged] = useState(false);
 
-  // Demo data
-  const announcement = useMemo(
-    () => ({
-      id: announcementId || "ANN-002",
-      title: "Safety Protocol Updates",
-      message: `IMPORTANT SAFETY PROTOCOL UPDATES
+  const [announcement, setAnnouncement] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-Effective immediately, all technical staff must adhere to the following updated safety protocols for offshore operations:
+  useEffect(() => {
+    if (!announcementId) {
+      setError("No announcement ID provided");
+      setLoading(false);
+      return;
+    }
 
-1. PERSONAL PROTECTIVE EQUIPMENT (PPE):
-   - Hard hats must be worn at all times in operational areas
-   - Safety goggles required for all equipment handling
-   - High-visibility vests mandatory in all outdoor areas
-   - Steel-toe boots required in workshop and field operations
+    const fetchAnnouncement = async () => {
+      try {
+        setLoading(true);
+        const res = await fetchWithAuth(`/api/announcements/${announcementId}`);
+        if (!res.ok) {
+          throw new Error("Announcement not found");
+        }
+        const data = await res.json();
 
-2. EQUIPMENT SAFETY:
-   - All equipment must undergo daily safety checks
-   - Faulty equipment must be tagged and removed from service immediately
-   - Safety guards must be in place during equipment operation
+        setAnnouncement({
+          id: data.id,
+          title: data.title || "Untitled Announcement",
+          message: data.description || "",
+          createdBy: data.createdBy || "System",
+          createdDate: data.createdAt || data.date || new Date().toISOString(),
+          scope: data.scopeType || "All Company",
+          priority: data.priority || "NORMAL",
+          expiresAt: data.expiresAt || null,
+          read: true,
+          documents: [],
+          attachments: [],
+          readBy: [],
+          pendingAcknowledgements: [],
+          comments: [],
+          readCount: 0,
+          acknowledgedCount: 0,
+          requireAcknowledgement: false,
+          department: data.department || "All Departments",
+        });
+      } catch (err) {
+        console.error(err);
+        setError("Announcement not found");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-3. EMERGENCY PROCEDURES:
-   - New emergency assembly points have been designated
-   - Updated evacuation routes posted in all buildings
-   - Emergency contact numbers updated
+    fetchAnnouncement();
+  }, [announcementId]);
 
-4. TRAINING REQUIREMENTS:
-   - All technical staff must complete the updated safety training by December 31, 2024
-   - Training available online via the company portal
-   - Certification required for continued site access
-
-Failure to comply with these protocols will result in disciplinary action and potential site access revocation.`,
-      createdBy: "HSE Manager",
-      createdDate: "2024-12-14 14:15",
-      scope: "Technical Department",
-      priority: "URGENT",
-      expiresAt: "2025-01-31",
-      read: true,
-      department: "HSE",
-      documents: [
-        { id: 1, name: "Updated_Safety_Protocols.pdf", uploadedBy: "HSE Manager", date: "2024-12-14", size: "2.1 MB" },
-        { id: 2, name: "Training_Schedule.xlsx", uploadedBy: "HSE Manager", date: "2024-12-14", size: "1.5 MB" },
-      ],
-      attachments: [
-        { id: 1, name: "PPE_Requirements.pdf", type: "document", uploadedBy: "HSE Dept", date: "2024-12-14", size: "0.8 MB" },
-      ],
-      readBy: [
-        { name: "Alex Johnson", department: "Technical", readAt: "2024-12-14 15:30" },
-        { name: "Maria Garcia", department: "HSE", readAt: "2024-12-14 16:15" },
-        { name: "David Chen", department: "Workshop", readAt: "2024-12-15 09:45" },
-        { name: "Emma Wilson", department: "Technical", readAt: "2024-12-15 11:20" },
-        { name: "Michael Brown", department: "Technical", readAt: "2024-12-15 14:10" },
-      ],
-      pendingAcknowledgements: [
-        { name: "Sarah Taylor", department: "Technical" },
-        { name: "Robert Lee", department: "Workshop" },
-        { name: "Lisa Wang", department: "Technical" },
-      ],
-      comments: [
-        { id: 1, user: "Alex Johnson", comment: "Where can we access the online training?", timestamp: "2024-12-14 15:45" },
-        { id: 2, user: "HSE Manager", comment: "Training is available on the company portal under 'Safety Training' section", timestamp: "2024-12-14 16:00" },
-        { id: 3, user: "David Chen", comment: "Are there any changes to the permit-to-work system?", timestamp: "2024-12-15 10:30" },
-      ],
-      readCount: 89,
-      acknowledgedCount: 45,
-      requireAcknowledgement: true
-    }),
-    [announcementId]
-  );
-
-  const isExpired = useMemo(() => new Date(announcement.expiresAt) < new Date(), [announcement.expiresAt]);
+  const isExpired = useMemo(() => announcement?.expiresAt ? new Date(announcement.expiresAt) < new Date() : false, [announcement?.expiresAt]);
 
   const priorityTone = (p) => {
     if (p === "URGENT") return "danger";
@@ -160,6 +143,30 @@ Failure to comply with these protocols will result in disciplinary action and po
 
   const downloadDocument = (doc) => toast.info(`Downloading ${doc.name} (${doc.size})`);
 
+  if (loading) {
+    return (
+      <Layout menuItems={HODMenuItems} userRole="HOD">
+        <div className="flex items-center justify-center p-12">
+          <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (error || !announcement) {
+    return (
+      <Layout menuItems={HODMenuItems} userRole="HOD">
+        <div className="flex flex-col items-center justify-center p-12 gap-4">
+          <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center text-3xl">⚠️</div>
+          <h2 className="text-xl font-bold text-gray-900">{error || "Announcement not found"}</h2>
+          <button onClick={() => router.push("/hod-dashboard/announcements")} className={btnOutline}>
+            Back to Announcements
+          </button>
+        </div>
+      </Layout>
+    );
+  }
+
   return (
     <Layout menuItems={HODMenuItems} userRole="HOD">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -192,7 +199,7 @@ Failure to comply with these protocols will result in disciplinary action and po
                     {isExpired ? <Pill tone="muted">Expired</Pill> : null}
                   </div>
 
-                  <h1 className="text-xl md:text-2xl font-extrabold text-gray-900 truncate">{announcement.title}</h1>
+                  <h1 className="text-xl md:text-2xl font-extrabold text-gray-900">{announcement.title}</h1>
                   <p className="text-gray-600 mt-1 text-sm">
                     By <span className="font-semibold">{announcement.createdBy}</span> • {formatDateTime(announcement.createdDate)}
                   </p>
@@ -254,7 +261,7 @@ Failure to comply with these protocols will result in disciplinary action and po
               <div className="w-11 h-11 rounded-2xl bg-white flex items-center justify-center">⏳</div>
               <div>
                 <p className="font-extrabold text-gray-800">This announcement has expired</p>
-                <p className="text-sm text-gray-600 mt-0.5">Expired on {announcement.expiresAt}</p>
+                <p className="text-sm text-gray-600 mt-0.5">Expired on {formatDateTime(announcement.expiresAt)}</p>
               </div>
             </div>
           </Card>
@@ -275,9 +282,8 @@ Failure to comply with these protocols will result in disciplinary action and po
                   <button
                     key={t.id}
                     onClick={() => setActiveTab(t.id)}
-                    className={`px-6 py-4 text-sm font-semibold transition ${
-                      activeTab === t.id ? "text-blue-700" : "text-gray-500 hover:text-gray-700"
-                    }`}
+                    className={`px-6 py-4 text-sm font-semibold transition ${activeTab === t.id ? "text-blue-700" : "text-gray-500 hover:text-gray-700"
+                      }`}
                     style={{
                       borderBottom: activeTab === t.id ? "2px solid var(--primary-blue)" : "2px solid transparent",
                     }}
@@ -292,7 +298,7 @@ Failure to comply with these protocols will result in disciplinary action and po
                 <div className="p-6">
                   <div className="flex flex-wrap items-center gap-2 mb-4">
                     <Pill tone={scopeTone(announcement.scope)}>{announcement.scope}</Pill>
-                    <Pill tone="muted">Expires: {announcement.expiresAt}</Pill>
+                    {announcement.expiresAt && <Pill tone="muted">Expires: {formatDateTime(announcement.expiresAt)}</Pill>}
                     <Pill tone="muted">ID: {announcement.id}</Pill>
                   </div>
 
@@ -520,7 +526,9 @@ Failure to comply with these protocols will result in disciplinary action and po
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-gray-500 font-semibold">Expires</span>
-                  <span className={`font-semibold ${isExpired ? "text-red-600" : "text-gray-800"}`}>{announcement.expiresAt}</span>
+                  <span className={`font-semibold ${isExpired ? "text-red-600" : "text-gray-800"}`}>
+                    {announcement.expiresAt ? formatDateTime(announcement.expiresAt) : "Never"}
+                  </span>
                 </div>
                 <div className="pt-3 border-t border-gray-200/70">
                   <p className="text-gray-500 font-semibold">Author</p>

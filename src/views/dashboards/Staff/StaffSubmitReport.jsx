@@ -1,11 +1,13 @@
 "use client";
 
 // pages/dashboards/Staff/StaffSubmitReport.jsx
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { StaffMenuItems } from "@/utils/menus";
+import { fetchWithAuth } from "@/lib/api";
+import { toast } from "@/lib/toast";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -28,12 +30,12 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "info"
-      ? "bg-blue-50 text-blue-700 ring-blue-100"
-      : "bg-gray-50 text-gray-700 ring-gray-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "info"
+            ? "bg-blue-50 text-blue-700 ring-blue-100"
+            : "bg-gray-50 text-gray-700 ring-gray-100";
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
       {children}
@@ -71,15 +73,10 @@ const submittedReportsData = [
   }
 ];
 
-const tasksData = [
-  { id: 'TASK-2024-00123', title: 'Safety Inspection Report', due: '2024-12-10' },
-  { id: 'TASK-2024-00124', title: 'Equipment Maintenance Log', due: '2024-12-11' },
-  { id: 'TASK-2024-00125', title: 'Client Meeting Notes', due: '2024-12-15' },
-  { id: 'TASK-2024-00126', title: 'Training Completion', due: '2024-12-08' },
-];
+
 
 const getStatusTone = (status) => {
-  switch(status) {
+  switch (status) {
     case 'APPROVED': return 'success';
     case 'UNDER_REVIEW': return 'warn';
     case 'SUBMITTED': return 'info';
@@ -88,7 +85,7 @@ const getStatusTone = (status) => {
 };
 
 const getStatusLabel = (status) => {
-  switch(status) {
+  switch (status) {
     case 'APPROVED': return 'Approved';
     case 'UNDER_REVIEW': return 'Under Review';
     case 'SUBMITTED': return 'Submitted';
@@ -98,7 +95,7 @@ const getStatusLabel = (status) => {
 
 const getFileIcon = (fileName) => {
   const ext = fileName.split('.').pop().toLowerCase();
-  switch(ext) {
+  switch (ext) {
     case 'pdf': return '📕';
     case 'doc':
     case 'docx': return '📘';
@@ -114,12 +111,12 @@ const getFileIcon = (fileName) => {
 };
 
 const fmtDateTime = (iso) =>
-  iso ? new Date(iso).toLocaleString(undefined, { 
-    hour: '2-digit', 
+  iso ? new Date(iso).toLocaleString(undefined, {
+    hour: '2-digit',
     minute: '2-digit',
     month: 'short',
     day: 'numeric',
-    hour12: true 
+    hour12: true
   }) : "Not set";
 
 export default function StaffSubmitReport() {
@@ -131,6 +128,25 @@ export default function StaffSubmitReport() {
   const [file, setFile] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittedReports, setSubmittedReports] = useState(submittedReportsData);
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadTasks() {
+      try {
+        const res = await fetchWithAuth("/api/tasks/my-tasks");
+        if (res.ok) {
+          const data = await res.json();
+          setTasks(data);
+        }
+      } catch (err) {
+        console.error("Failed to load tasks:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadTasks();
+  }, []);
 
   const stats = useMemo(() => {
     const total = submittedReports.length;
@@ -139,10 +155,10 @@ export default function StaffSubmitReport() {
     const thisMonth = submittedReports.filter(r => {
       const reportDate = new Date(r.submittedDate);
       const now = new Date();
-      return reportDate.getMonth() === now.getMonth() && 
-             reportDate.getFullYear() === now.getFullYear();
+      return reportDate.getMonth() === now.getMonth() &&
+        reportDate.getFullYear() === now.getFullYear();
     }).length;
-    
+
     return { total, approved, underReview, thisMonth };
   }, [submittedReports]);
 
@@ -169,7 +185,7 @@ export default function StaffSubmitReport() {
     }
 
     setIsSubmitting(true);
-    
+
     // Simulate API call
     setTimeout(() => {
       const newReport = {
@@ -181,7 +197,7 @@ export default function StaffSubmitReport() {
         file: file.name,
         fileSize: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
       };
-      
+
       setSubmittedReports([newReport, ...submittedReports]);
       setTitle('');
       setDescription('');
@@ -244,7 +260,7 @@ export default function StaffSubmitReport() {
           {/* Submit Form */}
           <Card className="p-6">
             <SectionTitle title="Submit New Report" />
-            
+
             <form onSubmit={handleSubmit} className="mt-6 space-y-6">
               {/* Report Type */}
               <div>
@@ -253,9 +269,8 @@ export default function StaffSubmitReport() {
                   <button
                     type="button"
                     onClick={() => setReportType('task')}
-                    className={`flex-1 px-4 py-3 rounded-2xl font-semibold text-sm border transition active:scale-[0.99] ${
-                      reportType === 'task' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
-                    }`}
+                    className={`flex-1 px-4 py-3 rounded-2xl font-semibold text-sm border transition active:scale-[0.99] ${reportType === 'task' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
+                      }`}
                     style={{
                       borderColor: reportType === 'task' ? "var(--primary-blue)" : "#e5e7eb",
                       color: reportType === 'task' ? "var(--primary-blue)" : "#374151",
@@ -266,9 +281,8 @@ export default function StaffSubmitReport() {
                   <button
                     type="button"
                     onClick={() => setReportType('general')}
-                    className={`flex-1 px-4 py-3 rounded-2xl font-semibold text-sm border transition active:scale-[0.99] ${
-                      reportType === 'general' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
-                    }`}
+                    className={`flex-1 px-4 py-3 rounded-2xl font-semibold text-sm border transition active:scale-[0.99] ${reportType === 'general' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
+                      }`}
                     style={{
                       borderColor: reportType === 'general' ? "var(--secondary-blue)" : "#e5e7eb",
                       color: reportType === 'general' ? "var(--secondary-blue)" : "#374151",
@@ -289,9 +303,9 @@ export default function StaffSubmitReport() {
                     className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-100"
                   >
                     <option value="">Select a task...</option>
-                    {tasksData.map((task) => (
+                    {tasks.map((task) => (
                       <option key={task.id} value={task.id}>
-                        {task.title} ({task.id}) - Due: {task.due}
+                        {task.title} ({task.id}) - Due: {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'N/A'}
                       </option>
                     ))}
                   </select>
@@ -353,7 +367,7 @@ export default function StaffSubmitReport() {
                     </p>
                   </label>
                 </div>
-                
+
                 {file && (
                   <div className="mt-3 p-3 rounded-2xl bg-emerald-50 border border-emerald-200">
                     <div className="flex items-center justify-between">
@@ -374,9 +388,8 @@ export default function StaffSubmitReport() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`w-full px-6 py-3 rounded-2xl font-semibold text-white transition ${
-                    isSubmitting ? 'opacity-75 cursor-not-allowed' : 'active:scale-[0.99]'
-                  }`}
+                  className={`w-full px-6 py-3 rounded-2xl font-semibold text-white transition ${isSubmitting ? 'opacity-75 cursor-not-allowed' : 'active:scale-[0.99]'
+                    }`}
                   style={{ backgroundColor: "var(--accent-red)" }}
                 >
                   {isSubmitting ? (
@@ -395,11 +408,11 @@ export default function StaffSubmitReport() {
 
           {/* Submitted Reports */}
           <Card className="p-6">
-            <SectionTitle 
-              title="Previously Submitted Reports" 
+            <SectionTitle
+              title="Previously Submitted Reports"
               subtitle={`${submittedReports.length} total`}
             />
-            
+
             <div className="mt-6 space-y-4 max-h-[500px] overflow-y-auto pr-2">
               {submittedReports.map((report) => (
                 <div
@@ -413,7 +426,7 @@ export default function StaffSubmitReport() {
                     >
                       {getFileIcon(report.file)}
                     </div>
-                    
+
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2">
                         <div>

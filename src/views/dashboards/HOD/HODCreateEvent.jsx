@@ -1,11 +1,13 @@
 "use client";
 
 // pages/dashboards/HOD/HODCreateEvent.jsx
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { HODMenuItems } from "@/utils/menus";
 import { getIconByKey } from "@/lib/icons";
+import { fetchWithAuth } from "@/lib/api";
+import { toast } from "@/lib/toast";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -16,12 +18,12 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "info"
-      ? "bg-blue-50 text-blue-700 ring-blue-100"
-      : "bg-gray-50 text-gray-700 ring-gray-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "info"
+            ? "bg-blue-50 text-blue-700 ring-blue-100"
+            : "bg-gray-50 text-gray-700 ring-gray-100";
 
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
@@ -59,22 +61,37 @@ const textareaBase =
 
 const typeIconKey = (v) => (v === "MEETING" ? "users" : v === "TRAINING" ? "training" : v === "EVENT" ? "event" : "calendar");
 
-const departments = [
-  'Technical', 'Workshop', 'HSE', 'Logistics', 'Procurement', 'Accounts'
-];
 
-const users = [
-  { id: 1, name: 'Alex Johnson', department: 'Technical' },
-  { id: 2, name: 'Emma Wilson', department: 'Technical' },
-  { id: 3, name: 'Michael Brown', department: 'Technical' },
-  { id: 4, name: 'Sarah Taylor', department: 'HSE' },
-  { id: 5, name: 'James Anderson', department: 'Workshop' },
-  { id: 6, name: 'Lisa Chen', department: 'Logistics' },
-  { id: 7, name: 'David Kim', department: 'Procurement' },
-  { id: 8, name: 'Maria Garcia', department: 'Accounts' },
-];
 
 export default function HODCreateEvent() {
+  const [departments, setDepartments] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const [deptRes, userRes] = await Promise.all([
+          fetchWithAuth("/api/departments"),
+          fetchWithAuth("/api/users"),
+        ]);
+        if (deptRes.ok) {
+          const data = await deptRes.json();
+          setDepartments(data.map(d => d.name));
+        }
+        if (userRes.ok) {
+          const data = await userRes.json();
+          setUsers(data);
+        }
+      } catch (err) {
+        console.error("Failed to load departments/users:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadData();
+  }, []);
+
   const router = useRouter();
 
   const [formData, setFormData] = useState({
@@ -229,9 +246,8 @@ export default function HODCreateEvent() {
                   <button
                     key={t.value}
                     type="button"
-                    className={`p-4 rounded-2xl border text-left transition ${
-                      active ? "bg-white" : "bg-gray-50 hover:bg-gray-100"
-                    }`}
+                    className={`p-4 rounded-2xl border text-left transition ${active ? "bg-white" : "bg-gray-50 hover:bg-gray-100"
+                      }`}
                     style={{
                       borderColor: active ? "rgba(44, 75, 155, 0.45)" : "rgba(0,0,0,0.08)",
                       boxShadow: active ? "0 10px 20px rgba(17,24,39,0.06)" : undefined,
@@ -249,8 +265,8 @@ export default function HODCreateEvent() {
                       {t.value === "MEETING"
                         ? "Department meetings"
                         : t.value === "TRAINING"
-                        ? "Workshops and trainings"
-                        : "Department events & gatherings"}
+                          ? "Workshops and trainings"
+                          : "Department events & gatherings"}
                     </div>
                   </button>
                 );
@@ -382,9 +398,8 @@ export default function HODCreateEvent() {
                   <button
                     key={s.value}
                     type="button"
-                    className={`p-4 rounded-2xl border text-left transition ${
-                      active ? "bg-white" : "bg-gray-50 hover:bg-gray-100"
-                    }`}
+                    className={`p-4 rounded-2xl border text-left transition ${active ? "bg-white" : "bg-gray-50 hover:bg-gray-100"
+                      }`}
                     style={{
                       borderColor: active ? "rgba(44, 75, 155, 0.45)" : "rgba(0,0,0,0.08)",
                       boxShadow: active ? "0 10px 20px rgba(17,24,39,0.06)" : undefined,
@@ -421,9 +436,8 @@ export default function HODCreateEvent() {
                         key={dept}
                         type="button"
                         onClick={() => toggleDepartment(dept)}
-                        className={`px-3.5 py-2 rounded-2xl text-sm font-semibold transition ring-1 ${
-                          active ? "text-white" : "text-gray-700 bg-gray-50 hover:bg-gray-100"
-                        }`}
+                        className={`px-3.5 py-2 rounded-2xl text-sm font-semibold transition ring-1 ${active ? "text-white" : "text-gray-700 bg-gray-50 hover:bg-gray-100"
+                          }`}
                         style={{
                           backgroundColor: active ? "var(--primary-blue)" : undefined,
                           borderColor: active ? "transparent" : "rgba(0,0,0,0.06)",
@@ -455,9 +469,8 @@ export default function HODCreateEvent() {
                         key={u.id}
                         type="button"
                         onClick={() => toggleUser(u.id)}
-                        className={`w-full flex items-center gap-3 px-4 py-3 text-left border-b last:border-b-0 border-gray-200/70 transition ${
-                          active ? "bg-blue-50" : "hover:bg-gray-50"
-                        }`}
+                        className={`w-full flex items-center gap-3 px-4 py-3 text-left border-b last:border-b-0 border-gray-200/70 transition ${active ? "bg-blue-50" : "hover:bg-gray-50"
+                          }`}
                       >
                         <div
                           className="w-9 h-9 rounded-2xl flex items-center justify-center text-white font-bold text-sm "
@@ -573,15 +586,13 @@ export default function HODCreateEvent() {
                     <button
                       type="button"
                       onClick={() => setFormData((p) => ({ ...p, [opt.key]: !p[opt.key] }))}
-                      className={`relative inline-flex items-center h-7 w-12 rounded-full transition ${
-                        checked ? "bg-blue-600" : "bg-gray-200"
-                      }`}
+                      className={`relative inline-flex items-center h-7 w-12 rounded-full transition ${checked ? "bg-blue-600" : "bg-gray-200"
+                        }`}
                       aria-pressed={checked}
                     >
                       <span
-                        className={`inline-block h-5 w-5 bg-white rounded-full transform transition ${
-                          checked ? "translate-x-6" : "translate-x-1"
-                        }`}
+                        className={`inline-block h-5 w-5 bg-white rounded-full transform transition ${checked ? "translate-x-6" : "translate-x-1"
+                          }`}
                       />
                     </button>
                   </div>

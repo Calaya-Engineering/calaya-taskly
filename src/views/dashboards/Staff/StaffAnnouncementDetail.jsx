@@ -1,11 +1,12 @@
 "use client";
 
-// pages/dashboards/Staff/StaffAnnouncementDetail.jsx
-import { useMemo, useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { StaffMenuItems } from "@/utils/menus";
+import { toast } from "@/lib/toast";
+import { fetchWithAuth } from "@/lib/api";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -16,14 +17,14 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "purple"
-      ? "bg-purple-50 text-purple-700 ring-purple-100"
-      : tone === "muted"
-      ? "bg-gray-50 text-gray-700 ring-gray-100"
-      : "bg-blue-50 text-blue-700 ring-blue-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "purple"
+            ? "bg-purple-50 text-purple-700 ring-purple-100"
+            : tone === "muted"
+              ? "bg-gray-50 text-gray-700 ring-gray-100"
+              : "bg-blue-50 text-blue-700 ring-blue-100";
 
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
@@ -45,67 +46,55 @@ export default function StaffAnnouncementDetail() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("content");
   const [newComment, setNewComment] = useState("");
-  const [isInternal, setIsInternal] = useState(false);
+  const [announcement, setAnnouncement] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Demo data
-  const announcement = useMemo(
-    () => ({
-      id: announcementId || "ANN-001",
-      title: "Safety Protocol Update - December 2024",
-      message: `Dear All,
+  useEffect(() => {
+    if (!announcementId) {
+      setError("No announcement ID provided");
+      setLoading(false);
+      return;
+    }
 
-Please review the updated safety protocols that will take effect from January 1, 2025. All staff must complete the mandatory safety training by December 31, 2024.
+    const fetchAnnouncement = async () => {
+      try {
+        setLoading(true);
+        const res = await fetchWithAuth(`/api/announcements/${announcementId}`);
+        if (!res.ok) {
+          throw new Error("Announcement not found");
+        }
+        const data = await res.json();
 
-Key Changes:
-1. New workshop equipment safety guidelines
-2. Updated emergency evacuation procedures
-3. Revised personal protective equipment requirements
-4. Enhanced incident reporting system
+        setAnnouncement({
+          id: data.id,
+          title: data.title || "Untitled Announcement",
+          message: data.description || "",
+          createdBy: data.createdBy || "System",
+          createdDate: data.createdAt || data.date || new Date().toISOString(),
+          scope: data.scopeType || "All Company",
+          priority: data.priority || "NORMAL",
+          expiresAt: data.expiresAt || null,
+          read: true,
+          documents: [],
+          attachments: [],
+          readBy: [],
+          comments: [],
+          reads: 0,
+          departments: data.department ? [data.department] : ["All Departments"],
+        });
+      } catch (err) {
+        console.error(err);
+        setError("Announcement not found");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-Training Requirements:
-• All technical staff must attend workshop safety training
-• Office staff must complete fire safety training
-• Department heads are responsible for ensuring compliance
+    fetchAnnouncement();
+  }, [announcementId]);
 
-Action Required:
-1. Review the attached safety protocol document
-2. Complete required training by December 31
-3. Submit training completion certificates to HR
-4. Report any safety concerns immediately
-
-Failure to complete training by the deadline may result in restricted site access.`,
-      createdBy: "HSE Department",
-      createdDate: "2024-12-10T09:30:00",
-      scope: "All Company",
-      priority: "IMPORTANT",
-      expiresAt: "2024-12-31",
-      read: true,
-      documents: [
-        { id: 1, name: "Safety Protocol v2.1.pdf", uploadedBy: "HSE Department", date: "2024-12-10", size: "2.4 MB" },
-        { id: 2, name: "Training Schedule.xlsx", uploadedBy: "HR Department", date: "2024-12-09", size: "0.8 MB" },
-      ],
-      attachments: [],
-      readBy: [
-        { name: "John Doe", department: "Technical", readAt: "2024-12-10T10:15:00" },
-        { name: "Sarah Smith", department: "Workshop", readAt: "2024-12-10T11:30:00" },
-        { name: "Mike Johnson", department: "HSE", readAt: "2024-12-10T09:45:00" },
-        { name: "Lisa Wang", department: "Technical", readAt: "2024-12-10T14:20:00" },
-        { name: "Robert Brown", department: "Logistics", readAt: "2024-12-10T16:45:00" },
-      ],
-      comments: [
-        { id: 1, user: "John Doe", comment: "When is the workshop safety training scheduled?", timestamp: "2024-12-10T10:30:00", isInternal: false },
-        { id: 2, user: "HSE Officer", comment: "Workshop training is scheduled for Dec 15 & 16", timestamp: "2024-12-10T11:15:00", isInternal: false },
-        { id: 3, user: "HR Department", comment: "Training completion certificates should be submitted through the portal", timestamp: "2024-12-10T12:45:00", isInternal: false },
-        { id: 4, user: "HSE Manager", comment: "Internal Note: Need to follow up with Technical Dept", timestamp: "2024-12-10T13:30:00", isInternal: true },
-      ],
-      reads: 142,
-      departments: ["All Departments"],
-    }),
-    [announcementId]
-  );
-
-  const isExpired = useMemo(() => new Date(announcement.expiresAt) < new Date(), [announcement.expiresAt]);
-
+  const isExpired = useMemo(() => announcement?.expiresAt ? new Date(announcement.expiresAt) < new Date() : false, [announcement?.expiresAt]);
   const priorityTone = (p) => (p === "URGENT" ? "danger" : p === "IMPORTANT" || p === "HIGH" ? "warn" : p === "NORMAL" ? "success" : "muted");
   const scopeTone = (s) => (s === "All Company" ? "purple" : s === "Technical Department" ? "info" : s === "Workshop Department" ? "warn" : "muted");
 
@@ -121,8 +110,31 @@ Failure to complete training by the deadline may result in restricted site acces
     setIsInternal(false);
   };
 
-  const downloadDocument = (doc) => toast.info(`Downloading ${doc.name} (${doc.size})`);
   const markAsUnread = () => toast.info("Marked as unread");
+
+  if (loading) {
+    return (
+      <Layout menuItems={StaffMenuItems} userRole="Staff">
+        <div className="flex items-center justify-center p-12">
+          <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (error || !announcement) {
+    return (
+      <Layout menuItems={StaffMenuItems} userRole="Staff">
+        <div className="flex flex-col items-center justify-center p-12 gap-4">
+          <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center text-3xl">⚠️</div>
+          <h2 className="text-xl font-bold text-gray-900">{error || "Announcement not found"}</h2>
+          <button onClick={() => router.push("/staff-dashboard/announcements")} className={btnOutline}>
+            Back to Announcements
+          </button>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout menuItems={StaffMenuItems} userRole="Staff">
@@ -155,7 +167,7 @@ Failure to complete training by the deadline may result in restricted site acces
                     {isExpired ? <Pill tone="muted">Expired</Pill> : null}
                   </div>
 
-                  <h1 className="text-xl md:text-2xl font-extrabold text-gray-900 truncate">{announcement.title}</h1>
+                  <h1 className="text-xl md:text-2xl font-extrabold text-gray-900">{announcement.title}</h1>
                   <p className="text-gray-600 mt-1 text-sm">
                     By <span className="font-semibold">{announcement.createdBy}</span> • {formatDateTime(announcement.createdDate)}
                   </p>
@@ -189,7 +201,7 @@ Failure to complete training by the deadline may result in restricted site acces
               <div className="w-11 h-11 rounded-2xl bg-white flex items-center justify-center">⏳</div>
               <div>
                 <p className="font-extrabold text-gray-800">This announcement has expired</p>
-                <p className="text-sm text-gray-600 mt-0.5">Expired on {announcement.expiresAt}</p>
+                <p className="text-sm text-gray-600 mt-0.5">Expired on {formatDateTime(announcement.expiresAt)}</p>
               </div>
             </div>
           </Card>
@@ -209,9 +221,8 @@ Failure to complete training by the deadline may result in restricted site acces
                   <button
                     key={t.id}
                     onClick={() => setActiveTab(t.id)}
-                    className={`px-6 py-4 text-sm font-semibold transition ${
-                      activeTab === t.id ? "text-blue-700" : "text-gray-500 hover:text-gray-700"
-                    }`}
+                    className={`px-6 py-4 text-sm font-semibold transition ${activeTab === t.id ? "text-blue-700" : "text-gray-500 hover:text-gray-700"
+                      }`}
                     style={{
                       borderBottom: activeTab === t.id ? "2px solid var(--primary-blue)" : "2px solid transparent",
                     }}
@@ -226,7 +237,7 @@ Failure to complete training by the deadline may result in restricted site acces
                 <div className="p-6">
                   <div className="flex flex-wrap items-center gap-2 mb-4">
                     <Pill tone={scopeTone(announcement.scope)}>{announcement.scope}</Pill>
-                    <Pill tone="muted">Expires: {announcement.expiresAt}</Pill>
+                    {announcement.expiresAt && <Pill tone="muted">Expires: {formatDateTime(announcement.expiresAt)}</Pill>}
                     <Pill tone="muted">ID: {announcement.id}</Pill>
                   </div>
 
@@ -387,7 +398,9 @@ Failure to complete training by the deadline may result in restricted site acces
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-gray-500 font-semibold">Expires</span>
-                  <span className={`font-semibold ${isExpired ? "text-red-600" : "text-gray-800"}`}>{announcement.expiresAt}</span>
+                  <span className={`font-semibold ${isExpired ? "text-red-600" : "text-gray-800"}`}>
+                    {announcement.expiresAt ? formatDateTime(announcement.expiresAt) : "Never"}
+                  </span>
                 </div>
                 <div className="pt-3 border-t border-gray-200/70">
                   <p className="text-gray-500 font-semibold">Author</p>

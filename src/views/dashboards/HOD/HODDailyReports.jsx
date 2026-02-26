@@ -1,10 +1,12 @@
 "use client";
 
 // pages/dashboards/HOD/HODDailyReports.jsx
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import { HODMenuItems } from "@/utils/menus";
+import { fetchWithAuth } from "@/lib/api";
+import { toast } from "@/lib/toast";
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
 );
@@ -26,14 +28,14 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "info"
-      ? "bg-blue-50 text-blue-700 ring-blue-100"
-      : tone === "purple"
-      ? "bg-purple-50 text-purple-700 ring-purple-100"
-      : "bg-gray-50 text-gray-700 ring-gray-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "info"
+            ? "bg-blue-50 text-blue-700 ring-blue-100"
+            : tone === "purple"
+              ? "bg-purple-50 text-purple-700 ring-purple-100"
+              : "bg-gray-50 text-gray-700 ring-gray-100";
 
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
@@ -93,15 +95,17 @@ const formatDate = (dateString) => {
 const formatDateTime = (dateTime) => {
   if (!dateTime) return '-';
   const date = new Date(dateTime);
-  return date.toLocaleString('en-US', { 
-    month: 'short', 
-    day: 'numeric', 
-    hour: '2-digit', 
-    minute: '2-digit' 
+  return date.toLocaleString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
   });
 };
 
 export default function HODDailyReports() {
+  const [dailyReports, setDailyReports] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState('');
   const [departmentFilter, setDepartmentFilter] = useState('All');
   const [viewMode, setViewMode] = useState('list');
@@ -119,122 +123,35 @@ export default function HODDailyReports() {
     }
   ]);
 
-  const [dailyReports, setDailyReports] = useState([
-    {
-      id: 'DR-2024-12-15-001',
-      date: '2024-12-15',
-      department: 'Technical',
-      submittedBy: 'HOD - Technical',
-      submittedAt: '2024-12-15T16:30:00',
-      entries: [
-        {
-          taskName: 'Pipeline Inspection',
-          objective: 'Complete safety check of main pipeline',
-          target: 'Inspect 5km section',
-          nextDayTask: 'Continue inspection on remaining sections'
-        },
-        {
-          taskName: 'Equipment Maintenance',
-          objective: 'Calibrate testing equipment',
-          target: 'Complete calibration of 3 units',
-          nextDayTask: 'Document calibration results'
+  useEffect(() => {
+    async function getReports() {
+      try {
+        const resp = await fetchWithAuth("/api/documents?type=Report");
+        if (resp.ok) {
+          const data = await resp.json();
+          const mapped = data.map(d => ({
+            id: d.id,
+            dbId: d.dbId,
+            date: d.date ? d.date.split('T')[0] : '',
+            department: d.department,
+            submittedBy: d.uploadedBy,
+            submittedAt: d.date,
+            entries: [], // Documents don't have nested entries in this schema
+            fileSize: d.size || '—',
+            fileType: d.fileUrl ? d.fileUrl.split('.').pop().toUpperCase() : 'PDF',
+            status: 'APPROVED',
+            fileUrl: d.fileUrl
+          }));
+          setDailyReports(mapped);
         }
-      ],
-      fileSize: '1.2 MB',
-      fileType: 'PDF',
-      status: 'APPROVED'
-    },
-    {
-      id: 'DR-2024-12-15-002',
-      date: '2024-12-15',
-      department: 'Workshop',
-      submittedBy: 'HOD - Workshop',
-      submittedAt: '2024-12-15T15:45:00',
-      entries: [
-        {
-          taskName: 'Machine Repair',
-          objective: 'Fix lathe machine',
-          target: 'Complete repair by end of day',
-          nextDayTask: 'Test machine under load'
-        }
-      ],
-      fileSize: '0.8 MB',
-      fileType: 'PDF',
-      status: 'PENDING'
-    },
-    {
-      id: 'DR-2024-12-14-001',
-      date: '2024-12-14',
-      department: 'Technical',
-      submittedBy: 'HOD - Technical',
-      submittedAt: '2024-12-14T17:00:00',
-      entries: [
-        {
-          taskName: 'Safety Training',
-          objective: 'Conduct safety briefing',
-          target: 'All technical staff attended',
-          nextDayTask: 'Collect training feedback'
-        },
-        {
-          taskName: 'Site Inspection',
-          objective: 'Inspect Site A',
-          target: 'Complete full site inspection',
-          nextDayTask: 'Prepare inspection report'
-        },
-        {
-          taskName: 'Equipment Order',
-          objective: 'Process equipment request',
-          target: 'Submit purchase requisition',
-          nextDayTask: 'Follow up with procurement'
-        }
-      ],
-      fileSize: '2.1 MB',
-      fileType: 'PDF',
-      status: 'APPROVED'
-    },
-    {
-      id: 'DR-2024-12-14-002',
-      date: '2024-12-14',
-      department: 'HSE',
-      submittedBy: 'HOD - HSE',
-      submittedAt: '2024-12-14T16:15:00',
-      entries: [
-        {
-          taskName: 'Safety Audit',
-          objective: 'Conduct weekly safety audit',
-          target: 'Inspect workshop and technical areas',
-          nextDayTask: 'Address identified non-compliance'
-        }
-      ],
-      fileSize: '1.5 MB',
-      fileType: 'PDF',
-      status: 'APPROVED'
-    },
-    {
-      id: 'DR-2024-12-13-001',
-      date: '2024-12-13',
-      department: 'Workshop',
-      submittedBy: 'HOD - Workshop',
-      submittedAt: '2024-12-13T16:50:00',
-      entries: [
-        {
-          taskName: 'Tool Calibration',
-          objective: 'Calibrate workshop tools',
-          target: 'Complete calibration of 15 tools',
-          nextDayTask: 'Update tool register'
-        },
-        {
-          taskName: 'Inventory Check',
-          objective: 'Monthly stock verification',
-          target: 'Count all consumables',
-          nextDayTask: 'Place orders for low stock'
-        }
-      ],
-      fileSize: '1.8 MB',
-      fileType: 'PDF',
-      status: 'APPROVED'
-    },
-  ]);
+      } catch (err) {
+        console.error("Failed to fetch reports:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    getReports();
+  }, []);
 
   // Load saved form data from sessionStorage on mount
   useEffect(() => {
@@ -331,10 +248,10 @@ export default function HODDailyReports() {
       target: '',
       nextDayTask: ''
     }];
-    
+
     setReportEntries(defaultEntries);
     setSelectedDepartments(['Technical']);
-    
+
     sessionStorage.removeItem(STORAGE_KEYS.REPORT_ENTRIES);
     sessionStorage.removeItem(STORAGE_KEYS.SELECTED_DEPARTMENTS);
   };
@@ -398,6 +315,16 @@ export default function HODDailyReports() {
     }
   }, [isModalOpen, reportEntries]);
 
+  if (loading) {
+    return (
+      <Layout menuItems={HODMenuItems} userRole="HOD">
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div>
+        </div>
+      </Layout>
+    );
+  }
+
   return (
     <Layout menuItems={HODMenuItems} userRole="HOD">
       <div className="space-y-6">
@@ -438,18 +365,16 @@ export default function HODDailyReports() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => setViewMode('list')}
-                    className={`p-3 rounded-2xl text-xl transition ${
-                      viewMode === 'list' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
-                    }`}
+                    className={`p-3 rounded-2xl text-xl transition ${viewMode === 'list' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
+                      }`}
                     style={{ color: viewMode === 'list' ? 'var(--primary-blue)' : '#6B7280' }}
                   >
                     📋
                   </button>
                   <button
                     onClick={() => setViewMode('calendar')}
-                    className={`p-3 rounded-2xl text-xl transition ${
-                      viewMode === 'calendar' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
-                    }`}
+                    className={`p-3 rounded-2xl text-xl transition ${viewMode === 'calendar' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
+                      }`}
                     style={{ color: viewMode === 'calendar' ? 'var(--primary-blue)' : '#6B7280' }}
                   >
                     📅
@@ -528,9 +453,8 @@ export default function HODDailyReports() {
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => setSelectedDate('')}
-                className={`px-4 py-2 rounded-2xl text-sm font-semibold border transition ${
-                  selectedDate === '' ? 'text-white' : 'text-gray-700 bg-white hover:bg-gray-50'
-                }`}
+                className={`px-4 py-2 rounded-2xl text-sm font-semibold border transition ${selectedDate === '' ? 'text-white' : 'text-gray-700 bg-white hover:bg-gray-50'
+                  }`}
                 style={{
                   backgroundColor: selectedDate === '' ? 'var(--primary-blue)' : undefined,
                   borderColor: selectedDate === '' ? 'transparent' : 'rgba(0,0,0,0.08)',
@@ -540,9 +464,8 @@ export default function HODDailyReports() {
               </button>
               <button
                 onClick={() => setSelectedDate(new Date().toISOString().split('T')[0])}
-                className={`px-4 py-2 rounded-2xl text-sm font-semibold border transition ${
-                  selectedDate === new Date().toISOString().split('T')[0] ? 'text-white' : 'text-gray-700 bg-white hover:bg-gray-50'
-                }`}
+                className={`px-4 py-2 rounded-2xl text-sm font-semibold border transition ${selectedDate === new Date().toISOString().split('T')[0] ? 'text-white' : 'text-gray-700 bg-white hover:bg-gray-50'
+                  }`}
                 style={{
                   backgroundColor: selectedDate === new Date().toISOString().split('T')[0] ? 'var(--secondary-blue)' : undefined,
                   borderColor: selectedDate === new Date().toISOString().split('T')[0] ? 'transparent' : 'rgba(0,0,0,0.08)',
@@ -658,11 +581,11 @@ export default function HODDailyReports() {
         ) : (
           /* Calendar View */
           <Card className="p-6">
-            <SectionTitle 
-              title="Calendar View - December 2024" 
+            <SectionTitle
+              title="Calendar View - December 2024"
               subtitle="Click on a date to filter reports"
             />
-            
+
             <div className="mt-6">
               <div className="grid grid-cols-7 gap-2 mb-2">
                 {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
@@ -671,25 +594,24 @@ export default function HODDailyReports() {
                   </div>
                 ))}
               </div>
-              
+
               <div className="grid grid-cols-7 gap-2">
                 {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => {
                   const dateStr = `2024-12-${day.toString().padStart(2, '0')}`;
                   const dayReports = filteredReports.filter(r => r.date === dateStr);
                   const hasReport = dayReports.length > 0;
                   const isSelected = selectedDate === dateStr;
-                  
+
                   return (
                     <button
                       key={day}
                       onClick={() => setSelectedDate(dateStr)}
-                      className={`p-3 rounded-2xl border-2 transition-all ${
-                        isSelected
-                          ? 'border-blue-500 bg-blue-50'
-                          : hasReport
+                      className={`p-3 rounded-2xl border-2 transition-all ${isSelected
+                        ? 'border-blue-500 bg-blue-50'
+                        : hasReport
                           ? 'border-blue-200 hover:border-blue-300 bg-white'
                           : 'border-gray-100 hover:border-gray-200 bg-gray-50'
-                      }`}
+                        }`}
                     >
                       <div className="flex justify-between items-start">
                         <span className={`text-sm font-semibold ${isSelected ? 'text-blue-700' : 'text-gray-700'}`}>
@@ -699,20 +621,20 @@ export default function HODDailyReports() {
                           <span className="w-2 h-2 rounded-full bg-green-500"></span>
                         )}
                       </div>
-                      
+
                       {hasReport && (
                         <div className="mt-2 space-y-1">
                           {dayReports.slice(0, 2).map((report, idx) => (
                             <div
                               key={idx}
                               className="text-[10px] p-1 rounded truncate text-left"
-                              style={{ 
+                              style={{
                                 backgroundColor: report.department === 'Technical' ? '#DBEAFE' :
-                                               report.department === 'HSE' ? '#D1FAE5' :
-                                               report.department === 'Workshop' ? '#FEF3C7' : '#F3E8FF',
+                                  report.department === 'HSE' ? '#D1FAE5' :
+                                    report.department === 'Workshop' ? '#FEF3C7' : '#F3E8FF',
                                 color: report.department === 'Technical' ? '#1E40AF' :
-                                       report.department === 'HSE' ? '#065F46' :
-                                       report.department === 'Workshop' ? '#92400E' : '#6B21A8',
+                                  report.department === 'HSE' ? '#065F46' :
+                                    report.department === 'Workshop' ? '#92400E' : '#6B21A8',
                               }}
                             >
                               {report.department} ({report.entries.length})
@@ -739,7 +661,7 @@ export default function HODDailyReports() {
             const deptReports = filteredReports.filter(r => r.department === dept);
             const pendingCount = deptReports.filter(r => r.status === 'PENDING').length;
             const approvedCount = deptReports.filter(r => r.status === 'APPROVED').length;
-            
+
             return (
               <Card key={dept} className="p-6 transition">
                 <div className="flex items-center justify-between mb-4">
@@ -748,7 +670,7 @@ export default function HODDailyReports() {
                   </h3>
                   <Pill tone={getDepartmentTone(dept)}>{deptReports.length} reports</Pill>
                 </div>
-                
+
                 <div className="space-y-3">
                   <div className="flex justify-between items-center text-sm">
                     <span className="text-gray-600">This Month</span>
@@ -756,12 +678,12 @@ export default function HODDailyReports() {
                       {deptReports.filter(r => r.date.startsWith('2024-12')).length}
                     </span>
                   </div>
-                  
+
                   <div className="flex justify-between items-center text-sm">
                     <span className="text-gray-600">Pending Approval</span>
                     <Pill tone="warn">{pendingCount}</Pill>
                   </div>
-                  
+
                   <div className="flex justify-between items-center text-sm">
                     <span className="text-gray-600">Approved</span>
                     <Pill tone="success">{approvedCount}</Pill>
@@ -783,7 +705,7 @@ export default function HODDailyReports() {
                     </div>
                   </div>
 
-                  <button 
+                  <button
                     onClick={() => setDepartmentFilter(dept)}
                     className="w-full mt-3 px-4 py-2.5 rounded-2xl text-sm font-semibold border bg-white hover:bg-gray-50 transition active:scale-[0.99]"
                     style={{ borderColor: "rgba(44, 75, 155, 0.35)", color: "var(--primary-blue)" }}
@@ -846,11 +768,10 @@ export default function HODDailyReports() {
                         key={dept}
                         type="button"
                         onClick={() => toggleDepartment(dept)}
-                        className={`px-4 py-2 rounded-2xl text-sm font-semibold border transition ${
-                          selectedDepartments.includes(dept)
-                            ? 'text-white'
-                            : 'text-gray-700 bg-white hover:bg-gray-50'
-                        }`}
+                        className={`px-4 py-2 rounded-2xl text-sm font-semibold border transition ${selectedDepartments.includes(dept)
+                          ? 'text-white'
+                          : 'text-gray-700 bg-white hover:bg-gray-50'
+                          }`}
                         style={{
                           backgroundColor: selectedDepartments.includes(dept) ? 'var(--primary-blue)' : undefined,
                           borderColor: selectedDepartments.includes(dept) ? 'transparent' : 'rgba(0,0,0,0.08)',
@@ -983,11 +904,10 @@ export default function HODDailyReports() {
                                 type="button"
                                 onClick={() => removeRow(entry.id)}
                                 disabled={reportEntries.length === 1}
-                                className={`text-sm font-semibold ${
-                                  reportEntries.length === 1 
-                                    ? 'text-gray-300 cursor-not-allowed' 
-                                    : 'text-red-600 hover:text-red-800'
-                                }`}
+                                className={`text-sm font-semibold ${reportEntries.length === 1
+                                  ? 'text-gray-300 cursor-not-allowed'
+                                  : 'text-red-600 hover:text-red-800'
+                                  }`}
                               >
                                 Remove
                               </button>

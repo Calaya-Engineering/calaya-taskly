@@ -197,7 +197,9 @@ async function POST(req) {
         const result = await new Promise((resolve, reject)=>{
             const uploadStream = __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$cloudinary$2f$cloudinary$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["v2"].uploader.upload_stream({
                 resource_type: "raw",
-                folder: "calaya-documents"
+                folder: "calaya-documents",
+                use_filename: true,
+                unique_filename: true
             }, (error, result)=>{
                 if (error) reject(error);
                 else if (result) resolve(result);

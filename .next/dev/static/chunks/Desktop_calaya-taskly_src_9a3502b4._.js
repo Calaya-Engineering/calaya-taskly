@@ -2076,124 +2076,14 @@ const documentTypes = [
     "Form",
     "Presentation"
 ];
-/* Demo lists (for SPECIFIC_HODS / SPECIFIC_USERS UI) */ const hodUsers = [
-    {
-        id: 1,
-        name: "John Smith",
-        department: "Technical",
-        email: "hod.technical@company.com"
-    },
-    {
-        id: 2,
-        name: "David Chen",
-        department: "Workshop",
-        email: "hod.workshop@company.com"
-    },
-    {
-        id: 3,
-        name: "Maria Garcia",
-        department: "HSE",
-        email: "hod.hse@company.com"
-    },
-    {
-        id: 4,
-        name: "Robert Lee",
-        department: "Logistics",
-        email: "hod.logistics@company.com"
-    },
-    {
-        id: 5,
-        name: "Sarah Johnson",
-        department: "Accounts",
-        email: "hod.accounts@company.com"
-    },
-    {
-        id: 6,
-        name: "Patricia Davis",
-        department: "HR",
-        email: "hod.hr@company.com"
-    },
-    {
-        id: 7,
-        name: "James Wilson",
-        department: "Contract and Procurement",
-        email: "hod.procurement@company.com"
-    },
-    {
-        id: 8,
-        name: "Lisa Wang",
-        department: "Legal and Compliances",
-        email: "hod.legal@company.com"
-    }
-];
-const users = [
-    {
-        id: 101,
-        name: "John Doe",
-        department: "Technical",
-        email: "john.doe@company.com"
-    },
-    {
-        id: 102,
-        name: "Mike Johnson",
-        department: "Technical",
-        email: "mike.johnson@company.com"
-    },
-    {
-        id: 103,
-        name: "Alex Turner",
-        department: "Technical",
-        email: "alex.turner@company.com"
-    },
-    {
-        id: 104,
-        name: "Sarah Smith",
-        department: "HSE",
-        email: "sarah.smith@company.com"
-    },
-    {
-        id: 105,
-        name: "Robert Chen",
-        department: "Workshop",
-        email: "robert.chen@company.com"
-    },
-    {
-        id: 106,
-        name: "Emma Wilson",
-        department: "Technical",
-        email: "emma.wilson@company.com"
-    },
-    {
-        id: 107,
-        name: "Michael Brown",
-        department: "Logistics",
-        email: "michael.brown@company.com"
-    },
-    {
-        id: 108,
-        name: "Lisa Wang",
-        department: "Logistics",
-        email: "lisa.wang@company.com"
-    },
-    {
-        id: 109,
-        name: "David Kim",
-        department: "Legal and Compliances",
-        email: "david.kim@company.com"
-    },
-    {
-        id: 110,
-        name: "James Miller",
-        department: "HR",
-        email: "james.miller@company.com"
-    }
-];
+/* Demo lists (for SPECIFIC_HODS / SPECIFIC_USERS UI) - cleared as per request */ const hodUsers = [];
+const users = [];
 /* ---------- dashboard-style helpers ---------- */ const Card = ({ className = "", children })=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: `bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`,
         children: children
     }, void 0, false, {
         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-        lineNumber: 69,
+        lineNumber: 48,
         columnNumber: 3
     }, ("TURBOPACK compile-time value", void 0));
 _c = Card;
@@ -2204,7 +2094,7 @@ const Pill = ({ children, tone = "default" })=>{
         children: children
     }, void 0, false, {
         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-        lineNumber: 87,
+        lineNumber: 66,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
@@ -2268,13 +2158,14 @@ function MDCreateDocument() {
         formData.tagsText
     ]);
     // Demo document id
-    const docId = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
-        "MDCreateDocument.useMemo[docId]": ()=>{
+    const [docId, setDocId] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "MDCreateDocument.useEffect": ()=>{
             const year = new Date().getFullYear();
             const rnd = Math.floor(Math.random() * 1000).toString().padStart(3, "0");
-            return `DOC-${year}-${rnd}`;
+            setDocId(`DOC-${year}-${rnd}`);
         }
-    }["MDCreateDocument.useMemo[docId]"], []);
+    }["MDCreateDocument.useEffect"], []);
     const totalSizeMB = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
         "MDCreateDocument.useMemo[totalSizeMB]": ()=>files.reduce({
                 "MDCreateDocument.useMemo[totalSizeMB]": (sum, f)=>sum + f.size
@@ -2448,7 +2339,7 @@ function MDCreateDocument() {
                                                         children: "Upload Document"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                        lineNumber: 330,
+                                                        lineNumber: 310,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -2456,7 +2347,7 @@ function MDCreateDocument() {
                                                         children: docId
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                        lineNumber: 331,
+                                                        lineNumber: 311,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -2464,7 +2355,7 @@ function MDCreateDocument() {
                                                         children: formatScope(formData.scope)
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                        lineNumber: 332,
+                                                        lineNumber: 312,
                                                         columnNumber: 19
                                                     }, this),
                                                     files.length ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -2475,13 +2366,13 @@ function MDCreateDocument() {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                        lineNumber: 333,
+                                                        lineNumber: 313,
                                                         columnNumber: 35
                                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
                                                         children: "No files yet"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                        lineNumber: 333,
+                                                        lineNumber: 313,
                                                         columnNumber: 85
                                                     }, this),
                                                     formData.isEncrypted ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -2489,19 +2380,19 @@ function MDCreateDocument() {
                                                         children: "Encrypted"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                        lineNumber: 334,
+                                                        lineNumber: 314,
                                                         columnNumber: 43
                                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
                                                         children: "Not encrypted"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                        lineNumber: 334,
+                                                        lineNumber: 314,
                                                         columnNumber: 82
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                lineNumber: 329,
+                                                lineNumber: 309,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
@@ -2512,7 +2403,7 @@ function MDCreateDocument() {
                                                 children: "Create Document"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                lineNumber: 337,
+                                                lineNumber: 317,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2520,13 +2411,13 @@ function MDCreateDocument() {
                                                 children: "Upload and share documents with controlled access permissions across departments."
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                lineNumber: 340,
+                                                lineNumber: 320,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                        lineNumber: 328,
+                                        lineNumber: 308,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2543,7 +2434,7 @@ function MDCreateDocument() {
                                                 children: "Cancel"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                lineNumber: 346,
+                                                lineNumber: 326,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2559,24 +2450,24 @@ function MDCreateDocument() {
                                                 children: "Preview"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                lineNumber: 355,
+                                                lineNumber: 335,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                        lineNumber: 345,
+                                        lineNumber: 325,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                lineNumber: 327,
+                                lineNumber: 307,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                            lineNumber: 320,
+                            lineNumber: 300,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2612,24 +2503,24 @@ function MDCreateDocument() {
                                         children: t.label
                                     }, t.id, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                        lineNumber: 380,
+                                        lineNumber: 360,
                                         columnNumber: 19
                                     }, this);
                                 })
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                lineNumber: 371,
+                                lineNumber: 351,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                            lineNumber: 370,
+                            lineNumber: 350,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                    lineNumber: 319,
+                    lineNumber: 299,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
@@ -2657,13 +2548,13 @@ function MDCreateDocument() {
                                                                         children: "*"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 407,
+                                                                        lineNumber: 386,
                                                                         columnNumber: 40
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 406,
+                                                                lineNumber: 385,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2678,13 +2569,13 @@ function MDCreateDocument() {
                                                                         }))
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 409,
+                                                                lineNumber: 388,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                        lineNumber: 405,
+                                                        lineNumber: 384,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2694,7 +2585,7 @@ function MDCreateDocument() {
                                                                 children: "Description"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 420,
+                                                                lineNumber: 399,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
@@ -2708,13 +2599,13 @@ function MDCreateDocument() {
                                                                         }))
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 421,
+                                                                lineNumber: 400,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                        lineNumber: 419,
+                                                        lineNumber: 398,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2727,7 +2618,7 @@ function MDCreateDocument() {
                                                                         children: "Document Type"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 432,
+                                                                        lineNumber: 411,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -2743,7 +2634,7 @@ function MDCreateDocument() {
                                                                                 children: "Select Type"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 438,
+                                                                                lineNumber: 417,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             documentTypes.map((t)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2751,19 +2642,19 @@ function MDCreateDocument() {
                                                                                     children: t
                                                                                 }, t, false, {
                                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                    lineNumber: 440,
+                                                                                    lineNumber: 419,
                                                                                     columnNumber: 29
                                                                                 }, this))
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 433,
+                                                                        lineNumber: 412,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 431,
+                                                                lineNumber: 410,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2773,7 +2664,7 @@ function MDCreateDocument() {
                                                                         children: "Department (Optional)"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 448,
+                                                                        lineNumber: 427,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -2789,7 +2680,7 @@ function MDCreateDocument() {
                                                                                 children: "Select Department"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 454,
+                                                                                lineNumber: 433,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             departments.map((d)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2797,13 +2688,13 @@ function MDCreateDocument() {
                                                                                     children: d
                                                                                 }, d, false, {
                                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                    lineNumber: 456,
+                                                                                    lineNumber: 435,
                                                                                     columnNumber: 29
                                                                                 }, this))
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 449,
+                                                                        lineNumber: 428,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2811,13 +2702,13 @@ function MDCreateDocument() {
                                                                         children: "Tip: Selecting a department can help filter users later."
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 461,
+                                                                        lineNumber: 440,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 447,
+                                                                lineNumber: 426,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2827,7 +2718,7 @@ function MDCreateDocument() {
                                                                         children: "Version Label"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 465,
+                                                                        lineNumber: 444,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2841,13 +2732,13 @@ function MDCreateDocument() {
                                                                                 }))
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 466,
+                                                                        lineNumber: 445,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 464,
+                                                                lineNumber: 443,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2857,7 +2748,7 @@ function MDCreateDocument() {
                                                                         children: "Expiry Date (Optional)"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 476,
+                                                                        lineNumber: 455,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2870,19 +2761,19 @@ function MDCreateDocument() {
                                                                                 }))
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 477,
+                                                                        lineNumber: 456,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 475,
+                                                                lineNumber: 454,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                        lineNumber: 430,
+                                                        lineNumber: 409,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2896,7 +2787,7 @@ function MDCreateDocument() {
                                                                 children: "Tags (Optional)"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 487,
+                                                                lineNumber: 466,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2913,7 +2804,7 @@ function MDCreateDocument() {
                                                                                 }))
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 492,
+                                                                        lineNumber: 471,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2930,13 +2821,13 @@ function MDCreateDocument() {
                                                                         children: "Clean Tags"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 499,
+                                                                        lineNumber: 478,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 491,
+                                                                lineNumber: 470,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2946,19 +2837,19 @@ function MDCreateDocument() {
                                                                         children: t
                                                                     }, t, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 510,
+                                                                        lineNumber: 489,
                                                                         columnNumber: 56
                                                                     }, this)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                     className: "text-sm text-gray-500",
                                                                     children: "No tags added."
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                    lineNumber: 510,
+                                                                    lineNumber: 489,
                                                                     columnNumber: 96
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 509,
+                                                                lineNumber: 488,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2966,19 +2857,19 @@ function MDCreateDocument() {
                                                                 children: "Tags help with organizing and searching documents."
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 512,
+                                                                lineNumber: 491,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                        lineNumber: 486,
+                                                        lineNumber: 465,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                lineNumber: 404,
+                                                lineNumber: 383,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2995,7 +2886,7 @@ function MDCreateDocument() {
                                                                 children: "Quick Summary"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 519,
+                                                                lineNumber: 498,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3009,7 +2900,7 @@ function MDCreateDocument() {
                                                                                 children: "Document ID"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 525,
+                                                                                lineNumber: 504,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3017,13 +2908,13 @@ function MDCreateDocument() {
                                                                                 children: docId
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 526,
+                                                                                lineNumber: 505,
                                                                                 columnNumber: 27
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 524,
+                                                                        lineNumber: 503,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3034,7 +2925,7 @@ function MDCreateDocument() {
                                                                                 children: "Scope"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 529,
+                                                                                lineNumber: 508,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3042,13 +2933,13 @@ function MDCreateDocument() {
                                                                                 children: formatScope(formData.scope)
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 530,
+                                                                                lineNumber: 509,
                                                                                 columnNumber: 27
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 528,
+                                                                        lineNumber: 507,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3059,7 +2950,7 @@ function MDCreateDocument() {
                                                                                 children: "Files"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 533,
+                                                                                lineNumber: 512,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3067,13 +2958,13 @@ function MDCreateDocument() {
                                                                                 children: files.length
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 534,
+                                                                                lineNumber: 513,
                                                                                 columnNumber: 27
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 532,
+                                                                        lineNumber: 511,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3084,7 +2975,7 @@ function MDCreateDocument() {
                                                                                 children: "Total size"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 537,
+                                                                                lineNumber: 516,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3092,19 +2983,19 @@ function MDCreateDocument() {
                                                                                 children: files.length ? `${totalSizeMB.toFixed(2)} MB` : "-"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 538,
+                                                                                lineNumber: 517,
                                                                                 columnNumber: 27
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 536,
+                                                                        lineNumber: 515,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 523,
+                                                                lineNumber: 502,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3115,7 +3006,7 @@ function MDCreateDocument() {
                                                                         children: formatScope(formData.scope)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 543,
+                                                                        lineNumber: 522,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     formData.isEncrypted ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -3123,25 +3014,25 @@ function MDCreateDocument() {
                                                                         children: "Encrypted"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 544,
+                                                                        lineNumber: 523,
                                                                         columnNumber: 49
                                                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
                                                                         children: "Not encrypted"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 544,
+                                                                        lineNumber: 523,
                                                                         columnNumber: 88
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 542,
+                                                                lineNumber: 521,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                        lineNumber: 518,
+                                                        lineNumber: 497,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3154,7 +3045,7 @@ function MDCreateDocument() {
                                                         children: "Continue to Access Control →"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                        lineNumber: 548,
+                                                        lineNumber: 527,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3168,7 +3059,7 @@ function MDCreateDocument() {
                                                                 children: "Upload Guidelines"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 558,
+                                                                lineNumber: 537,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
@@ -3182,14 +3073,14 @@ function MDCreateDocument() {
                                                                                 children: "✓"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 563,
+                                                                                lineNumber: 542,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             " Maximum file size: 100MB per file"
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 562,
+                                                                        lineNumber: 541,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
@@ -3200,14 +3091,14 @@ function MDCreateDocument() {
                                                                                 children: "✓"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 566,
+                                                                                lineNumber: 545,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             " Use descriptive titles for searchability"
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 565,
+                                                                        lineNumber: 544,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
@@ -3218,38 +3109,38 @@ function MDCreateDocument() {
                                                                                 children: "✓"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 569,
+                                                                                lineNumber: 548,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             " Choose scope carefully for confidentiality"
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 568,
+                                                                        lineNumber: 547,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 561,
+                                                                lineNumber: 540,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                        lineNumber: 557,
+                                                        lineNumber: 536,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                lineNumber: 517,
+                                                lineNumber: 496,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                        lineNumber: 403,
+                                        lineNumber: 382,
                                         columnNumber: 17
                                     }, this),
                                     activeTab === "access" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3273,13 +3164,13 @@ function MDCreateDocument() {
                                                                         children: "*"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 583,
+                                                                        lineNumber: 562,
                                                                         columnNumber: 38
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 582,
+                                                                lineNumber: 561,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3336,7 +3227,7 @@ function MDCreateDocument() {
                                                                                 children: s.icon
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 606,
+                                                                                lineNumber: 584,
                                                                                 columnNumber: 31
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3347,7 +3238,7 @@ function MDCreateDocument() {
                                                                                 children: s.label
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 607,
+                                                                                lineNumber: 585,
                                                                                 columnNumber: 31
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3355,19 +3246,19 @@ function MDCreateDocument() {
                                                                                 children: s.desc
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 610,
+                                                                                lineNumber: 588,
                                                                                 columnNumber: 31
                                                                             }, this)
                                                                         ]
                                                                     }, s.value, true, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 597,
+                                                                        lineNumber: 576,
                                                                         columnNumber: 29
                                                                     }, this);
                                                                 })
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 586,
+                                                                lineNumber: 565,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3378,7 +3269,7 @@ function MDCreateDocument() {
                                                                         children: formatScope(formData.scope)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 617,
+                                                                        lineNumber: 595,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     formData.scope === "PRIVATE" ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -3386,13 +3277,13 @@ function MDCreateDocument() {
                                                                         children: "Owner only"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 618,
+                                                                        lineNumber: 596,
                                                                         columnNumber: 57
                                                                     }, this) : null
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 616,
+                                                                lineNumber: 594,
                                                                 columnNumber: 23
                                                             }, this),
                                                             formData.scope === "PRIVATE" ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3400,13 +3291,13 @@ function MDCreateDocument() {
                                                                 children: "This document will only be visible to you. You can share it later with specific users."
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 622,
+                                                                lineNumber: 600,
                                                                 columnNumber: 25
                                                             }, this) : null
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                        lineNumber: 581,
+                                                        lineNumber: 560,
                                                         columnNumber: 21
                                                     }, this),
                                                     formData.scope === "SPECIFIC_DEPARTMENTS" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3423,7 +3314,7 @@ function MDCreateDocument() {
                                                                         children: "Select Departments"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 632,
+                                                                        lineNumber: 610,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3437,7 +3328,7 @@ function MDCreateDocument() {
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 636,
+                                                                                lineNumber: 614,
                                                                                 columnNumber: 29
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3451,19 +3342,19 @@ function MDCreateDocument() {
                                                                                 children: formData.selectedDepartments.length === departments.length ? "Deselect All" : "Select All"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 637,
+                                                                                lineNumber: 615,
                                                                                 columnNumber: 29
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 635,
+                                                                        lineNumber: 613,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 631,
+                                                                lineNumber: 609,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3485,19 +3376,19 @@ function MDCreateDocument() {
                                                                         ]
                                                                     }, d, true, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 652,
+                                                                        lineNumber: 630,
                                                                         columnNumber: 31
                                                                     }, this);
                                                                 })
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 648,
+                                                                lineNumber: 626,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                        lineNumber: 630,
+                                                        lineNumber: 608,
                                                         columnNumber: 23
                                                     }, this),
                                                     formData.scope === "SPECIFIC_HODS" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3511,7 +3402,7 @@ function MDCreateDocument() {
                                                                 children: "Select HODs"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 675,
+                                                                lineNumber: 652,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3534,7 +3425,7 @@ function MDCreateDocument() {
                                                                                 children: h.name.charAt(0)
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 692,
+                                                                                lineNumber: 668,
                                                                                 columnNumber: 33
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3545,7 +3436,7 @@ function MDCreateDocument() {
                                                                                         children: h.name
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                        lineNumber: 699,
+                                                                                        lineNumber: 675,
                                                                                         columnNumber: 35
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3553,13 +3444,13 @@ function MDCreateDocument() {
                                                                                         children: h.department
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                        lineNumber: 700,
+                                                                                        lineNumber: 676,
                                                                                         columnNumber: 35
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 698,
+                                                                                lineNumber: 674,
                                                                                 columnNumber: 33
                                                                             }, this),
                                                                             active ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3567,19 +3458,19 @@ function MDCreateDocument() {
                                                                                 children: "✓"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 702,
+                                                                                lineNumber: 678,
                                                                                 columnNumber: 43
                                                                             }, this) : null
                                                                         ]
                                                                     }, h.id, true, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 683,
+                                                                        lineNumber: 660,
                                                                         columnNumber: 31
                                                                     }, this);
                                                                 })
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 679,
+                                                                lineNumber: 656,
                                                                 columnNumber: 25
                                                             }, this),
                                                             formData.selectedHODs.length ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3589,25 +3480,25 @@ function MDCreateDocument() {
                                                                         children: h.name
                                                                     }, h.id, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 711,
+                                                                        lineNumber: 687,
                                                                         columnNumber: 31
                                                                     }, this))
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 709,
+                                                                lineNumber: 685,
                                                                 columnNumber: 27
                                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                 className: "mt-3 text-sm text-gray-500",
                                                                 children: "No HOD selected yet."
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 717,
+                                                                lineNumber: 693,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                        lineNumber: 674,
+                                                        lineNumber: 651,
                                                         columnNumber: 23
                                                     }, this),
                                                     formData.scope === "SPECIFIC_USERS" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3621,7 +3512,7 @@ function MDCreateDocument() {
                                                                 children: "Select Users"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 725,
+                                                                lineNumber: 701,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3634,7 +3525,7 @@ function MDCreateDocument() {
                                                                             children: formData.department
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                            lineNumber: 732,
+                                                                            lineNumber: 708,
                                                                             columnNumber: 48
                                                                         }, this),
                                                                         " (based on selected document department)."
@@ -3644,7 +3535,7 @@ function MDCreateDocument() {
                                                                 }, void 0, false)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 729,
+                                                                lineNumber: 705,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3667,7 +3558,7 @@ function MDCreateDocument() {
                                                                                 children: u.name.charAt(0)
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 752,
+                                                                                lineNumber: 727,
                                                                                 columnNumber: 33
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3678,7 +3569,7 @@ function MDCreateDocument() {
                                                                                         children: u.name
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                        lineNumber: 759,
+                                                                                        lineNumber: 734,
                                                                                         columnNumber: 35
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3690,13 +3581,13 @@ function MDCreateDocument() {
                                                                                         ]
                                                                                     }, void 0, true, {
                                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                        lineNumber: 760,
+                                                                                        lineNumber: 735,
                                                                                         columnNumber: 35
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 758,
+                                                                                lineNumber: 733,
                                                                                 columnNumber: 33
                                                                             }, this),
                                                                             active ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3704,25 +3595,25 @@ function MDCreateDocument() {
                                                                                 children: "✓"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 764,
+                                                                                lineNumber: 739,
                                                                                 columnNumber: 43
                                                                             }, this) : null
                                                                         ]
                                                                     }, u.id, true, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 743,
+                                                                        lineNumber: 719,
                                                                         columnNumber: 31
                                                                     }, this);
                                                                 })
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 739,
+                                                                lineNumber: 715,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                        lineNumber: 724,
+                                                        lineNumber: 700,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3741,7 +3632,7 @@ function MDCreateDocument() {
                                                                                 children: "Encrypt Document"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 776,
+                                                                                lineNumber: 751,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3749,13 +3640,13 @@ function MDCreateDocument() {
                                                                                 children: "Add password protection for sensitive documents."
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 779,
+                                                                                lineNumber: 754,
                                                                                 columnNumber: 27
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 775,
+                                                                        lineNumber: 750,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3773,13 +3664,13 @@ function MDCreateDocument() {
                                                                         children: formData.isEncrypted ? "Enabled" : "Disabled"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 782,
+                                                                        lineNumber: 757,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 774,
+                                                                lineNumber: 749,
                                                                 columnNumber: 23
                                                             }, this),
                                                             formData.isEncrypted ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3790,7 +3681,7 @@ function MDCreateDocument() {
                                                                         children: "Encryption Password"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 805,
+                                                                        lineNumber: 779,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$components$2f$ui$2f$password$2d$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PasswordInput"], {
@@ -3803,7 +3694,7 @@ function MDCreateDocument() {
                                                                                 }))
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 806,
+                                                                        lineNumber: 780,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3811,25 +3702,25 @@ function MDCreateDocument() {
                                                                         children: "Store passwords securely. Users without the password won't open the file."
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 812,
+                                                                        lineNumber: 786,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 804,
+                                                                lineNumber: 778,
                                                                 columnNumber: 25
                                                             }, this) : null
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                        lineNumber: 773,
+                                                        lineNumber: 748,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                lineNumber: 580,
+                                                lineNumber: 559,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3846,7 +3737,7 @@ function MDCreateDocument() {
                                                                 children: "Scope Summary"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 823,
+                                                                lineNumber: 797,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3857,7 +3748,7 @@ function MDCreateDocument() {
                                                                         children: formatScope(formData.scope)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 828,
+                                                                        lineNumber: 802,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     formData.isEncrypted ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -3865,19 +3756,19 @@ function MDCreateDocument() {
                                                                         children: "Encrypted"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 829,
+                                                                        lineNumber: 803,
                                                                         columnNumber: 49
                                                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
                                                                         children: "Not encrypted"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 829,
+                                                                        lineNumber: 803,
                                                                         columnNumber: 88
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 827,
+                                                                lineNumber: 801,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3891,7 +3782,7 @@ function MDCreateDocument() {
                                                                                 children: "Departments"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 834,
+                                                                                lineNumber: 808,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3899,13 +3790,13 @@ function MDCreateDocument() {
                                                                                 children: formData.selectedDepartments.length
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 835,
+                                                                                lineNumber: 809,
                                                                                 columnNumber: 27
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 833,
+                                                                        lineNumber: 807,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3916,7 +3807,7 @@ function MDCreateDocument() {
                                                                                 children: "HODs"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 838,
+                                                                                lineNumber: 812,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3924,13 +3815,13 @@ function MDCreateDocument() {
                                                                                 children: formData.selectedHODs.length
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 839,
+                                                                                lineNumber: 813,
                                                                                 columnNumber: 27
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 837,
+                                                                        lineNumber: 811,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3941,7 +3832,7 @@ function MDCreateDocument() {
                                                                                 children: "Users"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 842,
+                                                                                lineNumber: 816,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3949,25 +3840,25 @@ function MDCreateDocument() {
                                                                                 children: formData.selectedUsers.length
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 843,
+                                                                                lineNumber: 817,
                                                                                 columnNumber: 27
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 841,
+                                                                        lineNumber: 815,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 832,
+                                                                lineNumber: 806,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                        lineNumber: 822,
+                                                        lineNumber: 796,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3984,7 +3875,7 @@ function MDCreateDocument() {
                                                                 children: "← Back"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 849,
+                                                                lineNumber: 823,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3997,13 +3888,13 @@ function MDCreateDocument() {
                                                                 children: "Continue →"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 857,
+                                                                lineNumber: 831,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                        lineNumber: 848,
+                                                        lineNumber: 822,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4017,7 +3908,7 @@ function MDCreateDocument() {
                                                                 children: "Notes"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 868,
+                                                                lineNumber: 842,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
@@ -4031,14 +3922,14 @@ function MDCreateDocument() {
                                                                                 children: "✓"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 873,
+                                                                                lineNumber: 847,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             " Use Private for sensitive drafts."
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 872,
+                                                                        lineNumber: 846,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
@@ -4049,14 +3940,14 @@ function MDCreateDocument() {
                                                                                 children: "✓"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 876,
+                                                                                lineNumber: 850,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             " Specific Users is best for exceptions."
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 875,
+                                                                        lineNumber: 849,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
@@ -4067,38 +3958,38 @@ function MDCreateDocument() {
                                                                                 children: "✓"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 879,
+                                                                                lineNumber: 853,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             " Add encryption only when necessary."
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 878,
+                                                                        lineNumber: 852,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 871,
+                                                                lineNumber: 845,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                        lineNumber: 867,
+                                                        lineNumber: 841,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                lineNumber: 821,
+                                                lineNumber: 795,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                        lineNumber: 579,
+                                        lineNumber: 558,
                                         columnNumber: 17
                                     }, this),
                                     activeTab === "files" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4121,13 +4012,13 @@ function MDCreateDocument() {
                                                                     children: "*"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                    lineNumber: 893,
+                                                                    lineNumber: 867,
                                                                     columnNumber: 38
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                            lineNumber: 892,
+                                                            lineNumber: 866,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4141,7 +4032,7 @@ function MDCreateDocument() {
                                                                     onChange: handleFileUpload
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                    lineNumber: 897,
+                                                                    lineNumber: 871,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -4158,12 +4049,12 @@ function MDCreateDocument() {
                                                                                 children: "📤"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 900,
+                                                                                lineNumber: 874,
                                                                                 columnNumber: 29
                                                                             }, this)
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                            lineNumber: 899,
+                                                                            lineNumber: 873,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4171,7 +4062,7 @@ function MDCreateDocument() {
                                                                             children: "Click to upload or drag and drop"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                            lineNumber: 902,
+                                                                            lineNumber: 876,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4179,19 +4070,19 @@ function MDCreateDocument() {
                                                                             children: "Max 100MB per file • PDF, DOCX, XLSX, JPG, PNG, PPTX"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                            lineNumber: 903,
+                                                                            lineNumber: 877,
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                    lineNumber: 898,
+                                                                    lineNumber: 872,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                            lineNumber: 896,
+                                                            lineNumber: 870,
                                                             columnNumber: 23
                                                         }, this),
                                                         files.length ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4208,7 +4099,7 @@ function MDCreateDocument() {
                                                                             children: "Selected Files"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                            lineNumber: 910,
+                                                                            lineNumber: 884,
                                                                             columnNumber: 29
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4222,7 +4113,7 @@ function MDCreateDocument() {
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                    lineNumber: 914,
+                                                                                    lineNumber: 888,
                                                                                     columnNumber: 31
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -4233,19 +4124,19 @@ function MDCreateDocument() {
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                    lineNumber: 915,
+                                                                                    lineNumber: 889,
                                                                                     columnNumber: 31
                                                                                 }, this)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                            lineNumber: 913,
+                                                                            lineNumber: 887,
                                                                             columnNumber: 29
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                    lineNumber: 909,
+                                                                    lineNumber: 883,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4266,12 +4157,12 @@ function MDCreateDocument() {
                                                                                                 children: fileIcon(file.name)
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                                lineNumber: 924,
+                                                                                                lineNumber: 898,
                                                                                                 columnNumber: 37
                                                                                             }, this)
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                            lineNumber: 923,
+                                                                                            lineNumber: 897,
                                                                                             columnNumber: 35
                                                                                         }, this),
                                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4282,7 +4173,7 @@ function MDCreateDocument() {
                                                                                                     children: file.name
                                                                                                 }, void 0, false, {
                                                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                                    lineNumber: 927,
+                                                                                                    lineNumber: 901,
                                                                                                     columnNumber: 37
                                                                                                 }, this),
                                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4294,19 +4185,19 @@ function MDCreateDocument() {
                                                                                                     ]
                                                                                                 }, void 0, true, {
                                                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                                    lineNumber: 928,
+                                                                                                    lineNumber: 902,
                                                                                                     columnNumber: 37
                                                                                                 }, this)
                                                                                             ]
                                                                                         }, void 0, true, {
                                                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                            lineNumber: 926,
+                                                                                            lineNumber: 900,
                                                                                             columnNumber: 35
                                                                                         }, this)
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                    lineNumber: 922,
+                                                                                    lineNumber: 896,
                                                                                     columnNumber: 33
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -4320,42 +4211,42 @@ function MDCreateDocument() {
                                                                                     children: "Remove"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                    lineNumber: 934,
+                                                                                    lineNumber: 908,
                                                                                     columnNumber: 33
                                                                                 }, this)
                                                                             ]
                                                                         }, `${file.name}-${idx}`, true, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                            lineNumber: 921,
+                                                                            lineNumber: 895,
                                                                             columnNumber: 31
                                                                         }, this))
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                    lineNumber: 919,
+                                                                    lineNumber: 893,
                                                                     columnNumber: 27
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                            lineNumber: 908,
+                                                            lineNumber: 882,
                                                             columnNumber: 25
                                                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                             className: "mt-6 text-sm text-gray-500",
                                                             children: "No files selected yet."
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                            lineNumber: 947,
+                                                            lineNumber: 921,
                                                             columnNumber: 25
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                    lineNumber: 891,
+                                                    lineNumber: 865,
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                lineNumber: 890,
+                                                lineNumber: 864,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4372,7 +4263,7 @@ function MDCreateDocument() {
                                                                 children: "Checks"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 954,
+                                                                lineNumber: 928,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
@@ -4386,14 +4277,14 @@ function MDCreateDocument() {
                                                                                 children: "✓"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 959,
+                                                                                lineNumber: 933,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             " Use clear filenames (e.g., SiteA_Inspection_Photos.zip)"
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 958,
+                                                                        lineNumber: 932,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
@@ -4404,14 +4295,14 @@ function MDCreateDocument() {
                                                                                 children: "✓"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 962,
+                                                                                lineNumber: 936,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             " Confirm scope matches confidentiality"
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 961,
+                                                                        lineNumber: 935,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
@@ -4422,26 +4313,26 @@ function MDCreateDocument() {
                                                                                 children: "✓"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 965,
+                                                                                lineNumber: 939,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             " Add version labels for updates"
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 964,
+                                                                        lineNumber: 938,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 957,
+                                                                lineNumber: 931,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                        lineNumber: 953,
+                                                        lineNumber: 927,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4458,7 +4349,7 @@ function MDCreateDocument() {
                                                                 children: "← Back"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 971,
+                                                                lineNumber: 945,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -4472,25 +4363,25 @@ function MDCreateDocument() {
                                                                 children: "Preview →"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 979,
+                                                                lineNumber: 953,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                        lineNumber: 970,
+                                                        lineNumber: 944,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                lineNumber: 952,
+                                                lineNumber: 926,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                        lineNumber: 889,
+                                        lineNumber: 863,
                                         columnNumber: 17
                                     }, this),
                                     activeTab === "preview" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4510,20 +4401,20 @@ function MDCreateDocument() {
                                                                         children: docId
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 999,
+                                                                        lineNumber: 973,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     formData.documentType ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
                                                                         children: formData.documentType
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 1000,
+                                                                        lineNumber: 974,
                                                                         columnNumber: 50
                                                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
                                                                         children: "Type not set"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 1000,
+                                                                        lineNumber: 974,
                                                                         columnNumber: 89
                                                                     }, this),
                                                                     formData.department ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -4531,13 +4422,13 @@ function MDCreateDocument() {
                                                                         children: formData.department
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 1001,
+                                                                        lineNumber: 975,
                                                                         columnNumber: 48
                                                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
                                                                         children: "Department not set"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 1001,
+                                                                        lineNumber: 975,
                                                                         columnNumber: 97
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -4545,7 +4436,7 @@ function MDCreateDocument() {
                                                                         children: formatScope(formData.scope)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 1002,
+                                                                        lineNumber: 976,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     formData.isEncrypted ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -4553,13 +4444,13 @@ function MDCreateDocument() {
                                                                         children: "Encrypted"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 1003,
+                                                                        lineNumber: 977,
                                                                         columnNumber: 49
                                                                     }, this) : null
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 998,
+                                                                lineNumber: 972,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -4567,7 +4458,7 @@ function MDCreateDocument() {
                                                                 children: formData.title || "Untitled Document"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 1006,
+                                                                lineNumber: 980,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4575,7 +4466,7 @@ function MDCreateDocument() {
                                                                 children: formData.description || "No description provided."
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 1007,
+                                                                lineNumber: 981,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4589,7 +4480,7 @@ function MDCreateDocument() {
                                                                                 children: "Version"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 1013,
+                                                                                lineNumber: 987,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4597,13 +4488,13 @@ function MDCreateDocument() {
                                                                                 children: formData.versionLabel || "-"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 1014,
+                                                                                lineNumber: 988,
                                                                                 columnNumber: 27
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 1012,
+                                                                        lineNumber: 986,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4614,7 +4505,7 @@ function MDCreateDocument() {
                                                                                 children: "Expiry"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 1017,
+                                                                                lineNumber: 991,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4622,13 +4513,13 @@ function MDCreateDocument() {
                                                                                 children: formData.expiryDate || "-"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 1018,
+                                                                                lineNumber: 992,
                                                                                 columnNumber: 27
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 1016,
+                                                                        lineNumber: 990,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4639,7 +4530,7 @@ function MDCreateDocument() {
                                                                                 children: "Files"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 1021,
+                                                                                lineNumber: 995,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4647,19 +4538,19 @@ function MDCreateDocument() {
                                                                                 children: files.length ? `${files.length} file(s) • ${totalSizeMB.toFixed(2)} MB` : "-"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 1022,
+                                                                                lineNumber: 996,
                                                                                 columnNumber: 27
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 1020,
+                                                                        lineNumber: 994,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 1011,
+                                                                lineNumber: 985,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4670,7 +4561,7 @@ function MDCreateDocument() {
                                                                         children: "Tags"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 1029,
+                                                                        lineNumber: 1003,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4680,31 +4571,31 @@ function MDCreateDocument() {
                                                                                 children: t
                                                                             }, t, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 1031,
+                                                                                lineNumber: 1005,
                                                                                 columnNumber: 58
                                                                             }, this)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                             className: "text-sm text-gray-500",
                                                                             children: "No tags"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                            lineNumber: 1031,
+                                                                            lineNumber: 1005,
                                                                             columnNumber: 98
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 1030,
+                                                                        lineNumber: 1004,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 1028,
+                                                                lineNumber: 1002,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                        lineNumber: 997,
+                                                        lineNumber: 971,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4718,7 +4609,7 @@ function MDCreateDocument() {
                                                                 children: "File List"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 1037,
+                                                                lineNumber: 1011,
                                                                 columnNumber: 23
                                                             }, this),
                                                             files.length ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4739,12 +4630,12 @@ function MDCreateDocument() {
                                                                                             children: fileIcon(f.name)
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                            lineNumber: 1046,
+                                                                                            lineNumber: 1020,
                                                                                             columnNumber: 35
                                                                                         }, this)
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                        lineNumber: 1045,
+                                                                                        lineNumber: 1019,
                                                                                         columnNumber: 33
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4755,7 +4646,7 @@ function MDCreateDocument() {
                                                                                                 children: f.name
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                                lineNumber: 1049,
+                                                                                                lineNumber: 1023,
                                                                                                 columnNumber: 35
                                                                                             }, this),
                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4766,19 +4657,19 @@ function MDCreateDocument() {
                                                                                                 ]
                                                                                             }, void 0, true, {
                                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                                lineNumber: 1050,
+                                                                                                lineNumber: 1024,
                                                                                                 columnNumber: 35
                                                                                             }, this)
                                                                                         ]
                                                                                     }, void 0, true, {
                                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                        lineNumber: 1048,
+                                                                                        lineNumber: 1022,
                                                                                         columnNumber: 33
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 1044,
+                                                                                lineNumber: 1018,
                                                                                 columnNumber: 31
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -4792,37 +4683,37 @@ function MDCreateDocument() {
                                                                                 children: "Remove"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 1053,
+                                                                                lineNumber: 1027,
                                                                                 columnNumber: 31
                                                                             }, this)
                                                                         ]
                                                                     }, `${f.name}-${idx}`, true, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 1043,
+                                                                        lineNumber: 1017,
                                                                         columnNumber: 29
                                                                     }, this))
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 1041,
+                                                                lineNumber: 1015,
                                                                 columnNumber: 25
                                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                 className: "mt-3 text-sm text-gray-500",
                                                                 children: "No files uploaded."
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 1065,
+                                                                lineNumber: 1039,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                        lineNumber: 1036,
+                                                        lineNumber: 1010,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                lineNumber: 996,
+                                                lineNumber: 970,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4839,7 +4730,7 @@ function MDCreateDocument() {
                                                                 children: "Access Summary"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 1072,
+                                                                lineNumber: 1046,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4850,7 +4741,7 @@ function MDCreateDocument() {
                                                                         children: formatScope(formData.scope)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 1077,
+                                                                        lineNumber: 1051,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     formData.isEncrypted ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -4858,19 +4749,19 @@ function MDCreateDocument() {
                                                                         children: "Encrypted"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 1078,
+                                                                        lineNumber: 1052,
                                                                         columnNumber: 49
                                                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
                                                                         children: "Not encrypted"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                        lineNumber: 1078,
+                                                                        lineNumber: 1052,
                                                                         columnNumber: 88
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 1076,
+                                                                lineNumber: 1050,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4883,7 +4774,7 @@ function MDCreateDocument() {
                                                                                 children: "Departments"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 1084,
+                                                                                lineNumber: 1058,
                                                                                 columnNumber: 29
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4893,12 +4784,12 @@ function MDCreateDocument() {
                                                                                         children: d
                                                                                     }, d, false, {
                                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                        lineNumber: 1087,
+                                                                                        lineNumber: 1061,
                                                                                         columnNumber: 75
                                                                                     }, this)) : "—"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 1085,
+                                                                                lineNumber: 1059,
                                                                                 columnNumber: 29
                                                                             }, this)
                                                                         ]
@@ -4910,7 +4801,7 @@ function MDCreateDocument() {
                                                                                 children: "HODs"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 1095,
+                                                                                lineNumber: 1069,
                                                                                 columnNumber: 29
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4920,12 +4811,12 @@ function MDCreateDocument() {
                                                                                         children: h.name
                                                                                     }, h.id, false, {
                                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                        lineNumber: 1098,
+                                                                                        lineNumber: 1072,
                                                                                         columnNumber: 68
                                                                                     }, this)) : "—"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 1096,
+                                                                                lineNumber: 1070,
                                                                                 columnNumber: 29
                                                                             }, this)
                                                                         ]
@@ -4937,7 +4828,7 @@ function MDCreateDocument() {
                                                                                 children: "Users"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 1106,
+                                                                                lineNumber: 1080,
                                                                                 columnNumber: 29
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4948,7 +4839,7 @@ function MDCreateDocument() {
                                                                                             children: u.name
                                                                                         }, u.id, false, {
                                                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                            lineNumber: 1109,
+                                                                                            lineNumber: 1083,
                                                                                             columnNumber: 81
                                                                                         }, this)) : "—",
                                                                                     formData.selectedUsers.length > 6 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -4959,13 +4850,13 @@ function MDCreateDocument() {
                                                                                         ]
                                                                                     }, void 0, true, {
                                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                        lineNumber: 1111,
+                                                                                        lineNumber: 1085,
                                                                                         columnNumber: 68
                                                                                     }, this) : null
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                                lineNumber: 1107,
+                                                                                lineNumber: 1081,
                                                                                 columnNumber: 29
                                                                             }, this)
                                                                         ]
@@ -4973,13 +4864,13 @@ function MDCreateDocument() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 1081,
+                                                                lineNumber: 1055,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                        lineNumber: 1071,
+                                                        lineNumber: 1045,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4996,7 +4887,7 @@ function MDCreateDocument() {
                                                                 children: "← Back"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 1119,
+                                                                lineNumber: 1093,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -5009,13 +4900,13 @@ function MDCreateDocument() {
                                                                 children: "Upload Document"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                                lineNumber: 1128,
+                                                                lineNumber: 1102,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                        lineNumber: 1118,
+                                                        lineNumber: 1092,
                                                         columnNumber: 21
                                                     }, this),
                                                     !files.length ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5023,25 +4914,25 @@ function MDCreateDocument() {
                                                         children: "Upload at least one file to enable submission."
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                        lineNumber: 1139,
+                                                        lineNumber: 1113,
                                                         columnNumber: 23
                                                     }, this) : null
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                lineNumber: 1070,
+                                                lineNumber: 1044,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                        lineNumber: 995,
+                                        lineNumber: 969,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                lineNumber: 400,
+                                lineNumber: 379,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5058,7 +4949,7 @@ function MDCreateDocument() {
                                                 children: "Document:"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                lineNumber: 1151,
+                                                lineNumber: 1125,
                                                 columnNumber: 17
                                             }, this),
                                             " ",
@@ -5073,7 +4964,7 @@ function MDCreateDocument() {
                                                 children: "Scope:"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                lineNumber: 1155,
+                                                lineNumber: 1129,
                                                 columnNumber: 17
                                             }, this),
                                             " ",
@@ -5081,7 +4972,7 @@ function MDCreateDocument() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                        lineNumber: 1150,
+                                        lineNumber: 1124,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5098,7 +4989,7 @@ function MDCreateDocument() {
                                                 children: "← Previous"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                lineNumber: 1163,
+                                                lineNumber: 1137,
                                                 columnNumber: 19
                                             }, this) : null,
                                             activeTab !== "preview" ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -5111,7 +5002,7 @@ function MDCreateDocument() {
                                                 children: "Next →"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                lineNumber: 1174,
+                                                lineNumber: 1148,
                                                 columnNumber: 19
                                             }, this) : null,
                                             activeTab === "preview" ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -5119,45 +5010,45 @@ function MDCreateDocument() {
                                                 className: "hidden"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                                lineNumber: 1185,
+                                                lineNumber: 1159,
                                                 columnNumber: 19
                                             }, this) : null
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                        lineNumber: 1161,
+                                        lineNumber: 1135,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                                lineNumber: 1149,
+                                lineNumber: 1123,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                        lineNumber: 399,
+                        lineNumber: 378,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-                    lineNumber: 398,
+                    lineNumber: 377,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-            lineNumber: 317,
+            lineNumber: 297,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDCreateDocument.jsx",
-        lineNumber: 316,
+        lineNumber: 296,
         columnNumber: 5
     }, this);
 }
-_s(MDCreateDocument, "DB3H49xkpB1zsfnU2S/uMhAeUAc=", false, function() {
+_s(MDCreateDocument, "NsVu/g1tFqD3eXi79FmVG5gYEUY=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"]
     ];

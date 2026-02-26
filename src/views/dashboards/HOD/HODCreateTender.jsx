@@ -5,10 +5,9 @@ import { useMemo, useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { HODMenuItems } from "@/utils/menus";
-const ALL_DEPARTMENTS = [
-  "Technical", "Workshop", "HSE", "IT", "Admin", "Legal", 
-  "Logistics", "Procurement", "HR", "Accounts", "QHSE", "NCD"
-];
+import { toast } from "@/lib/toast";
+import { fetchWithAuth } from "@/lib/api";
+
 
 const CATEGORIES = [
   "Equipment Supply",
@@ -33,14 +32,14 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "purple"
-      ? "bg-purple-50 text-purple-700 ring-purple-100"
-      : tone === "info"
-      ? "bg-blue-50 text-blue-700 ring-blue-100"
-      : "bg-gray-50 text-gray-700 ring-gray-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "purple"
+            ? "bg-purple-50 text-purple-700 ring-purple-100"
+            : tone === "info"
+              ? "bg-blue-50 text-blue-700 ring-blue-100"
+              : "bg-gray-50 text-gray-700 ring-gray-100";
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
       {children}
@@ -82,7 +81,7 @@ export default function HODCreateTender() {
 
   const [formData, setFormData] = useState({
     title: "",
-    department: ALL_DEPARTMENTS[0],
+    department: "",
     category: "",
     description: "",
     closingDate: "",
@@ -92,6 +91,8 @@ export default function HODCreateTender() {
     contactPhone: "",
     status: "OPEN",
   });
+
+  const [departments, setDepartments] = useState([]);
 
   const [requirements, setRequirements] = useState([""]);
   const [attachments, setAttachments] = useState([]);
@@ -106,36 +107,67 @@ export default function HODCreateTender() {
     [requirements, attachments.length]
   );
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    if (isEditMode) {
-      // Simulate loading tender data
-      const mockTenderData = {
-        title: "Supply of Pipeline Inspection Equipment",
-        department: "Technical",
-        category: "Equipment Supply",
-        description: "Supply of pipeline inspection equipment and tools for Site A project.",
-        closingDate: "2024-12-20",
-        budget: "15,800,000",
-        contactPerson: "Engr. Michael Okonkwo",
-        contactEmail: "procurement@calaya.com",
-        contactPhone: "+234 801 234 5678",
-        status: "OPEN",
-      };
-      
-      setFormData(mockTenderData);
-      setRequirements([
-        "Minimum 5 years experience in oil and gas equipment supply",
-        "ISO 9001:2015 certification",
-        "Local content compliance (Nigerian Content Act)",
-        "Valid tax clearance certificate",
-        "Evidence of similar projects completed",
-      ]);
-      setExistingDocuments([
-        { id: 1, name: "Tender Document.pdf", size: "1.2 MB" },
-        { id: 2, name: "Technical Specifications.pdf", size: "2.1 MB" },
-      ]);
+    async function getDepartments() {
+      try {
+        const res = await fetchWithAuth("/api/departments");
+        if (res.ok) {
+          const data = await res.json();
+          setDepartments(data.map(d => d.name));
+          if (!isEditMode) {
+            setFormData(prev => ({ ...prev, department: data[0]?.name || "" }));
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch departments:", err);
+      } finally {
+        if (!isEditMode) setLoading(false);
+      }
     }
+    getDepartments();
   }, [isEditMode]);
+
+  useEffect(() => {
+    if (isEditMode && tenderId) {
+      async function getTender() {
+        try {
+          const res = await fetchWithAuth(`/api/tenders/${tenderId}`);
+          if (res.ok) {
+            const data = await res.json();
+            setFormData({
+              title: data.title || "",
+              department: data.department || "",
+              category: data.category || "",
+              description: data.description || "",
+              closingDate: data.closingDate || "",
+              budget: data.budget || "",
+              contactPerson: data.contactPerson || "",
+              contactEmail: data.contactEmail || "",
+              contactPhone: data.contactPhone || "",
+              status: data.status || "OPEN",
+            });
+            if (data.requirements) setRequirements(data.requirements);
+            if (data.documents) setExistingDocuments(data.documents.map(d => ({
+              id: d.dbId,
+              name: d.name,
+              size: d.size
+            })));
+          } else {
+            toast.error("Tender not found");
+            router.push("/hod-dashboard/tenders");
+          }
+        } catch (err) {
+          console.error("Failed to fetch tender:", err);
+          toast.error("Failed to load tender data");
+        } finally {
+          setLoading(false);
+        }
+      }
+      getTender();
+    }
+  }, [isEditMode, tenderId, router]);
 
   const generateReferenceNo = () => {
     const prefix = "CAL";
@@ -145,7 +177,7 @@ export default function HODCreateTender() {
     return `${prefix}/${deptCode}/${year}/${sequence}`;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!formData.title.trim()) return toast.warning("Please enter tender title");
@@ -153,24 +185,34 @@ export default function HODCreateTender() {
     if (!formData.description.trim()) return toast.warning("Please enter description");
     if (!formData.closingDate) return toast.warning("Please set closing date");
 
-    const newTender = {
-      ...formData,
-      id: isEditMode ? tenderId : `TEN-${Date.now().toString().slice(-3)}`,
-      referenceNo: isEditMode ? "CAL/TECH/2024/001" : generateReferenceNo(),
-      issuedDate: isEditMode ? "2024-12-01" : new Date().toISOString().split("T")[0],
-      documents: attachments.length + existingDocuments.length,
-      fileSize: "0 MB",
-      downloads: isEditMode ? 24 : 0,
-      requirements: requirements.filter((r) => r.trim() !== ""),
-      attachments,
-      existingDocuments,
-      createdBy: "HOD - Technical",
-      createdAt: isEditMode ? "2024-12-01" : new Date().toISOString().split("T")[0],
-    };
+    setLoading(true);
+    try {
+      const payload = {
+        ...formData,
+        referenceNo: isEditMode ? undefined : generateReferenceNo(),
+      };
 
-    console.log(`${isEditMode ? "Updating" : "Creating"} tender:`, newTender);
-    toast.success(`Tender ${isEditMode ? "updated" : "created"} successfully!`);
-    router.push("/hod-dashboard/tenders");
+      const url = isEditMode ? `/api/tenders/${tenderId}` : "/api/tenders";
+      const method = isEditMode ? "PATCH" : "POST";
+
+      const res = await fetchWithAuth(url, {
+        method,
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        toast.success(`Tender ${isEditMode ? "updated" : "created"} successfully!`);
+        router.push("/hod-dashboard/tenders");
+      } else {
+        const error = await res.json();
+        toast.error(error.error || "Failed to save tender");
+      }
+    } catch (err) {
+      console.error("Error saving tender:", err);
+      toast.error("An error occurred while saving the tender");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleRequirementChange = (index, value) => {
@@ -218,8 +260,8 @@ export default function HODCreateTender() {
                   {isEditMode ? "Edit Tender" : "Create New Tender"}
                 </h1>
                 <p className="text-gray-600 mt-2">
-                  {isEditMode 
-                    ? "Update tender information, requirements and documents" 
+                  {isEditMode
+                    ? "Update tender information, requirements and documents"
                     : "Publish a tender and attach documents for suppliers and contractors."}
                 </p>
               </div>
@@ -239,9 +281,8 @@ export default function HODCreateTender() {
                 <button
                   key={t.id}
                   onClick={() => setActiveTab(t.id)}
-                  className={`pb-4 text-sm font-semibold transition ${
-                    activeTab === t.id ? "text-blue-700" : "text-gray-500 hover:text-gray-700"
-                  }`}
+                  className={`pb-4 text-sm font-semibold transition ${activeTab === t.id ? "text-blue-700" : "text-gray-500 hover:text-gray-700"
+                    }`}
                   style={{
                     borderBottom: activeTab === t.id ? "2px solid var(--primary-blue)" : "2px solid transparent",
                   }}
@@ -281,7 +322,8 @@ export default function HODCreateTender() {
                     value={formData.department}
                     onChange={(e) => setFormData({ ...formData, department: e.target.value })}
                   >
-                    {ALL_DEPARTMENTS.map((dept) => (
+                    <option value="">Select department</option>
+                    {departments.map((dept) => (
                       <option key={dept} value={dept}>
                         {dept}
                       </option>

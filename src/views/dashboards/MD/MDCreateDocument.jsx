@@ -1,7 +1,7 @@
 "use client";
 
 // pages/dashboards/MD/MDCreateDocument.jsx
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
@@ -9,20 +9,7 @@ import { MDMenuItems } from "@/utils/menus";
 import { PasswordInput } from "@/components/ui/password-input";
 import { toast } from "@/lib/toast";
 import { fetchWithAuth } from "@/lib/api";
-const departments = [
-  "Technical",
-  "Workshop",
-  "Logistics",
-  "Contract and Procurement",
-  "Legal and Compliances",
-  "HR",
-  "HSE",
-  "Business Development (BDD)",
-  "Accounts",
-  "NCD",
-  "QHSE",
-  "Admin",
-];
+
 
 const documentTypes = [
   "Report",
@@ -39,30 +26,8 @@ const documentTypes = [
   "Presentation",
 ];
 
-/* Demo lists (for SPECIFIC_HODS / SPECIFIC_USERS UI) */
-const hodUsers = [
-  { id: 1, name: "John Smith", department: "Technical", email: "hod.technical@company.com" },
-  { id: 2, name: "David Chen", department: "Workshop", email: "hod.workshop@company.com" },
-  { id: 3, name: "Maria Garcia", department: "HSE", email: "hod.hse@company.com" },
-  { id: 4, name: "Robert Lee", department: "Logistics", email: "hod.logistics@company.com" },
-  { id: 5, name: "Sarah Johnson", department: "Accounts", email: "hod.accounts@company.com" },
-  { id: 6, name: "Patricia Davis", department: "HR", email: "hod.hr@company.com" },
-  { id: 7, name: "James Wilson", department: "Contract and Procurement", email: "hod.procurement@company.com" },
-  { id: 8, name: "Lisa Wang", department: "Legal and Compliances", email: "hod.legal@company.com" },
-];
+/* Demo lists (for SPECIFIC_HODS / SPECIFIC_USERS UI) - cleared as per request */
 
-const users = [
-  { id: 101, name: "John Doe", department: "Technical", email: "john.doe@company.com" },
-  { id: 102, name: "Mike Johnson", department: "Technical", email: "mike.johnson@company.com" },
-  { id: 103, name: "Alex Turner", department: "Technical", email: "alex.turner@company.com" },
-  { id: 104, name: "Sarah Smith", department: "HSE", email: "sarah.smith@company.com" },
-  { id: 105, name: "Robert Chen", department: "Workshop", email: "robert.chen@company.com" },
-  { id: 106, name: "Emma Wilson", department: "Technical", email: "emma.wilson@company.com" },
-  { id: 107, name: "Michael Brown", department: "Logistics", email: "michael.brown@company.com" },
-  { id: 108, name: "Lisa Wang", department: "Logistics", email: "lisa.wang@company.com" },
-  { id: 109, name: "David Kim", department: "Legal and Compliances", email: "david.kim@company.com" },
-  { id: 110, name: "James Miller", department: "HR", email: "james.miller@company.com" },
-];
 
 /* ---------- dashboard-style helpers ---------- */
 const Card = ({ className = "", children }) => (
@@ -74,14 +39,14 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "info"
-      ? "bg-blue-50 text-blue-700 ring-blue-100"
-      : tone === "purple"
-      ? "bg-purple-50 text-purple-700 ring-purple-100"
-      : "bg-gray-50 text-gray-700 ring-gray-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "info"
+            ? "bg-blue-50 text-blue-700 ring-blue-100"
+            : tone === "purple"
+              ? "bg-purple-50 text-purple-700 ring-purple-100"
+              : "bg-gray-50 text-gray-700 ring-gray-100";
 
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
@@ -153,18 +118,49 @@ export default function MDCreateDocument() {
   });
 
   const [files, setFiles] = useState([]);
+  const [departments, setDepartments] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [hodUsers, setHodUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const [deptRes, userRes] = await Promise.all([
+          fetchWithAuth("/api/departments"),
+          fetchWithAuth("/api/users"),
+        ]);
+        if (deptRes.ok) {
+          const data = await deptRes.json();
+          setDepartments(data.map((d) => d.name));
+        }
+        if (userRes.ok) {
+          const data = await userRes.json();
+          setUsers(data);
+          setHodUsers(data.filter((u) => u.role === "HOD" || u.role === "MD"));
+        }
+      } catch (err) {
+        console.error("Failed to load departments/users:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadData();
+  }, []);
+
   const [saving, setSaving] = useState(false);
 
   // Derived tags
   const tags = useMemo(() => safeSplitTags(formData.tagsText), [formData.tagsText]);
 
   // Demo document id
-  const docId = useMemo(() => {
+  const [docId, setDocId] = useState("");
+  useEffect(() => {
     const year = new Date().getFullYear();
     const rnd = Math.floor(Math.random() * 1000)
       .toString()
       .padStart(3, "0");
-    return `DOC-${year}-${rnd}`;
+    setDocId(`DOC-${year}-${rnd}`);
   }, []);
 
   const totalSizeMB = useMemo(() => files.reduce((sum, f) => sum + f.size, 0) / 1024 / 1024, [files]);
@@ -381,9 +377,8 @@ export default function MDCreateDocument() {
                     key={t.id}
                     type="button"
                     onClick={() => setActiveTab(t.id)}
-                    className={`px-6 py-4 text-sm font-semibold transition border-b-2 ${
-                      active ? "text-gray-900" : "text-gray-500 hover:text-gray-700"
-                    }`}
+                    className={`px-6 py-4 text-sm font-semibold transition border-b-2 ${active ? "text-gray-900" : "text-gray-500 hover:text-gray-700"
+                      }`}
                     style={{ borderBottomColor: active ? "var(--primary-blue)" : "transparent" }}
                   >
                     {t.label}
@@ -598,9 +593,8 @@ export default function MDCreateDocument() {
                               key={s.value}
                               type="button"
                               onClick={() => clearScopedSelections(s.value)}
-                              className={`text-left p-4 rounded-2xl border transition hover:-translate-y-[1px] ${
-                                active ? "bg-white" : "bg-gray-50 hover:bg-gray-100"
-                              }`}
+                              className={`text-left p-4 rounded-2xl border transition hover:-translate-y-[1px] ${active ? "bg-white" : "bg-gray-50 hover:bg-gray-100"
+                                }`}
                               style={{ borderColor: active ? "rgba(44, 75, 155, 0.35)" : "rgba(0,0,0,0.08)" }}
                             >
                               <div className="text-2xl">{s.icon}</div>
@@ -653,9 +647,8 @@ export default function MDCreateDocument() {
                                 key={d}
                                 type="button"
                                 onClick={() => toggleDept(d)}
-                                className={`px-3.5 py-2 rounded-2xl text-sm font-semibold border transition ${
-                                  active ? "text-white" : "text-gray-700 bg-white hover:bg-gray-50"
-                                }`}
+                                className={`px-3.5 py-2 rounded-2xl text-sm font-semibold border transition ${active ? "text-white" : "text-gray-700 bg-white hover:bg-gray-50"
+                                  }`}
                                 style={{
                                   backgroundColor: active ? "var(--primary-blue)" : undefined,
                                   borderColor: active ? "transparent" : "rgba(0,0,0,0.08)",
@@ -684,9 +677,8 @@ export default function MDCreateDocument() {
                                 key={h.id}
                                 type="button"
                                 onClick={() => toggleHod(h)}
-                                className={`text-left flex items-center gap-3 p-3 rounded-2xl border transition ${
-                                  active ? "bg-purple-50" : "bg-white hover:bg-gray-50"
-                                }`}
+                                className={`text-left flex items-center gap-3 p-3 rounded-2xl border transition ${active ? "bg-purple-50" : "bg-white hover:bg-gray-50"
+                                  }`}
                                 style={{ borderColor: active ? "rgba(139,92,246,0.25)" : "rgba(0,0,0,0.08)" }}
                               >
                                 <div
@@ -744,9 +736,8 @@ export default function MDCreateDocument() {
                                 key={u.id}
                                 type="button"
                                 onClick={() => toggleUser(u)}
-                                className={`w-full text-left flex items-center gap-3 p-3 rounded-2xl border transition ${
-                                  active ? "bg-blue-50" : "bg-white hover:bg-gray-50"
-                                }`}
+                                className={`w-full text-left flex items-center gap-3 p-3 rounded-2xl border transition ${active ? "bg-blue-50" : "bg-white hover:bg-gray-50"
+                                  }`}
                                 style={{ borderColor: active ? "rgba(44, 75, 155, 0.25)" : "rgba(0,0,0,0.08)" }}
                               >
                                 <div
@@ -788,9 +779,8 @@ export default function MDCreateDocument() {
                               encryptionPassword: !p.isEncrypted ? p.encryptionPassword : "",
                             }))
                           }
-                          className={`px-4 py-2 rounded-2xl text-sm font-semibold border transition ${
-                            formData.isEncrypted ? "bg-red-50" : "bg-white hover:bg-gray-50"
-                          }`}
+                          className={`px-4 py-2 rounded-2xl text-sm font-semibold border transition ${formData.isEncrypted ? "bg-red-50" : "bg-white hover:bg-gray-50"
+                            }`}
                           style={{
                             borderColor: formData.isEncrypted ? "rgba(239,68,68,0.25)" : "rgba(0,0,0,0.08)",
                             color: formData.isEncrypted ? "#DC2626" : "var(--primary-blue)",

@@ -6,6 +6,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { StaffMenuItems } from "@/utils/menus";
+import { toast } from "@/lib/toast";
+import { getAuthToken } from "@/lib/api";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -16,14 +18,14 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "info"
-      ? "bg-blue-50 text-blue-700 ring-blue-100"
-      : tone === "purple"
-      ? "bg-purple-50 text-purple-700 ring-purple-100"
-      : "bg-gray-50 text-gray-700 ring-gray-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "info"
+            ? "bg-blue-50 text-blue-700 ring-blue-100"
+            : tone === "purple"
+              ? "bg-purple-50 text-purple-700 ring-purple-100"
+              : "bg-gray-50 text-gray-700 ring-gray-100";
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
       {children}
@@ -135,7 +137,7 @@ const documentsData = [
 ];
 
 const accessTone = (access) => {
-  switch(access) {
+  switch (access) {
     case 'Public': return 'success';
     case 'Department': return 'info';
     case 'All Departments': return 'purple';
@@ -155,7 +157,7 @@ const departmentTone = (dept) => {
 };
 
 const getFileIcon = (fileType) => {
-  switch(fileType.toLowerCase()) {
+  switch (fileType.toLowerCase()) {
     case 'pdf': return '📕';
     case 'word': return '📝';
     case 'excel': return '📊';
@@ -185,9 +187,9 @@ export default function StaffDocuments() {
     }).filter(doc => {
       if (!query) return true;
       return doc.title.toLowerCase().includes(query) ||
-             doc.description.toLowerCase().includes(query) ||
-             doc.type.toLowerCase().includes(query) ||
-             doc.department.toLowerCase().includes(query);
+        doc.description.toLowerCase().includes(query) ||
+        doc.type.toLowerCase().includes(query) ||
+        doc.department.toLowerCase().includes(query);
     });
   }, [filter, search]);
 
@@ -202,7 +204,13 @@ export default function StaffDocuments() {
   const handleDownload = (doc, e) => {
     e.preventDefault();
     e.stopPropagation();
-    toast.info(`Downloading ${doc.title}.${doc.fileType.toLowerCase()} (${doc.fileSize})`);
+    if (!doc.id) {
+      toast.info("No file available for download");
+      return;
+    }
+    const token = getAuthToken();
+    const url = `/api/documents/${doc.id}/download${token ? `?token=${token}` : ""}`;
+    window.open(url, "_blank");
   };
 
   const clearFilters = () => {
@@ -259,9 +267,8 @@ export default function StaffDocuments() {
               <div className="flex flex-wrap gap-2">
                 <button
                   onClick={() => setFilter('all')}
-                  className={`px-4 py-3 rounded-2xl text-sm font-semibold border transition active:scale-[0.99] ${
-                    filter === 'all' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
-                  }`}
+                  className={`px-4 py-3 rounded-2xl text-sm font-semibold border transition active:scale-[0.99] ${filter === 'all' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
+                    }`}
                   style={{
                     borderColor: filter === 'all' ? "var(--primary-blue)" : "#e5e7eb",
                     color: filter === 'all' ? "var(--primary-blue)" : "#374151",
@@ -271,9 +278,8 @@ export default function StaffDocuments() {
                 </button>
                 <button
                   onClick={() => setFilter('public')}
-                  className={`px-4 py-3 rounded-2xl text-sm font-semibold border transition active:scale-[0.99] ${
-                    filter === 'public' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
-                  }`}
+                  className={`px-4 py-3 rounded-2xl text-sm font-semibold border transition active:scale-[0.99] ${filter === 'public' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
+                    }`}
                   style={{
                     borderColor: filter === 'public' ? "var(--secondary-blue)" : "#e5e7eb",
                     color: filter === 'public' ? "var(--secondary-blue)" : "#374151",
@@ -283,9 +289,8 @@ export default function StaffDocuments() {
                 </button>
                 <button
                   onClick={() => setFilter('department')}
-                  className={`px-4 py-3 rounded-2xl text-sm font-semibold border transition active:scale-[0.99] ${
-                    filter === 'department' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
-                  }`}
+                  className={`px-4 py-3 rounded-2xl text-sm font-semibold border transition active:scale-[0.99] ${filter === 'department' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
+                    }`}
                   style={{
                     borderColor: filter === 'department' ? "#F59E0B" : "#e5e7eb",
                     color: filter === 'department' ? "#F59E0B" : "#374151",
@@ -295,9 +300,8 @@ export default function StaffDocuments() {
                 </button>
                 <button
                   onClick={() => setFilter('technical')}
-                  className={`px-4 py-3 rounded-2xl text-sm font-semibold border transition active:scale-[0.99] ${
-                    filter === 'technical' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
-                  }`}
+                  className={`px-4 py-3 rounded-2xl text-sm font-semibold border transition active:scale-[0.99] ${filter === 'technical' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
+                    }`}
                   style={{
                     borderColor: filter === 'technical' ? "#3B82F6" : "#e5e7eb",
                     color: filter === 'technical' ? "#3B82F6" : "#374151",
@@ -307,9 +311,8 @@ export default function StaffDocuments() {
                 </button>
                 <button
                   onClick={() => setFilter('workshop')}
-                  className={`px-4 py-3 rounded-2xl text-sm font-semibold border transition active:scale-[0.99] ${
-                    filter === 'workshop' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
-                  }`}
+                  className={`px-4 py-3 rounded-2xl text-sm font-semibold border transition active:scale-[0.99] ${filter === 'workshop' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
+                    }`}
                   style={{
                     borderColor: filter === 'workshop' ? "#F59E0B" : "#e5e7eb",
                     color: filter === 'workshop' ? "#F59E0B" : "#374151",

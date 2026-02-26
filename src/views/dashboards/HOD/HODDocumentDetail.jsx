@@ -1,11 +1,12 @@
 "use client";
 
-// pages/dashboards/HOD/HODDocumentDetail.jsx
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { HODMenuItems } from "@/utils/menus";
+import { toast } from "@/lib/toast";
+import { fetchWithAuth, getAuthToken } from "@/lib/api";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -28,14 +29,14 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "info"
-      ? "bg-blue-50 text-blue-700 ring-blue-100"
-      : tone === "purple"
-      ? "bg-purple-50 text-purple-700 ring-purple-100"
-      : "bg-gray-50 text-gray-700 ring-gray-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "info"
+            ? "bg-blue-50 text-blue-700 ring-blue-100"
+            : tone === "purple"
+              ? "bg-purple-50 text-purple-700 ring-purple-100"
+              : "bg-gray-50 text-gray-700 ring-gray-100";
 
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
@@ -107,61 +108,108 @@ export default function HODDocumentDetail() {
   const router = useRouter();
 
   const [activeTab, setActiveTab] = useState("details");
+  const [doc, setDoc] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const documentData = {
-    id: docId || 'DOC-001',
-    title: 'Pipeline Safety Inspection Report',
-    description: 'Quarterly safety inspection report for pipeline infrastructure covering visual inspection, pressure testing, and compliance verification.',
-    type: 'Report',
-    department: 'Technical',
-    scope: 'PUBLIC',
-    uploadedBy: 'Alex Johnson',
-    uploadedAt: '2024-12-10T14:30:00',
-    fileSize: '2.4 MB',
-    fileType: 'PDF',
-    versionLabel: 'v2.1',
-    expiryDate: '2025-06-10',
-    isEncrypted: false,
-    downloads: 24,
-    lastDownloaded: '2024-12-11T09:30:00',
-    attachedTask: 'TASK-2024-00123',
-    tags: ['safety', 'inspection', 'pipeline', 'q4'],
-    versions: [
-      { version: 'v2.1', date: '2024-12-10', uploadedBy: 'Alex Johnson', changes: 'Updated inspection results' },
-      { version: 'v2.0', date: '2024-09-15', uploadedBy: 'Alex Johnson', changes: 'Added new compliance sections' },
-      { version: 'v1.0', date: '2024-06-20', uploadedBy: 'Maria Garcia', changes: 'Initial report' },
-    ],
-    downloadHistory: [
-      { user: 'HOD - Technical', downloadedAt: '2024-12-11T10:15:00', department: 'Technical' },
-      { user: 'MD', downloadedAt: '2024-12-11T09:30:00', department: 'Executive' },
-      { user: 'Alex Johnson', downloadedAt: '2024-12-10T15:45:00', department: 'Technical' },
-      { user: 'Emma Wilson', downloadedAt: '2024-12-10T16:20:00', department: 'Technical' },
-    ],
-    accessList: [
-      { user: 'Alex Johnson', accessType: 'Owner', department: 'Technical' },
-      { user: 'HOD - Technical', accessType: 'Full Access', department: 'Technical' },
-      { user: 'All HODs', accessType: 'View Only', department: 'Various' },
-    ],
-    comments: [
-      { user: 'HOD - Technical', date: '2024-12-11', comment: 'Good report. Please ensure next version includes more detailed compliance metrics.' },
-      { user: 'Alex Johnson', date: '2024-12-10', comment: 'Updated with latest inspection data from North Field.' },
-    ],
-  };
+  useEffect(() => {
+    if (!docId) return;
+
+    const fetchDocData = async () => {
+      setLoading(true);
+      try {
+        const resp = await fetchWithAuth(`/api/documents/${docId}`);
+        if (!resp.ok) {
+          throw new Error("Failed to fetch document details");
+        }
+        const data = await resp.json();
+        // Map API data to component structure
+        setDoc({
+          ...data,
+          description: data.description || "No description provided for this document.",
+          uploadedAt: data.date,
+          fileSize: data.size || "Unknown",
+          fileType: data.title.split('.').pop()?.toUpperCase() || "PDF",
+          versionLabel: "v1.0",
+          expiryDate: null,
+          isEncrypted: false,
+          attachedTask: null,
+          tags: [],
+          versions: [
+            { version: "v1.0", date: data.date, uploadedBy: data.uploadedBy, changes: "Initial upload" },
+          ],
+          downloadHistory: [],
+          accessList: [
+            { user: data.uploadedBy, accessType: "Owner", department: data.department },
+          ],
+          comments: []
+        });
+      } catch (error) {
+        console.error("Error fetching document:", error);
+        toast.error("Could not load document details");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDocData();
+  }, [docId]);
+
+  const documentData = doc;
 
   const downloadsToday = useMemo(() => {
+    if (!documentData?.downloadHistory) return 0;
     const today = new Date().toDateString();
     return documentData.downloadHistory.filter((d) => new Date(d.downloadedAt).toDateString() === today).length;
-  }, [documentData.downloadHistory]);
+  }, [documentData?.downloadHistory]);
 
-  const uniqueDepartments = useMemo(
-    () => [...new Set(documentData.downloadHistory.map((d) => d.department))].length,
-    [documentData.downloadHistory]
-  );
+  const uniqueDepartments = useMemo(() => {
+    if (!documentData?.downloadHistory) return 0;
+    return [...new Set(documentData.downloadHistory.map((d) => d.department))].length;
+  }, [documentData?.downloadHistory]);
 
-  const handleDownload = () => toast.info("Document download started!");
+  const handleDownload = () => {
+    if (!documentData?.dbId) {
+      toast.info("No file available for download");
+      return;
+    }
+    const token = getAuthToken();
+    const url = `/api/documents/${documentData.dbId}/download${token ? `?token=${token}` : ""}`;
+    window.open(url, "_blank");
+  };
   const handleShare = () => toast.info("Share modal would open here");
   const handleUploadNewVersion = () => toast.warning("Upload new version flow would open here");
   const handleArchive = () => toast.info("Archive document flow would open here");
+
+  if (loading) {
+    return (
+      <Layout menuItems={HODMenuItems} userRole="HOD">
+        <div className="flex flex-col items-center justify-center min-h-[400px]">
+          <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+          <p className="text-gray-500 font-semibold">Loading document details...</p>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (!documentData) {
+    return (
+      <Layout menuItems={HODMenuItems} userRole="HOD">
+        <Card className="p-12 text-center">
+          <div className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-4 bg-red-50">
+            <span className="text-2xl text-red-600">⚠️</span>
+          </div>
+          <h3 className="text-lg font-extrabold text-gray-900 mb-2">Document not found</h3>
+          <p className="text-gray-600 mb-6">The document you are looking for might have been removed or renamed.</p>
+          <button
+            onClick={() => router.push("/hod-dashboard/documents")}
+            className="px-6 py-3 rounded-2xl font-semibold text-white bg-blue-600 hover:bg-blue-700 transition"
+          >
+            Back to Documents
+          </button>
+        </Card>
+      </Layout>
+    );
+  }
 
   return (
     <Layout menuItems={HODMenuItems} userRole="HOD">
@@ -241,9 +289,8 @@ export default function HODDocumentDetail() {
                     key={t.id}
                     type="button"
                     onClick={() => setActiveTab(t.id)}
-                    className={`px-6 py-4 text-sm font-semibold transition border-b-2 ${
-                      active ? "text-gray-900" : "text-gray-500 hover:text-gray-700"
-                    }`}
+                    className={`px-6 py-4 text-sm font-semibold transition border-b-2 ${active ? "text-gray-900" : "text-gray-500 hover:text-gray-700"
+                      }`}
                     style={{ borderBottomColor: active ? "var(--primary-blue)" : "transparent" }}
                   >
                     {t.label}

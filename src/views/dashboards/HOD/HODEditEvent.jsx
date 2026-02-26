@@ -5,6 +5,8 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { HODMenuItems } from "@/utils/menus";
+import { toast } from "@/lib/toast";
+import { fetchWithAuth } from "@/lib/api";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -15,12 +17,12 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "info"
-      ? "bg-blue-50 text-blue-700 ring-blue-100"
-      : "bg-gray-50 text-gray-700 ring-gray-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "info"
+            ? "bg-blue-50 text-blue-700 ring-blue-100"
+            : "bg-gray-50 text-gray-700 ring-gray-100";
 
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
@@ -94,23 +96,7 @@ const eventsData = [
   },
 ];
 
-const departments = [
-  { id: 'TECH', name: 'Technical' },
-  { id: 'HSE', name: 'HSE' },
-  { id: 'WORKSHOP', name: 'Workshop' },
-  { id: 'LOGISTICS', name: 'Logistics' },
-  { id: 'HR', name: 'Human Resources' },
-  { id: 'FIN', name: 'Finance' }
-];
 
-const users = [
-  { id: 1, name: 'Alex Johnson', department: 'Technical' },
-  { id: 2, name: 'Emma Wilson', department: 'Technical' },
-  { id: 3, name: 'Michael Brown', department: 'Technical' },
-  { id: 4, name: 'Sarah Taylor', department: 'HSE' },
-  { id: 5, name: 'James Anderson', department: 'Workshop' },
-  { id: 6, name: 'Lisa Chen', department: 'Logistics' }
-];
 
 const getColorOptions = () => {
   return [
@@ -127,7 +113,28 @@ export default function HODEditEvent() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  
+  const [allDepartments, setAllDepartments] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const [deptResp, userResp] = await Promise.all([
+          fetchWithAuth("/api/departments"),
+          fetchWithAuth("/api/users")
+        ]);
+        if (deptResp.ok) setAllDepartments(await deptResp.json());
+        if (userResp.ok) {
+          const u = await userResp.json();
+          setAllUsers(u.users || u);
+        }
+      } catch (err) {
+        console.error("Failed to load users/depts", err);
+      }
+    }
+    loadData();
+  }, []);
+
   const [formData, setFormData] = useState({
     title: '',
     type: 'MEETING',
@@ -151,7 +158,7 @@ export default function HODEditEvent() {
     if (event) {
       const startDateTime = new Date(event.startAt);
       const endDateTime = new Date(event.endAt);
-      
+
       setFormData({
         ...formData,
         title: event.title,
@@ -224,11 +231,11 @@ export default function HODEditEvent() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
+
     try {
       const startAt = `${formData.startDate}T${formData.startTime}:00`;
       const endAt = `${formData.endDate}T${formData.endTime}:00`;
-      
+
       if (new Date(endAt) <= new Date(startAt)) {
         toast.warning('End time must be after start time');
         setLoading(false);
@@ -236,7 +243,7 @@ export default function HODEditEvent() {
       }
 
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       toast.success('Event updated successfully!');
       router.push(`/hod-dashboard/event/${eventId}`);
     } catch (error) {
@@ -312,7 +319,7 @@ export default function HODEditEvent() {
           {/* Basic Information */}
           <Card className="p-6">
             <SectionTitle title="Basic Information" subtitle="Event title, type, and description" />
-            
+
             <div className="mt-5 space-y-4">
               <div>
                 <FieldLabel required>Event Title</FieldLabel>
@@ -377,7 +384,7 @@ export default function HODEditEvent() {
           {/* Date & Time */}
           <Card className="p-6">
             <SectionTitle title="Date & Time" subtitle="Start and end schedule" />
-            
+
             <div className="mt-5 grid grid-cols-2 gap-4">
               <div>
                 <FieldLabel required>Start Date</FieldLabel>
@@ -432,7 +439,7 @@ export default function HODEditEvent() {
           {/* Location */}
           <Card className="p-6">
             <SectionTitle title="Location" subtitle="Physical or virtual meeting details" />
-            
+
             <div className="mt-5 space-y-4">
               <div>
                 <FieldLabel>Physical Location</FieldLabel>
@@ -473,7 +480,7 @@ export default function HODEditEvent() {
                 + Add Item
               </button>
             </div>
-            
+
             <div className="mt-5 space-y-3">
               {formData.agenda.map((item, index) => (
                 <div key={index} className="flex items-center gap-2">
@@ -502,7 +509,7 @@ export default function HODEditEvent() {
           {/* Visibility & Attendees */}
           <Card className="p-6">
             <SectionTitle title="Visibility & Attendees" subtitle="Who can see and attend this event" />
-            
+
             <div className="mt-5 space-y-4">
               <div>
                 <FieldLabel required>Who can see this event?</FieldLabel>
@@ -524,12 +531,12 @@ export default function HODEditEvent() {
                 <div>
                   <FieldLabel required>Select Departments</FieldLabel>
                   <div className="grid grid-cols-2 gap-3 mt-2">
-                    {departments.map(dept => (
-                      <label key={dept.id} className="flex items-center gap-2 p-3 rounded-2xl border border-gray-200 hover:bg-gray-50 cursor-pointer">
+                    {allDepartments.map(dept => (
+                      <label key={dept.id || dept.name} className="flex items-center gap-2 p-3 rounded-2xl border border-gray-200 hover:bg-gray-50 cursor-pointer">
                         <input
                           type="checkbox"
-                          checked={formData.selectedDepartments.includes(dept.id)}
-                          onChange={() => handleDepartmentToggle(dept.id)}
+                          checked={formData.selectedDepartments.includes(dept.id || dept.name)}
+                          onChange={() => handleDepartmentToggle(dept.id || dept.name)}
                           className="rounded border-gray-300"
                         />
                         <span className="text-sm font-medium">{dept.name}</span>
@@ -543,7 +550,7 @@ export default function HODEditEvent() {
                 <div>
                   <FieldLabel required>Select Users</FieldLabel>
                   <div className="mt-2 max-h-60 overflow-y-auto rounded-2xl border border-gray-200 divide-y divide-gray-200/70">
-                    {users.map(user => (
+                    {allUsers.map(user => (
                       <label key={user.id} className="flex items-center gap-3 p-4 hover:bg-gray-50 cursor-pointer">
                         <input
                           type="checkbox"
@@ -552,8 +559,8 @@ export default function HODEditEvent() {
                           className="rounded border-gray-300"
                         />
                         <div>
-                          <p className="font-semibold text-gray-900">{user.name}</p>
-                          <p className="text-xs text-gray-500">{user.department}</p>
+                          <p className="font-semibold text-gray-900">{user.name || user.display_name}</p>
+                          <p className="text-xs text-gray-500">{user.department || user.role}</p>
                         </div>
                       </label>
                     ))}

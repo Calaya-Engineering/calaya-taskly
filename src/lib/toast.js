@@ -9,6 +9,9 @@ export const toast = {
   error: (message) => sonnerToast.error(message),
   warning: (message) => sonnerToast.warning(message),
   info: (message) => sonnerToast.info(message),
+  promise: (promise, data) => sonnerToast.promise(promise, data),
+  loading: (message) => sonnerToast.loading(message),
+  dismiss: (id) => sonnerToast.dismiss(id),
   /** Generic toast (default style) */
   message: (message) => sonnerToast(message),
 };

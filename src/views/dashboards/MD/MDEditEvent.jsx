@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { MDMenuItems } from "@/utils/menus";
+import { toast } from "@/lib/toast";
 // Sample event data (in real app, this would come from an API)
 const eventsData = [
   {
@@ -49,10 +50,10 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : "bg-blue-50 text-blue-700 ring-blue-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : "bg-blue-50 text-blue-700 ring-blue-100";
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
       {children}
@@ -552,9 +553,8 @@ export default function MDEditEvent() {
                           key={dept.id}
                           type="button"
                           onClick={() => handleDepartmentToggle(dept.id)}
-                          className={`flex items-center justify-between gap-3 px-4 py-3 rounded-2xl border transition ${
-                            checked ? "bg-blue-50" : "bg-white hover:bg-gray-50"
-                          }`}
+                          className={`flex items-center justify-between gap-3 px-4 py-3 rounded-2xl border transition ${checked ? "bg-blue-50" : "bg-white hover:bg-gray-50"
+                            }`}
                           style={{ borderColor: checked ? "rgba(44, 75, 155, 0.35)" : "rgba(0,0,0,0.08)" }}
                         >
                           <span className="font-semibold text-gray-900">{dept.name}</span>
@@ -577,9 +577,8 @@ export default function MDEditEvent() {
                           key={user.id}
                           type="button"
                           onClick={() => handleUserToggle(user.id)}
-                          className={`w-full flex items-center gap-3 px-4 py-3 text-left border-b last:border-b-0 border-gray-200/70 transition ${
-                            checked ? "bg-blue-50" : "hover:bg-gray-50"
-                          }`}
+                          className={`w-full flex items-center gap-3 px-4 py-3 text-left border-b last:border-b-0 border-gray-200/70 transition ${checked ? "bg-blue-50" : "hover:bg-gray-50"
+                            }`}
                         >
                           <div
                             className="w-9 h-9 rounded-2xl flex items-center justify-center text-white font-bold text-sm "

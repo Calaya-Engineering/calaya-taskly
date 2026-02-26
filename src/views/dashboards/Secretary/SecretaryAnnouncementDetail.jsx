@@ -1,11 +1,12 @@
 "use client";
 
-// pages/dashboards/Secretary/SecretaryAnnouncementDetail.jsx
-import { useMemo, useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { SecretaryMenuItems } from "@/utils/menus";
+import { toast } from "@/lib/toast";
+import { fetchWithAuth } from "@/lib/api";
 const AnnouncementIcon = () => (
   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
@@ -22,14 +23,14 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "info"
-      ? "bg-blue-50 text-blue-700 ring-blue-100"
-      : tone === "purple"
-      ? "bg-purple-50 text-purple-700 ring-purple-100"
-      : "bg-gray-50 text-gray-700 ring-gray-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "info"
+            ? "bg-blue-50 text-blue-700 ring-blue-100"
+            : tone === "purple"
+              ? "bg-purple-50 text-purple-700 ring-purple-100"
+              : "bg-gray-50 text-gray-700 ring-gray-100";
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
       {children}
@@ -109,7 +110,7 @@ const formatDateTime = (dateTime) => {
 
 const getFileIcon = (fileName) => {
   const ext = fileName?.split('.').pop().toLowerCase();
-  switch(ext) {
+  switch (ext) {
     case 'pdf': return '📕';
     case 'doc':
     case 'docx': return '📘';
@@ -130,71 +131,57 @@ export default function SecretaryAnnouncementDetail() {
   const [newComment, setNewComment] = useState('');
   const [isInternal, setIsInternal] = useState(false);
 
-  const announcement = useMemo(() => ({
-    id: announcementId || 'ANN-003',
-    title: 'Safety Protocol Updates',
-    message: `IMPORTANT SAFETY PROTOCOL UPDATES
+  const [announcement, setAnnouncement] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-Effective immediately, all personnel must adhere to the following updated safety protocols for field operations:
+  useEffect(() => {
+    if (!announcementId) {
+      setError("No announcement ID provided");
+      setLoading(false);
+      return;
+    }
 
-1. PERSONAL PROTECTIVE EQUIPMENT (PPE):
-   - Hard hats required in all operational areas
-   - Safety goggles mandatory for equipment handling
-   - High-visibility vests required in field operations
-   - Steel-toe boots required for site visits
+    const fetchAnnouncement = async () => {
+      try {
+        setLoading(true);
+        const res = await fetchWithAuth(`/api/announcements/${announcementId}`);
+        if (!res.ok) {
+          throw new Error("Announcement not found");
+        }
+        const data = await res.json();
 
-2. FIELD OPERATIONS:
-   - Minimum 2 persons required for all field visits
-   - Daily safety briefings before operations
-   - Incident reporting within 1 hour of occurrence
-   - Emergency contact numbers must be carried at all times
+        setAnnouncement({
+          id: data.id,
+          title: data.title || "Untitled Announcement",
+          message: data.description || "",
+          createdBy: data.createdBy || "System",
+          createdDate: data.createdAt || data.date || new Date().toISOString(),
+          scope: data.scopeType || "All Company",
+          priority: data.priority || "NORMAL",
+          expiresAt: data.expiresAt || null,
+          read: true,
+          documents: [],
+          attachments: [],
+          readBy: [],
+          comments: [],
+          readCount: 0,
+          attachmentsCount: 0,
+          department: data.department || "All Departments",
+          departments: data.department ? [data.department] : ["All Departments"],
+        });
+      } catch (err) {
+        console.error(err);
+        setError("Announcement not found");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-3. VEHICLE SAFETY:
-   - Pre-trip inspections mandatory
-   - Speed limits strictly enforced
-   - Defensive driving techniques required
-   - Vehicle tracking system must remain active
+    fetchAnnouncement();
+  }, [announcementId]);
 
-4. COVID-19 PROTOCOLS:
-   - Mask wearing required in company vehicles
-   - Hand sanitizing stations available at all entries
-   - Stay home if experiencing symptoms
-
-All staff must acknowledge receipt of these updated protocols by December 31, 2024. Training sessions will be conducted next week.`,
-    createdBy: 'HSE Department',
-    createdDate: '2024-12-08T11:00:00',
-    scope: 'All Company',
-    priority: 'URGENT',
-    expiresAt: '2024-12-31',
-    read: false,
-    department: 'HSE',
-    documents: [
-      { id: 1, name: 'Safety_Protocol_Updates_2024.pdf', uploadedBy: 'HSE Department', date: '2024-12-08', size: '1.8 MB' },
-      { id: 2, name: 'Field_Operations_Checklist.xlsx', uploadedBy: 'HSE Department', date: '2024-12-08', size: '0.6 MB' },
-    ],
-    attachments: [
-      { id: 1, name: 'Emergency_Contacts.pdf', type: 'document', uploadedBy: 'HSE Dept', date: '2024-12-08', size: '0.3 MB' },
-      { id: 2, name: 'Training_Schedule.jpg', type: 'image', uploadedBy: 'HSE Dept', date: '2024-12-08', size: '1.1 MB' },
-    ],
-    readBy: [
-      { name: 'John Smith', department: 'Technical', readAt: '2024-12-08T13:15:00' },
-      { name: 'Sarah Johnson', department: 'Admin', readAt: '2024-12-08T14:30:00' },
-      { name: 'Michael Brown', department: 'HSE', readAt: '2024-12-08T11:45:00' },
-      { name: 'Emily Davis', department: 'Technical', readAt: '2024-12-08T15:20:00' },
-      { name: 'David Wilson', department: 'Workshop', readAt: '2024-12-09T09:10:00' },
-    ],
-    comments: [
-      { id: 1, user: 'John Smith', role: 'Staff', comment: 'Will there be a practical training session for these new protocols?', timestamp: '2024-12-08T14:20:00', isInternal: false },
-      { id: 2, user: 'HSE Department', role: 'HSE', comment: 'Yes, training sessions are scheduled for Dec 15-16. Registration link will be sent via email.', timestamp: '2024-12-08T15:45:00', isInternal: false },
-      { id: 3, user: 'Sarah Johnson', role: 'Admin', comment: 'Please ensure all field staff receive this information by tomorrow.', timestamp: '2024-12-08T16:30:00', isInternal: true },
-      { id: 4, user: 'Michael Brown', role: 'HSE', comment: 'Acknowledged. Team briefing scheduled for tomorrow morning.', timestamp: '2024-12-09T08:15:00', isInternal: true },
-    ],
-    readCount: 45,
-    attachmentsCount: 4
-  }), [announcementId]);
-
-  const isExpired = useMemo(() => new Date(announcement.expiresAt) < new Date(), [announcement.expiresAt]);
-
+  const isExpired = useMemo(() => announcement?.expiresAt ? new Date(announcement.expiresAt) < new Date() : false, [announcement?.expiresAt]);
   const markAsRead = () => toast.info('Marked as read');
   const markAsUnread = () => toast.info('Marked as unread');
 
@@ -207,6 +194,30 @@ All staff must acknowledge receipt of these updated protocols by December 31, 20
     setNewComment('');
     setIsInternal(false);
   };
+
+  if (loading) {
+    return (
+      <Layout menuItems={SecretaryMenuItems} userRole="Secretary">
+        <div className="flex items-center justify-center p-12">
+          <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (error || !announcement) {
+    return (
+      <Layout menuItems={SecretaryMenuItems} userRole="Secretary">
+        <div className="flex flex-col items-center justify-center p-12 gap-4">
+          <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center text-3xl">⚠️</div>
+          <h2 className="text-xl font-bold text-gray-900">{error || "Announcement not found"}</h2>
+          <button onClick={() => router.push("/secretary-dashboard/announcements")} className={btnOutline}>
+            Back to Announcements
+          </button>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout menuItems={SecretaryMenuItems} userRole="Secretary">
@@ -240,7 +251,7 @@ All staff must acknowledge receipt of these updated protocols by December 31, 20
                     {isExpired ? <Pill tone="muted">Expired</Pill> : null}
                   </div>
 
-                  <h1 className="text-xl md:text-2xl font-extrabold text-gray-900 truncate">{announcement.title}</h1>
+                  <h1 className="text-xl md:text-2xl font-extrabold text-gray-900">{announcement.title}</h1>
                   <p className="text-gray-600 mt-1 text-sm">
                     By <span className="font-semibold">{announcement.createdBy}</span> • {formatDate(announcement.createdDate)}
                   </p>
@@ -284,7 +295,7 @@ All staff must acknowledge receipt of these updated protocols by December 31, 20
               <div className="w-11 h-11 rounded-2xl bg-white flex items-center justify-center">⏳</div>
               <div>
                 <p className="font-extrabold text-gray-800">This announcement has expired</p>
-                <p className="text-sm text-gray-600 mt-0.5">Expired on {announcement.expiresAt}</p>
+                <p className="text-sm text-gray-600 mt-0.5">Expired on {formatDate(announcement.expiresAt)}</p>
               </div>
             </div>
           </Card>
@@ -304,9 +315,8 @@ All staff must acknowledge receipt of these updated protocols by December 31, 20
                   <button
                     key={t.id}
                     onClick={() => setActiveTab(t.id)}
-                    className={`px-6 py-4 text-sm font-semibold transition ${
-                      activeTab === t.id ? "text-blue-700" : "text-gray-500 hover:text-gray-700"
-                    }`}
+                    className={`px-6 py-4 text-sm font-semibold transition ${activeTab === t.id ? "text-blue-700" : "text-gray-500 hover:text-gray-700"
+                      }`}
                     style={{
                       borderBottom: activeTab === t.id ? "2px solid var(--primary-blue)" : "2px solid transparent",
                     }}
@@ -321,7 +331,7 @@ All staff must acknowledge receipt of these updated protocols by December 31, 20
                 <div className="p-6">
                   <div className="flex flex-wrap items-center gap-2 mb-4">
                     <Pill tone={scopeTone(announcement.scope)}>{announcement.scope}</Pill>
-                    <Pill tone="muted">Expires: {announcement.expiresAt}</Pill>
+                    {announcement.expiresAt && <Pill tone="muted">Expires: {formatDate(announcement.expiresAt)}</Pill>}
                     <Pill tone="muted">ID: {announcement.id}</Pill>
                   </div>
 
@@ -442,9 +452,8 @@ All staff must acknowledge receipt of these updated protocols by December 31, 20
                   {/* Comments List */}
                   <div className="space-y-4">
                     {announcement.comments.map((c) => (
-                      <div key={c.id} className={`p-4 rounded-2xl border ${
-                        c.isInternal ? 'bg-amber-50/50 border-amber-200' : 'bg-gray-50 border-gray-200/70'
-                      }`}>
+                      <div key={c.id} className={`p-4 rounded-2xl border ${c.isInternal ? 'bg-amber-50/50 border-amber-200' : 'bg-gray-50 border-gray-200/70'
+                        }`}>
                         <div className="flex items-start justify-between gap-3">
                           <div className="flex items-center gap-3">
                             <div className="w-8 h-8 rounded-xl flex items-center justify-center text-white text-xs font-extrabold" style={{ backgroundColor: c.isInternal ? "#F59E0B" : "var(--primary-blue)" }}>
@@ -471,7 +480,7 @@ All staff must acknowledge receipt of these updated protocols by December 31, 20
               {activeTab === "readby" && (
                 <div className="p-6">
                   <SectionTitle title="Read By" subtitle={`${announcement.readBy.length} people`} />
-                  
+
                   <div className="mt-6 space-y-3">
                     {announcement.readBy.map((reader, index) => (
                       <div key={index} className="flex items-center justify-between p-4 rounded-2xl border border-gray-200/70 hover:bg-gray-50 transition">
@@ -540,7 +549,9 @@ All staff must acknowledge receipt of these updated protocols by December 31, 20
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-gray-500 font-semibold">Expires</span>
-                  <span className={`font-semibold ${isExpired ? "text-red-600" : "text-gray-800"}`}>{announcement.expiresAt}</span>
+                  <span className={`font-semibold ${isExpired ? "text-red-600" : "text-gray-800"}`}>
+                    {announcement.expiresAt ? formatDate(announcement.expiresAt) : "Never"}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-gray-500 font-semibold">Author</span>
@@ -558,7 +569,7 @@ All staff must acknowledge receipt of these updated protocols by December 31, 20
             {/* Quick Actions */}
             <Card className="p-6">
               <SectionTitle title="Quick Actions" />
-              
+
               <div className="mt-4 space-y-2">
                 <button
                   onClick={() => toast.info('Printing announcement...')}
@@ -598,7 +609,7 @@ All staff must acknowledge receipt of these updated protocols by December 31, 20
             {/* Statistics */}
             <Card className="p-6">
               <SectionTitle title="Announcement Statistics" />
-              
+
               <div className="mt-4 space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="text-center p-4 rounded-2xl border border-gray-200/70">
@@ -614,7 +625,7 @@ All staff must acknowledge receipt of these updated protocols by December 31, 20
                     <p className="text-xs text-gray-500 mt-1">Comments</p>
                   </div>
                 </div>
-                
+
                 <div className="pt-4 border-t border-gray-200/70">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="text-center">
@@ -637,7 +648,7 @@ All staff must acknowledge receipt of these updated protocols by December 31, 20
             {/* Related Announcements */}
             <Card className="p-6">
               <SectionTitle title="Related Announcements" />
-              
+
               <div className="mt-4 space-y-3">
                 <Link href="/secretary-dashboard/announcement/ANN-001">
                   <div className="p-4 rounded-2xl border border-gray-200/70 hover:bg-gray-50 transition cursor-pointer">

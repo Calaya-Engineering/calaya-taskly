@@ -6,7 +6,8 @@ import Link from "next/link";
 import Layout from "@/components/Layout";
 import { TaskIcon, DocumentIcon } from "@/lib/icons";
 import { HODMenuItems } from "@/utils/menus";
-import { getDocIconComponent, LockIcon, DownloadIcon, ClockIcon } from '@/lib/icons';
+import { fetchWithAuth, getAuthToken } from "@/lib/api";
+import { toast } from "@/lib/toast";
 
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
@@ -30,14 +31,14 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "info"
-      ? "bg-blue-50 text-blue-700 ring-blue-100"
-      : tone === "purple"
-      ? "bg-purple-50 text-purple-700 ring-purple-100"
-      : "bg-gray-50 text-gray-700 ring-gray-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "info"
+            ? "bg-blue-50 text-blue-700 ring-blue-100"
+            : tone === "purple"
+              ? "bg-purple-50 text-purple-700 ring-purple-100"
+              : "bg-gray-50 text-gray-700 ring-gray-100";
 
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
@@ -181,6 +182,20 @@ export default function HODDocuments() {
     return { total, publicCount, privateCount, totalDownloads, avgSize };
   }, []);
 
+  const handleDownload = (doc, e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    if (!doc.id) {
+      toast.info("No file available for download");
+      return;
+    }
+    const token = getAuthToken();
+    const url = `/api/documents/${doc.id}/download${token ? `?token=${token}` : ""}`;
+    window.open(url, "_blank");
+  };
+
   const maxDownloads = useMemo(() => Math.max(1, ...documentsData.map((d) => d.downloads)), []);
 
   return (
@@ -224,18 +239,16 @@ export default function HODDocuments() {
 
                 <div className="flex w-full sm:w-auto gap-2">
                   <button
-                    className={`flex-1 sm:flex-none px-4 py-3 rounded-2xl font-semibold border transition ${
-                      view === "cards" ? "bg-white" : "bg-gray-50"
-                    }`}
+                    className={`flex-1 sm:flex-none px-4 py-3 rounded-2xl font-semibold border transition ${view === "cards" ? "bg-white" : "bg-gray-50"
+                      }`}
                     style={{ borderColor: "rgba(109, 198, 223, 0.7)", color: "var(--primary-blue)" }}
                     onClick={() => setView("cards")}
                   >
                     Cards
                   </button>
                   <button
-                    className={`flex-1 sm:flex-none px-4 py-3 rounded-2xl font-semibold border transition ${
-                      view === "table" ? "bg-white" : "bg-gray-50"
-                    }`}
+                    className={`flex-1 sm:flex-none px-4 py-3 rounded-2xl font-semibold border transition ${view === "table" ? "bg-white" : "bg-gray-50"
+                      }`}
                     style={{ borderColor: "rgba(109, 198, 223, 0.7)", color: "var(--primary-blue)" }}
                     onClick={() => setView("table")}
                   >
@@ -329,10 +342,10 @@ export default function HODDocuments() {
                       s.label === "Public Documents"
                         ? `${Math.min(100, Math.round((stats.publicCount / Math.max(1, stats.total)) * 100))}%`
                         : s.label === "Total Downloads"
-                        ? "72%"
-                        : s.label === "Avg Size"
-                        ? "55%"
-                        : "80%",
+                          ? "72%"
+                          : s.label === "Avg Size"
+                            ? "55%"
+                            : "80%",
                     backgroundColor: "var(--primary-blue)",
                   }}
                 />
@@ -408,6 +421,7 @@ export default function HODDocuments() {
 
                   <div className="mt-6 flex items-center gap-2">
                     <button
+                      onClick={(e) => handleDownload(doc, e)}
                       className="flex-1 px-4 py-2.5 rounded-2xl font-semibold text-sm text-white active:scale-[0.99] transition"
                       style={{ backgroundColor: "var(--secondary-blue)" }}
                     >
@@ -514,6 +528,7 @@ export default function HODDocuments() {
                           </button>
                         </Link>
                         <button
+                          onClick={(e) => handleDownload(doc, e)}
                           className="ml-2 px-3 py-1.5 rounded-xl text-[12px] font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
                           style={{ borderColor: "rgba(44, 75, 155, 0.35)", color: "var(--primary-blue)" }}
                         >

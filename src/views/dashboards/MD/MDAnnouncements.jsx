@@ -1,104 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import { MDMenuItems } from "@/utils/menus";
-const announcementsData = [
-  {
-    id: "ANN-001",
-    title: "Year-End Holiday Schedule",
-    message:
-      "Please find attached the holiday schedule for the year-end period. All departments should plan their work accordingly.",
-    createdBy: "HR Department",
-    createdDate: "2024-12-15 09:00",
-    scope: "All Company",
-    priority: "IMPORTANT",
-    expiresAt: "2024-12-31",
-    read: true,
-    documents: 1,
-    comments: 3,
-    reads: 142,
-    departments: ["All"],
-  },
-  {
-    id: "ANN-002",
-    title: "Safety Protocol Updates",
-    message: "Important updates to safety protocols effective immediately. All staff must review the attached document.",
-    createdBy: "HSE Department",
-    createdDate: "2024-12-14 14:30",
-    scope: "All Company",
-    priority: "URGENT",
-    expiresAt: "2024-12-28",
-    read: false,
-    documents: 2,
-    comments: 8,
-    reads: 156,
-    departments: ["All"],
-  },
-  {
-    id: "ANN-003",
-    title: "Monthly Performance Review",
-    message:
-      "Monthly performance review meetings will be held next week. Department heads should prepare their reports.",
-    createdBy: "Managing Director",
-    createdDate: "2024-12-13 10:15",
-    scope: "HODs Only",
-    priority: "NORMAL",
-    expiresAt: "2024-12-20",
-    read: true,
-    documents: 0,
-    comments: 2,
-    reads: 12,
-    departments: ["All HODs"],
-  },
-  {
-    id: "ANN-004",
-    title: "IT System Maintenance",
-    message:
-      "Scheduled maintenance for IT systems this weekend. Expect downtime from 10 PM Saturday to 2 AM Sunday.",
-    createdBy: "Technical Department",
-    createdDate: "2024-12-12 16:45",
-    scope: "All Company",
-    priority: "IMPORTANT",
-    expiresAt: "2024-12-18",
-    read: true,
-    documents: 0,
-    comments: 5,
-    reads: 138,
-    departments: ["All"],
-  },
-  {
-    id: "ANN-005",
-    title: "Workshop Safety Audit",
-    message: "Mandatory safety audit for workshop staff. All personnel must attend the briefing session.",
-    createdBy: "Workshop HOD",
-    createdDate: "2024-12-11 08:30",
-    scope: "Workshop Department",
-    priority: "HIGH",
-    expiresAt: "2024-12-15",
-    read: false,
-    documents: 1,
-    comments: 4,
-    reads: 24,
-    departments: ["Workshop"],
-  },
-  {
-    id: "ANN-006",
-    title: "Financial Year-End Closing",
-    message: "Important deadlines for financial year-end closing procedures. All departments must comply.",
-    createdBy: "Accounts Department",
-    createdDate: "2024-12-10 11:20",
-    scope: "HODs Only",
-    priority: "URGENT",
-    expiresAt: "2024-12-25",
-    read: false,
-    documents: 3,
-    comments: 6,
-    reads: 15,
-    departments: ["All HODs"],
-  },
-];
+import { toast } from "@/lib/toast";
+import { fetchWithAuth } from "@/lib/api";
 
 /* ---------- Shared UI helpers (dashboard style) ---------- */
 const Card = ({ className = "", children }) => (
@@ -110,14 +17,14 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "purple"
-      ? "bg-purple-50 text-purple-700 ring-purple-100"
-      : tone === "muted"
-      ? "bg-gray-50 text-gray-700 ring-gray-100"
-      : "bg-blue-50 text-blue-700 ring-blue-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "purple"
+            ? "bg-purple-50 text-purple-700 ring-purple-100"
+            : tone === "muted"
+              ? "bg-gray-50 text-gray-700 ring-gray-100"
+              : "bg-blue-50 text-blue-700 ring-blue-100";
 
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
@@ -136,11 +43,33 @@ const btnSolid = `${btnBase} text-white`;
 export default function MDAnnouncements() {
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
+  const [announcementsData, setAnnouncementsData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const unreadCount = useMemo(() => announcementsData.filter((a) => !a.read).length, []);
+  const fetchAnnouncements = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const res = await fetchWithAuth("/api/announcements");
+      if (res.ok) {
+        const data = await res.json();
+        setAnnouncementsData(data);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchAnnouncements();
+  }, [fetchAnnouncements]);
+
+
+  const unreadCount = useMemo(() => announcementsData.filter((a) => !a.read).length, [announcementsData]);
   const urgentUnreadCount = useMemo(
     () => announcementsData.filter((a) => a.priority === "URGENT" && !a.read).length,
-    []
+    [announcementsData]
   );
 
   const filteredAnnouncements = useMemo(() => {
@@ -148,15 +77,17 @@ export default function MDAnnouncements() {
       if (filter === "unread" && ann.read) return false;
       if (filter === "urgent" && ann.priority !== "URGENT") return false;
       if (filter === "important" && ann.priority !== "IMPORTANT" && ann.priority !== "HIGH") return false;
-      if (filter === "hods" && ann.scope !== "HODs Only") return false;
+      if (filter === "hods" && ann.scope !== "HODs Only" && ann.scope !== "HODS_ONLY") return false;
 
       if (search) {
         const q = search.toLowerCase();
-        if (!ann.title.toLowerCase().includes(q) && !ann.message.toLowerCase().includes(q)) return false;
+        const titleMatch = (ann.title || "").toLowerCase().includes(q);
+        const messageMatch = (ann.message || "").toLowerCase().includes(q);
+        if (!titleMatch && !messageMatch) return false;
       }
       return true;
     });
-  }, [filter, search]);
+  }, [filter, search, announcementsData]);
 
   const priorityTone = (priority) => {
     switch (priority) {
@@ -206,7 +137,19 @@ export default function MDAnnouncements() {
 
   const isExpired = (expiresAt) => new Date(expiresAt) < new Date();
 
-  const markAsRead = (id) => toast.info(`Marked announcement ${id} as read`);
+  const markAsRead = async (id) => {
+    try {
+      const res = await fetchWithAuth(`/api/announcements/${id}/read`, { method: "PATCH" });
+      if (res.ok) {
+        toast.info(`Marked announcement ${id} as read`);
+        setAnnouncementsData(prev => prev.map(a => a.id === id ? { ...a, read: true } : a));
+      } else {
+        toast.error("Failed to mark as read");
+      }
+    } catch (e) {
+      toast.error("Failed to mark as read");
+    }
+  };
 
   return (
     <Layout menuItems={MDMenuItems} userRole="MD">
@@ -265,31 +208,31 @@ export default function MDAnnouncements() {
                         ? "rgba(239,68,68,1)"
                         : "transparent"
                       : f.id === "important"
-                      ? active
-                        ? "rgba(245,158,11,1)"
-                        : "transparent"
-                      : f.id === "unread"
-                      ? active
-                        ? "var(--secondary-blue)"
-                        : "transparent"
-                      : f.id === "hods"
-                      ? active
-                        ? "rgba(139,92,246,1)"
-                        : "transparent"
-                      : active
-                      ? "var(--primary-blue)"
-                      : "transparent";
+                        ? active
+                          ? "rgba(245,158,11,1)"
+                          : "transparent"
+                        : f.id === "unread"
+                          ? active
+                            ? "var(--secondary-blue)"
+                            : "transparent"
+                          : f.id === "hods"
+                            ? active
+                              ? "rgba(139,92,246,1)"
+                              : "transparent"
+                            : active
+                              ? "var(--primary-blue)"
+                              : "transparent";
 
                   const border =
                     f.id === "urgent"
                       ? "rgba(239,68,68,1)"
                       : f.id === "important"
-                      ? "rgba(245,158,11,1)"
-                      : f.id === "unread"
-                      ? "var(--secondary-blue)"
-                      : f.id === "hods"
-                      ? "rgba(139,92,246,1)"
-                      : "var(--primary-blue)";
+                        ? "rgba(245,158,11,1)"
+                        : f.id === "unread"
+                          ? "var(--secondary-blue)"
+                          : f.id === "hods"
+                            ? "rgba(139,92,246,1)"
+                            : "var(--primary-blue)";
 
                   const color = active ? "white" : border;
 
@@ -353,104 +296,115 @@ export default function MDAnnouncements() {
         )}
 
         {/* LIST */}
-        <div className="grid grid-cols-1 gap-4">
-          {filteredAnnouncements.map((a) => {
-            const expired = isExpired(a.expiresAt);
-            return (
-              <Card key={a.id} className={`overflow-hidden ${!a.read ? "ring-2 ring-blue-200" : ""} ${expired ? "opacity-80" : ""}`}>
-                <div className="p-6">
-                  <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
-                    <div className="min-w-0">
-                      <div className="flex flex-wrap items-center gap-2 mb-3">
-                        {!a.read ? <span className="w-2.5 h-2.5 rounded-full bg-blue-500" /> : null}
-                        <Pill tone={priorityTone(a.priority)}>{a.priority}</Pill>
-                        <Pill tone={scopeTone(a.scope)}>{a.scope}</Pill>
-                        <Pill tone={departmentTone(a.departments?.[0])}>{a.departments.join(", ")}</Pill>
-                        {expired ? <Pill tone="muted">Expired</Pill> : null}
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center p-12 py-20 bg-white rounded-2xl border border-gray-200/70 shadow-sm">
+            <div className="w-10 h-10 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin mb-4"></div>
+            <p className="text-gray-500 font-semibold">Loading announcements...</p>
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 gap-4">
+              {filteredAnnouncements.map((a) => {
+                const expired = isExpired(a.expiresAt);
+                return (
+                  <Card key={a.id} className={`overflow-hidden ${!a.read ? "ring-2 ring-blue-200" : ""} ${expired ? "opacity-80" : ""}`}>
+                    <div className="p-6">
+                      <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+                        <div className="min-w-0">
+                          <div className="flex flex-wrap items-center gap-2 mb-3">
+                            {!a.read ? <span className="w-2.5 h-2.5 rounded-full bg-blue-500" /> : null}
+                            <Pill tone={priorityTone(a.priority)}>{a.priority}</Pill>
+                            <Pill tone={scopeTone(a.scope)}>{a.scope}</Pill>
+                            <Pill tone={departmentTone(a.departments?.[0])}>{a.departments.join(", ")}</Pill>
+                            {expired ? <Pill tone="muted">Expired</Pill> : null}
+                          </div>
+
+                          <h3 className="text-lg font-extrabold text-gray-900 truncate">{a.title}</h3>
+                          <p className="text-sm text-gray-600 mt-2">
+                            {(a.message || "").length > 200 ? (a.message || "").substring(0, 200) + "..." : (a.message || "")}
+                          </p>
+
+                          <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-gray-600">
+                            <span className="inline-flex items-center gap-2">
+                              <span className="w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center">👤</span>
+                              {a.createdBy}
+                            </span>
+                            <span className="inline-flex items-center gap-2">
+                              <span className="w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center">🗓️</span>
+                              {formatDate(a.createdDate)}
+                            </span>
+                            <span className="inline-flex items-center gap-2">
+                              <span className="w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center">👁️</span>
+                              {a.readsCount || 0} views
+                            </span>
+                            {a.expiresAt && (
+                              <span className="inline-flex items-center gap-2">
+                                <span className="w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center">⏳</span>
+                                Expires: {a.expiresAt ? formatDate(a.expiresAt) : "N/A"}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row gap-2 shrink-0">
+                          {!a.read && (
+                            <button
+                              onClick={() => markAsRead(a.id)}
+                              className={btnOutline}
+                              style={{ borderColor: "rgba(109,198,223,0.55)", color: "var(--secondary-blue)" }}
+                            >
+                              Mark as Read
+                            </button>
+                          )}
+                          <Link href={`/md-dashboard/announcement/${a.id}`}>
+                            <button className={btnSolid} style={{ backgroundColor: "var(--primary-blue)" }}>
+                              View Details
+                            </button>
+                          </Link>
+                        </div>
                       </div>
 
-                      <h3 className="text-lg font-extrabold text-gray-900 truncate">{a.title}</h3>
-                      <p className="text-sm text-gray-600 mt-2">
-                        {a.message.length > 200 ? a.message.substring(0, 200) + "..." : a.message}
-                      </p>
+                      <div className="mt-5 pt-4 border-t border-gray-200/70 flex flex-wrap items-center justify-between gap-3 text-sm">
+                        <div className="flex flex-wrap items-center gap-3 text-gray-600">
+                          <span>📄 {a.documents} attachment{a.documents !== 1 ? "s" : ""}</span>
+                          <span>💬 {a.comments} comment{a.comments !== 1 ? "s" : ""}</span>
+                        </div>
 
-                      <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-gray-600">
-                        <span className="inline-flex items-center gap-2">
-                          <span className="w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center">👤</span>
-                          {a.createdBy}
-                        </span>
-                        <span className="inline-flex items-center gap-2">
-                          <span className="w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center">🗓️</span>
-                          {formatDate(a.createdDate)}
-                        </span>
-                        <span className="inline-flex items-center gap-2">
-                          <span className="w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center">👁️</span>
-                          {a.reads} views
-                        </span>
-                        <span className="inline-flex items-center gap-2">
-                          <span className="w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center">⏳</span>
-                          Expires: {a.expiresAt}
-                        </span>
+                        <div className="text-xs text-gray-500 inline-flex items-center gap-2">
+                          <span className="font-semibold" style={{ color: "var(--primary-blue)" }}>
+                            {a.read ? "✅ Read" : "📌 New"}
+                          </span>
+                          <span>•</span>
+                          <span>ID: {a.id}</span>
+                        </div>
                       </div>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row gap-2 shrink-0">
-                      {!a.read && (
-                        <button
-                          onClick={() => markAsRead(a.id)}
-                          className={btnOutline}
-                          style={{ borderColor: "rgba(109,198,223,0.55)", color: "var(--secondary-blue)" }}
-                        >
-                          Mark as Read
-                        </button>
-                      )}
-                      <Link href={`/md-dashboard/announcement/${a.id}`}>
-                        <button className={btnSolid} style={{ backgroundColor: "var(--primary-blue)" }}>
-                          View Details
-                        </button>
-                      </Link>
+                    <div className="px-6 py-3" style={{ backgroundColor: "rgba(109, 198, 223, 0.08)" }}>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-semibold" style={{ color: "var(--primary-blue)" }}>
+                          {a.scope}
+                        </span>
+                        <span className="text-xs text-gray-600">{a.createdBy}</span>
+                      </div>
                     </div>
-                  </div>
-
-                  <div className="mt-5 pt-4 border-t border-gray-200/70 flex flex-wrap items-center justify-between gap-3 text-sm">
-                    <div className="flex flex-wrap items-center gap-3 text-gray-600">
-                      <span>📄 {a.documents} attachment{a.documents !== 1 ? "s" : ""}</span>
-                      <span>💬 {a.comments} comment{a.comments !== 1 ? "s" : ""}</span>
-                    </div>
-
-                    <div className="text-xs text-gray-500 inline-flex items-center gap-2">
-                      <span className="font-semibold" style={{ color: "var(--primary-blue)" }}>
-                        {a.read ? "✅ Read" : "📌 New"}
-                      </span>
-                      <span>•</span>
-                      <span>ID: {a.id}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="px-6 py-3" style={{ backgroundColor: "rgba(109, 198, 223, 0.08)" }}>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold" style={{ color: "var(--primary-blue)" }}>
-                      {a.scope}
-                    </span>
-                    <span className="text-xs text-gray-600">{a.createdBy}</span>
-                  </div>
-                </div>
-              </Card>
-            );
-          })}
-        </div>
-
-        {filteredAnnouncements.length === 0 && (
-          <Card className="p-12 text-center">
-            <div className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-4" style={{ backgroundColor: "rgba(109, 198, 223, 0.12)" }}>
-              <span className="text-2xl" style={{ color: "var(--secondary-blue)" }}>
-                🧐
-              </span>
+                  </Card>
+                );
+              })}
             </div>
-            <h3 className="text-lg font-extrabold text-gray-900 mb-2">No announcements found</h3>
-            <p className="text-gray-600">Try adjusting your filters or search term.</p>
-          </Card>
+
+            {filteredAnnouncements.length === 0 && (
+              <Card className="p-12 text-center">
+                <div className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-4" style={{ backgroundColor: "rgba(109, 198, 223, 0.12)" }}>
+                  <span className="text-2xl" style={{ color: "var(--secondary-blue)" }}>
+                    🧐
+                  </span>
+                </div>
+                <h3 className="text-lg font-extrabold text-gray-900 mb-2">No announcements found</h3>
+                <p className="text-gray-600">Try adjusting your filters or search term.</p>
+              </Card>
+            )}
+          </>
         )}
 
         {/* QUICK STATS */}
@@ -461,7 +415,7 @@ export default function MDAnnouncements() {
             { label: "Urgent", value: announcementsData.filter((a) => a.priority === "URGENT").length, icon: "🚨", tone: "danger" },
             {
               label: "Avg. Reads",
-              value: Math.round(announcementsData.reduce((s, a) => s + a.reads, 0) / announcementsData.length),
+              value: announcementsData.length > 0 ? Math.round(announcementsData.reduce((s, a) => s + (a.readsCount || 0), 0) / announcementsData.length) : 0,
               icon: "👁️",
               tone: "purple",
             },

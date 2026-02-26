@@ -22,6 +22,54 @@
   },
   "dynamicRoutes": [
     {
+      "page": "/api/announcements/[id]",
+      "regex": "^/api/announcements/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/announcements/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/announcements/[id]/read",
+      "regex": "^/api/announcements/([^/]+?)/read(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/announcements/(?<nxtPid>[^/]+?)/read(?:/)?$"
+    },
+    {
+      "page": "/api/departments/[id]",
+      "regex": "^/api/departments/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/departments/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/documents/[id]",
+      "regex": "^/api/documents/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/documents/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/documents/[id]/download",
+      "regex": "^/api/documents/([^/]+?)/download(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/documents/(?<nxtPid>[^/]+?)/download(?:/)?$"
+    },
+    {
+      "page": "/api/roles/[id]",
+      "regex": "^/api/roles/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/roles/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
       "page": "/api/tasks/[id]",
       "regex": "^/api/tasks/([^/]+?)(?:/)?$",
       "routeKeys": {
@@ -36,6 +84,22 @@
         "nxtPid": "nxtPid"
       },
       "namedRegex": "^/api/tasks/(?<nxtPid>[^/]+?)/assign(?:/)?$"
+    },
+    {
+      "page": "/api/tenders/[id]",
+      "regex": "^/api/tenders/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/tenders/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/users/[id]",
+      "regex": "^/api/users/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/users/(?<nxtPid>[^/]+?)(?:/)?$"
     },
     {
       "page": "/hod-dashboard/announcement/[announcementId]",
@@ -266,6 +330,48 @@
       "namedRegex": "^/_not\\-found(?:/)?$"
     },
     {
+      "page": "/admin-dashboard",
+      "regex": "^/admin\\-dashboard(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin\\-dashboard(?:/)?$"
+    },
+    {
+      "page": "/admin-dashboard/accounts",
+      "regex": "^/admin\\-dashboard/accounts(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin\\-dashboard/accounts(?:/)?$"
+    },
+    {
+      "page": "/admin-dashboard/departments",
+      "regex": "^/admin\\-dashboard/departments(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin\\-dashboard/departments(?:/)?$"
+    },
+    {
+      "page": "/admin-dashboard/roles",
+      "regex": "^/admin\\-dashboard/roles(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin\\-dashboard/roles(?:/)?$"
+    },
+    {
+      "page": "/admin-dashboard/users",
+      "regex": "^/admin\\-dashboard/users(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin\\-dashboard/users(?:/)?$"
+    },
+    {
+      "page": "/api/announcements",
+      "regex": "^/api/announcements(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/announcements(?:/)?$"
+    },
+    {
+      "page": "/api/announcements/events",
+      "regex": "^/api/announcements/events(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/announcements/events(?:/)?$"
+    },
+    {
       "page": "/api/auth/send-otp",
       "regex": "^/api/auth/send\\-otp(?:/)?$",
       "routeKeys": {},
@@ -284,6 +390,30 @@
       "namedRegex": "^/api/departments(?:/)?$"
     },
     {
+      "page": "/api/documents",
+      "regex": "^/api/documents(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/documents(?:/)?$"
+    },
+    {
+      "page": "/api/me",
+      "regex": "^/api/me(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/me(?:/)?$"
+    },
+    {
+      "page": "/api/notifications",
+      "regex": "^/api/notifications(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/notifications(?:/)?$"
+    },
+    {
+      "page": "/api/roles",
+      "regex": "^/api/roles(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/roles(?:/)?$"
+    },
+    {
       "page": "/api/tasks",
       "regex": "^/api/tasks(?:/)?$",
       "routeKeys": {},
@@ -294,6 +424,18 @@
       "regex": "^/api/tasks/events(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/api/tasks/events(?:/)?$"
+    },
+    {
+      "page": "/api/tenders",
+      "regex": "^/api/tenders(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/tenders(?:/)?$"
+    },
+    {
+      "page": "/api/upload/cloudinary",
+      "regex": "^/api/upload/cloudinary(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/upload/cloudinary(?:/)?$"
     },
     {
       "page": "/api/users",
@@ -348,6 +490,12 @@
       "regex": "^/hod\\-dashboard/create\\-task(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/hod\\-dashboard/create\\-task(?:/)?$"
+    },
+    {
+      "page": "/hod-dashboard/department-users",
+      "regex": "^/hod\\-dashboard/department\\-users(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/hod\\-dashboard/department\\-users(?:/)?$"
     },
     {
       "page": "/hod-dashboard/documents",

@@ -1,11 +1,12 @@
 "use client";
 
 // pages/dashboards/HOD/HODCreateDocument.jsx
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { HODMenuItems } from "@/utils/menus";
 import { PasswordInput } from "@/components/ui/password-input";
+import { fetchWithAuth } from "@/lib/api";
 import { toast } from "@/lib/toast";
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -16,14 +17,14 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "info"
-      ? "bg-blue-50 text-blue-700 ring-blue-100"
-      : tone === "purple"
-      ? "bg-purple-50 text-purple-700 ring-purple-100"
-      : "bg-gray-50 text-gray-700 ring-gray-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "info"
+            ? "bg-blue-50 text-blue-700 ring-blue-100"
+            : tone === "purple"
+              ? "bg-purple-50 text-purple-700 ring-purple-100"
+              : "bg-gray-50 text-gray-700 ring-gray-100";
 
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
@@ -91,23 +92,43 @@ const fileIcon = (name = "") => {
 
 const bytesToMB = (bytes) => (bytes / 1024 / 1024).toFixed(2);
 
-const departments = ['Technical', 'Workshop', 'HSE', 'Logistics', 'Procurement', 'Accounts'];
 const documentTypes = ['Report', 'Checklist', 'Manual', 'Financial', 'Procedure', 'Certificate', 'Drawing', 'Other'];
-
-const hodOptions = ['MD', 'Technical HOD', 'Workshop HOD', 'HSE HOD', 'Logistics HOD'];
-
-const users = [
-  { id: 101, name: 'Alex Johnson', department: 'Technical', email: 'alex.johnson@company.com' },
-  { id: 102, name: 'Maria Garcia', department: 'HSE', email: 'maria.garcia@company.com' },
-  { id: 103, name: 'David Chen', department: 'Workshop', email: 'david.chen@company.com' },
-  { id: 104, name: 'Emma Wilson', department: 'Technical', email: 'emma.wilson@company.com' },
-  { id: 105, name: 'Michael Brown', department: 'Logistics', email: 'michael.brown@company.com' },
-];
 
 export default function HODCreateDocument() {
   const router = useRouter();
 
   const [activeTab, setActiveTab] = useState("info");
+  const [departments, setDepartments] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [hodOptions, setHodOptions] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const [deptRes, userRes] = await Promise.all([
+          fetchWithAuth("/api/departments"),
+          fetchWithAuth("/api/users"),
+        ]);
+        if (deptRes.ok) {
+          const data = await deptRes.json();
+          setDepartments(data.map(d => d.name));
+        }
+        if (userRes.ok) {
+          const data = await userRes.json();
+          setUsers(data);
+          // Extract HODs
+          const hods = data.filter(u => u.role === "HOD" || u.role === "MD").map(u => u.name || u.email);
+          setHodOptions(hods);
+        }
+      } catch (err) {
+        console.error("Failed to load departments/users:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadData();
+  }, []);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -127,12 +148,12 @@ export default function HODCreateDocument() {
 
   const [files, setFiles] = useState([]);
 
-  const tags = useMemo(() => 
+  const tags = useMemo(() =>
     formData.tagsText
       .split(",")
       .map((t) => t.trim())
       .filter(Boolean)
-      .slice(0, 12), 
+      .slice(0, 12),
     [formData.tagsText]
   );
 
@@ -309,9 +330,8 @@ export default function HODCreateDocument() {
                     key={t.id}
                     type="button"
                     onClick={() => setActiveTab(t.id)}
-                    className={`px-6 py-4 text-sm font-semibold transition border-b-2 ${
-                      active ? "text-gray-900" : "text-gray-500 hover:text-gray-700"
-                    }`}
+                    className={`px-6 py-4 text-sm font-semibold transition border-b-2 ${active ? "text-gray-900" : "text-gray-500 hover:text-gray-700"
+                      }`}
                     style={{ borderBottomColor: active ? "var(--primary-blue)" : "transparent" }}
                   >
                     {t.label}
@@ -514,9 +534,8 @@ export default function HODCreateDocument() {
                               key={s.value}
                               type="button"
                               onClick={() => clearScopedSelections(s.value)}
-                              className={`text-left p-4 rounded-2xl border transition hover:-translate-y-[1px] ${
-                                active ? "bg-white" : "bg-gray-50 hover:bg-gray-100"
-                              }`}
+                              className={`text-left p-4 rounded-2xl border transition hover:-translate-y-[1px] ${active ? "bg-white" : "bg-gray-50 hover:bg-gray-100"
+                                }`}
                               style={{ borderColor: active ? "rgba(44, 75, 155, 0.35)" : "rgba(0,0,0,0.08)" }}
                             >
                               <div className="text-2xl">{s.icon}</div>
@@ -563,9 +582,8 @@ export default function HODCreateDocument() {
                                 key={d}
                                 type="button"
                                 onClick={() => toggleDept(d)}
-                                className={`px-3.5 py-2 rounded-2xl text-sm font-semibold border transition ${
-                                  active ? "text-white" : "text-gray-700 bg-white hover:bg-gray-50"
-                                }`}
+                                className={`px-3.5 py-2 rounded-2xl text-sm font-semibold border transition ${active ? "text-white" : "text-gray-700 bg-white hover:bg-gray-50"
+                                  }`}
                                 style={{
                                   backgroundColor: active ? "var(--primary-blue)" : undefined,
                                   borderColor: active ? "transparent" : "rgba(0,0,0,0.08)",
@@ -594,9 +612,8 @@ export default function HODCreateDocument() {
                                 key={h}
                                 type="button"
                                 onClick={() => toggleHOD(h)}
-                                className={`text-left flex items-center gap-3 p-3 rounded-2xl border transition ${
-                                  active ? "bg-purple-50" : "bg-white hover:bg-gray-50"
-                                }`}
+                                className={`text-left flex items-center gap-3 p-3 rounded-2xl border transition ${active ? "bg-purple-50" : "bg-white hover:bg-gray-50"
+                                  }`}
                                 style={{ borderColor: active ? "rgba(139,92,246,0.25)" : "rgba(0,0,0,0.08)" }}
                               >
                                 <div
@@ -641,9 +658,8 @@ export default function HODCreateDocument() {
                                 key={u.id}
                                 type="button"
                                 onClick={() => toggleUser(u.id)}
-                                className={`w-full text-left flex items-center gap-3 p-3 rounded-2xl border transition ${
-                                  active ? "bg-blue-50" : "bg-white hover:bg-gray-50"
-                                }`}
+                                className={`w-full text-left flex items-center gap-3 p-3 rounded-2xl border transition ${active ? "bg-blue-50" : "bg-white hover:bg-gray-50"
+                                  }`}
                                 style={{ borderColor: active ? "rgba(44, 75, 155, 0.25)" : "rgba(0,0,0,0.08)" }}
                               >
                                 <div
@@ -683,9 +699,8 @@ export default function HODCreateDocument() {
                               encryptionPassword: !p.isEncrypted ? p.encryptionPassword : "",
                             }))
                           }
-                          className={`px-4 py-2 rounded-2xl text-sm font-semibold border transition ${
-                            formData.isEncrypted ? "bg-red-50" : "bg-white hover:bg-gray-50"
-                          }`}
+                          className={`px-4 py-2 rounded-2xl text-sm font-semibold border transition ${formData.isEncrypted ? "bg-red-50" : "bg-white hover:bg-gray-50"
+                            }`}
                           style={{
                             borderColor: formData.isEncrypted ? "rgba(239,68,68,0.25)" : "rgba(0,0,0,0.08)",
                             color: formData.isEncrypted ? "#DC2626" : "var(--primary-blue)",
@@ -1020,9 +1035,9 @@ export default function HODCreateDocument() {
                             <div className="text-xs text-gray-500">Users</div>
                             <div className="flex flex-wrap gap-2">
                               {formData.specificUsers.length
-                                ? users.filter(u => formData.specificUsers.includes(u.id)).slice(0, 3).map((u) => 
-                                    <Pill key={u.id} tone="info">{u.name}</Pill>
-                                  )
+                                ? users.filter(u => formData.specificUsers.includes(u.id)).slice(0, 3).map((u) =>
+                                  <Pill key={u.id} tone="info">{u.name}</Pill>
+                                )
                                 : "—"}
                               {formData.specificUsers.length > 3 ? <Pill>+{formData.specificUsers.length - 3} more</Pill> : null}
                             </div>

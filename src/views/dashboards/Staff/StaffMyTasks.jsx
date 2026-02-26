@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { StaffMenuItems } from "@/utils/menus";
+import { toast } from "@/lib/toast";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -28,12 +29,12 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "info"
-      ? "bg-blue-50 text-blue-700 ring-blue-100"
-      : "bg-gray-50 text-gray-700 ring-gray-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "info"
+            ? "bg-blue-50 text-blue-700 ring-blue-100"
+            : "bg-gray-50 text-gray-700 ring-gray-100";
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
       {children}
@@ -42,9 +43,9 @@ const Pill = ({ children, tone = "default" }) => {
 };
 
 const tasksData = [
-  { 
-    id: 'TASK-2024-00123', 
-    title: 'Safety Inspection Report', 
+  {
+    id: 'TASK-2024-00123',
+    title: 'Safety Inspection Report',
     description: 'Complete safety inspection for workshop equipment',
     department: 'Technical',
     assignedBy: 'HOD - Mr. Johnson',
@@ -58,9 +59,9 @@ const tasksData = [
     attachments: 3,
     comments: 5
   },
-  { 
-    id: 'TASK-2024-00124', 
-    title: 'Equipment Maintenance Log', 
+  {
+    id: 'TASK-2024-00124',
+    title: 'Equipment Maintenance Log',
     description: 'Update maintenance logs for all workshop machinery',
     department: 'Workshop',
     assignedBy: 'HOD - Mr. Johnson',
@@ -74,9 +75,9 @@ const tasksData = [
     attachments: 1,
     comments: 2
   },
-  { 
-    id: 'TASK-2024-00125', 
-    title: 'Client Meeting Notes', 
+  {
+    id: 'TASK-2024-00125',
+    title: 'Client Meeting Notes',
     description: 'Prepare and submit meeting notes for client review',
     department: 'Technical',
     assignedBy: 'MD - Mr. Williams',
@@ -90,9 +91,9 @@ const tasksData = [
     attachments: 0,
     comments: 3
   },
-  { 
-    id: 'TASK-2024-00126', 
-    title: 'Training Completion', 
+  {
+    id: 'TASK-2024-00126',
+    title: 'Training Completion',
     description: 'Complete safety training and submit certificate',
     department: 'HSE',
     assignedBy: 'HOD - Ms. Rodriguez',
@@ -106,9 +107,9 @@ const tasksData = [
     attachments: 2,
     comments: 4
   },
-  { 
-    id: 'TASK-2024-00127', 
-    title: 'Inventory Check', 
+  {
+    id: 'TASK-2024-00127',
+    title: 'Inventory Check',
     description: 'Weekly inventory check for workshop supplies',
     department: 'Workshop',
     assignedBy: 'HOD - Mr. Johnson',
@@ -122,9 +123,9 @@ const tasksData = [
     attachments: 0,
     comments: 0
   },
-  { 
-    id: 'TASK-2024-00128', 
-    title: 'Monthly Report Submission', 
+  {
+    id: 'TASK-2024-00128',
+    title: 'Monthly Report Submission',
     description: 'Submit monthly activity report for November',
     department: 'Technical',
     assignedBy: 'HOD - Mr. Johnson',
@@ -141,7 +142,7 @@ const tasksData = [
 ];
 
 const getStatusTone = (status) => {
-  switch(status) {
+  switch (status) {
     case 'COMPLETED': return 'success';
     case 'IN_PROGRESS': return 'info';
     case 'PENDING': return 'warn';
@@ -151,7 +152,7 @@ const getStatusTone = (status) => {
 };
 
 const getPriorityTone = (priority) => {
-  switch(priority) {
+  switch (priority) {
     case 'HIGH': return 'warn';
     case 'MEDIUM': return 'info';
     case 'LOW': return 'success';
@@ -160,7 +161,7 @@ const getPriorityTone = (priority) => {
 };
 
 const getStatusLabel = (status) => {
-  switch(status) {
+  switch (status) {
     case 'IN_PROGRESS': return 'In Progress';
     case 'PENDING': return 'Pending';
     case 'COMPLETED': return 'Completed';
@@ -186,19 +187,19 @@ export default function StaffMyTasks() {
   const filteredTasks = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
     return tasksData.filter((task) => {
-      const matchesFilter = filter === 'all' || 
+      const matchesFilter = filter === 'all' ||
         (filter === 'in_progress' && task.status === 'IN_PROGRESS') ||
         (filter === 'pending' && task.status === 'PENDING') ||
         (filter === 'completed' && task.status === 'COMPLETED') ||
         (filter === 'overdue' && task.status === 'OVERDUE');
-      
+
       const matchesSearch =
         !query ||
         task.title.toLowerCase().includes(query) ||
         task.description.toLowerCase().includes(query) ||
         task.id.toLowerCase().includes(query) ||
         task.department.toLowerCase().includes(query);
-      
+
       return matchesFilter && matchesSearch;
     });
   }, [filter, searchTerm]);
@@ -210,7 +211,7 @@ export default function StaffMyTasks() {
     const overdue = tasksData.filter(t => t.status === 'OVERDUE').length;
     const totalHours = tasksData.reduce((sum, t) => sum + t.actualHours, 0);
     const completionRate = total ? Math.round((completed / total) * 100) : 0;
-    
+
     return { total, completed, inProgress, overdue, totalHours, completionRate };
   }, []);
 
@@ -341,9 +342,8 @@ export default function StaffMyTasks() {
               <div className="flex flex-wrap gap-2">
                 <button
                   onClick={() => setFilter('all')}
-                  className={`px-4 py-2.5 rounded-2xl text-sm font-semibold border transition active:scale-[0.99] ${
-                    filter === 'all' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
-                  }`}
+                  className={`px-4 py-2.5 rounded-2xl text-sm font-semibold border transition active:scale-[0.99] ${filter === 'all' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
+                    }`}
                   style={{
                     borderColor: filter === 'all' ? "rgba(44,75,155,0.35)" : "#e5e7eb",
                     color: filter === 'all' ? "var(--primary-blue)" : "#374151",
@@ -353,9 +353,8 @@ export default function StaffMyTasks() {
                 </button>
                 <button
                   onClick={() => setFilter('in_progress')}
-                  className={`px-4 py-2.5 rounded-2xl text-sm font-semibold border transition active:scale-[0.99] ${
-                    filter === 'in_progress' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
-                  }`}
+                  className={`px-4 py-2.5 rounded-2xl text-sm font-semibold border transition active:scale-[0.99] ${filter === 'in_progress' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
+                    }`}
                   style={{
                     borderColor: filter === 'in_progress' ? "rgba(59,130,246,0.35)" : "#e5e7eb",
                     color: filter === 'in_progress' ? "#3B82F6" : "#374151",
@@ -365,9 +364,8 @@ export default function StaffMyTasks() {
                 </button>
                 <button
                   onClick={() => setFilter('pending')}
-                  className={`px-4 py-2.5 rounded-2xl text-sm font-semibold border transition active:scale-[0.99] ${
-                    filter === 'pending' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
-                  }`}
+                  className={`px-4 py-2.5 rounded-2xl text-sm font-semibold border transition active:scale-[0.99] ${filter === 'pending' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
+                    }`}
                   style={{
                     borderColor: filter === 'pending' ? "rgba(245,158,11,0.35)" : "#e5e7eb",
                     color: filter === 'pending' ? "#F59E0B" : "#374151",
@@ -377,9 +375,8 @@ export default function StaffMyTasks() {
                 </button>
                 <button
                   onClick={() => setFilter('completed')}
-                  className={`px-4 py-2.5 rounded-2xl text-sm font-semibold border transition active:scale-[0.99] ${
-                    filter === 'completed' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
-                  }`}
+                  className={`px-4 py-2.5 rounded-2xl text-sm font-semibold border transition active:scale-[0.99] ${filter === 'completed' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
+                    }`}
                   style={{
                     borderColor: filter === 'completed' ? "rgba(16,185,129,0.35)" : "#e5e7eb",
                     color: filter === 'completed' ? "#10B981" : "#374151",
@@ -389,9 +386,8 @@ export default function StaffMyTasks() {
                 </button>
                 <button
                   onClick={() => setFilter('overdue')}
-                  className={`px-4 py-2.5 rounded-2xl text-sm font-semibold border transition active:scale-[0.99] ${
-                    filter === 'overdue' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
-                  }`}
+                  className={`px-4 py-2.5 rounded-2xl text-sm font-semibold border transition active:scale-[0.99] ${filter === 'overdue' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
+                    }`}
                   style={{
                     borderColor: filter === 'overdue' ? "rgba(239,68,68,0.35)" : "#e5e7eb",
                     color: filter === 'overdue' ? "#EF4444" : "#374151",
@@ -602,7 +598,7 @@ export default function StaffMyTasks() {
           </Card>
         </div>
 
- 
+
       </div>
     </Layout>
   );

@@ -1,7 +1,7 @@
 "use client";
 
 // pages/dashboards/HOD/HODNotifications.jsx
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import { HODMenuItems } from "@/utils/menus";
@@ -27,12 +27,12 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "info"
-      ? "bg-blue-50 text-blue-700 ring-blue-100"
-      : "bg-gray-50 text-gray-700 ring-gray-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "info"
+            ? "bg-blue-50 text-blue-700 ring-blue-100"
+            : "bg-gray-50 text-gray-700 ring-gray-100";
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
       {children}
@@ -188,23 +188,54 @@ const notificationsData = [
 ];
 
 export default function HODNotifications() {
-  const [notifications, setNotifications] = useState(notificationsData);
+  const [notifications, setNotifications] = useState([]);
   const [filter, setFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPriority, setSelectedPriority] = useState("all");
   const [selectedType, setSelectedType] = useState("all");
 
   const notificationTypes = [
-    "TASK_ASSIGNED",
-    "APPROVAL_REQUESTED",
-    "DOCUMENT_UPLOADED",
-    "TASK_OVERDUE",
-    "MEETING_INVITE",
-    "ANNOUNCEMENT",
-    "TENDER_DEADLINE",
-    "REPORT_SUBMITTED",
-    "ESCALATION",
+    "CREATE_TASK",
+    "UPDATE_TASK",
+    "VIEW_TASK",
+    "ASSIGN_TASK",
+    "UPLOAD_DOCUMENT",
+    "CREATE_ANNOUNCEMENT",
   ];
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const res = await fetch("/api/notifications");
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Failed to fetch");
+
+        const mapped = data.map(n => ({
+          id: n.id,
+          type: n.actionType || "SYSTEM_ALERT",
+          title: (n.actionType || "System Alert").replace(/_/g, " "),
+          message: n.message,
+          time: new Date(n.createdAt).toLocaleString(),
+          timestamp: n.createdAt,
+          read: n.read,
+          link: "#",
+          priority: "NORMAL",
+          sender: {
+            name: n.actor?.name || n.actorRole || "System",
+            avatar: "👤",
+            department: n.actor?.department || "General",
+          }
+        }));
+        setNotifications(mapped);
+      } catch (error) {
+        console.error("Failed to fetch notifications:", error);
+      }
+    };
+
+    fetchNotifications();
+    const interval = setInterval(fetchNotifications, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   const filteredNotifications = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
@@ -224,12 +255,30 @@ export default function HODNotifications() {
   const unreadCount = useMemo(() => notifications.filter((n) => !n.read).length, [notifications]);
   const urgentCount = useMemo(() => notifications.filter((n) => n.priority === "URGENT").length, [notifications]);
 
-  const markAsRead = (id) => {
+  const markAsRead = async (id) => {
     setNotifications(notifications.map((notif) => (notif.id === id ? { ...notif, read: true } : notif)));
+    try {
+      await fetch("/api/notifications", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+    } catch (e) {
+      console.error(e);
+    }
   };
 
-  const markAllAsRead = () => {
+  const markAllAsRead = async () => {
     setNotifications(notifications.map((notif) => ({ ...notif, read: true })));
+    try {
+      await fetch("/api/notifications", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ markAllRead: true }),
+      });
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const deleteNotification = (id) => {
@@ -583,10 +632,10 @@ export default function HODNotifications() {
                               priority === "URGENT"
                                 ? "var(--accent-red)"
                                 : priority === "HIGH"
-                                ? "#F97316"
-                                : priority === "IMPORTANT"
-                                ? "#EAB308"
-                                : "#3B82F6",
+                                  ? "#F97316"
+                                  : priority === "IMPORTANT"
+                                    ? "#EAB308"
+                                    : "#3B82F6",
                           }}
                         />
                       </div>

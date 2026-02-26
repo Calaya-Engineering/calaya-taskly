@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";  // Added Link here
 import Layout from "@/components/Layout";
 import { HODMenuItems } from "@/utils/menus";
+import { toast } from "@/lib/toast";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -16,14 +17,14 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "info"
-      ? "bg-blue-50 text-blue-700 ring-blue-100"
-      : tone === "purple"
-      ? "bg-purple-50 text-purple-700 ring-purple-100"
-      : "bg-gray-50 text-gray-700 ring-gray-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "info"
+            ? "bg-blue-50 text-blue-700 ring-blue-100"
+            : tone === "purple"
+              ? "bg-purple-50 text-purple-700 ring-purple-100"
+              : "bg-gray-50 text-gray-700 ring-gray-100";
 
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
@@ -348,9 +349,8 @@ export default function HODEventDetail() {
                   <button
                     key={t.key}
                     onClick={() => setActiveTab(t.key)}
-                    className={`px-3.5 py-2 rounded-2xl text-sm font-semibold transition ring-1 ${
-                      active ? "text-white" : "text-gray-700 bg-gray-50 hover:bg-gray-100"
-                    }`}
+                    className={`px-3.5 py-2 rounded-2xl text-sm font-semibold transition ring-1 ${active ? "text-white" : "text-gray-700 bg-gray-50 hover:bg-gray-100"
+                      }`}
                     style={{
                       backgroundColor: active ? "var(--primary-blue)" : undefined,
                       borderColor: active ? "transparent" : "rgba(0,0,0,0.06)",
@@ -421,9 +421,8 @@ export default function HODEventDetail() {
                       <button
                         key={s}
                         onClick={() => handleRsvpChange(s)}
-                        className={`px-4 py-2.5 rounded-2xl text-sm font-semibold border transition ${
-                          active ? "text-white" : "bg-white hover:bg-gray-50"
-                        }`}
+                        className={`px-4 py-2.5 rounded-2xl text-sm font-semibold border transition ${active ? "text-white" : "bg-white hover:bg-gray-50"
+                          }`}
                         style={{
                           backgroundColor: active ? "var(--primary-blue)" : undefined,
                           borderColor: active ? "transparent" : "rgba(44, 75, 155, 0.25)",

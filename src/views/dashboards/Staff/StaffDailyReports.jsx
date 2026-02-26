@@ -6,6 +6,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { StaffMenuItems } from "@/utils/menus";
+import { fetchWithAuth } from "@/lib/api";
+import { toast } from "@/lib/toast";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -28,14 +30,14 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "info"
-      ? "bg-blue-50 text-blue-700 ring-blue-100"
-      : tone === "purple"
-      ? "bg-purple-50 text-purple-700 ring-purple-100"
-      : "bg-gray-50 text-gray-700 ring-gray-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "info"
+            ? "bg-blue-50 text-blue-700 ring-blue-100"
+            : tone === "purple"
+              ? "bg-purple-50 text-purple-700 ring-purple-100"
+              : "bg-gray-50 text-gray-700 ring-gray-100";
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
       {children}
@@ -53,140 +55,7 @@ const STORAGE_KEYS = {
   IS_MODAL_OPEN: 'staffDailyReport_modalOpen'
 };
 
-const dailyReportsData = [
-  {
-    id: 'DR-2024-12-15-001',
-    date: '2024-12-15',
-    title: 'Technical Department Daily Report',
-    department: 'Technical',
-    submittedBy: 'John Doe',
-    submittedAt: '2024-12-15T16:30:00',
-    entries: [
-      {
-        taskName: 'Pipeline Inspection',
-        objective: 'Complete safety check of main pipeline',
-        target: 'Inspect 5km section',
-        nextDayTask: 'Continue inspection on remaining sections'
-      },
-      {
-        taskName: 'Equipment Maintenance',
-        objective: 'Calibrate testing equipment',
-        target: 'Complete calibration of 3 units',
-        nextDayTask: 'Document calibration results'
-      }
-    ],
-    fileSize: '1.2 MB',
-    fileType: 'PDF',
-    status: 'PENDING',
-    downloads: 0
-  },
-  {
-    id: 'DR-2024-12-14-001',
-    date: '2024-12-14',
-    title: 'Technical Department Daily Report',
-    department: 'Technical',
-    submittedBy: 'John Doe',
-    submittedAt: '2024-12-14T17:00:00',
-    entries: [
-      {
-        taskName: 'Safety Training',
-        objective: 'Conduct safety briefing',
-        target: 'All technical staff attended',
-        nextDayTask: 'Collect training feedback'
-      },
-      {
-        taskName: 'Site Inspection',
-        objective: 'Inspect Site A',
-        target: 'Complete full site inspection',
-        nextDayTask: 'Prepare inspection report'
-      }
-    ],
-    fileSize: '1.8 MB',
-    fileType: 'PDF',
-    status: 'APPROVED',
-    downloads: 5
-  },
-  {
-    id: 'DR-2024-12-13-001',
-    date: '2024-12-13',
-    title: 'Technical Department Daily Report',
-    department: 'Technical',
-    submittedBy: 'John Doe',
-    submittedAt: '2024-12-13T16:45:00',
-    entries: [
-      {
-        taskName: 'Equipment Calibration',
-        objective: 'Calibrate testing equipment',
-        target: 'Complete calibration of 5 units',
-        nextDayTask: 'Update calibration logs'
-      }
-    ],
-    fileSize: '0.9 MB',
-    fileType: 'PDF',
-    status: 'APPROVED',
-    downloads: 3
-  },
-  {
-    id: 'DR-2024-12-09',
-    date: '2024-12-09',
-    title: 'Company Daily Report - December 9',
-    department: 'All Company',
-    submittedBy: 'Secretary - Ms. Chen',
-    submittedAt: '2024-12-09T18:00:00',
-    entries: [
-      {
-        taskName: 'Company Operations',
-        objective: 'Daily operations summary',
-        target: 'All departments',
-        nextDayTask: 'Continue regular operations'
-      }
-    ],
-    fileSize: '4.2 MB',
-    fileType: 'PDF',
-    status: 'APPROVED',
-    downloads: 89
-  },
-  {
-    id: 'DR-2024-12-08',
-    date: '2024-12-08',
-    title: 'Technical Department Daily Report',
-    department: 'Technical',
-    submittedBy: 'John Doe',
-    submittedAt: '2024-12-08T16:30:00',
-    entries: [
-      {
-        taskName: 'Equipment Maintenance',
-        objective: 'Perform routine maintenance',
-        target: 'Complete maintenance on 3 machines',
-        nextDayTask: 'Test maintained equipment'
-      }
-    ],
-    fileSize: '0.8 MB',
-    fileType: 'PDF',
-    status: 'APPROVED',
-    downloads: 12
-  },
-  {
-    id: 'DR-2024-12-06',
-    date: '2024-12-06',
-    title: 'Company Daily Report - December 6',
-    department: 'All Company',
-    submittedBy: 'Secretary - Ms. Chen',
-    submittedAt: '2024-12-06T18:00:00',
-    entries: [
-      {
-        taskName: 'Company Operations',
-        objective: 'Daily operations summary',
-        target: 'All departments',
-        nextDayTask: 'Weekend maintenance schedule'
-      }
-    ],
-    fileSize: '4.5 MB',
-    fileType: 'PDF',
-    status: 'APPROVED',
-    downloads: 92
-  },
-];
+
 
 const getStatusTone = (status) => {
   switch (status) {
@@ -198,7 +67,7 @@ const getStatusTone = (status) => {
 };
 
 const getDepartmentTone = (dept) => {
-  switch(dept) {
+  switch (dept) {
     case 'All Company': return 'purple';
     case 'Technical': return 'info';
     case 'Workshop': return 'warn';
@@ -209,7 +78,7 @@ const getDepartmentTone = (dept) => {
 };
 
 const getFileIcon = (type) => {
-  switch(type?.toLowerCase()) {
+  switch (type?.toLowerCase()) {
     case 'pdf': return '📕';
     case 'doc':
     case 'docx': return '📘';
@@ -223,21 +92,73 @@ const fmtDate = (iso) =>
   iso ? new Date(iso).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" }) : "Not set";
 
 const fmtDateTime = (iso) =>
-  iso ? new Date(iso).toLocaleString(undefined, { 
-    hour: '2-digit', 
+  iso ? new Date(iso).toLocaleString(undefined, {
+    hour: '2-digit',
     minute: '2-digit',
     month: 'short',
     day: 'numeric',
-    hour12: true 
+    hour12: true
   }) : "Not set";
 
 export default function StaffDailyReports() {
   const router = useRouter();
+  const [dailyReports, setDailyReports] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [dateFilter, setDateFilter] = useState('all');
   const [departmentFilter, setDepartmentFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [dailyReports, setDailyReports] = useState(dailyReportsData);
+  const [departments, setDepartments] = useState([]);
+  const [loadingDepts, setLoadingDepts] = useState(true);
+
+  useEffect(() => {
+    async function loadDepts() {
+      try {
+        const res = await fetchWithAuth("/api/departments");
+        if (res.ok) {
+          const data = await res.json();
+          setDepartments(['All Company', ...data.map(d => d.name)]);
+        }
+      } catch (err) {
+        console.error("Failed to load departments:", err);
+      } finally {
+        setLoadingDepts(false);
+      }
+    }
+    loadDepts();
+  }, []);
+
+  useEffect(() => {
+    async function getReports() {
+      try {
+        const resp = await fetchWithAuth("/api/documents?type=Report");
+        if (resp.ok) {
+          const data = await resp.json();
+          const mapped = data.map(d => ({
+            id: d.id,
+            dbId: d.dbId,
+            title: d.title,
+            date: d.date ? d.date.split('T')[0] : '',
+            department: d.department,
+            submittedBy: d.uploadedBy,
+            submittedAt: d.date,
+            entries: [],
+            fileSize: d.size || '—',
+            fileType: d.fileUrl ? d.fileUrl.split('.').pop().toUpperCase() : 'PDF',
+            status: 'APPROVED',
+            downloads: d.downloads || 0,
+            fileUrl: d.fileUrl
+          }));
+          setDailyReports(mapped);
+        }
+      } catch (err) {
+        console.error("Failed to fetch reports:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    getReports();
+  }, []);
 
   // Report entries with dynamic rows
   const [reportEntries, setReportEntries] = useState([
@@ -282,7 +203,7 @@ export default function StaffDailyReports() {
       weekAgo.setDate(weekAgo.getDate() - 7);
       const monthAgo = new Date(today);
       monthAgo.setDate(monthAgo.getDate() - 30);
-      
+
       if (dateFilter === 'thisWeek' && reportDate < weekAgo) return false;
       if (dateFilter === 'thisMonth' && reportDate < monthAgo) return false;
       if (dateFilter === 'lastMonth') {
@@ -290,24 +211,24 @@ export default function StaffDailyReports() {
         const lastMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0);
         if (reportDate < lastMonthStart || reportDate > lastMonthEnd) return false;
       }
-      
+
       // Department filtering
       if (departmentFilter !== 'all') {
         if (departmentFilter === 'company' && report.department !== 'All Company') return false;
         if (departmentFilter !== 'company' && report.department !== departmentFilter) return false;
       }
-      
+
       // Search filtering
       if (query) {
         const matchesTitle = report.title?.toLowerCase().includes(query);
-        const matchesTask = report.entries?.some(entry => 
+        const matchesTask = report.entries?.some(entry =>
           entry.taskName.toLowerCase().includes(query) ||
           entry.objective.toLowerCase().includes(query)
         );
         const matchesId = report.id.toLowerCase().includes(query);
         if (!matchesTitle && !matchesTask && !matchesId) return false;
       }
-      
+
       return true;
     });
   }, [dailyReports, dateFilter, departmentFilter, searchTerm]);
@@ -355,7 +276,7 @@ export default function StaffDailyReports() {
       target: '',
       nextDayTask: ''
     }];
-    
+
     setReportEntries(defaultEntries);
     sessionStorage.removeItem(STORAGE_KEYS.REPORT_ENTRIES);
   };
@@ -433,7 +354,17 @@ export default function StaffDailyReports() {
     setSearchTerm('');
   };
 
-  const departments = ['All Company', 'Technical', 'Workshop', 'HSE', 'Logistics'];
+
+
+  if (loading) {
+    return (
+      <Layout menuItems={StaffMenuItems} userRole="Staff">
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout menuItems={StaffMenuItems} userRole="Staff">
@@ -668,7 +599,7 @@ export default function StaffDailyReports() {
         {/* Calendar View */}
         <Card className="p-6">
           <SectionTitle title="Report Calendar" subtitle="Overview of reports by date" />
-          
+
           <div className="mt-6 grid grid-cols-7 gap-2">
             {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
               <div key={day} className="text-center text-xs font-semibold text-gray-500 py-2">
@@ -680,19 +611,17 @@ export default function StaffDailyReports() {
               const dateStr = date.toISOString().split('T')[0];
               const hasReport = dailyReports.some(r => r.date === dateStr);
               const isStaffReport = dailyReports.some(r => r.date === dateStr && r.submittedBy === STAFF_NAME);
-              
+
               return (
-                <div 
-                  key={i} 
-                  className={`relative p-3 text-center rounded-2xl border ${
-                    isStaffReport ? 'bg-emerald-50 border-emerald-200' :
+                <div
+                  key={i}
+                  className={`relative p-3 text-center rounded-2xl border ${isStaffReport ? 'bg-emerald-50 border-emerald-200' :
                     hasReport ? 'bg-blue-50 border-blue-200' : 'border-gray-200/70'
-                  }`}
+                    }`}
                 >
-                  <div className={`font-semibold text-sm ${
-                    isStaffReport ? 'text-emerald-700' :
+                  <div className={`font-semibold text-sm ${isStaffReport ? 'text-emerald-700' :
                     hasReport ? 'text-blue-700' : 'text-gray-700'
-                  }`}>
+                    }`}>
                     {date.getDate()}
                   </div>
                   {isStaffReport ? (
@@ -704,7 +633,7 @@ export default function StaffDailyReports() {
               );
             })}
           </div>
-          
+
           <div className="mt-4 flex items-center justify-center gap-4">
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-blue-500"></div>
@@ -935,11 +864,10 @@ export default function StaffDailyReports() {
                                   type="button"
                                   onClick={() => removeRow(entry.id)}
                                   disabled={reportEntries.length === 1}
-                                  className={`text-sm font-semibold px-3 py-1.5 rounded-xl transition ${
-                                    reportEntries.length === 1 
-                                      ? 'text-gray-400 cursor-not-allowed' 
-                                      : 'text-red-600 hover:bg-red-50'
-                                  }`}
+                                  className={`text-sm font-semibold px-3 py-1.5 rounded-xl transition ${reportEntries.length === 1
+                                    ? 'text-gray-400 cursor-not-allowed'
+                                    : 'text-red-600 hover:bg-red-50'
+                                    }`}
                                 >
                                   Remove
                                 </button>

@@ -1,11 +1,13 @@
 "use client";
 
-// pages/dashboards/HOD/HODEvents.jsx
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { HODMenuItems } from "@/utils/menus";
+import { fetchWithAuth, getAuthToken } from '@/lib/api';
+import { toast } from '@/lib/toast';
+
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -28,14 +30,14 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "info"
-      ? "bg-blue-50 text-blue-700 ring-blue-100"
-      : tone === "purple"
-      ? "bg-purple-50 text-purple-700 ring-purple-100"
-      : "bg-gray-50 text-gray-700 ring-gray-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "info"
+            ? "bg-blue-50 text-blue-700 ring-blue-100"
+            : tone === "purple"
+              ? "bg-purple-50 text-purple-700 ring-purple-100"
+              : "bg-gray-50 text-gray-700 ring-gray-100";
 
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
@@ -43,105 +45,6 @@ const Pill = ({ children, tone = "default" }) => {
     </span>
   );
 };
-
-const eventsData = [
-  {
-    id: 'EVT-001',
-    title: 'Technical Department Quarterly Review',
-    type: 'MEETING',
-    description: 'Quarterly performance review and planning for next quarter',
-    location: 'Conference Room A',
-    meetingLink: 'https://meet.google.com/abc-defg-hij',
-    startAt: '2024-12-20T10:00:00',
-    endAt: '2024-12-20T12:00:00',
-    createdBy: 'HOD - Technical',
-    scope: 'DEPARTMENTS',
-    department: 'Technical',
-    attendees: 12,
-    rsvpStatus: 'ACCEPTED',
-    color: 'blue'
-  },
-  {
-    id: 'EVT-002',
-    title: 'Safety Training Workshop',
-    type: 'TRAINING',
-    description: 'Mandatory safety training for all field staff',
-    location: 'Training Hall B',
-    meetingLink: '',
-    startAt: '2024-12-22T09:00:00',
-    endAt: '2024-12-22T17:00:00',
-    createdBy: 'HSE Manager',
-    scope: 'DEPARTMENTS',
-    department: 'HSE',
-    attendees: 25,
-    rsvpStatus: 'ACCEPTED',
-    color: 'green'
-  },
-  {
-    id: 'EVT-003',
-    title: 'Project Kick-off: Pipeline Maintenance',
-    type: 'MEETING',
-    description: 'Kick-off meeting for Q1 pipeline maintenance project',
-    location: 'Project Room 3',
-    meetingLink: 'https://teams.microsoft.com/l/meetup-join',
-    startAt: '2024-12-18T14:00:00',
-    endAt: '2024-12-18T16:00:00',
-    createdBy: 'Project Manager',
-    scope: 'DEPARTMENTS',
-    department: 'Technical',
-    attendees: 8,
-    rsvpStatus: 'TENTATIVE',
-    color: 'purple'
-  },
-  {
-    id: 'EVT-004',
-    title: 'Company Annual Dinner',
-    type: 'EVENT',
-    description: 'Annual company dinner and awards ceremony',
-    location: 'Grand Ballroom',
-    meetingLink: '',
-    startAt: '2024-12-25T19:00:00',
-    endAt: '2024-12-25T22:00:00',
-    createdBy: 'HR Department',
-    scope: 'ALL_COMPANY',
-    department: 'All',
-    attendees: 150,
-    rsvpStatus: 'ACCEPTED',
-    color: 'red'
-  },
-  {
-    id: 'EVT-005',
-    title: 'Workshop Equipment Demo',
-    type: 'TRAINING',
-    description: 'Demo of new workshop equipment and safety procedures',
-    location: 'Workshop Area',
-    meetingLink: '',
-    startAt: '2024-12-16T11:00:00',
-    endAt: '2024-12-16T13:00:00',
-    createdBy: 'Workshop Supervisor',
-    scope: 'DEPARTMENTS',
-    department: 'Workshop',
-    attendees: 15,
-    rsvpStatus: 'DECLINED',
-    color: 'green'
-  },
-  {
-    id: 'EVT-006',
-    title: 'Cross-Department Sync',
-    type: 'MEETING',
-    description: 'Monthly cross-department synchronization meeting',
-    location: 'Virtual Meeting',
-    meetingLink: 'https://zoom.us/j/123456789',
-    startAt: '2024-12-17T15:00:00',
-    endAt: '2024-12-17T16:30:00',
-    createdBy: 'MD',
-    scope: 'ALL_COMPANY',
-    department: 'All',
-    attendees: 20,
-    rsvpStatus: 'INVITED',
-    color: 'blue'
-  },
-];
 
 const safeDate = (v) => {
   const d = new Date(v);
@@ -170,23 +73,70 @@ const typeEmoji = (t) => (t === "MEETING" ? "👥" : t === "TRAINING" ? "🎓" :
 
 export default function HODEvents() {
   const router = useRouter();
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState('upcoming'); // upcoming | past
   const [selectedType, setSelectedType] = useState('all');
   const [selectedDate, setSelectedDate] = useState('');
   const [departmentFilter, setDepartmentFilter] = useState('all');
 
-  const now = useMemo(() => {
-    const sorted = [...eventsData]
-      .map((e) => safeDate(e.startAt))
-      .filter(Boolean)
-      .sort((a, b) => b.getTime() - a.getTime());
-    return sorted[0] || new Date();
+  // Calendar navigation state
+  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+
+  const fetchEvents = useCallback(async () => {
+    try {
+      const resp = await fetchWithAuth("/api/tasks?type=MEETING,TRAINING,EVENT&limit=100");
+      if (resp.ok) {
+        const data = await resp.json();
+        const mapped = data.tasks.map(t => {
+          let meetingLink = "";
+          const linkMatch = t.description?.match(/https?:\/\/[^\s]+/);
+          if (linkMatch) meetingLink = linkMatch[0];
+
+          return {
+            id: t.id,
+            title: t.title,
+            description: t.description,
+            type: t.type,
+            location: t.location || "N/A",
+            meetingLink,
+            startAt: t.startDate || t.createdAt,
+            endAt: t.dueDate || t.startDate || t.createdAt,
+            createdBy: (t.creator?.name || t.creator?.email) || "System",
+            department: t.department || "All Company",
+            attendees: t.assignments?.length || 0,
+            rsvpStatus: "ACCEPTED", // Mocked as not in task API
+          };
+        });
+        setEvents(mapped);
+      }
+    } catch (err) {
+      console.error("Fetch events failed", err);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  const departments = useMemo(() => ['all', ...new Set(eventsData.map(e => e.department))], []);
+  useEffect(() => {
+    fetchEvents();
+    const token = getAuthToken();
+    const eventSource = new EventSource(`/api/tasks/events?token=${token}`);
+    eventSource.onmessage = (e) => {
+      const data = JSON.parse(e.data);
+      if (data.type === "task:created" || data.type === "task:updated") {
+        fetchEvents();
+      }
+    };
+    return () => eventSource.close();
+  }, [fetchEvents]);
+
+  const now = useMemo(() => new Date(), []);
+
+  const departments = useMemo(() => ['all', ...new Set(events.map(e => e.department))], [events]);
 
   const filteredEvents = useMemo(() => {
-    return eventsData
+    return events
       .filter((event) => {
         const eventDate = safeDate(event.startAt);
         if (!eventDate) return false;
@@ -198,7 +148,7 @@ export default function HODEvents() {
         return matchesView && matchesType && matchesDept;
       })
       .sort((a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime());
-  }, [viewMode, selectedType, departmentFilter, now]);
+  }, [events, viewMode, selectedType, departmentFilter, now]);
 
   const listEvents = useMemo(() => {
     if (!selectedDate) return filteredEvents;
@@ -209,21 +159,21 @@ export default function HODEvents() {
   }, [filteredEvents, selectedDate]);
 
   const overview = useMemo(() => {
-    const total = eventsData.length;
-    const upcoming = eventsData.filter((e) => (safeDate(e.startAt)?.getTime() || 0) >= now.getTime()).length;
-    const meetings = eventsData.filter((e) => e.type === 'MEETING').length;
-    const attendees = eventsData.reduce((sum, e) => sum + (e.attendees || 0), 0);
+    const total = events.length;
+    const upcoming = events.filter((e) => (safeDate(e.startAt)?.getTime() || 0) >= now.getTime()).length;
+    const meetings = events.filter((e) => e.type === 'MEETING').length;
+    const attendees = events.reduce((sum, e) => sum + (e.attendees || 0), 0);
     return { total, upcoming, meetings, attendees };
-  }, [now]);
+  }, [events, now]);
 
   const todayISO = useMemo(() => toISODate(now), [now]);
   const todaysEvents = useMemo(
     () =>
-      eventsData.filter((e) => {
+      events.filter((e) => {
         const d = safeDate(e.startAt);
         return d ? toISODate(d) === todayISO : false;
       }),
-    [todayISO]
+    [events, todayISO]
   );
 
   const handleEditClick = (e, eventId) => {
@@ -294,9 +244,8 @@ export default function HODEvents() {
                   return (
                     <button
                       key={v.key}
-                      className={`px-3.5 py-2 rounded-2xl text-sm font-semibold transition ring-1 ${
-                        active ? "text-white" : "text-gray-700 bg-gray-50 hover:bg-gray-100"
-                      }`}
+                      className={`px-3.5 py-2 rounded-2xl text-sm font-semibold transition ring-1 ${active ? "text-white" : "text-gray-700 bg-gray-50 hover:bg-gray-100"
+                        }`}
                       style={{
                         backgroundColor: active ? "var(--primary-blue)" : undefined,
                         borderColor: active ? "transparent" : "rgba(0,0,0,0.06)",
@@ -321,9 +270,8 @@ export default function HODEvents() {
                   return (
                     <button
                       key={t.key}
-                      className={`px-3.5 py-2 rounded-2xl text-sm font-semibold transition ring-1 ${
-                        active ? "text-white" : "text-gray-700 bg-gray-50 hover:bg-gray-100"
-                      }`}
+                      className={`px-3.5 py-2 rounded-2xl text-sm font-semibold transition ring-1 ${active ? "text-white" : "text-gray-700 bg-gray-50 hover:bg-gray-100"
+                        }`}
                       style={{
                         backgroundColor: active ? "var(--primary-blue)" : undefined,
                         borderColor: active ? "transparent" : "rgba(0,0,0,0.06)",
@@ -418,7 +366,7 @@ export default function HODEvents() {
 
               {listEvents.length === 0 ? (
                 <div className="p-10 text-center text-gray-500">
-                  No events found for these filters.
+                  {loading ? "Loading events..." : "No events found for these filters."}
                 </div>
               ) : (
                 <div className="hidden lg:block overflow-x-auto">
@@ -556,7 +504,40 @@ export default function HODEvents() {
           {/* Calendar Widget */}
           <div className="lg:col-span-1">
             <Card className="p-6">
-              <SectionTitle title="December 2024" subtitle="Click a day to filter events" />
+              <SectionTitle
+                title={`${new Date(currentYear, currentMonth).toLocaleString('default', { month: 'long' })} ${currentYear}`}
+                subtitle="Click a day to filter events"
+                action={
+                  <div className="flex gap-1">
+                    <button
+                      onClick={() => {
+                        if (currentMonth === 0) {
+                          setCurrentMonth(11);
+                          setCurrentYear(v => v - 1);
+                        } else {
+                          setCurrentMonth(v => v - 1);
+                        }
+                      }}
+                      className="p-1 hover:bg-gray-100 rounded-lg transition"
+                    >
+                      ←
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (currentMonth === 11) {
+                          setCurrentMonth(0);
+                          setCurrentYear(v => v + 1);
+                        } else {
+                          setCurrentMonth(v => v + 1);
+                        }
+                      }}
+                      className="p-1 hover:bg-gray-100 rounded-lg transition"
+                    >
+                      →
+                    </button>
+                  </div>
+                }
+              />
 
               <div className="mt-5 grid grid-cols-7 gap-2">
                 {["S", "M", "T", "W", "T", "F", "S"].map((day, i) => (
@@ -565,9 +546,14 @@ export default function HODEvents() {
                   </div>
                 ))}
 
-                {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => {
-                  const dateStr = `2024-12-${day.toString().padStart(2, "0")}`;
-                  const dayEvents = eventsData.filter((event) => {
+                {/* Empty slots for start of month */}
+                {Array.from({ length: new Date(currentYear, currentMonth, 1).getDay() }).map((_, i) => (
+                  <div key={`empty-${i}`} />
+                ))}
+
+                {Array.from({ length: new Date(currentYear, currentMonth + 1, 0).getDate() }, (_, i) => i + 1).map((day) => {
+                  const dateStr = `${currentYear}-${(currentMonth + 1).toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
+                  const dayEvents = events.filter((event) => {
                     const d = safeDate(event.startAt);
                     return d ? toISODate(d) === dateStr : false;
                   });
@@ -578,9 +564,8 @@ export default function HODEvents() {
                       type="button"
                       key={day}
                       onClick={() => setSelectedDate(dateStr)}
-                      className={`h-10 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition relative ring-1 ${
-                        active ? "ring-blue-300" : "ring-black/5"
-                      } ${dayEvents.length ? "bg-blue-50" : "bg-gray-50 hover:bg-gray-100"}`}
+                      className={`h-10 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition relative ring-1 ${active ? "ring-blue-300" : "ring-black/5"
+                        } ${dayEvents.length ? "bg-blue-50" : "bg-gray-50 hover:bg-gray-100"}`}
                       title={dayEvents.length ? `${dayEvents.length} event(s)` : "No events"}
                     >
                       <span className={`font-extrabold text-sm ${dayEvents.length ? "text-blue-700" : "text-gray-700"}`}>
@@ -662,18 +647,18 @@ export default function HODEvents() {
           <SectionTitle title="Event Statistics" subtitle="Quick insights and averages" />
           <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { label: "Total Events", value: eventsData.length, color: "var(--primary-blue)", icon: "📅" },
-              { label: "This Month", value: eventsData.filter((e) => safeDate(e.startAt)?.getMonth() === 11).length, color: "var(--secondary-blue)", icon: "📆" },
-              { label: "Total Attendees", value: eventsData.reduce((sum, e) => sum + e.attendees, 0), color: "#8B5CF6", icon: "👥" },
+              { label: "Total Events", value: events.length, color: "var(--primary-blue)", icon: "📅" },
+              { label: "This Month", value: events.filter((e) => safeDate(e.startAt)?.getMonth() === new Date().getMonth()).length, color: "var(--secondary-blue)", icon: "📆" },
+              { label: "Total Attendees", value: events.reduce((sum, e) => sum + e.attendees, 0), color: "#8B5CF6", icon: "👥" },
               {
                 label: "Avg Duration",
                 value: (() => {
-                  const mins = eventsData.reduce((sum, e) => {
+                  const mins = events.reduce((sum, e) => {
                     const s = safeDate(e.startAt)?.getTime() || 0;
                     const en = safeDate(e.endAt)?.getTime() || 0;
                     return en > s ? sum + Math.round((en - s) / 60000) : sum;
                   }, 0);
-                  const avg = eventsData.length ? Math.round(mins / eventsData.length) : 0;
+                  const avg = events.length ? Math.round(mins / events.length) : 0;
                   return avg >= 60 ? `${(avg / 60).toFixed(1)} hours` : `${avg} mins`;
                 })(),
                 color: "#10B981",

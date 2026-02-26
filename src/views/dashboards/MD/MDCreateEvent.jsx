@@ -1,37 +1,12 @@
 "use client";
 
 // pages/dashboards/MD/MDCreateEvent.jsx
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { MDMenuItems } from "@/utils/menus";
-const departments = [
-  "Technical",
-  "Workshop",
-  "Logistics",
-  "Contract and Procurement",
-  "Legal and Compliances",
-  "HR",
-  "HSE",
-  "Business Development (BDD)",
-  "Accounts",
-  "NCD",
-  "QHSE",
-  "Admin",
-];
-
-const users = [
-  { id: 1, name: "John Doe", department: "Technical" },
-  { id: 2, name: "Sarah Smith", department: "HSE" },
-  { id: 3, name: "Mike Johnson", department: "Technical" },
-  { id: 4, name: "Robert Chen", department: "Workshop" },
-  { id: 5, name: "Lisa Wang", department: "Logistics" },
-  { id: 6, name: "David Kim", department: "Legal and Compliances" },
-  { id: 7, name: "Maria Garcia", department: "HR" },
-  { id: 8, name: "James Wilson", department: "Accounts" },
-  { id: 9, name: "Alex Turner", department: "Technical" },
-];
-
+import { fetchWithAuth } from "@/lib/api";
+import { toast } from "@/lib/toast";
 
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -42,10 +17,10 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : "bg-blue-50 text-blue-700 ring-blue-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : "bg-blue-50 text-blue-700 ring-blue-100";
 
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
@@ -70,6 +45,28 @@ const typeIcon = (v) => (v === "MEETING" ? "👥" : v === "TRAINING" ? "🎓" : 
 
 export default function MDCreateEvent() {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [allDepartments, setAllDepartments] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const [deptResp, userResp] = await Promise.all([
+          fetchWithAuth("/api/departments"),
+          fetchWithAuth("/api/users")
+        ]);
+        if (deptResp.ok) setAllDepartments(await deptResp.json());
+        if (userResp.ok) {
+          const u = await userResp.json();
+          setAllUsers(u.users || u); // Handle different response formats
+        }
+      } catch (err) {
+        console.error("Failed to load users/depts", err);
+      }
+    }
+    loadData();
+  }, []);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -92,11 +89,47 @@ export default function MDCreateEvent() {
   const now = useMemo(() => new Date(), []);
   const currentDate = useMemo(() => now.toISOString().split("T")[0], [now]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Creating event:", formData);
-    toast.success("Event created successfully!");
-    router.push("/md-dashboard/events");
+    setLoading(true);
+    try {
+      const startDateTime = new Date(`${formData.startDate}T${formData.startTime}`);
+      const endDateTime = formData.endDate && formData.endTime
+        ? new Date(`${formData.endDate}T${formData.endTime}`)
+        : startDateTime;
+
+      const body = {
+        title: formData.title,
+        description: formData.description + (formData.meetingLink ? `\n\nMeeting Link: ${formData.meetingLink}` : ""),
+        type: formData.eventType,
+        startDate: startDateTime.toISOString(),
+        dueDate: endDateTime.toISOString(),
+        priority: "MEDIUM",
+        visibility: formData.scopeType,
+        assigneeIds: formData.selectedUsers,
+        department: formData.selectedDepartments.join(","),
+        location: formData.location
+      };
+
+      const resp = await fetchWithAuth("/api/tasks", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      });
+
+      if (resp.ok) {
+        toast.success("Event scheduled successfully!");
+        router.push("/md-dashboard/events");
+      } else {
+        const err = await resp.json();
+        toast.error(err.error || "Failed to create event");
+      }
+    } catch (error) {
+      console.error("Create event error:", error);
+      toast.error("An error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleFileUpload = (e) => {
@@ -223,9 +256,8 @@ export default function MDCreateEvent() {
                   <button
                     key={t.value}
                     type="button"
-                    className={`p-4 rounded-2xl border text-left transition ${
-                      active ? "bg-white" : "bg-gray-50 hover:bg-gray-100"
-                    }`}
+                    className={`p-4 rounded-2xl border text-left transition ${active ? "bg-white" : "bg-gray-50 hover:bg-gray-100"
+                      }`}
                     style={{
                       borderColor: active ? "rgba(44, 75, 155, 0.45)" : "rgba(0,0,0,0.08)",
                       boxShadow: active ? "0 10px 20px rgba(17,24,39,0.06)" : undefined,
@@ -243,8 +275,8 @@ export default function MDCreateEvent() {
                       {t.value === "MEETING"
                         ? "Internal or client meetings"
                         : t.value === "TRAINING"
-                        ? "Workshops and trainings"
-                        : "Company events & gatherings"}
+                          ? "Workshops and trainings"
+                          : "Company events & gatherings"}
                     </div>
                   </button>
                 );
@@ -376,9 +408,8 @@ export default function MDCreateEvent() {
                   <button
                     key={s.value}
                     type="button"
-                    className={`p-4 rounded-2xl border text-left transition ${
-                      active ? "bg-white" : "bg-gray-50 hover:bg-gray-100"
-                    }`}
+                    className={`p-4 rounded-2xl border text-left transition ${active ? "bg-white" : "bg-gray-50 hover:bg-gray-100"
+                      }`}
                     style={{
                       borderColor: active ? "rgba(44, 75, 155, 0.45)" : "rgba(0,0,0,0.08)",
                       boxShadow: active ? "0 10px 20px rgba(17,24,39,0.06)" : undefined,
@@ -408,22 +439,22 @@ export default function MDCreateEvent() {
                 </div>
 
                 <div className="mt-3 flex flex-wrap gap-2">
-                  {departments.map((dept) => {
-                    const active = formData.selectedDepartments.includes(dept);
+                  {allDepartments.map((dept) => {
+                    const deptName = typeof dept === 'string' ? dept : dept.name;
+                    const active = formData.selectedDepartments.includes(deptName);
                     return (
                       <button
-                        key={dept}
+                        key={deptName}
                         type="button"
-                        onClick={() => toggleDepartment(dept)}
-                        className={`px-3.5 py-2 rounded-2xl text-sm font-semibold transition ring-1 ${
-                          active ? "text-white" : "text-gray-700 bg-gray-50 hover:bg-gray-100"
-                        }`}
+                        onClick={() => toggleDepartment(deptName)}
+                        className={`px-3.5 py-2 rounded-2xl text-sm font-semibold transition ring-1 ${active ? "text-white" : "text-gray-700 bg-gray-50 hover:bg-gray-100"
+                          }`}
                         style={{
                           backgroundColor: active ? "var(--primary-blue)" : undefined,
                           borderColor: active ? "transparent" : "rgba(0,0,0,0.06)",
                         }}
                       >
-                        {dept}
+                        {deptName}
                       </button>
                     );
                   })}
@@ -442,22 +473,21 @@ export default function MDCreateEvent() {
                 </div>
 
                 <div className="mt-3 max-h-60 overflow-y-auto rounded-2xl border border-gray-200/70 bg-white">
-                  {users.map((u) => {
+                  {allUsers.map((u) => {
                     const active = formData.selectedUsers.includes(u.id);
                     return (
                       <button
                         key={u.id}
                         type="button"
                         onClick={() => toggleUser(u.id)}
-                        className={`w-full flex items-center gap-3 px-4 py-3 text-left border-b last:border-b-0 border-gray-200/70 transition ${
-                          active ? "bg-blue-50" : "hover:bg-gray-50"
-                        }`}
+                        className={`w-full flex items-center gap-3 px-4 py-3 text-left border-b last:border-b-0 border-gray-200/70 transition ${active ? "bg-blue-50" : "hover:bg-gray-50"
+                          }`}
                       >
                         <div
                           className="w-9 h-9 rounded-2xl flex items-center justify-center text-white font-bold text-sm "
                           style={{ backgroundColor: "var(--secondary-blue)" }}
                         >
-                          {u.name
+                          {(u.name || u.email)
                             .split(" ")
                             .slice(0, 2)
                             .map((x) => x[0])
@@ -466,8 +496,8 @@ export default function MDCreateEvent() {
                         </div>
 
                         <div className="min-w-0 flex-1">
-                          <div className="font-semibold text-gray-900">{u.name}</div>
-                          <div className="text-xs text-gray-500">{u.department}</div>
+                          <div className="font-semibold text-gray-900">{u.name || u.email}</div>
+                          <div className="text-xs text-gray-500">{u.department || u.role}</div>
                         </div>
 
                         {active ? <Pill tone="success">✓ Added</Pill> : <Pill>Add</Pill>}
@@ -567,15 +597,13 @@ export default function MDCreateEvent() {
                     <button
                       type="button"
                       onClick={() => setFormData((p) => ({ ...p, [opt.key]: !p[opt.key] }))}
-                      className={`relative inline-flex items-center h-7 w-12 rounded-full transition ${
-                        checked ? "bg-blue-600" : "bg-gray-200"
-                      }`}
+                      className={`relative inline-flex items-center h-7 w-12 rounded-full transition ${checked ? "bg-blue-600" : "bg-gray-200"
+                        }`}
                       aria-pressed={checked}
                     >
                       <span
-                        className={`inline-block h-5 w-5 bg-white rounded-full transform transition ${
-                          checked ? "translate-x-6" : "translate-x-1"
-                        }`}
+                        className={`inline-block h-5 w-5 bg-white rounded-full transform transition ${checked ? "translate-x-6" : "translate-x-1"
+                          }`}
                       />
                     </button>
                   </div>
@@ -596,10 +624,11 @@ export default function MDCreateEvent() {
             </button>
             <button
               type="submit"
-              className="px-6 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition"
+              disabled={loading}
+              className={`px-6 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
               style={{ backgroundColor: "var(--accent-red)" }}
             >
-              Schedule Event
+              {loading ? "Scheduling..." : "Schedule Event"}
             </button>
           </div>
         </form>

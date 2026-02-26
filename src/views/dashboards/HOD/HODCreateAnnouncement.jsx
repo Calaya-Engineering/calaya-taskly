@@ -1,10 +1,12 @@
 "use client";
 
 // pages/dashboards/HOD/HODCreateAnnouncement.jsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { HODMenuItems } from "@/utils/menus";
+import { fetchWithAuth } from "@/lib/api";
+import { toast } from "@/lib/toast";
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
 );
@@ -14,12 +16,12 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "purple"
-      ? "bg-purple-50 text-purple-700 ring-purple-100"
-      : "bg-blue-50 text-blue-700 ring-blue-100";
+        ? "bg-amber-50 text-amber-800 ring-amber-100"
+        : tone === "success"
+          ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+          : tone === "purple"
+            ? "bg-purple-50 text-purple-700 ring-purple-100"
+            : "bg-blue-50 text-blue-700 ring-blue-100";
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
       {children}
@@ -42,26 +44,38 @@ const btnBase = "px-6 py-3 rounded-2xl font-semibold active:scale-[0.99] transit
 const btnOutline = `${btnBase} border bg-white hover:bg-gray-50`;
 const btnSolid = `${btnBase} text-white`;
 
-const departments = [
-  'Technical', 'Workshop', 'HSE', 'Logistics', 
-  'Procurement', 'Accounts', 'HR', 'IT'
-];
 
-const users = [
-  { id: 1, name: 'Alex Johnson', department: 'Technical' },
-  { id: 2, name: 'Maria Garcia', department: 'HSE' },
-  { id: 3, name: 'David Chen', department: 'Workshop' },
-  { id: 4, name: 'Emma Wilson', department: 'Technical' },
-  { id: 5, name: 'Michael Brown', department: 'Logistics' },
-  { id: 6, name: 'Sarah Taylor', department: 'Accounts' },
-  { id: 7, name: 'Robert Lee', department: 'Procurement' },
-  { id: 8, name: 'Lisa Wang', department: 'Technical' },
-  { id: 9, name: 'James Miller', department: 'HR' },
-  { id: 10, name: 'Patricia Davis', department: 'IT' },
-];
 
 export default function HODCreateAnnouncement() {
   const router = useRouter();
+  const [departments, setDepartments] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const [deptRes, userRes] = await Promise.all([
+          fetchWithAuth("/api/departments"),
+          fetchWithAuth("/api/users"),
+        ]);
+        if (deptRes.ok) {
+          const data = await deptRes.json();
+          setDepartments(data.map(d => d.name));
+        }
+        if (userRes.ok) {
+          const data = await userRes.json();
+          setUsers(data);
+        }
+      } catch (err) {
+        console.error("Failed to load departments/users:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadData();
+  }, []);
+
   const [formData, setFormData] = useState({
     title: '',
     message: '',
@@ -90,11 +104,24 @@ export default function HODCreateAnnouncement() {
     { value: "USERS", label: "Specific Users", desc: "Selected individuals" },
   ];
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Creating announcement:', formData);
-    toast.success('Announcement created successfully!');
-    router.push('/hod-dashboard/announcements');
+    try {
+      const res = await fetchWithAuth("/api/announcements", {
+        method: "POST",
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || "Failed to create announcement");
+      }
+      toast.success("Announcement created successfully!");
+      router.push("/hod-dashboard/announcements");
+    } catch (err) {
+      console.error(err);
+      toast.error(err.message || "Failed to create announcement");
+    }
   };
 
   const handleFileUpload = (e) => {
@@ -107,22 +134,22 @@ export default function HODCreateAnnouncement() {
   };
 
   const handleScopeChange = (scope) => {
-    setFormData((p) => ({ 
-      ...p, 
-      scopeType: scope, 
-      selectedDepartments: scope === 'DEPARTMENTS' ? ['Technical'] : [], 
-      selectedUsers: [] 
+    setFormData((p) => ({
+      ...p,
+      scopeType: scope,
+      selectedDepartments: scope === 'DEPARTMENTS' ? ['Technical'] : [],
+      selectedUsers: []
     }));
   };
 
   const toggleDepartment = (dept) => {
     setFormData((p) => {
       const exists = p.selectedDepartments.includes(dept);
-      return { 
-        ...p, 
-        selectedDepartments: exists 
-          ? p.selectedDepartments.filter((d) => d !== dept) 
-          : [...p.selectedDepartments, dept] 
+      return {
+        ...p,
+        selectedDepartments: exists
+          ? p.selectedDepartments.filter((d) => d !== dept)
+          : [...p.selectedDepartments, dept]
       };
     });
   };
@@ -130,11 +157,11 @@ export default function HODCreateAnnouncement() {
   const toggleUser = (userId) => {
     setFormData((p) => {
       const exists = p.selectedUsers.includes(userId);
-      return { 
-        ...p, 
-        selectedUsers: exists 
-          ? p.selectedUsers.filter((id) => id !== userId) 
-          : [...p.selectedUsers, userId] 
+      return {
+        ...p,
+        selectedUsers: exists
+          ? p.selectedUsers.filter((id) => id !== userId)
+          : [...p.selectedUsers, userId]
       };
     });
   };
@@ -315,9 +342,8 @@ export default function HODCreateAnnouncement() {
                         key={u.id}
                         type="button"
                         onClick={() => toggleUser(u.id)}
-                        className={`w-full text-left p-3 rounded-2xl border mb-2 last:mb-0 active:scale-[0.99] transition ${
-                          active ? "bg-blue-50 border-blue-200" : "bg-white border-gray-200 hover:bg-gray-50"
-                        }`}
+                        className={`w-full text-left p-3 rounded-2xl border mb-2 last:mb-0 active:scale-[0.99] transition ${active ? "bg-blue-50 border-blue-200" : "bg-white border-gray-200 hover:bg-gray-50"
+                          }`}
                       >
                         <div className="flex items-center gap-3">
                           <div
@@ -533,9 +559,9 @@ export default function HODCreateAnnouncement() {
                 <div className="flex justify-between text-gray-500">
                   <span>To: {
                     formData.scopeType === 'ALL_COMPANY' ? 'All Company' :
-                    formData.scopeType === 'DEPARTMENTS' ? `${formData.selectedDepartments.length} Department(s)` :
-                    formData.scopeType === 'HODS_ONLY' ? 'HODs Only' :
-                    `${formData.selectedUsers.length} User(s)`
+                      formData.scopeType === 'DEPARTMENTS' ? `${formData.selectedDepartments.length} Department(s)` :
+                        formData.scopeType === 'HODS_ONLY' ? 'HODs Only' :
+                          `${formData.selectedUsers.length} User(s)`
                   }</span>
                   <span>Sent: {formData.scheduleForLater ? formData.scheduledTime || 'Scheduled' : 'Immediately'}</span>
                 </div>
@@ -563,9 +589,9 @@ export default function HODCreateAnnouncement() {
             >
               Cancel
             </button>
-            <button 
-              type="submit" 
-              className={btnSolid} 
+            <button
+              type="submit"
+              className={btnSolid}
               style={{ backgroundColor: "var(--accent-red)" }}
               disabled={formData.scopeType === 'DEPARTMENTS' && formData.selectedDepartments.length === 0}
             >

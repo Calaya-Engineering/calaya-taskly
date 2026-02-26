@@ -1071,6 +1071,8 @@ function Layout({ children, menuItems, userRole }) {
 "use strict";
 
 __turbopack_context__.s([
+    "AdminMenuItems",
+    ()=>AdminMenuItems,
     "HODMenuItems",
     ()=>HODMenuItems,
     "MDMenuItems",
@@ -1087,23 +1089,85 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$
 ;
 ;
 ;
+const AdminMenuItems = [
+    {
+        label: "Dashboard",
+        path: "/admin-dashboard",
+        icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DashboardIcon"], {}, void 0, false, {
+            fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
+            lineNumber: 20,
+            columnNumber: 57
+        }, ("TURBOPACK compile-time value", void 0)),
+        group: "Overview"
+    },
+    {
+        label: "Users",
+        path: "/admin-dashboard/users",
+        icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["UserIcon"], {}, void 0, false, {
+            fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
+            lineNumber: 21,
+            columnNumber: 59
+        }, ("TURBOPACK compile-time value", void 0)),
+        group: "Management"
+    },
+    {
+        label: "Roles",
+        path: "/admin-dashboard/roles",
+        icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["UserIcon"], {}, void 0, false, {
+            fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
+            lineNumber: 22,
+            columnNumber: 59
+        }, ("TURBOPACK compile-time value", void 0)),
+        group: "Management"
+    },
+    {
+        label: "Accounts",
+        path: "/admin-dashboard/accounts",
+        icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["UserIcon"], {}, void 0, false, {
+            fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
+            lineNumber: 23,
+            columnNumber: 65
+        }, ("TURBOPACK compile-time value", void 0)),
+        group: "Management"
+    },
+    {
+        label: "Departments",
+        path: "/admin-dashboard/departments",
+        icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["BuildingIcon"], {}, void 0, false, {
+            fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
+            lineNumber: 24,
+            columnNumber: 71
+        }, ("TURBOPACK compile-time value", void 0)),
+        group: "Management"
+    }
+];
 const HODMenuItems = [
     {
         label: "Dashboard",
         path: "/hod-dashboard",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DashboardIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 19,
+            lineNumber: 28,
             columnNumber: 55
         }, ("TURBOPACK compile-time value", void 0)),
         group: "Overview"
+    },
+    {
+        label: "Department Users",
+        path: "/hod-dashboard/department-users",
+        icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["UserIcon"], {}, void 0, false, {
+            fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
+            lineNumber: 29,
+            columnNumber: 79
+        }, ("TURBOPACK compile-time value", void 0)),
+        group: "Management"
     },
     {
         label: "Department Tasks",
         path: "/hod-dashboard/tasks",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["TaskIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 20,
+            lineNumber: 30,
             columnNumber: 68
         }, ("TURBOPACK compile-time value", void 0)),
         badge: "18",
@@ -1114,7 +1178,7 @@ const HODMenuItems = [
         path: "/hod-dashboard/my-tasks",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["TaskIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 21,
+            lineNumber: 31,
             columnNumber: 63
         }, ("TURBOPACK compile-time value", void 0)),
         badge: "5",
@@ -1125,7 +1189,7 @@ const HODMenuItems = [
         path: "/hod-dashboard/documents",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DocumentIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 22,
+            lineNumber: 32,
             columnNumber: 65
         }, ("TURBOPACK compile-time value", void 0)),
         group: "Documents & Reports"
@@ -1135,7 +1199,7 @@ const HODMenuItems = [
         path: "/hod-dashboard/reports",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ReportIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 23,
+            lineNumber: 33,
             columnNumber: 67
         }, ("TURBOPACK compile-time value", void 0)),
         group: "Documents & Reports"
@@ -1145,7 +1209,7 @@ const HODMenuItems = [
         path: "/hod-dashboard/events",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CalendarIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 24,
+            lineNumber: 34,
             columnNumber: 68
         }, ("TURBOPACK compile-time value", void 0)),
         group: "Calendar"
@@ -1155,7 +1219,7 @@ const HODMenuItems = [
         path: "/hod-dashboard/tenders",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["TenderIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 25,
+            lineNumber: 35,
             columnNumber: 61
         }, ("TURBOPACK compile-time value", void 0)),
         badge: "3",
@@ -1166,7 +1230,7 @@ const HODMenuItems = [
         path: "/hod-dashboard/tender-documents",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DocumentIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 26,
+            lineNumber: 36,
             columnNumber: 79
         }, ("TURBOPACK compile-time value", void 0)),
         badge: "5",
@@ -1177,7 +1241,7 @@ const HODMenuItems = [
         path: "/hod-dashboard/announcements",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AnnouncementIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 27,
+            lineNumber: 37,
             columnNumber: 73
         }, ("TURBOPACK compile-time value", void 0)),
         group: "Communications"
@@ -1187,7 +1251,7 @@ const HODMenuItems = [
         path: "/hod-dashboard/approvals",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ApprovalIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 28,
+            lineNumber: 38,
             columnNumber: 65
         }, ("TURBOPACK compile-time value", void 0)),
         badge: "4",
@@ -1198,7 +1262,7 @@ const HODMenuItems = [
         path: "/hod-dashboard/escalations",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AlertIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 29,
+            lineNumber: 39,
             columnNumber: 77
         }, ("TURBOPACK compile-time value", void 0)),
         badge: "2",
@@ -1209,7 +1273,7 @@ const HODMenuItems = [
         path: "/hod-dashboard/notifications",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["BellIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 30,
+            lineNumber: 40,
             columnNumber: 73
         }, ("TURBOPACK compile-time value", void 0)),
         badge: "8",
@@ -1220,7 +1284,7 @@ const HODMenuItems = [
         path: "/hod-dashboard/profile",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["UserIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 31,
+            lineNumber: 41,
             columnNumber: 61
         }, ("TURBOPACK compile-time value", void 0)),
         group: "Account"
@@ -1232,7 +1296,7 @@ const MDMenuItems = [
         path: "/md-dashboard",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DashboardIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 35,
+            lineNumber: 45,
             columnNumber: 54
         }, ("TURBOPACK compile-time value", void 0)),
         group: "Overview"
@@ -1242,7 +1306,7 @@ const MDMenuItems = [
         path: "/md-dashboard/tasks",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["TaskIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 36,
+            lineNumber: 46,
             columnNumber: 62
         }, ("TURBOPACK compile-time value", void 0)),
         badge: "24",
@@ -1253,7 +1317,7 @@ const MDMenuItems = [
         path: "/md-dashboard/jobs",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["TaskIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 37,
+            lineNumber: 47,
             columnNumber: 61
         }, ("TURBOPACK compile-time value", void 0)),
         badge: "8",
@@ -1264,7 +1328,7 @@ const MDMenuItems = [
         path: "/md-dashboard/documents",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DocumentIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 38,
+            lineNumber: 48,
             columnNumber: 64
         }, ("TURBOPACK compile-time value", void 0)),
         badge: "3",
@@ -1275,7 +1339,7 @@ const MDMenuItems = [
         path: "/md-dashboard/reports",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ReportIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 39,
+            lineNumber: 49,
             columnNumber: 66
         }, ("TURBOPACK compile-time value", void 0)),
         group: "Documents & Reports"
@@ -1285,7 +1349,7 @@ const MDMenuItems = [
         path: "/md-dashboard/events",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CalendarIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 40,
+            lineNumber: 50,
             columnNumber: 67
         }, ("TURBOPACK compile-time value", void 0)),
         badge: "2",
@@ -1296,7 +1360,7 @@ const MDMenuItems = [
         path: "/md-dashboard/tenders",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DocumentIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 41,
+            lineNumber: 51,
             columnNumber: 60
         }, ("TURBOPACK compile-time value", void 0)),
         group: "Tenders"
@@ -1306,7 +1370,7 @@ const MDMenuItems = [
         path: "/md-dashboard/tender-documents",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DocumentIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 42,
+            lineNumber: 52,
             columnNumber: 78
         }, ("TURBOPACK compile-time value", void 0)),
         badge: "5",
@@ -1317,7 +1381,7 @@ const MDMenuItems = [
         path: "/md-dashboard/announcements",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AnnouncementIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 43,
+            lineNumber: 53,
             columnNumber: 72
         }, ("TURBOPACK compile-time value", void 0)),
         group: "Communications"
@@ -1327,7 +1391,7 @@ const MDMenuItems = [
         path: "/md-dashboard/approvals",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ApprovalIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 44,
+            lineNumber: 54,
             columnNumber: 64
         }, ("TURBOPACK compile-time value", void 0)),
         badge: "7",
@@ -1338,7 +1402,7 @@ const MDMenuItems = [
         path: "/md-dashboard/escalations",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AlertIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 45,
+            lineNumber: 55,
             columnNumber: 76
         }, ("TURBOPACK compile-time value", void 0)),
         badge: "3",
@@ -1349,7 +1413,7 @@ const MDMenuItems = [
         path: "/md-dashboard/notifications",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["BellIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 46,
+            lineNumber: 56,
             columnNumber: 72
         }, ("TURBOPACK compile-time value", void 0)),
         badge: "12",
@@ -1360,7 +1424,7 @@ const MDMenuItems = [
         path: "/md-dashboard/profile",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["UserIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 47,
+            lineNumber: 57,
             columnNumber: 60
         }, ("TURBOPACK compile-time value", void 0)),
         group: "Account"
@@ -1372,7 +1436,7 @@ const StaffMenuItems = [
         path: "/staff-dashboard",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DashboardIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 51,
+            lineNumber: 61,
             columnNumber: 57
         }, ("TURBOPACK compile-time value", void 0)),
         group: "Overview"
@@ -1382,7 +1446,7 @@ const StaffMenuItems = [
         path: "/staff-dashboard/tasks",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["TaskIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 52,
+            lineNumber: 62,
             columnNumber: 62
         }, ("TURBOPACK compile-time value", void 0)),
         badge: "8",
@@ -1393,7 +1457,7 @@ const StaffMenuItems = [
         path: "/staff-dashboard/submit-reports",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ReportIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 53,
+            lineNumber: 63,
             columnNumber: 77
         }, ("TURBOPACK compile-time value", void 0)),
         group: "Documents & Reports"
@@ -1403,7 +1467,7 @@ const StaffMenuItems = [
         path: "/staff-dashboard/documents",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DocumentIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 54,
+            lineNumber: 64,
             columnNumber: 67
         }, ("TURBOPACK compile-time value", void 0)),
         group: "Documents & Reports"
@@ -1413,7 +1477,7 @@ const StaffMenuItems = [
         path: "/staff-dashboard/daily-reports",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ReportIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 55,
+            lineNumber: 65,
             columnNumber: 75
         }, ("TURBOPACK compile-time value", void 0)),
         group: "Documents & Reports"
@@ -1423,7 +1487,7 @@ const StaffMenuItems = [
         path: "/staff-dashboard/events",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CalendarIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 56,
+            lineNumber: 66,
             columnNumber: 70
         }, ("TURBOPACK compile-time value", void 0)),
         group: "Calendar"
@@ -1433,7 +1497,7 @@ const StaffMenuItems = [
         path: "/staff-dashboard/tenders",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["TenderIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 57,
+            lineNumber: 67,
             columnNumber: 63
         }, ("TURBOPACK compile-time value", void 0)),
         badge: "3",
@@ -1444,7 +1508,7 @@ const StaffMenuItems = [
         path: "/staff-dashboard/tender-documents",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DocumentIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 58,
+            lineNumber: 68,
             columnNumber: 81
         }, ("TURBOPACK compile-time value", void 0)),
         badge: "5",
@@ -1455,7 +1519,7 @@ const StaffMenuItems = [
         path: "/staff-dashboard/announcements",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AnnouncementIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 59,
+            lineNumber: 69,
             columnNumber: 75
         }, ("TURBOPACK compile-time value", void 0)),
         group: "Communications"
@@ -1465,7 +1529,7 @@ const StaffMenuItems = [
         path: "/staff-dashboard/notifications",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["BellIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 60,
+            lineNumber: 70,
             columnNumber: 75
         }, ("TURBOPACK compile-time value", void 0)),
         badge: "5",
@@ -1476,7 +1540,7 @@ const StaffMenuItems = [
         path: "/staff-dashboard/profile",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["UserIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 61,
+            lineNumber: 71,
             columnNumber: 63
         }, ("TURBOPACK compile-time value", void 0)),
         group: "Account"
@@ -1488,7 +1552,7 @@ const SecretaryMenuItems = [
         path: "/secretary-dashboard",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DashboardIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 65,
+            lineNumber: 75,
             columnNumber: 61
         }, ("TURBOPACK compile-time value", void 0)),
         group: "Overview"
@@ -1498,7 +1562,7 @@ const SecretaryMenuItems = [
         path: "/secretary-dashboard/upload-report",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ReportIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 66,
+            lineNumber: 76,
             columnNumber: 85
         }, ("TURBOPACK compile-time value", void 0)),
         group: "Documents & Reports"
@@ -1508,7 +1572,7 @@ const SecretaryMenuItems = [
         path: "/secretary-dashboard/reports-archive",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ReportIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 67,
+            lineNumber: 77,
             columnNumber: 89
         }, ("TURBOPACK compile-time value", void 0)),
         badge: "24",
@@ -1519,7 +1583,7 @@ const SecretaryMenuItems = [
         path: "/secretary-dashboard/task-reports",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DocumentIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 68,
+            lineNumber: 78,
             columnNumber: 85
         }, ("TURBOPACK compile-time value", void 0)),
         badge: "45",
@@ -1530,7 +1594,7 @@ const SecretaryMenuItems = [
         path: "/secretary-dashboard/documents",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DocumentIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 69,
+            lineNumber: 79,
             columnNumber: 71
         }, ("TURBOPACK compile-time value", void 0)),
         group: "Documents & Reports"
@@ -1540,7 +1604,7 @@ const SecretaryMenuItems = [
         path: "/secretary-dashboard/events",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CalendarIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 70,
+            lineNumber: 80,
             columnNumber: 74
         }, ("TURBOPACK compile-time value", void 0)),
         badge: "3",
@@ -1551,7 +1615,7 @@ const SecretaryMenuItems = [
         path: "/secretary-dashboard/tenders",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["TenderIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 71,
+            lineNumber: 81,
             columnNumber: 67
         }, ("TURBOPACK compile-time value", void 0)),
         badge: "5",
@@ -1562,7 +1626,7 @@ const SecretaryMenuItems = [
         path: "/secretary-dashboard/announcements",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AnnouncementIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 72,
+            lineNumber: 82,
             columnNumber: 79
         }, ("TURBOPACK compile-time value", void 0)),
         badge: "3",
@@ -1573,7 +1637,7 @@ const SecretaryMenuItems = [
         path: "/secretary-dashboard/notifications",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["BellIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 73,
+            lineNumber: 83,
             columnNumber: 79
         }, ("TURBOPACK compile-time value", void 0)),
         badge: "12",
@@ -1584,7 +1648,7 @@ const SecretaryMenuItems = [
         path: "/secretary-dashboard/profile",
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["UserIcon"], {}, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/utils/menus.jsx",
-            lineNumber: 74,
+            lineNumber: 84,
             columnNumber: 67
         }, ("TURBOPACK compile-time value", void 0)),
         group: "Account"

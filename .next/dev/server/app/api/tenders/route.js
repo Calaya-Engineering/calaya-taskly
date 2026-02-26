@@ -1,0 +1,10 @@
+var R=require("../../../chunks/[turbopack]_runtime.js")("server/app/api/tenders/route.js")
+R.c("server/chunks/[externals]__4755b665._.js")
+R.c("server/chunks/a96cc_next_b9346353._.js")
+R.c("server/chunks/a96cc_mariadb_1af40092._.js")
+R.c("server/chunks/a96cc_iconv-lite_124d46ee._.js")
+R.c("server/chunks/[root-of-the-server]__e5f1868e._.js")
+R.c("server/chunks/[root-of-the-server]__01441560._.js")
+R.c("server/chunks/3d860_calaya-taskly__next-internal_server_app_api_tenders_route_actions_87f81b26.js")
+R.m("[project]/Desktop/calaya-taskly/node_modules/next/dist/esm/build/templates/app-route.js { INNER_APP_ROUTE => \"[project]/Desktop/calaya-taskly/src/app/api/tenders/route.ts [app-route] (ecmascript)\" } [app-route] (ecmascript)")
+module.exports=R.m("[project]/Desktop/calaya-taskly/node_modules/next/dist/esm/build/templates/app-route.js { INNER_APP_ROUTE => \"[project]/Desktop/calaya-taskly/src/app/api/tenders/route.ts [app-route] (ecmascript)\" } [app-route] (ecmascript)").exports

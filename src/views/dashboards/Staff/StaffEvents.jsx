@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { StaffMenuItems } from "@/utils/menus";
+import { toast } from "@/lib/toast";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -16,14 +17,14 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "info"
-      ? "bg-blue-50 text-blue-700 ring-blue-100"
-      : tone === "purple"
-      ? "bg-purple-50 text-purple-700 ring-purple-100"
-      : "bg-gray-50 text-gray-700 ring-gray-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "info"
+            ? "bg-blue-50 text-blue-700 ring-blue-100"
+            : tone === "purple"
+              ? "bg-purple-50 text-purple-700 ring-purple-100"
+              : "bg-gray-50 text-gray-700 ring-gray-100";
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
       {children}
@@ -141,7 +142,7 @@ const eventsData = [
 ];
 
 const typeTone = (type) => {
-  switch(type) {
+  switch (type) {
     case 'MEETING': return 'info';
     case 'TRAINING': return 'success';
     case 'EVENT': return 'purple';
@@ -150,7 +151,7 @@ const typeTone = (type) => {
 };
 
 const rsvpTone = (status) => {
-  switch(status) {
+  switch (status) {
     case 'ACCEPTED': return 'success';
     case 'DECLINED': return 'danger';
     case 'TENTATIVE': return 'warn';
@@ -193,12 +194,12 @@ export default function StaffEvents() {
   const filteredEvents = useMemo(() => {
     return eventsData.filter(event => {
       const eventDate = new Date(event.startAt);
-      
+
       if (view === 'upcoming' && eventDate < now) return false;
       if (view === 'past' && eventDate >= now) return false;
-      
+
       if (typeFilter !== 'all' && event.type !== typeFilter) return false;
-      
+
       return true;
     });
   }, [view, typeFilter]);
@@ -277,9 +278,8 @@ export default function StaffEvents() {
               <div className="flex gap-2">
                 <button
                   onClick={() => setView('upcoming')}
-                  className={`px-4 py-3 rounded-2xl text-sm font-semibold border transition active:scale-[0.99] ${
-                    view === 'upcoming' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
-                  }`}
+                  className={`px-4 py-3 rounded-2xl text-sm font-semibold border transition active:scale-[0.99] ${view === 'upcoming' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
+                    }`}
                   style={{
                     borderColor: view === 'upcoming' ? "var(--primary-blue)" : "#e5e7eb",
                     color: view === 'upcoming' ? "var(--primary-blue)" : "#374151",
@@ -289,9 +289,8 @@ export default function StaffEvents() {
                 </button>
                 <button
                   onClick={() => setView('past')}
-                  className={`px-4 py-3 rounded-2xl text-sm font-semibold border transition active:scale-[0.99] ${
-                    view === 'past' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
-                  }`}
+                  className={`px-4 py-3 rounded-2xl text-sm font-semibold border transition active:scale-[0.99] ${view === 'past' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
+                    }`}
                   style={{
                     borderColor: view === 'past' ? "var(--secondary-blue)" : "#e5e7eb",
                     color: view === 'past' ? "var(--secondary-blue)" : "#374151",
@@ -301,9 +300,8 @@ export default function StaffEvents() {
                 </button>
                 <button
                   onClick={() => setView('all')}
-                  className={`px-4 py-3 rounded-2xl text-sm font-semibold border transition active:scale-[0.99] ${
-                    view === 'all' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
-                  }`}
+                  className={`px-4 py-3 rounded-2xl text-sm font-semibold border transition active:scale-[0.99] ${view === 'all' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
+                    }`}
                   style={{
                     borderColor: view === 'all' ? "#F59E0B" : "#e5e7eb",
                     color: view === 'all' ? "#F59E0B" : "#374151",
@@ -389,33 +387,30 @@ export default function StaffEvents() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleRSVP(event.id, 'ACCEPTED')}
-                      className={`flex-1 px-3 py-1.5 rounded-xl text-[11px] font-semibold transition ${
-                        event.rsvpStatus === 'ACCEPTED'
+                      className={`flex-1 px-3 py-1.5 rounded-xl text-[11px] font-semibold transition ${event.rsvpStatus === 'ACCEPTED'
                           ? 'bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200'
                           : 'border bg-white hover:bg-gray-50'
-                      }`}
+                        }`}
                       style={event.rsvpStatus !== 'ACCEPTED' ? { borderColor: "rgba(16,185,129,0.35)", color: "#10B981" } : {}}
                     >
                       Accept
                     </button>
                     <button
                       onClick={() => handleRSVP(event.id, 'TENTATIVE')}
-                      className={`flex-1 px-3 py-1.5 rounded-xl text-[11px] font-semibold transition ${
-                        event.rsvpStatus === 'TENTATIVE'
+                      className={`flex-1 px-3 py-1.5 rounded-xl text-[11px] font-semibold transition ${event.rsvpStatus === 'TENTATIVE'
                           ? 'bg-amber-100 text-amber-700 ring-1 ring-amber-200'
                           : 'border bg-white hover:bg-gray-50'
-                      }`}
+                        }`}
                       style={event.rsvpStatus !== 'TENTATIVE' ? { borderColor: "rgba(245,158,11,0.35)", color: "#F59E0B" } : {}}
                     >
                       Tentative
                     </button>
                     <button
                       onClick={() => handleRSVP(event.id, 'DECLINED')}
-                      className={`flex-1 px-3 py-1.5 rounded-xl text-[11px] font-semibold transition ${
-                        event.rsvpStatus === 'DECLINED'
+                      className={`flex-1 px-3 py-1.5 rounded-xl text-[11px] font-semibold transition ${event.rsvpStatus === 'DECLINED'
                           ? 'bg-red-100 text-red-700 ring-1 ring-red-200'
                           : 'border bg-white hover:bg-gray-50'
-                      }`}
+                        }`}
                       style={event.rsvpStatus !== 'DECLINED' ? { borderColor: "rgba(239,68,68,0.35)", color: "#EF4444" } : {}}
                     >
                       Decline
@@ -468,10 +463,9 @@ export default function StaffEvents() {
                 >
                   <div className="flex items-center gap-3">
                     <div
-                      className={`w-2 h-2 rounded-full ${
-                        event.type === 'MEETING' ? 'bg-blue-500' :
-                        event.type === 'TRAINING' ? 'bg-green-500' : 'bg-purple-500'
-                      }`}
+                      className={`w-2 h-2 rounded-full ${event.type === 'MEETING' ? 'bg-blue-500' :
+                          event.type === 'TRAINING' ? 'bg-green-500' : 'bg-purple-500'
+                        }`}
                     />
                     <div>
                       <p className="font-extrabold text-sm text-gray-900">{event.title}</p>

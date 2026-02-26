@@ -3,9 +3,11 @@
 // pages/dashboards/Staff/StaffTenderDocuments.jsx
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { StaffMenuItems } from "@/utils/menus";
+import { toast } from "@/lib/toast";
+import { fetchWithAuth } from "@/lib/api";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -16,14 +18,14 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "info"
-      ? "bg-blue-50 text-blue-700 ring-blue-100"
-      : tone === "purple"
-      ? "bg-purple-50 text-purple-700 ring-purple-100"
-      : "bg-gray-50 text-gray-700 ring-gray-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "info"
+            ? "bg-blue-50 text-blue-700 ring-blue-100"
+            : tone === "purple"
+              ? "bg-purple-50 text-purple-700 ring-purple-100"
+              : "bg-gray-50 text-gray-700 ring-gray-100";
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
       {children}
@@ -79,7 +81,7 @@ const getDepartmentTone = (dept) => {
 };
 
 const getRoleTone = (role) => {
-  switch(role) {
+  switch (role) {
     case 'MD': return 'purple';
     case 'HOD': return 'info';
     case 'Vendor': return 'success';
@@ -90,7 +92,7 @@ const getRoleTone = (role) => {
 };
 
 const getFileTypeIcon = (type) => {
-  switch(type?.toLowerCase()) {
+  switch (type?.toLowerCase()) {
     case 'pdf': return '📕';
     case 'xlsx':
     case 'xls': return '📊';
@@ -102,181 +104,60 @@ const getFileTypeIcon = (type) => {
 };
 
 const fmtDateTime = (iso) =>
-  iso ? new Date(iso).toLocaleString(undefined, { 
-    hour: '2-digit', 
+  iso ? new Date(iso).toLocaleString(undefined, {
+    hour: '2-digit',
     minute: '2-digit',
     month: 'short',
     day: 'numeric',
-    hour12: true 
+    hour12: true
   }) : "Not set";
 
 export default function StaffTenderDocuments() {
   const params = useParams() || {};
   const tenderId = params.tenderId;
+  const router = useRouter();
   const [selectedTender, setSelectedTender] = useState(null);
-  const [comment, setComment] = useState('');
-  const [activeTab, setActiveTab] = useState('all');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [comment, setComment] = useState("");
+  const [activeTab, setActiveTab] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
 
-  // Upload form state
-  const [uploadFormData, setUploadFormData] = useState({
-    title: '',
-    category: 'Staff Document',
-    file: null,
-    description: ''
-  });
+  const [tenders, setTenders] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Mock tenders data
-  const tenders = [
-    {
-      id: 'TEN-001',
-      title: 'Supply of Pipeline Inspection Equipment',
-      referenceNo: 'CAL/PROC/2024/001',
-      department: 'Technical',
-      status: 'OPEN',
-      closingDate: '2024-12-20',
-      documents: 8,
-      submissions: 4
-    },
-    {
-      id: 'TEN-002',
-      title: 'Annual Safety Training Services',
-      referenceNo: 'CAL/HSE/2024/002',
-      department: 'HSE',
-      status: 'OPEN',
-      closingDate: '2024-12-22',
-      documents: 6,
-      submissions: 3
-    },
-    {
-      id: 'TEN-003',
-      title: 'Workshop Equipment Maintenance',
-      referenceNo: 'CAL/WORK/2024/004',
-      department: 'Workshop',
-      status: 'OPEN',
-      closingDate: '2024-12-18',
-      documents: 5,
-      submissions: 2
-    },
-    {
-      id: 'TEN-004',
-      title: 'IT Infrastructure Upgrade',
-      referenceNo: 'CAL/IT/2024/003',
-      department: 'IT',
-      status: 'OPEN',
-      closingDate: '2024-12-25',
-      documents: 9,
-      submissions: 5
-    },
-    {
-      id: 'TEN-005',
-      title: 'Office Furniture Supply',
-      referenceNo: 'CAL/ADMIN/2024/007',
-      department: 'Admin',
-      status: 'OPEN',
-      closingDate: '2024-12-21',
-      documents: 4,
-      submissions: 3
-    },
-  ];
+  useEffect(() => {
+    async function getTenders() {
+      try {
+        const res = await fetchWithAuth("/api/tenders");
+        if (res.ok) {
+          const data = await res.json();
+          setTenders(data);
+          if (tenderId) {
+            const found = data.find((t) => t.id === tenderId);
+            if (found) setSelectedTender(found);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch tenders:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    getTenders();
+  }, [tenderId]);
 
-  // Mock tender documents and submissions
-  const [tenderDocuments, setTenderDocuments] = useState([
-    {
-      id: 1,
-      tenderId: 'TEN-001',
-      title: 'Tender Document - Pipeline Equipment',
-      fileName: 'Tender_Document_Pipeline.pdf',
-      uploadedBy: 'Procurement Department',
-      uploadedByRole: 'Procurement',
-      uploadedDate: '2024-12-01',
-      fileSize: '2.4 MB',
-      fileType: 'PDF',
-      category: 'Tender Document',
-      downloads: 24,
-      status: 'active',
-      department: 'Technical',
-      comments: [
-        { id: 1, user: 'MD - Managing Director', comment: 'Please ensure all technical specs are included', date: '2024-12-02 10:30', role: 'MD' },
-        { id: 2, user: 'Procurement Manager', comment: 'Technical specs have been added', date: '2024-12-02 14:15', role: 'HOD' }
-      ]
-    },
-    {
-      id: 2,
-      tenderId: 'TEN-001',
-      title: 'Technical Specifications',
-      fileName: 'Technical_Specifications_Pipeline.pdf',
-      uploadedBy: 'Technical Department',
-      uploadedByRole: 'HOD',
-      uploadedDate: '2024-12-02',
-      fileSize: '3.1 MB',
-      fileType: 'PDF',
-      category: 'Specification',
-      downloads: 18,
-      status: 'active',
-      department: 'Technical',
-      comments: [
-        { id: 3, user: 'MD - Managing Director', comment: 'Approved. Ensure ISO standards are met.', date: '2024-12-03 09:45', role: 'MD' }
-      ]
-    },
-    {
-      id: 3,
-      tenderId: 'TEN-001',
-      title: 'Vendor Bid - TechEquip Ltd',
-      fileName: 'Bid_TechEquip_Pipeline.pdf',
-      uploadedBy: 'TechEquip Ltd',
-      uploadedByRole: 'Vendor',
-      uploadedDate: '2024-12-15',
-      fileSize: '5.2 MB',
-      fileType: 'PDF',
-      category: 'Bid Submission',
-      downloads: 8,
-      status: 'active',
-      department: 'Technical',
-      comments: []
-    },
-    {
-      id: 4,
-      tenderId: 'TEN-002',
-      title: 'Safety Training Tender Document',
-      fileName: 'Safety_Training_Tender.pdf',
-      uploadedBy: 'HSE Department',
-      uploadedByRole: 'HOD',
-      uploadedDate: '2024-12-02',
-      fileSize: '1.8 MB',
-      fileType: 'PDF',
-      category: 'Tender Document',
-      downloads: 15,
-      status: 'active',
-      department: 'HSE',
-      comments: []
-    },
-    {
-      id: 5,
-      tenderId: 'TEN-001',
-      title: 'Staff Feedback - John Doe',
-      fileName: 'Staff_Feedback_Pipeline.docx',
-      uploadedBy: STAFF_NAME,
-      uploadedByRole: 'Staff',
-      uploadedDate: '2024-12-16',
-      fileSize: '0.8 MB',
-      fileType: 'DOCX',
-      category: 'Staff Document',
-      downloads: 2,
-      status: 'active',
-      department: 'Technical',
-      comments: []
-    },
-  ]);
+  const tenderDocuments = useMemo(() => {
+    return selectedTender?.documents || [];
+  }, [selectedTender]);
 
-  const [allComments, setAllComments] = useState([
-    { id: 1, tenderId: 'TEN-001', documentId: 1, user: 'MD - Managing Director', comment: 'Please ensure all technical specs are included', date: '2024-12-02 10:30', role: 'MD' },
-    { id: 2, tenderId: 'TEN-001', documentId: 1, user: 'Procurement Manager', comment: 'Technical specs have been added', date: '2024-12-02 14:15', role: 'HOD' },
-    { id: 3, tenderId: 'TEN-001', documentId: 2, user: 'MD - Managing Director', comment: 'Approved. Ensure ISO standards are met.', date: '2024-12-03 09:45', role: 'MD' },
-  ]);
+  const updateTenderDocuments = (newDocs) => {
+    setSelectedTender(prev => prev ? { ...prev, documents: newDocs } : null);
+    setTenders(prev => prev.map(t => t.id === selectedTender?.id ? { ...t, documents: newDocs } : t));
+  };
+
+  const [allComments, setAllComments] = useState([]);
 
   // Load saved comment draft from sessionStorage
   useEffect(() => {
@@ -290,12 +171,6 @@ export default function StaffTenderDocuments() {
     else sessionStorage.removeItem(STORAGE_KEYS.COMMENT_DRAFT);
   }, [comment]);
 
-  // If route contains tenderId, auto-select it
-  useEffect(() => {
-    if (!tenderId) return;
-    const found = tenders.find((t) => t.id === tenderId);
-    if (found) setSelectedTender(found);
-  }, [tenderId]);
 
   const filteredTenders = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
@@ -312,14 +187,12 @@ export default function StaffTenderDocuments() {
   }, [searchTerm]);
 
   const documentsForSelectedTender = useMemo(() => {
-    return selectedTender ? tenderDocuments.filter((doc) => doc.tenderId === selectedTender.id) : [];
-  }, [selectedTender, tenderDocuments]);
+    return selectedTender?.documents || [];
+  }, [selectedTender]);
 
   const staffDocumentsForSelectedTender = useMemo(() => {
-    return selectedTender
-      ? tenderDocuments.filter((doc) => doc.tenderId === selectedTender.id && doc.uploadedByRole === 'Staff')
-      : [];
-  }, [selectedTender, tenderDocuments]);
+    return (selectedTender?.documents || []).filter((doc) => doc.uploadedByRole === "Staff");
+  }, [selectedTender]);
 
   const handleSelectTender = (tender) => {
     setSelectedTender(tender);
@@ -333,7 +206,8 @@ export default function StaffTenderDocuments() {
     const docToDelete = tenderDocuments.find((doc) => doc.id === documentId);
     if (docToDelete && docToDelete.uploadedBy === STAFF_NAME) {
       if (window.confirm('Are you sure you want to delete this document?')) {
-        setTenderDocuments(tenderDocuments.filter((doc) => doc.id !== documentId));
+        const newDocs = tenderDocuments.filter((doc) => doc.id !== documentId);
+        updateTenderDocuments(newDocs);
         toast.success('Document deleted successfully');
       }
     } else {
@@ -351,18 +225,17 @@ export default function StaffTenderDocuments() {
       user: STAFF_NAME,
       role: 'Staff',
       comment: comment.trim(),
-      date: new Date().toISOString().split('T')[0] + ' ' + 
-             new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+      date: new Date().toISOString().split('T')[0] + ' ' +
+        new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
     };
 
     setAllComments([...allComments, newComment]);
-    setTenderDocuments((prev) =>
-      prev.map((doc) =>
-        doc.id === documentId
-          ? { ...doc, comments: [...(doc.comments || []), newComment] }
-          : doc
-      )
+    const newDocs = tenderDocuments.map((doc) =>
+      doc.id === documentId
+        ? { ...doc, comments: [...(doc.comments || []), newComment] }
+        : doc
     );
+    updateTenderDocuments(newDocs);
     setComment('');
   };
 
@@ -424,7 +297,8 @@ export default function StaffTenderDocuments() {
             department: selectedTender.department,
             comments: [],
           };
-          setTenderDocuments([...tenderDocuments, newDocument]);
+          const newDocs = [...tenderDocuments, newDocument];
+          updateTenderDocuments(newDocs);
           setIsUploading(false);
           toast.success('Document uploaded successfully!');
           setIsUploadModalOpen(false);
@@ -498,15 +372,19 @@ export default function StaffTenderDocuments() {
               </div>
 
               <div className="mt-5 space-y-3 max-h-[600px] overflow-y-auto pr-1">
-                {filteredTenders.map((tender) => {
+                {loading ? (
+                  <div className="py-10 flex flex-col items-center justify-center">
+                    <div className="w-8 h-8 border-3 border-blue-100 border-t-blue-600 rounded-full animate-spin mb-2"></div>
+                    <p className="text-xs text-gray-500 font-semibold">Fetching tenders...</p>
+                  </div>
+                ) : filteredTenders.map((tender) => {
                   const selected = selectedTender?.id === tender.id;
                   return (
                     <button
                       key={tender.id}
                       onClick={() => handleSelectTender(tender)}
-                      className={`w-full text-left p-4 rounded-2xl border transition ${
-                        selected ? "bg-blue-50 border-blue-200" : "bg-white hover:bg-gray-50 border-gray-200/70"
-                      }`}
+                      className={`w-full text-left p-4 rounded-2xl border transition ${selected ? "bg-blue-50 border-blue-200" : "bg-white hover:bg-gray-50 border-gray-200/70"
+                        }`}
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
@@ -521,8 +399,8 @@ export default function StaffTenderDocuments() {
                       </div>
 
                       <div className="mt-2 flex items-center justify-between text-xs text-gray-500">
-                        <span>📄 {tender.documents} docs</span>
-                        <span>📥 {tender.submissions} bids</span>
+                        <span>📄 {tender.documents?.length || 0} docs</span>
+                        <span>📥 {tender.submissions || 0} bids</span>
                         <span>⏰ {tender.closingDate}</span>
                       </div>
                     </button>
@@ -534,7 +412,12 @@ export default function StaffTenderDocuments() {
 
           {/* RIGHT: CONTENT */}
           <div className="lg:col-span-2 space-y-6">
-            {selectedTender ? (
+            {loading ? (
+              <Card className="p-10 flex flex-col items-center justify-center">
+                <div className="w-10 h-10 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin mb-4"></div>
+                <p className="text-gray-500 font-semibold tracking-wide">Loading workspace...</p>
+              </Card>
+            ) : selectedTender ? (
               <>
                 {/* Tender header */}
                 <Card className="overflow-hidden">
@@ -581,9 +464,8 @@ export default function StaffTenderDocuments() {
                   <div className="flex flex-wrap border-t border-gray-200/70">
                     <button
                       onClick={() => setActiveTab("all")}
-                      className={`px-6 py-4 text-sm font-semibold transition ${
-                        activeTab === "all" ? "text-blue-700" : "text-gray-500 hover:text-gray-700"
-                      }`}
+                      className={`px-6 py-4 text-sm font-semibold transition ${activeTab === "all" ? "text-blue-700" : "text-gray-500 hover:text-gray-700"
+                        }`}
                       style={{
                         borderBottom: activeTab === "all" ? "2px solid var(--primary-blue)" : "2px solid transparent",
                       }}
@@ -592,9 +474,8 @@ export default function StaffTenderDocuments() {
                     </button>
                     <button
                       onClick={() => setActiveTab("staff")}
-                      className={`px-6 py-4 text-sm font-semibold transition ${
-                        activeTab === "staff" ? "text-blue-700" : "text-gray-500 hover:text-gray-700"
-                      }`}
+                      className={`px-6 py-4 text-sm font-semibold transition ${activeTab === "staff" ? "text-blue-700" : "text-gray-500 hover:text-gray-700"
+                        }`}
                       style={{
                         borderBottom: activeTab === "staff" ? "2px solid var(--primary-blue)" : "2px solid transparent",
                       }}
@@ -607,12 +488,12 @@ export default function StaffTenderDocuments() {
                 {/* Documents list */}
                 <Card className="p-6">
                   <div className="space-y-4">
-                    {(activeTab === "all" 
-                      ? documentsForSelectedTender 
+                    {(activeTab === "all"
+                      ? documentsForSelectedTender
                       : staffDocumentsForSelectedTender
                     ).length > 0 ? (
-                      (activeTab === "all" 
-                        ? documentsForSelectedTender 
+                      (activeTab === "all"
+                        ? documentsForSelectedTender
                         : staffDocumentsForSelectedTender
                       ).map((doc) => (
                         <div key={doc.id} className="p-5 rounded-2xl border border-gray-200/70 transition">
@@ -727,10 +608,10 @@ export default function StaffTenderDocuments() {
                         </div>
                       ))
                     ) : (
-                      <EmptyState 
-                        icon="📄" 
-                        title={activeTab === "staff" ? "No documents uploaded" : "No documents available"} 
-                        subtitle={activeTab === "staff" ? "Upload your first document to get started" : "No documents available for this tender"} 
+                      <EmptyState
+                        icon="📄"
+                        title={activeTab === "staff" ? "No documents uploaded" : "No documents available"}
+                        subtitle={activeTab === "staff" ? "Upload your first document to get started" : "No documents available for this tender"}
                       />
                     )}
                   </div>
@@ -889,9 +770,8 @@ export default function StaffTenderDocuments() {
                     <button
                       type="submit"
                       disabled={isUploading}
-                      className={`px-6 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition ${
-                        isUploading ? "opacity-75 cursor-not-allowed" : ""
-                      }`}
+                      className={`px-6 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition ${isUploading ? "opacity-75 cursor-not-allowed" : ""
+                        }`}
                       style={{ backgroundColor: "var(--accent-red)" }}
                     >
                       {isUploading ? "Uploading..." : "Upload Document"}

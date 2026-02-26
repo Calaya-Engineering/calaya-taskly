@@ -1,11 +1,14 @@
 "use client";
 
 // pages/dashboards/Secretary/SecretaryAnnouncements.jsx
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { SecretaryMenuItems } from "@/utils/menus";
+import { toast } from "@/lib/toast";
+import { fetchWithAuth } from "@/lib/api";
+
 const AnnouncementIcon = () => (
   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
@@ -34,14 +37,14 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "info"
-      ? "bg-blue-50 text-blue-700 ring-blue-100"
-      : tone === "purple"
-      ? "bg-purple-50 text-purple-700 ring-purple-100"
-      : "bg-gray-50 text-gray-700 ring-gray-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "info"
+            ? "bg-blue-50 text-blue-700 ring-blue-100"
+            : tone === "purple"
+              ? "bg-purple-50 text-purple-700 ring-purple-100"
+              : "bg-gray-50 text-gray-700 ring-gray-100";
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
       {children}
@@ -56,92 +59,6 @@ const btnSolid = `${btnBase} text-white`;
 const inputBase =
   "w-full pl-11 pr-4 py-3 rounded-2xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100";
 
-const announcementsData = [
-  { 
-    id: 'ANN-001', 
-    title: 'Year-End Holiday Schedule', 
-    message: 'Office closure dates and holiday schedule for December 2024 and January 2025.',
-    createdBy: 'HR Manager',
-    createdDate: '2024-12-10T09:30:00',
-    scope: 'All Company',
-    priority: 'IMPORTANT',
-    expiresAt: '2025-01-10',
-    read: true,
-    documents: 1,
-    comments: 5,
-    department: 'HR'
-  },
-  { 
-    id: 'ANN-002', 
-    title: 'System Maintenance Notice', 
-    message: 'Scheduled system maintenance on December 14, 2024 from 2:00 AM to 4:00 AM.',
-    createdBy: 'IT Department',
-    createdDate: '2024-12-09T14:15:00',
-    scope: 'All Company',
-    priority: 'IMPORTANT',
-    expiresAt: '2024-12-15',
-    read: true,
-    documents: 0,
-    comments: 3,
-    department: 'IT'
-  },
-  { 
-    id: 'ANN-003', 
-    title: 'Safety Protocol Updates', 
-    message: 'Updated safety protocols for field operations effective immediately.',
-    createdBy: 'HSE Department',
-    createdDate: '2024-12-08T11:00:00',
-    scope: 'All Company',
-    priority: 'URGENT',
-    expiresAt: '2024-12-31',
-    read: false,
-    documents: 2,
-    comments: 8,
-    department: 'HSE'
-  },
-  { 
-    id: 'ANN-004', 
-    title: 'Monthly Performance Review', 
-    message: 'Schedule for monthly performance reviews for all departments.',
-    createdBy: 'HR Department',
-    createdDate: '2024-12-07T10:45:00',
-    scope: 'All Departments',
-    priority: 'NORMAL',
-    expiresAt: '2024-12-14',
-    read: true,
-    documents: 1,
-    comments: 2,
-    department: 'HR'
-  },
-  { 
-    id: 'ANN-005', 
-    title: 'New Document Upload Guidelines', 
-    message: 'Updated guidelines for document uploads and naming conventions.',
-    createdBy: 'Admin Department',
-    createdDate: '2024-12-06T15:30:00',
-    scope: 'All Departments',
-    priority: 'NORMAL',
-    expiresAt: '2024-12-31',
-    read: true,
-    documents: 1,
-    comments: 4,
-    department: 'Admin'
-  },
-  { 
-    id: 'ANN-006', 
-    title: 'Training Session: New Software', 
-    message: 'Mandatory training session for new project management software.',
-    createdBy: 'Technical Department',
-    createdDate: '2024-12-05T13:20:00',
-    scope: 'Technical Department',
-    priority: 'IMPORTANT',
-    expiresAt: '2024-12-20',
-    read: false,
-    documents: 1,
-    comments: 6,
-    department: 'Technical'
-  },
-];
 
 const priorityTone = (priority) => {
   switch (priority) {
@@ -184,10 +101,31 @@ export default function SecretaryAnnouncements() {
   const router = useRouter();
   const [filter, setFilter] = useState('all');
   const [search, setSearch] = useState('');
+  const [announcementsData, setAnnouncementsData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const unreadCount = useMemo(() => announcementsData.filter((a) => !a.read).length, []);
-  const urgentCount = useMemo(() => announcementsData.filter((a) => a.priority === "URGENT").length, []);
-  const importantCount = useMemo(() => announcementsData.filter((a) => a.priority === "IMPORTANT").length, []);
+  const fetchAnnouncements = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const res = await fetchWithAuth("/api/announcements");
+      if (res.ok) {
+        const data = await res.json();
+        setAnnouncementsData(data);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchAnnouncements();
+  }, [fetchAnnouncements]);
+
+  const unreadCount = useMemo(() => announcementsData.filter((a) => !a.read).length, [announcementsData]);
+  const urgentCount = useMemo(() => announcementsData.filter((a) => a.priority === "URGENT").length, [announcementsData]);
+  const importantCount = useMemo(() => announcementsData.filter((a) => a.priority === "IMPORTANT").length, [announcementsData]);
 
   const filteredAnnouncements = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -199,14 +137,14 @@ export default function SecretaryAnnouncements() {
       if (query) {
         const hit =
           ann.title.toLowerCase().includes(query) ||
-          ann.message.toLowerCase().includes(query) ||
-          ann.department.toLowerCase().includes(query) ||
-          ann.createdBy.toLowerCase().includes(query);
+          (ann.message || "").toLowerCase().includes(query) ||
+          (ann.department && ann.department.toLowerCase().includes(query)) ||
+          (ann.createdBy || "").toLowerCase().includes(query);
         if (!hit) return false;
       }
       return true;
     });
-  }, [filter, search]);
+  }, [filter, search, announcementsData]);
 
   const stats = useMemo(() => {
     const total = announcementsData.length;
@@ -219,9 +157,21 @@ export default function SecretaryAnnouncements() {
       return annDate >= weekAgo;
     }).length;
     return { total, unread, important, thisWeek };
-  }, [unreadCount, importantCount, urgentCount]);
+  }, [unreadCount, importantCount, urgentCount, announcementsData]);
 
-  const markAsRead = (id) => toast.info(`Marked announcement ${id} as read`);
+  const markAsRead = async (id) => {
+    try {
+      const res = await fetchWithAuth(`/api/announcements/${id}/read`, { method: "PATCH" });
+      if (res.ok) {
+        toast.info(`Marked announcement ${id} as read`);
+        setAnnouncementsData((prev) => prev.map((a) => (a.id === id ? { ...a, read: true } : a)));
+      } else {
+        toast.error("Failed to mark as read");
+      }
+    } catch (e) {
+      toast.error("Failed to mark as read");
+    }
+  };
   const markAllAsRead = () => toast.info('All announcements marked as read');
 
   const clearFilters = () => {
@@ -294,25 +244,25 @@ export default function SecretaryAnnouncements() {
                         ? "rgba(239,68,68,1)"
                         : "transparent"
                       : f.id === "important"
-                      ? active
-                        ? "rgba(245,158,11,1)"
-                        : "transparent"
-                      : f.id === "unread"
-                      ? active
-                        ? "var(--secondary-blue)"
-                        : "transparent"
-                      : active
-                      ? "var(--primary-blue)"
-                      : "transparent";
+                        ? active
+                          ? "rgba(245,158,11,1)"
+                          : "transparent"
+                        : f.id === "unread"
+                          ? active
+                            ? "var(--secondary-blue)"
+                            : "transparent"
+                          : active
+                            ? "var(--primary-blue)"
+                            : "transparent";
 
                   const border =
                     f.id === "urgent"
                       ? "rgba(239,68,68,1)"
                       : f.id === "important"
-                      ? "rgba(245,158,11,1)"
-                      : f.id === "unread"
-                      ? "var(--secondary-blue)"
-                      : "var(--primary-blue)";
+                        ? "rgba(245,158,11,1)"
+                        : f.id === "unread"
+                          ? "var(--secondary-blue)"
+                          : "var(--primary-blue)";
 
                   const color = active ? "white" : border;
 
@@ -369,99 +319,108 @@ export default function SecretaryAnnouncements() {
         )}
 
         {/* LIST */}
-        <div className="grid grid-cols-1 gap-4">
-          {filteredAnnouncements.map((a) => {
-            const expired = isExpired(a.expiresAt);
-            return (
-              <Card key={a.id} className={`overflow-hidden ${!a.read ? "ring-2 ring-blue-200" : ""} ${expired ? "opacity-80" : ""}`}>
-                <div className="p-6">
-                  <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
-                    <div className="min-w-0">
-                      <div className="flex flex-wrap items-center gap-2 mb-3">
-                        {!a.read && <span className="w-2.5 h-2.5 rounded-full bg-blue-500" />}
-                        <Pill tone={priorityTone(a.priority)}>{a.priority}</Pill>
-                        <Pill tone={scopeTone(a.scope)}>{a.scope}</Pill>
-                        <Pill tone={departmentTone(a.department)}>{a.department}</Pill>
-                        {expired ? <Pill tone="muted">Expired</Pill> : null}
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center p-12 py-20 bg-white rounded-2xl border border-gray-200/70 shadow-sm">
+            <div className="w-10 h-10 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin mb-4"></div>
+            <p className="text-gray-500 font-semibold">Loading announcements...</p>
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 gap-4">
+              {filteredAnnouncements.map((a) => {
+                const expired = isExpired(a.expiresAt);
+                return (
+                  <Card key={a.id} className={`overflow-hidden ${!a.read ? "ring-2 ring-blue-200" : ""} ${expired ? "opacity-80" : ""}`}>
+                    <div className="p-6">
+                      <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+                        <div className="min-w-0">
+                          <div className="flex flex-wrap items-center gap-2 mb-3">
+                            {!a.read && <span className="w-2.5 h-2.5 rounded-full bg-blue-500" />}
+                            <Pill tone={priorityTone(a.priority)}>{a.priority}</Pill>
+                            <Pill tone={scopeTone(a.scope)}>{a.scope}</Pill>
+                            <Pill tone={departmentTone(a.department)}>{a.department}</Pill>
+                            {expired ? <Pill tone="muted">Expired</Pill> : null}
+                          </div>
+
+                          <h3 className="text-lg font-extrabold text-gray-900 truncate">{a.title}</h3>
+                          <p className="text-sm text-gray-600 mt-2 line-clamp-2">{a.message}</p>
+
+                          <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-gray-600">
+                            <span className="inline-flex items-center gap-2">
+                              <span className="w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center">👤</span>
+                              {a.createdBy}
+                            </span>
+                            <span className="inline-flex items-center gap-2">
+                              <span className="w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center">🗓️</span>
+                              {formatDate(a.createdDate)}
+                            </span>
+                            <span className="inline-flex items-center gap-2">
+                              <span className="w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center">⏳</span>
+                              Expires: {a.expiresAt}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row gap-2 shrink-0">
+                          {!a.read && (
+                            <button
+                              onClick={() => markAsRead(a.id)}
+                              className={btnOutline}
+                              style={{ borderColor: "rgba(109,198,223,0.55)", color: "var(--secondary-blue)" }}
+                            >
+                              Mark as Read
+                            </button>
+                          )}
+                          <Link href={`/secretary-dashboard/announcement/${a.id}`}>
+                            <button className={btnSolid} style={{ backgroundColor: "var(--primary-blue)" }}>
+                              View Details
+                            </button>
+                          </Link>
+                        </div>
                       </div>
 
-                      <h3 className="text-lg font-extrabold text-gray-900 truncate">{a.title}</h3>
-                      <p className="text-sm text-gray-600 mt-2 line-clamp-2">{a.message}</p>
+                      <div className="mt-5 pt-4 border-t border-gray-200/70 flex flex-wrap items-center justify-between gap-3 text-sm">
+                        <div className="flex flex-wrap items-center gap-3 text-gray-600">
+                          <span>📄 {a.documents} attachment{a.documents !== 1 ? "s" : ""}</span>
+                          <span>💬 {a.comments} comment{a.comments !== 1 ? "s" : ""}</span>
+                        </div>
 
-                      <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-gray-600">
-                        <span className="inline-flex items-center gap-2">
-                          <span className="w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center">👤</span>
-                          {a.createdBy}
-                        </span>
-                        <span className="inline-flex items-center gap-2">
-                          <span className="w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center">🗓️</span>
-                          {formatDate(a.createdDate)}
-                        </span>
-                        <span className="inline-flex items-center gap-2">
-                          <span className="w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center">⏳</span>
-                          Expires: {a.expiresAt}
-                        </span>
+                        <div className="text-xs text-gray-500 inline-flex items-center gap-2">
+                          <span className="font-semibold" style={{ color: "var(--primary-blue)" }}>
+                            {a.read ? "✅ Read" : "📌 New"}
+                          </span>
+                          <span>•</span>
+                          <span>ID: {a.id}</span>
+                        </div>
                       </div>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row gap-2 shrink-0">
-                      {!a.read && (
-                        <button
-                          onClick={() => markAsRead(a.id)}
-                          className={btnOutline}
-                          style={{ borderColor: "rgba(109,198,223,0.55)", color: "var(--secondary-blue)" }}
-                        >
-                          Mark as Read
-                        </button>
-                      )}
-                      <Link href={`/secretary-dashboard/announcement/${a.id}`}>
-                        <button className={btnSolid} style={{ backgroundColor: "var(--primary-blue)" }}>
-                          View Details
-                        </button>
-                      </Link>
+                    <div className="px-6 py-3" style={{ backgroundColor: "rgba(109, 198, 223, 0.08)" }}>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-semibold" style={{ color: "var(--primary-blue)" }}>
+                          {a.scope}
+                        </span>
+                        <span className="text-xs text-gray-600">{a.createdBy}</span>
+                      </div>
                     </div>
-                  </div>
-
-                  <div className="mt-5 pt-4 border-t border-gray-200/70 flex flex-wrap items-center justify-between gap-3 text-sm">
-                    <div className="flex flex-wrap items-center gap-3 text-gray-600">
-                      <span>📄 {a.documents} attachment{a.documents !== 1 ? "s" : ""}</span>
-                      <span>💬 {a.comments} comment{a.comments !== 1 ? "s" : ""}</span>
-                    </div>
-
-                    <div className="text-xs text-gray-500 inline-flex items-center gap-2">
-                      <span className="font-semibold" style={{ color: "var(--primary-blue)" }}>
-                        {a.read ? "✅ Read" : "📌 New"}
-                      </span>
-                      <span>•</span>
-                      <span>ID: {a.id}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="px-6 py-3" style={{ backgroundColor: "rgba(109, 198, 223, 0.08)" }}>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold" style={{ color: "var(--primary-blue)" }}>
-                      {a.scope}
-                    </span>
-                    <span className="text-xs text-gray-600">{a.createdBy}</span>
-                  </div>
-                </div>
-              </Card>
-            );
-          })}
-        </div>
-
-        {filteredAnnouncements.length === 0 && (
-          <Card className="p-12 text-center">
-            <div
-              className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-4"
-              style={{ backgroundColor: "rgba(109, 198, 223, 0.12)" }}
-            >
-              <span className="text-2xl" style={{ color: "var(--secondary-blue)" }}>📢</span>
+                  </Card>
+                );
+              })}
             </div>
-            <h3 className="text-lg font-extrabold text-gray-900 mb-2">No announcements found</h3>
-            <p className="text-gray-600">Try adjusting your filters or search term.</p>
-          </Card>
+
+            {filteredAnnouncements.length === 0 && (
+              <Card className="p-12 text-center">
+                <div
+                  className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-4"
+                  style={{ backgroundColor: "rgba(109, 198, 223, 0.12)" }}
+                >
+                  <span className="text-2xl" style={{ color: "var(--secondary-blue)" }}>📢</span>
+                </div>
+                <h3 className="text-lg font-extrabold text-gray-900 mb-2">No announcements found</h3>
+                <p className="text-gray-600">Try adjusting your filters or search term.</p>
+              </Card>
+            )}
+          </>
         )}
 
         {/* QUICK STATS */}

@@ -1,102 +1,12 @@
 "use client";
 
 // pages/dashboards/HOD/HODAnnouncements.jsx
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import { HODMenuItems } from "@/utils/menus";
-const announcementsData = [
-  {
-    id: 'ANN-001',
-    title: 'Year-End Holiday Schedule',
-    message: 'Please note the revised holiday schedule for the year-end break. All offices will be closed from Dec 24 to Jan 2.',
-    createdBy: 'HR Department',
-    createdDate: '2024-12-15 09:30',
-    scope: 'All Company',
-    priority: 'IMPORTANT',
-    expiresAt: '2025-01-10',
-    read: true,
-    documents: 2,
-    comments: 8,
-    department: 'HR',
-    readCount: 145
-  },
-  {
-    id: 'ANN-002',
-    title: 'Safety Protocol Updates',
-    message: 'Important updates to safety protocols for offshore operations. All technical staff must complete training by Dec 31.',
-    createdBy: 'HSE Manager',
-    createdDate: '2024-12-14 14:15',
-    scope: 'Technical Department',
-    priority: 'URGENT',
-    expiresAt: '2025-01-31',
-    read: false,
-    documents: 1,
-    comments: 12,
-    department: 'HSE',
-    readCount: 89
-  },
-  {
-    id: 'ANN-003',
-    title: 'Monthly Performance Review',
-    message: 'Monthly performance review meeting scheduled for Dec 20. All team leads must submit reports by Dec 18.',
-    createdBy: 'HOD - Technical',
-    createdDate: '2024-12-13 11:00',
-    scope: 'Technical Department',
-    priority: 'NORMAL',
-    expiresAt: '2024-12-31',
-    read: true,
-    documents: 0,
-    comments: 5,
-    department: 'Technical',
-    readCount: 24
-  },
-  {
-    id: 'ANN-004',
-    title: 'Workshop Maintenance Shutdown',
-    message: 'Workshop will be closed for maintenance from Dec 20-22. Plan your equipment needs accordingly.',
-    createdBy: 'Workshop Supervisor',
-    createdDate: '2024-12-12 16:45',
-    scope: 'Workshop Department',
-    priority: 'IMPORTANT',
-    expiresAt: '2024-12-25',
-    read: false,
-    documents: 1,
-    comments: 3,
-    department: 'Workshop',
-    readCount: 18
-  },
-  {
-    id: 'ANN-005',
-    title: 'IT System Upgrade',
-    message: 'Scheduled system maintenance on Dec 18, 10 PM to 2 AM. All systems will be unavailable during this period.',
-    createdBy: 'IT Department',
-    createdDate: '2024-12-10 10:00',
-    scope: 'All Company',
-    priority: 'IMPORTANT',
-    expiresAt: '2024-12-31',
-    read: true,
-    documents: 3,
-    comments: 15,
-    department: 'IT',
-    readCount: 120
-  },
-  {
-    id: 'ANN-006',
-    title: 'Budget Planning for Q1 2025',
-    message: 'All HODs must submit their department budgets for Q1 2025 by Dec 15. Template available in documents.',
-    createdBy: 'Finance Director',
-    createdDate: '2024-12-09 15:30',
-    scope: 'HODs Only',
-    priority: 'NORMAL',
-    expiresAt: '2024-12-20',
-    read: false,
-    documents: 1,
-    comments: 6,
-    department: 'Finance',
-    readCount: 8
-  },
-];
+import { toast } from "@/lib/toast";
+import { fetchWithAuth } from "@/lib/api";
 
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
@@ -108,14 +18,14 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "purple"
-      ? "bg-purple-50 text-purple-700 ring-purple-100"
-      : tone === "muted"
-      ? "bg-gray-50 text-gray-700 ring-gray-100"
-      : "bg-blue-50 text-blue-700 ring-blue-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "purple"
+            ? "bg-purple-50 text-purple-700 ring-purple-100"
+            : tone === "muted"
+              ? "bg-gray-50 text-gray-700 ring-gray-100"
+              : "bg-blue-50 text-blue-700 ring-blue-100";
 
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
@@ -125,14 +35,12 @@ const Pill = ({ children, tone = "default" }) => {
 };
 
 const SectionTitle = ({ title, subtitle, action }) => (
-  <div className="flex items-start justify-between gap-3">
+  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
     <div>
-      <h2 className="text-lg md:text-xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
-        {title}
-      </h2>
-      {subtitle ? <p className="text-sm text-gray-500 mt-1">{subtitle}</p> : null}
+      <h2 className="text-lg md:text-xl font-extrabold text-gray-900 tracking-tight">{title}</h2>
+      {subtitle && <p className="text-sm text-gray-600 mt-1">{subtitle}</p>}
     </div>
-    {action}
+    {action && <div>{action}</div>}
   </div>
 );
 
@@ -144,28 +52,51 @@ const btnOutline = `${btnBase} border bg-white hover:bg-gray-50`;
 const btnSolid = `${btnBase} text-white`;
 
 export default function HODAnnouncements() {
-  const [filter, setFilter] = useState('all');
-  const [search, setSearch] = useState('');
+  const [filter, setFilter] = useState("all");
+  const [search, setSearch] = useState("");
+  const [announcementsData, setAnnouncementsData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const unreadCount = useMemo(() => announcementsData.filter((a) => !a.read).length, []);
-  const urgentCount = useMemo(() => announcementsData.filter((a) => a.priority === 'URGENT' && !a.read).length, []);
+  const fetchAnnouncements = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const res = await fetchWithAuth("/api/announcements");
+      if (res.ok) {
+        const data = await res.json();
+        setAnnouncementsData(data);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchAnnouncements();
+  }, [fetchAnnouncements]);
+
+  const unreadCount = useMemo(() => announcementsData.filter((a) => !a.read).length, [announcementsData]);
+  const urgentCount = useMemo(() => announcementsData.filter((a) => a.priority === 'URGENT' && !a.read).length, [announcementsData]);
 
   const filteredAnnouncements = useMemo(() => {
     return announcementsData.filter((ann) => {
       if (filter === 'unread' && ann.read) return false;
       if (filter === 'urgent' && ann.priority !== 'URGENT') return false;
-      if (filter === 'important' && ann.priority !== 'IMPORTANT' && ann.priority !== 'URGENT') return false;
-      if (filter === 'technical' && ann.department !== 'Technical') return false;
-      if (filter === 'workshop' && ann.department !== 'Workshop') return false;
-      if (filter === 'hods' && ann.scope !== 'HODs Only') return false;
+      if (filter === 'important' && ann.priority !== 'IMPORTANT' && ann.priority !== 'HIGH') return false;
+      if (filter === 'technical' && ann.departments && !ann.departments.includes('Technical')) return false;
+      if (filter === 'workshop' && ann.departments && !ann.departments.includes('Workshop')) return false;
+      if (filter === 'hods' && ann.scope !== 'HODs Only' && ann.scope !== 'HODS_ONLY') return false;
 
       if (search) {
         const q = search.toLowerCase();
-        if (!ann.title.toLowerCase().includes(q) && !ann.message.toLowerCase().includes(q)) return false;
+        const titleMatch = (ann.title || "").toLowerCase().includes(q);
+        const messageMatch = (ann.message || "").toLowerCase().includes(q);
+        if (!titleMatch && !messageMatch) return false;
       }
       return true;
     });
-  }, [filter, search]);
+  }, [filter, search, announcementsData]);
 
   const priorityTone = (priority) => {
     switch (priority) {
@@ -206,7 +137,19 @@ export default function HODAnnouncements() {
 
   const isExpired = (expiresAt) => new Date(expiresAt) < new Date();
 
-  const markAsRead = (id) => toast.info(`Marked announcement ${id} as read`);
+  const markAsRead = async (id) => {
+    try {
+      const res = await fetchWithAuth(`/api/announcements/${id}/read`, { method: "PATCH" });
+      if (res.ok) {
+        toast.info(`Marked announcement ${id} as read`);
+        setAnnouncementsData((prev) => prev.map((a) => (a.id === id ? { ...a, read: true } : a)));
+      } else {
+        toast.error("Failed to mark as read");
+      }
+    } catch (e) {
+      toast.error("Failed to mark as read");
+    }
+  };
 
   return (
     <Layout menuItems={HODMenuItems} userRole="HOD">
@@ -354,104 +297,115 @@ export default function HODAnnouncements() {
         )}
 
         {/* LIST */}
-        <div className="grid grid-cols-1 gap-4">
-          {filteredAnnouncements.map((a) => {
-            const expired = isExpired(a.expiresAt);
-            return (
-              <Card key={a.id} className={`overflow-hidden ${!a.read ? 'ring-2 ring-blue-200' : ''} ${expired ? 'opacity-80' : ''}`}>
-                <div className="p-6">
-                  <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
-                    <div className="min-w-0">
-                      <div className="flex flex-wrap items-center gap-2 mb-3">
-                        {!a.read && <span className="w-2.5 h-2.5 rounded-full bg-blue-500" />}
-                        <Pill tone={priorityTone(a.priority)}>{a.priority}</Pill>
-                        <Pill tone={scopeTone(a.scope)}>{a.scope}</Pill>
-                        <Pill tone={departmentTone(a.department)}>{a.department}</Pill>
-                        {expired && <Pill tone="muted">Expired</Pill>}
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center p-12 py-20 bg-white rounded-2xl border border-gray-200/70 shadow-sm">
+            <div className="w-10 h-10 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin mb-4"></div>
+            <p className="text-gray-500 font-semibold">Loading announcements...</p>
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 gap-4">
+              {filteredAnnouncements.map((a) => {
+                const expired = isExpired(a.expiresAt);
+                return (
+                  <Card key={a.id} className={`overflow-hidden ${!a.read ? 'ring-2 ring-blue-200' : ''} ${expired ? 'opacity-80' : ''}`}>
+                    <div className="p-6">
+                      <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+                        <div className="min-w-0">
+                          <div className="flex flex-wrap items-center gap-2 mb-3">
+                            {!a.read && <span className="w-2.5 h-2.5 rounded-full bg-blue-500" />}
+                            <Pill tone={priorityTone(a.priority)}>{a.priority}</Pill>
+                            <Pill tone={scopeTone(a.scope)}>{a.scope}</Pill>
+                            <Pill tone={departmentTone(a.department)}>{a.department}</Pill>
+                            {expired && <Pill tone="muted">Expired</Pill>}
+                          </div>
+
+                          <h3 className="text-lg font-extrabold text-gray-900 truncate">{a.title}</h3>
+                          <p className="text-sm text-gray-600 mt-2">
+                            {(a.message || "").length > 200 ? (a.message || "").substring(0, 200) + "..." : (a.message || "")}
+                          </p>
+
+                          <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600">
+                            <span className="inline-flex items-center gap-2">
+                              <span className="w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center">👤</span>
+                              {a.createdBy}
+                            </span>
+                            <span className="inline-flex items-center gap-2">
+                              <span className="w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center">🗓️</span>
+                              {formatDate(a.createdDate)}
+                            </span>
+                            <span className="inline-flex items-center gap-2">
+                              <span className="w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center">👁️</span>
+                              {a.readsCount || 0} views
+                            </span>
+                            {a.expiresAt && (
+                              <span className="inline-flex items-center gap-2">
+                                <span className="w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center">⏳</span>
+                                Expires: {a.expiresAt ? formatDate(a.expiresAt) : "N/A"}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row gap-2 shrink-0">
+                          {!a.read && (
+                            <button
+                              onClick={() => markAsRead(a.id)}
+                              className={btnOutline}
+                              style={{ borderColor: "rgba(109,198,223,0.55)", color: "var(--secondary-blue)" }}
+                            >
+                              Mark as Read
+                            </button>
+                          )}
+                          <Link href={`/hod-dashboard/announcement/${a.id}`}>
+                            <button className={btnSolid} style={{ backgroundColor: "var(--primary-blue)" }}>
+                              View Details
+                            </button>
+                          </Link>
+                        </div>
                       </div>
 
-                      <h3 className="text-lg font-extrabold text-gray-900 mb-2">{a.title}</h3>
-                      <p className="text-sm text-gray-600 mb-4">
-                        {a.message.length > 200 ? a.message.substring(0, 200) + '...' : a.message}
-                      </p>
+                      <div className="mt-5 pt-4 border-t border-gray-200/70 flex flex-wrap items-center justify-between gap-3 text-sm">
+                        <div className="flex flex-wrap items-center gap-3 text-gray-600">
+                          <span>📄 {a.documents} attachment{a.documents !== 1 ? 's' : ''}</span>
+                          <span>💬 {a.comments} comment{a.comments !== 1 ? 's' : ''}</span>
+                        </div>
 
-                      <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600">
-                        <span className="inline-flex items-center gap-2">
-                          <span className="w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center">👤</span>
-                          {a.createdBy}
-                        </span>
-                        <span className="inline-flex items-center gap-2">
-                          <span className="w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center">🗓️</span>
-                          {formatDate(a.createdDate)}
-                        </span>
-                        <span className="inline-flex items-center gap-2">
-                          <span className="w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center">👁️</span>
-                          {a.readCount} views
-                        </span>
-                        <span className="inline-flex items-center gap-2">
-                          <span className="w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center">⏳</span>
-                          Expires: {a.expiresAt}
-                        </span>
+                        <div className="text-xs text-gray-500 inline-flex items-center gap-2">
+                          <span className="font-semibold" style={{ color: "var(--primary-blue)" }}>
+                            {a.read ? '✅ Read' : '📌 New'}
+                          </span>
+                          <span>•</span>
+                          <span>ID: {a.id}</span>
+                        </div>
                       </div>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row gap-2 shrink-0">
-                      {!a.read && (
-                        <button
-                          onClick={() => markAsRead(a.id)}
-                          className={btnOutline}
-                          style={{ borderColor: "rgba(109,198,223,0.55)", color: "var(--secondary-blue)" }}
-                        >
-                          Mark as Read
-                        </button>
-                      )}
-                      <Link href={`/hod-dashboard/announcement/${a.id}`}>
-                        <button className={btnSolid} style={{ backgroundColor: "var(--primary-blue)" }}>
-                          View Details
-                        </button>
-                      </Link>
+                    <div className="px-6 py-3" style={{ backgroundColor: "rgba(109, 198, 223, 0.08)" }}>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-semibold" style={{ color: "var(--primary-blue)" }}>
+                          {a.scope}
+                        </span>
+                        <span className="text-xs text-gray-600">{a.createdBy}</span>
+                      </div>
                     </div>
-                  </div>
-
-                  <div className="mt-5 pt-4 border-t border-gray-200/70 flex flex-wrap items-center justify-between gap-3 text-sm">
-                    <div className="flex flex-wrap items-center gap-3 text-gray-600">
-                      <span>📄 {a.documents} attachment{a.documents !== 1 ? 's' : ''}</span>
-                      <span>💬 {a.comments} comment{a.comments !== 1 ? 's' : ''}</span>
-                    </div>
-
-                    <div className="text-xs text-gray-500 inline-flex items-center gap-2">
-                      <span className="font-semibold" style={{ color: "var(--primary-blue)" }}>
-                        {a.read ? '✅ Read' : '📌 New'}
-                      </span>
-                      <span>•</span>
-                      <span>ID: {a.id}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="px-6 py-3" style={{ backgroundColor: "rgba(109, 198, 223, 0.08)" }}>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold" style={{ color: "var(--primary-blue)" }}>
-                      {a.scope}
-                    </span>
-                    <span className="text-xs text-gray-600">{a.createdBy}</span>
-                  </div>
-                </div>
-              </Card>
-            );
-          })}
-        </div>
-
-        {filteredAnnouncements.length === 0 && (
-          <Card className="p-12 text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(109, 198, 223, 0.12)" }}>
-              <span className="text-3xl" style={{ color: "var(--secondary-blue)" }}>
-                🧐
-              </span>
+                  </Card>
+                );
+              })}
             </div>
-            <h3 className="text-lg font-extrabold text-gray-900 mb-2">No announcements found</h3>
-            <p className="text-gray-600">Try adjusting your filters or search term.</p>
-          </Card>
+
+            {filteredAnnouncements.length === 0 && (
+              <Card className="p-12 text-center">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(109, 198, 223, 0.12)" }}>
+                  <span className="text-3xl" style={{ color: "var(--secondary-blue)" }}>
+                    🧐
+                  </span>
+                </div>
+                <h3 className="text-lg font-extrabold text-gray-900 mb-2">No announcements found</h3>
+                <p className="text-gray-600">Try adjusting your filters or search term.</p>
+              </Card>
+            )}
+          </>
         )}
 
         {/* QUICK STATS */}
@@ -462,7 +416,7 @@ export default function HODAnnouncements() {
             { label: 'Urgent', value: announcementsData.filter((a) => a.priority === 'URGENT').length, icon: '🚨', tone: 'danger' },
             {
               label: 'Avg. Reads',
-              value: Math.round(announcementsData.reduce((s, a) => s + a.readCount, 0) / announcementsData.length),
+              value: announcementsData.length > 0 ? Math.round(announcementsData.reduce((s, a) => s + (a.readsCount || 0), 0) / announcementsData.length) : 0,
               icon: '👁️',
               tone: 'purple',
             },
@@ -484,6 +438,6 @@ export default function HODAnnouncements() {
           ))}
         </div>
       </div>
-    </Layout>
+    </Layout >
   );
 }

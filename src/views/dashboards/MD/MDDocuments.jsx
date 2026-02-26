@@ -7,7 +7,7 @@ import Layout from "@/components/Layout";
 import { DocumentIcon } from "@/lib/icons";
 import { MDMenuItems } from "@/utils/menus";
 import { getDocIconComponent } from "@/lib/icons";
-import { fetchWithAuth } from "@/lib/api";
+import { fetchWithAuth, getAuthToken } from "@/lib/api";
 import { toast } from "@/lib/toast";
 
 /* ---------- UI helpers (dashboard-style) ---------- */
@@ -32,14 +32,14 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "info"
-      ? "bg-blue-50 text-blue-700 ring-blue-100"
-      : tone === "purple"
-      ? "bg-purple-50 text-purple-700 ring-purple-100"
-      : "bg-gray-50 text-gray-700 ring-gray-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "info"
+            ? "bg-blue-50 text-blue-700 ring-blue-100"
+            : tone === "purple"
+              ? "bg-purple-50 text-purple-700 ring-purple-100"
+              : "bg-gray-50 text-gray-700 ring-gray-100";
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
       {children}
@@ -153,6 +153,18 @@ export default function MDDocuments() {
 
   const maxDownloads = useMemo(() => Math.max(1, ...documents.map((d) => d.downloads || 0)), [documents]);
 
+  const handleDownload = (doc) => {
+    if (!doc.id && !doc.dbId) {
+      toast.info("No file available for download");
+      return;
+    }
+    const id = doc.id || doc.dbId;
+    const token = getAuthToken();
+    const url = `/api/documents/${id}/download${token ? `?token=${token}` : ""}`;
+    window.open(url, "_blank");
+  };
+
+
   return (
     <Layout menuItems={MDMenuItems} userRole="MD">
       <div className="space-y-6">
@@ -202,18 +214,16 @@ export default function MDDocuments() {
 
                 <div className="flex w-full sm:w-auto gap-2">
                   <button
-                    className={`flex-1 sm:flex-none px-4 py-3 rounded-2xl font-semibold border transition ${
-                      view === "cards" ? "bg-white" : "bg-gray-50"
-                    }`}
+                    className={`flex-1 sm:flex-none px-4 py-3 rounded-2xl font-semibold border transition ${view === "cards" ? "bg-white" : "bg-gray-50"
+                      }`}
                     style={{ borderColor: "rgba(109, 198, 223, 0.7)", color: "var(--primary-blue)" }}
                     onClick={() => setView("cards")}
                   >
                     Cards
                   </button>
                   <button
-                    className={`flex-1 sm:flex-none px-4 py-3 rounded-2xl font-semibold border transition ${
-                      view === "table" ? "bg-white" : "bg-gray-50"
-                    }`}
+                    className={`flex-1 sm:flex-none px-4 py-3 rounded-2xl font-semibold border transition ${view === "table" ? "bg-white" : "bg-gray-50"
+                      }`}
                     style={{ borderColor: "rgba(109, 198, 223, 0.7)", color: "var(--primary-blue)" }}
                     onClick={() => setView("table")}
                   >
@@ -294,37 +304,37 @@ export default function MDDocuments() {
 
         {/* Stat tiles (dashboard-like) */}
         {!loading && (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6">
-          {[
-            { label: "Total Documents", value: stats.total, color: "var(--primary-blue)" },
-            { label: "Public Documents", value: stats.publicCount, color: "#10B981" },
-            { label: "Total Downloads", value: stats.totalDownloads.toLocaleString(), color: "var(--secondary-blue)" },
-            { label: "Avg Size", value: `${stats.avgSize} MB`, color: "#8B5CF6" },
-          ].map((s) => (
-            <Card key={s.label} className="p-5">
-              <p className="text-sm text-gray-500">{s.label}</p>
-              <p className="text-3xl font-extrabold mt-2" style={{ color: s.color }}>
-                {s.value}
-              </p>
-              <div className="mt-4 h-2 rounded-full bg-gray-100 overflow-hidden">
-                <div
-                  className="h-full rounded-full"
-                  style={{
-                    width:
-                      s.label === "Public Documents"
-                        ? `${Math.min(100, Math.round((stats.publicCount / Math.max(1, stats.total)) * 100))}%`
-                        : s.label === "Total Downloads"
-                        ? "72%"
-                        : s.label === "Avg Size"
-                        ? "55%"
-                        : "80%",
-                    backgroundColor: "var(--primary-blue)",
-                  }}
-                />
-              </div>
-            </Card>
-          ))}
-        </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6">
+            {[
+              { label: "Total Documents", value: stats.total, color: "var(--primary-blue)" },
+              { label: "Public Documents", value: stats.publicCount, color: "#10B981" },
+              { label: "Total Downloads", value: stats.totalDownloads.toLocaleString(), color: "var(--secondary-blue)" },
+              { label: "Avg Size", value: `${stats.avgSize} MB`, color: "#8B5CF6" },
+            ].map((s) => (
+              <Card key={s.label} className="p-5">
+                <p className="text-sm text-gray-500">{s.label}</p>
+                <p className="text-3xl font-extrabold mt-2" style={{ color: s.color }}>
+                  {s.value}
+                </p>
+                <div className="mt-4 h-2 rounded-full bg-gray-100 overflow-hidden">
+                  <div
+                    className="h-full rounded-full"
+                    style={{
+                      width:
+                        s.label === "Public Documents"
+                          ? `${Math.min(100, Math.round((stats.publicCount / Math.max(1, stats.total)) * 100))}%`
+                          : s.label === "Total Downloads"
+                            ? "72%"
+                            : s.label === "Avg Size"
+                              ? "55%"
+                              : "80%",
+                      backgroundColor: "var(--primary-blue)",
+                    }}
+                  />
+                </div>
+              </Card>
+            ))}
+          </div>
         )}
 
         {/* Docs list */}
@@ -398,8 +408,7 @@ export default function MDDocuments() {
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        if (doc.fileUrl) window.open(doc.fileUrl, "_blank");
-                        else toast.info("No file available for download");
+                        handleDownload(doc);
                       }}
                       className="flex-1 px-4 py-2.5 rounded-2xl font-semibold text-sm text-white active:scale-[0.99] transition"
                       style={{ backgroundColor: "var(--secondary-blue)" }}
@@ -508,7 +517,7 @@ export default function MDDocuments() {
                         </Link>
                         <button
                           type="button"
-                          onClick={() => doc.fileUrl && window.open(doc.fileUrl, "_blank")}
+                          onClick={() => handleDownload(doc)}
                           disabled={!doc.fileUrl}
                           className="ml-2 px-3 py-1.5 rounded-xl text-[12px] font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition disabled:opacity-50 disabled:cursor-not-allowed"
                           style={{ borderColor: "rgba(44, 75, 155, 0.35)", color: "var(--primary-blue)" }}
@@ -537,57 +546,57 @@ export default function MDDocuments() {
 
         {/* Documents by Department */}
         {!loading && (
-        <Card className="p-6">
-          <SectionTitle title="Documents by Department" subtitle="Overview of documents across departments" />
-          <div className="mt-5 space-y-3">
-            {departmentOptions
-              .filter((d) => d !== "all")
-              .map((dept) => {
-                const deptDocs = documents.filter((d) => d.department === dept);
-                const totalSize = deptDocs.reduce((sum, doc) => sum + toMB(doc.size), 0).toFixed(1);
-                const publicCount = deptDocs.filter((d) => d.scope === "PUBLIC").length;
-                const privateCount = deptDocs.filter((d) => d.scope === "PRIVATE").length;
+          <Card className="p-6">
+            <SectionTitle title="Documents by Department" subtitle="Overview of documents across departments" />
+            <div className="mt-5 space-y-3">
+              {departmentOptions
+                .filter((d) => d !== "all")
+                .map((dept) => {
+                  const deptDocs = documents.filter((d) => d.department === dept);
+                  const totalSize = deptDocs.reduce((sum, doc) => sum + toMB(doc.size), 0).toFixed(1);
+                  const publicCount = deptDocs.filter((d) => d.scope === "PUBLIC").length;
+                  const privateCount = deptDocs.filter((d) => d.scope === "PRIVATE").length;
 
-                return (
-                  <div key={dept} className="rounded-2xl border border-gray-200/70 p-4 hover:bg-gray-50 transition">
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-                      <div className="flex items-center gap-3">
-                        <div
-                          className="w-10 h-10 rounded-2xl flex items-center justify-center text-white font-bold "
-                          style={{ backgroundColor: "var(--secondary-blue)" }}
-                        >
-                          {dept.charAt(0)}
-                        </div>
-                        <div>
-                          <div className="font-extrabold" style={{ color: "var(--primary-blue)" }}>
-                            {dept}
+                  return (
+                    <div key={dept} className="rounded-2xl border border-gray-200/70 p-4 hover:bg-gray-50 transition">
+                      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                        <div className="flex items-center gap-3">
+                          <div
+                            className="w-10 h-10 rounded-2xl flex items-center justify-center text-white font-bold "
+                            style={{ backgroundColor: "var(--secondary-blue)" }}
+                          >
+                            {dept.charAt(0)}
                           </div>
-                          <div className="text-sm text-gray-500">
-                            {deptDocs.length} documents · {totalSize} MB total
+                          <div>
+                            <div className="font-extrabold" style={{ color: "var(--primary-blue)" }}>
+                              {dept}
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              {deptDocs.length} documents · {totalSize} MB total
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      <div className="flex items-center gap-4">
-                        <div className="flex gap-2">
-                          <Pill tone="success">{publicCount} Public</Pill>
-                          <Pill tone="danger">{privateCount} Private</Pill>
+                        <div className="flex items-center gap-4">
+                          <div className="flex gap-2">
+                            <Pill tone="success">{publicCount} Public</Pill>
+                            <Pill tone="danger">{privateCount} Private</Pill>
+                          </div>
+
+                          <button
+                            onClick={() => setFilters((p) => ({ ...p, department: dept }))}
+                            className="px-4 py-2 rounded-2xl text-sm font-semibold text-white active:scale-[0.99] transition"
+                            style={{ backgroundColor: "var(--primary-blue)" }}
+                          >
+                            View Documents
+                          </button>
                         </div>
-
-                        <button
-                          onClick={() => setFilters((p) => ({ ...p, department: dept }))}
-                          className="px-4 py-2 rounded-2xl text-sm font-semibold text-white active:scale-[0.99] transition"
-                          style={{ backgroundColor: "var(--primary-blue)" }}
-                        >
-                          View Documents
-                        </button>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
-          </div>
-        </Card>
+                  );
+                })}
+            </div>
+          </Card>
         )}
       </div>
     </Layout>

@@ -1,11 +1,13 @@
 "use client";
 
 // pages/dashboards/MD/MDCreateTender.jsx
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { MDMenuItems } from "@/utils/menus";
-const departments = ["Procurement", "Technical", "Workshop", "Logistics", "HSE", "Legal", "HR", "IT", "Admin"];
+import { toast } from "@/lib/toast";
+import { fetchWithAuth } from "@/lib/api";
+
 
 const categories = [
   "Equipment Supply",
@@ -28,12 +30,12 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "purple"
-      ? "bg-purple-50 text-purple-700 ring-purple-100"
-      : "bg-blue-50 text-blue-700 ring-blue-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "purple"
+            ? "bg-purple-50 text-purple-700 ring-purple-100"
+            : "bg-blue-50 text-blue-700 ring-blue-100";
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
       {children}
@@ -69,6 +71,25 @@ const textareaBase =
 export default function MDCreateTender() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("details");
+  const [departments, setDepartments] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function getDepartments() {
+      try {
+        const res = await fetchWithAuth("/api/departments");
+        if (res.ok) {
+          const data = await res.json();
+          setDepartments(data.map(d => d.name));
+        }
+      } catch (err) {
+        console.error("Failed to fetch departments:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    getDepartments();
+  }, []);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -108,30 +129,43 @@ export default function MDCreateTender() {
     return `${prefix}/${deptCode}/${year}/${sequence}`;
   };
 
-  const handleSubmit = (e) => {
+
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (loading) return;
 
     if (!formData.title.trim()) return toast.warning("Please enter tender title");
     if (!formData.department) return toast.warning("Please select department");
     if (!formData.description.trim()) return toast.warning("Please enter description");
     if (!formData.closingDate) return toast.warning("Please set closing date");
 
-    const newTender = {
-      ...formData,
-      id: `TEN-${Date.now().toString().slice(-3)}`,
-      referenceNo: generateReferenceNo(),
-      status: "OPEN",
-      documents: attachments.length,
-      fileSize: "0 MB",
-      downloads: 0,
-      issuedDate: new Date().toISOString().split("T")[0],
-      requirements: requirements.filter((r) => r.trim() !== ""),
-      attachments,
-    };
+    setLoading(true);
+    try {
+      const payload = {
+        ...formData,
+        referenceNo: generateReferenceNo(),
+        status: "OPEN",
+      };
 
-    console.log("Creating tender:", newTender);
-    toast.success("Tender created successfully!");
-    router.push("/md-dashboard/tenders");
+      const res = await fetchWithAuth("/api/tenders", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        toast.success("Tender created successfully!");
+        router.push("/md-dashboard/tenders");
+      } else {
+        const error = await res.json();
+        toast.error(error.error || "Failed to create tender");
+      }
+    } catch (err) {
+      console.error("Error creating tender:", err);
+      toast.error("An error occurred while creating the tender");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleRequirementChange = (index, value) => {
@@ -198,9 +232,8 @@ export default function MDCreateTender() {
                 <button
                   key={t.id}
                   onClick={() => setActiveTab(t.id)}
-                  className={`pb-4 text-sm font-semibold transition ${
-                    activeTab === t.id ? "text-blue-700" : "text-gray-500 hover:text-gray-700"
-                  }`}
+                  className={`pb-4 text-sm font-semibold transition ${activeTab === t.id ? "text-blue-700" : "text-gray-500 hover:text-gray-700"
+                    }`}
                   style={{
                     borderBottom: activeTab === t.id ? "2px solid var(--primary-blue)" : "2px solid transparent",
                   }}
@@ -503,10 +536,11 @@ export default function MDCreateTender() {
 
                   <button
                     type="submit"
-                    className="px-7 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition"
+                    disabled={loading}
+                    className="px-7 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition disabled:opacity-50 disabled:cursor-not-allowed"
                     style={{ backgroundColor: "var(--accent-red)" }}
                   >
-                    Create Tender
+                    {loading ? "Creating..." : "Create Tender"}
                   </button>
                 </div>
               </div>

@@ -1,36 +1,13 @@
 "use client";
 
 // pages/dashboards/MD/MDCreateAnnouncement.jsx
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { MDMenuItems } from "@/utils/menus";
-const departments = [
-  "Technical",
-  "Workshop",
-  "Logistics",
-  "Contract and Procurement",
-  "Legal and Compliances",
-  "HR",
-  "HSE",
-  "Business Development (BDD)",
-  "Accounts",
-  "NCD",
-  "QHSE",
-  "Admin",
-];
+import { fetchWithAuth } from "@/lib/api";
+import { toast } from "@/lib/toast";
 
-const users = [
-  { id: 1, name: "John Doe", department: "Technical" },
-  { id: 2, name: "Sarah Smith", department: "HSE" },
-  { id: 3, name: "Mike Johnson", department: "Technical" },
-  { id: 4, name: "Robert Chen", department: "Workshop" },
-  { id: 5, name: "Lisa Wang", department: "Logistics" },
-  { id: 6, name: "David Kim", department: "Legal and Compliances" },
-  { id: 7, name: "Maria Garcia", department: "HR" },
-  { id: 8, name: "James Wilson", department: "Accounts" },
-  { id: 9, name: "Alex Turner", department: "Technical" },
-];
 
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
@@ -42,12 +19,12 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "purple"
-      ? "bg-purple-50 text-purple-700 ring-purple-100"
-      : "bg-blue-50 text-blue-700 ring-blue-100";
+        ? "bg-amber-50 text-amber-800 ring-amber-100"
+        : tone === "success"
+          ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+          : tone === "purple"
+            ? "bg-purple-50 text-purple-700 ring-purple-100"
+            : "bg-blue-50 text-blue-700 ring-blue-100";
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
       {children}
@@ -72,6 +49,34 @@ const btnSolid = `${btnBase} text-white`;
 
 export default function MDCreateAnnouncement() {
   const router = useRouter();
+
+  const [departments, setDepartments] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const [deptRes, userRes] = await Promise.all([
+          fetchWithAuth("/api/departments"),
+          fetchWithAuth("/api/users"),
+        ]);
+        if (deptRes.ok) {
+          const data = await deptRes.json();
+          setDepartments(data.map((d) => d.name));
+        }
+        if (userRes.ok) {
+          const data = await userRes.json();
+          setUsers(data);
+        }
+      } catch (err) {
+        console.error("Failed to load departments/users:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadData();
+  }, []);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -104,11 +109,24 @@ export default function MDCreateAnnouncement() {
     []
   );
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Creating announcement:", formData);
-    toast.success("Announcement created successfully!");
-    router.push("/md-dashboard/announcements");
+    try {
+      const res = await fetchWithAuth("/api/announcements", {
+        method: "POST",
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || "Failed to create announcement");
+      }
+      toast.success("Announcement created successfully!");
+      router.push("/md-dashboard/announcements");
+    } catch (err) {
+      console.error(err);
+      toast.error(err.message || "Failed to create announcement");
+    }
   };
 
   const handleFileUpload = (e) => {
@@ -311,9 +329,8 @@ export default function MDCreateAnnouncement() {
                         key={u.id}
                         type="button"
                         onClick={() => toggleUser(u.id)}
-                        className={`w-full text-left p-3 rounded-2xl border mb-2 last:mb-0 active:scale-[0.99] transition ${
-                          active ? "bg-blue-50 border-blue-200" : "bg-white border-gray-200 hover:bg-gray-50"
-                        }`}
+                        className={`w-full text-left p-3 rounded-2xl border mb-2 last:mb-0 active:scale-[0.99] transition ${active ? "bg-blue-50 border-blue-200" : "bg-white border-gray-200 hover:bg-gray-50"
+                          }`}
                       >
                         <div className="flex items-center gap-3">
                           <div

@@ -1,11 +1,13 @@
 "use client";
 
 // pages/dashboards/Staff/StaffTenders.jsx
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { StaffMenuItems } from "@/utils/menus";
+import { toast } from "@/lib/toast";
+import { fetchWithAuth } from "@/lib/api";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -16,14 +18,14 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "info"
-      ? "bg-blue-50 text-blue-700 ring-blue-100"
-      : tone === "purple"
-      ? "bg-purple-50 text-purple-700 ring-purple-100"
-      : "bg-gray-50 text-gray-700 ring-gray-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "info"
+            ? "bg-blue-50 text-blue-700 ring-blue-100"
+            : tone === "purple"
+              ? "bg-purple-50 text-purple-700 ring-purple-100"
+              : "bg-gray-50 text-gray-700 ring-gray-100";
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
       {children}
@@ -43,120 +45,6 @@ const SectionTitle = ({ title, subtitle, action }) => (
   </div>
 );
 
-const tendersData = [
-  {
-    id: 'TEN-001',
-    title: 'Supply of Pipeline Inspection Equipment',
-    referenceNo: 'CAL/PROC/2024/001',
-    description: 'Supply of pipeline inspection equipment and tools for Site A project including ultrasonic testing devices, corrosion monitoring equipment, and safety gear.',
-    issuedDate: '2024-12-01',
-    closingDate: '2024-12-20',
-    department: 'Technical',
-    category: 'Equipment Supply',
-    documents: 3,
-    fileSize: '4.2 MB',
-    downloads: 24,
-    status: 'OPEN',
-    uploadedBy: 'Procurement Department',
-    views: 124
-  },
-  {
-    id: 'TEN-002',
-    title: 'Annual Safety Training Services',
-    referenceNo: 'CAL/HSE/2024/002',
-    description: 'Provision of annual safety training and certification services for all company staff including offshore and onshore personnel.',
-    issuedDate: '2024-12-02',
-    closingDate: '2024-12-22',
-    department: 'HSE',
-    category: 'Training Services',
-    documents: 2,
-    fileSize: '2.8 MB',
-    downloads: 18,
-    status: 'OPEN',
-    uploadedBy: 'Procurement Department',
-    views: 89
-  },
-  {
-    id: 'TEN-003',
-    title: 'Workshop Equipment Maintenance',
-    referenceNo: 'CAL/WORK/2024/004',
-    description: 'Annual maintenance contract for workshop machinery and equipment including lathes, milling machines, and fabrication tools.',
-    issuedDate: '2024-12-04',
-    closingDate: '2024-12-18',
-    department: 'Workshop',
-    category: 'Maintenance Services',
-    documents: 3,
-    fileSize: '3.1 MB',
-    downloads: 15,
-    status: 'OPEN',
-    uploadedBy: 'Procurement Department',
-    views: 156
-  },
-  {
-    id: 'TEN-004',
-    title: 'IT Infrastructure Upgrade',
-    referenceNo: 'CAL/IT/2024/003',
-    description: 'Upgrade of company-wide IT infrastructure including network systems, servers, and cybersecurity solutions.',
-    issuedDate: '2024-12-03',
-    closingDate: '2024-12-25',
-    department: 'IT',
-    category: 'IT Services',
-    documents: 4,
-    fileSize: '6.5 MB',
-    downloads: 32,
-    status: 'OPEN',
-    uploadedBy: 'Procurement Department',
-    views: 203
-  },
-  {
-    id: 'TEN-005',
-    title: 'Office Furniture Supply',
-    referenceNo: 'CAL/ADMIN/2024/007',
-    description: 'Supply and installation of office furniture for the new administration block.',
-    issuedDate: '2024-12-07',
-    closingDate: '2024-12-21',
-    department: 'Admin',
-    category: 'Equipment Supply',
-    documents: 2,
-    fileSize: '2.1 MB',
-    downloads: 12,
-    status: 'OPEN',
-    uploadedBy: 'Procurement Department',
-    views: 112
-  },
-  {
-    id: 'TEN-006',
-    title: 'Legal Advisory Services',
-    referenceNo: 'CAL/LEG/2024/006',
-    description: 'Retainer for legal advisory and compliance services covering corporate, commercial, and regulatory matters.',
-    issuedDate: '2024-12-06',
-    closingDate: '2024-12-10',
-    department: 'Legal',
-    category: 'Professional Services',
-    documents: 6,
-    fileSize: '7.2 MB',
-    downloads: 42,
-    status: 'CLOSED',
-    uploadedBy: 'Procurement Department',
-    views: 98
-  },
-  {
-    id: 'TEN-007',
-    title: 'Vehicle Fleet Maintenance',
-    referenceNo: 'CAL/LOG/2024/005',
-    description: 'Maintenance and servicing contract for company vehicle fleet including cars, trucks, and specialized transport vehicles.',
-    issuedDate: '2024-12-05',
-    closingDate: '2024-12-15',
-    department: 'Logistics',
-    category: 'Maintenance Services',
-    documents: 5,
-    fileSize: '5.3 MB',
-    downloads: 28,
-    status: 'AWARDED',
-    uploadedBy: 'Procurement Department',
-    views: 145
-  },
-];
 
 const statusTone = (status) => {
   if (status === "OPEN") return "success";
@@ -191,14 +79,33 @@ const fmtDate = (iso) =>
 
 export default function StaffTenders() {
   const router = useRouter();
-  const [filter, setFilter] = useState("open");
+  const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
+  const [tendersData, setTendersData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function getTenders() {
+      try {
+        const res = await fetchWithAuth("/api/tenders");
+        if (res.ok) {
+          const data = await res.json();
+          setTendersData(data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch tenders:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    getTenders();
+  }, []);
 
   const getDaysRemaining = (closingDate) => {
     const now = new Date();
     const deadline = new Date(closingDate);
     const diffTime = deadline - now;
-    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
   };
 
   const filteredTenders = useMemo(() => {
@@ -206,32 +113,32 @@ export default function StaffTenders() {
     return tendersData.filter((tender) => {
       if (filter === "open" && tender.status !== "OPEN") return false;
       if (filter === "closed" && tender.status === "OPEN") return false;
-      
+
       if (query) {
         const hit =
           tender.title.toLowerCase().includes(query) ||
-          tender.referenceNo.toLowerCase().includes(query) ||
+          (tender.referenceNo || "").toLowerCase().includes(query) ||
           tender.department.toLowerCase().includes(query) ||
-          tender.category.toLowerCase().includes(query);
+          (tender.category || "").toLowerCase().includes(query);
         if (!hit) return false;
       }
       return true;
     });
-  }, [filter, search]);
+  }, [filter, search, tendersData]);
 
-  const openTenders = useMemo(() => tendersData.filter(t => t.status === "OPEN"), []);
-  const closingSoonCount = useMemo(() => 
+  const openTenders = useMemo(() => tendersData.filter(t => t.status === "OPEN"), [tendersData]);
+  const closingSoonCount = useMemo(() =>
     tendersData.filter(t => {
       const days = getDaysRemaining(t.closingDate);
       return t.status === "OPEN" && days <= 7;
-    }).length, []);
+    }).length, [tendersData]);
 
   const totals = useMemo(() => {
     const totalTenders = tendersData.length;
     const totalDocs = tendersData.reduce((sum, t) => sum + (Number(t.documents) || 0), 0);
     const totalDownloads = tendersData.reduce((sum, t) => sum + (Number(t.downloads) || 0), 0);
     return { totalTenders, totalDocs, totalDownloads };
-  }, []);
+  }, [tendersData]);
 
   const handleDownload = (tender, e) => {
     e.preventDefault();
@@ -304,9 +211,8 @@ export default function StaffTenders() {
               <div className="flex gap-2">
                 <button
                   onClick={() => setFilter("open")}
-                  className={`px-4 py-3 rounded-2xl text-sm font-semibold border transition active:scale-[0.99] ${
-                    filter === "open" ? "bg-white" : "bg-gray-50 hover:bg-gray-100"
-                  }`}
+                  className={`px-4 py-3 rounded-2xl text-sm font-semibold border transition active:scale-[0.99] ${filter === "open" ? "bg-white" : "bg-gray-50 hover:bg-gray-100"
+                    }`}
                   style={{
                     borderColor: filter === "open" ? "var(--primary-blue)" : "#e5e7eb",
                     color: filter === "open" ? "var(--primary-blue)" : "#374151",
@@ -316,9 +222,8 @@ export default function StaffTenders() {
                 </button>
                 <button
                   onClick={() => setFilter("closed")}
-                  className={`px-4 py-3 rounded-2xl text-sm font-semibold border transition active:scale-[0.99] ${
-                    filter === "closed" ? "bg-white" : "bg-gray-50 hover:bg-gray-100"
-                  }`}
+                  className={`px-4 py-3 rounded-2xl text-sm font-semibold border transition active:scale-[0.99] ${filter === "closed" ? "bg-white" : "bg-gray-50 hover:bg-gray-100"
+                    }`}
                   style={{
                     borderColor: filter === "closed" ? "var(--accent-red)" : "#e5e7eb",
                     color: filter === "closed" ? "var(--accent-red)" : "#374151",
@@ -328,9 +233,8 @@ export default function StaffTenders() {
                 </button>
                 <button
                   onClick={() => setFilter("all")}
-                  className={`px-4 py-3 rounded-2xl text-sm font-semibold border transition active:scale-[0.99] ${
-                    filter === "all" ? "bg-white" : "bg-gray-50 hover:bg-gray-100"
-                  }`}
+                  className={`px-4 py-3 rounded-2xl text-sm font-semibold border transition active:scale-[0.99] ${filter === "all" ? "bg-white" : "bg-gray-50 hover:bg-gray-100"
+                    }`}
                   style={{
                     borderColor: filter === "all" ? "var(--secondary-blue)" : "#e5e7eb",
                     color: filter === "all" ? "var(--secondary-blue)" : "#374151",
@@ -374,7 +278,12 @@ export default function StaffTenders() {
 
         {/* LIST */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          {filteredTenders.map((t) => {
+          {loading ? (
+            <div className="lg:col-span-2 py-20 flex flex-col items-center justify-center">
+              <div className="w-12 h-12 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin mb-4"></div>
+              <p className="text-gray-500 font-semibold tracking-wide">Loading real-time tender data...</p>
+            </div>
+          ) : filteredTenders.map((t) => {
             const days = getDaysRemaining(t.closingDate);
             const isUrgent = days <= 7 && t.status === "OPEN";
 

@@ -6,6 +6,7 @@ import Link from "next/link";
 import Layout from "@/components/Layout";
 import { HODMenuItems } from "@/utils/menus";
 import { SearchIcon, getIconByKey } from "@/lib/icons";
+import { toast } from "@/lib/toast";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -28,12 +29,12 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "info"
-      ? "bg-blue-50 text-blue-700 ring-blue-100"
-      : "bg-gray-50 text-gray-700 ring-gray-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "info"
+            ? "bg-blue-50 text-blue-700 ring-blue-100"
+            : "bg-gray-50 text-gray-700 ring-gray-100";
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
       {children}
@@ -351,18 +352,16 @@ export default function HODEscalations() {
               <div className="flex flex-col sm:flex-row gap-3">
                 <div className="flex w-full sm:w-auto gap-2">
                   <button
-                    className={`flex-1 sm:flex-none px-4 py-3 rounded-2xl font-semibold border transition ${
-                      view === "cards" ? "bg-white" : "bg-gray-50"
-                    }`}
+                    className={`flex-1 sm:flex-none px-4 py-3 rounded-2xl font-semibold border transition ${view === "cards" ? "bg-white" : "bg-gray-50"
+                      }`}
                     style={{ borderColor: "rgba(109, 198, 223, 0.7)", color: "var(--primary-blue)" }}
                     onClick={() => setView("cards")}
                   >
                     Cards
                   </button>
                   <button
-                    className={`flex-1 sm:flex-none px-4 py-3 rounded-2xl font-semibold border transition ${
-                      view === "table" ? "bg-white" : "bg-gray-50"
-                    }`}
+                    className={`flex-1 sm:flex-none px-4 py-3 rounded-2xl font-semibold border transition ${view === "table" ? "bg-white" : "bg-gray-50"
+                      }`}
                     style={{ borderColor: "rgba(109, 198, 223, 0.7)", color: "var(--primary-blue)" }}
                     onClick={() => setView("table")}
                   >
@@ -621,9 +620,8 @@ export default function HODEscalations() {
                   <div>
                     <p className="text-xs text-gray-500">Due Date</p>
                     <p
-                      className={`text-sm font-semibold mt-1 ${
-                        escalation.overdueDays > 0 ? "text-red-600" : escalation.overdueDays < 0 ? "text-amber-600" : ""
-                      }`}
+                      className={`text-sm font-semibold mt-1 ${escalation.overdueDays > 0 ? "text-red-600" : escalation.overdueDays < 0 ? "text-amber-600" : ""
+                        }`}
                     >
                       {fmtDate(escalation.dueDate)}
                     </p>
@@ -631,8 +629,8 @@ export default function HODEscalations() {
                       {escalation.overdueDays > 0
                         ? `${escalation.overdueDays} days overdue`
                         : escalation.overdueDays < 0
-                        ? `${Math.abs(escalation.overdueDays)} days left`
-                        : "Due today"}
+                          ? `${Math.abs(escalation.overdueDays)} days left`
+                          : "Due today"}
                     </p>
                   </div>
                   <div>
@@ -665,7 +663,7 @@ export default function HODEscalations() {
                       View Task
                     </button>
                   </Link>
-                  
+
                   {escalation.actionRequired ? (
                     <>
                       <button
@@ -786,9 +784,8 @@ export default function HODEscalations() {
                       </td>
                       <td className="px-5 py-3 whitespace-nowrap">
                         <div
-                          className={`text-[13px] font-semibold ${
-                            escalation.overdueDays > 0 ? "text-red-600" : ""
-                          }`}
+                          className={`text-[13px] font-semibold ${escalation.overdueDays > 0 ? "text-red-600" : ""
+                            }`}
                         >
                           {fmtDate(escalation.dueDate)}
                         </div>
@@ -796,8 +793,8 @@ export default function HODEscalations() {
                           {escalation.overdueDays > 0
                             ? `${escalation.overdueDays} days overdue`
                             : escalation.overdueDays < 0
-                            ? `${Math.abs(escalation.overdueDays)} days left`
-                            : "Due today"}
+                              ? `${Math.abs(escalation.overdueDays)} days left`
+                              : "Due today"}
                         </div>
                       </td>
                       <td className="px-5 py-3 whitespace-nowrap">

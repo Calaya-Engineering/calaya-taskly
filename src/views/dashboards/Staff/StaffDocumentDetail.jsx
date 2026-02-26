@@ -1,12 +1,12 @@
 "use client";
 
-// pages/dashboards/Staff/StaffDocumentDetail.jsx
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "@/lib/toast";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { StaffMenuItems } from "@/utils/menus";
+import { fetchWithAuth } from "@/lib/api";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -17,14 +17,14 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "info"
-      ? "bg-blue-50 text-blue-700 ring-blue-100"
-      : tone === "purple"
-      ? "bg-purple-50 text-purple-700 ring-purple-100"
-      : "bg-gray-50 text-gray-700 ring-gray-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "info"
+            ? "bg-blue-50 text-blue-700 ring-blue-100"
+            : tone === "purple"
+              ? "bg-purple-50 text-purple-700 ring-purple-100"
+              : "bg-gray-50 text-gray-700 ring-gray-100";
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
       {children}
@@ -52,7 +52,7 @@ const textareaBase =
   "w-full px-4 py-3 rounded-2xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100";
 
 const accessTone = (access) => {
-  switch(access) {
+  switch (access) {
     case 'Public': return 'success';
     case 'Department': return 'info';
     case 'All Departments': return 'purple';
@@ -61,7 +61,7 @@ const accessTone = (access) => {
 };
 
 const getFileIcon = (fileType) => {
-  switch(fileType.toLowerCase()) {
+  switch (fileType.toLowerCase()) {
     case 'pdf': return '📕';
     case 'word': return '📝';
     case 'excel': return '📊';
@@ -74,12 +74,12 @@ const fmtDate = (iso) =>
   iso ? new Date(iso).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" }) : "Not set";
 
 const fmtDateTime = (iso) =>
-  iso ? new Date(iso).toLocaleString(undefined, { 
-    hour: '2-digit', 
+  iso ? new Date(iso).toLocaleString(undefined, {
+    hour: '2-digit',
     minute: '2-digit',
     month: 'short',
     day: 'numeric',
-    hour12: true 
+    hour12: true
   }) : "Not set";
 
 export default function StaffDocumentDetail() {
@@ -89,48 +89,58 @@ export default function StaffDocumentDetail() {
   const [activeTab, setActiveTab] = useState('details');
   const [newComment, setNewComment] = useState('');
   const [isInternal, setIsInternal] = useState(false);
+  const [document, setDocument] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Mock document data
-  const document = {
-    id: docId || 'DOC-001',
-    title: 'Safety Protocol v2.1',
-    description: 'Updated safety protocols for all departments, including new regulations for workshop equipment and emergency procedures. This version includes the latest industry standards and compliance requirements.',
-    type: 'Protocol',
-    department: 'HSE',
-    uploadedBy: 'HOD - Ms. Rodriguez',
-    uploadedDate: '2024-12-05',
-    fileType: 'PDF',
-    fileSize: '2.4 MB',
-    access: 'Public',
-    downloads: 45,
-    version: '2.1',
-    expiresAt: '2025-12-05',
-    storagePath: '/documents/safety/protocol_v2.1.pdf',
-    linkedTasks: ['TASK-2024-00123'],
-    tags: ['safety', 'protocol', 'compliance', 'workshop']
-  };
+  useEffect(() => {
+    if (!docId) return;
+
+    const fetchDocData = async () => {
+      setLoading(true);
+      try {
+        const resp = await fetchWithAuth(`/api/documents/${docId}`);
+        if (!resp.ok) {
+          throw new Error("Failed to fetch document details");
+        }
+        const data = await resp.json();
+        // Map API data to component structure
+        setDocument({
+          ...data,
+          description: data.description || "No description provided for this document.",
+          uploadedDate: data.date,
+          fileSize: data.size || "Unknown",
+          fileType: data.title.split('.').pop()?.toUpperCase() || "PDF",
+          version: "1.0",
+          expiresAt: null,
+          linkedTasks: [],
+          tags: []
+        });
+      } catch (error) {
+        console.error("Error fetching document:", error);
+        toast.error("Could not load document details");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDocData();
+  }, [docId]);
 
   const versions = [
-    { version: '2.1', date: '2024-12-05', uploadedBy: 'Ms. Rodriguez', changes: 'Updated workshop safety standards' },
-    { version: '2.0', date: '2024-06-15', uploadedBy: 'Mr. Smith', changes: 'Added new compliance requirements' },
-    { version: '1.5', date: '2023-12-01', uploadedBy: 'Ms. Rodriguez', changes: 'Minor revisions and corrections' },
+    { version: '1.0', date: document?.uploadedDate || '-', uploadedBy: document?.uploadedBy || '-', changes: 'Initial upload' },
   ];
 
-  const downloadHistory = [
-    { user: 'John Doe', date: '2024-12-09', department: 'Technical' },
-    { user: 'Sarah Smith', date: '2024-12-08', department: 'Workshop' },
-    { user: 'Mike Johnson', date: '2024-12-07', department: 'HSE' },
-    { user: 'Lisa Wang', date: '2024-12-06', department: 'Technical' },
-  ];
-
-  const comments = [
-    { id: 1, user: 'HOD - Mr. Johnson', comment: 'Important document for all staff to review', timestamp: '2024-12-06T10:30:00', isInternal: false },
-    { id: 2, user: 'John Doe', comment: 'Found this very helpful for the workshop inspection', timestamp: '2024-12-07T14:45:00', isInternal: false },
-    { id: 3, user: 'HSE Officer', comment: 'Internal: Need to update section 3.2 with new regulations', timestamp: '2024-12-08T09:15:00', isInternal: true },
-  ];
+  const downloadHistory = [];
+  const comments = [];
 
   const handleDownload = () => {
-    toast.info(`Downloading ${document.title}.${document.fileType.toLowerCase()} (${document.fileSize})`);
+    if (!document?.dbId) {
+      toast.info("No file available for download");
+      return;
+    }
+    const token = getAuthToken();
+    const url = `/api/documents/${document.dbId}/download${token ? `?token=${token}` : ""}`;
+    window.open(url, "_blank");
   };
 
   const handlePreview = () => {
@@ -148,6 +158,37 @@ export default function StaffDocumentDetail() {
     setNewComment('');
     setIsInternal(false);
   };
+
+  if (loading) {
+    return (
+      <Layout menuItems={StaffMenuItems} userRole="Staff">
+        <div className="flex flex-col items-center justify-center min-h-[400px]">
+          <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+          <p className="text-gray-500 font-semibold">Loading document details...</p>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (!document) {
+    return (
+      <Layout menuItems={StaffMenuItems} userRole="Staff">
+        <Card className="p-12 text-center">
+          <div className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-4 bg-red-50">
+            <span className="text-2xl text-red-600">⚠️</span>
+          </div>
+          <h3 className="text-lg font-extrabold text-gray-900 mb-2">Document not found</h3>
+          <p className="text-gray-600 mb-6">The document you are looking for might have been removed or renamed.</p>
+          <button
+            onClick={() => router.push("/staff-dashboard/documents")}
+            className="px-6 py-3 rounded-2xl font-semibold text-white bg-blue-600 hover:bg-blue-700 transition"
+          >
+            Back to Documents
+          </button>
+        </Card>
+      </Layout>
+    );
+  }
 
   return (
     <Layout menuItems={StaffMenuItems} userRole="Staff">
@@ -220,9 +261,8 @@ export default function StaffDocumentDetail() {
                   <button
                     key={t.id}
                     onClick={() => setActiveTab(t.id)}
-                    className={`px-6 py-4 text-sm font-semibold transition ${
-                      activeTab === t.id ? "text-blue-700" : "text-gray-500 hover:text-gray-700"
-                    }`}
+                    className={`px-6 py-4 text-sm font-semibold transition ${activeTab === t.id ? "text-blue-700" : "text-gray-500 hover:text-gray-700"
+                      }`}
                     style={{
                       borderBottom: activeTab === t.id ? "2px solid var(--primary-blue)" : "2px solid transparent",
                     }}
@@ -309,16 +349,15 @@ export default function StaffDocumentDetail() {
               {activeTab === "versions" && (
                 <div className="p-6">
                   <SectionTitle title="Version History" subtitle={`${versions.length} versions`} />
-                  
+
                   <div className="mt-6 space-y-4">
                     {versions.map((version, index) => (
                       <div
                         key={index}
-                        className={`p-5 rounded-2xl border ${
-                          version.version === document.version
-                            ? 'border-blue-200 bg-blue-50'
-                            : 'border-gray-200/70 hover:bg-gray-50'
-                        }`}
+                        className={`p-5 rounded-2xl border ${version.version === document.version
+                          ? 'border-blue-200 bg-blue-50'
+                          : 'border-gray-200/70 hover:bg-gray-50'
+                          }`}
                       >
                         <div className="flex items-start justify-between gap-4 mb-3">
                           <div className="flex items-center gap-2">
@@ -390,9 +429,8 @@ export default function StaffDocumentDetail() {
                   {/* Comments List */}
                   <div className="space-y-4">
                     {comments.map((comment) => (
-                      <div key={comment.id} className={`p-5 rounded-2xl border ${
-                        comment.isInternal ? 'bg-amber-50/50 border-amber-200' : 'bg-gray-50 border-gray-200/70'
-                      }`}>
+                      <div key={comment.id} className={`p-5 rounded-2xl border ${comment.isInternal ? 'bg-amber-50/50 border-amber-200' : 'bg-gray-50 border-gray-200/70'
+                        }`}>
                         <div className="flex items-start justify-between gap-3 mb-2">
                           <div className="flex items-center gap-2">
                             <div className="w-8 h-8 rounded-xl flex items-center justify-center text-white text-xs font-extrabold" style={{ backgroundColor: comment.isInternal ? "#F59E0B" : "var(--primary-blue)" }}>
@@ -417,7 +455,7 @@ export default function StaffDocumentDetail() {
             {/* Document Actions */}
             <Card className="p-6">
               <SectionTitle title="Document Actions" />
-              
+
               <div className="mt-4 space-y-2">
                 <button
                   onClick={handleDownload}
@@ -449,7 +487,7 @@ export default function StaffDocumentDetail() {
             {/* Document Stats */}
             <Card className="p-6">
               <SectionTitle title="Document Statistics" />
-              
+
               <div className="mt-4 space-y-4">
                 <div className="text-center p-5 rounded-2xl border border-gray-200/70">
                   <p className="text-3xl font-extrabold" style={{ color: "var(--primary-blue)" }}>
@@ -457,7 +495,7 @@ export default function StaffDocumentDetail() {
                   </p>
                   <p className="text-sm text-gray-500 mt-1">Total Downloads</p>
                 </div>
-                
+
                 <div className="pt-4 border-t border-gray-200/70">
                   <h4 className="text-sm font-extrabold mb-3" style={{ color: "var(--primary-blue)" }}>
                     Recent Downloads
@@ -477,7 +515,7 @@ export default function StaffDocumentDetail() {
             {/* Document Properties */}
             <Card className="p-6">
               <SectionTitle title="Properties" />
-              
+
               <div className="mt-4 space-y-3 text-sm">
                 <div className="flex items-center justify-between">
                   <span className="text-gray-500 font-semibold">Access Level:</span>
@@ -505,7 +543,7 @@ export default function StaffDocumentDetail() {
             {/* Related Documents */}
             <Card className="p-6">
               <SectionTitle title="Related Documents" />
-              
+
               <div className="mt-4 space-y-3">
                 <Link href="/staff-dashboard/document/DOC-002">
                   <div className="p-4 rounded-2xl border border-gray-200/70 hover:bg-gray-50 transition cursor-pointer">

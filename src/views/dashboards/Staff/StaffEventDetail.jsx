@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { StaffMenuItems } from "@/utils/menus";
+import { toast } from "@/lib/toast";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -16,14 +17,14 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "info"
-      ? "bg-blue-50 text-blue-700 ring-blue-100"
-      : tone === "purple"
-      ? "bg-purple-50 text-purple-700 ring-purple-100"
-      : "bg-gray-50 text-gray-700 ring-gray-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "info"
+            ? "bg-blue-50 text-blue-700 ring-blue-100"
+            : tone === "purple"
+              ? "bg-purple-50 text-purple-700 ring-purple-100"
+              : "bg-gray-50 text-gray-700 ring-gray-100";
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
       {children}
@@ -51,7 +52,7 @@ const textareaBase =
   "w-full px-4 py-3 rounded-2xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100";
 
 const typeTone = (type) => {
-  switch(type) {
+  switch (type) {
     case 'MEETING': return 'info';
     case 'TRAINING': return 'success';
     case 'EVENT': return 'purple';
@@ -60,7 +61,7 @@ const typeTone = (type) => {
 };
 
 const rsvpTone = (status) => {
-  switch(status) {
+  switch (status) {
     case 'ACCEPTED': return 'success';
     case 'DECLINED': return 'danger';
     case 'TENTATIVE': return 'warn';
@@ -69,7 +70,7 @@ const rsvpTone = (status) => {
 };
 
 const roleTone = (role) => {
-  switch(role) {
+  switch (role) {
     case 'HOD': return 'info';
     case 'Staff': return 'default';
     default: return 'default';
@@ -113,7 +114,7 @@ const getDuration = (start, end) => {
 
 const getFileIcon = (fileName) => {
   const ext = fileName.split('.').pop().toLowerCase();
-  switch(ext) {
+  switch (ext) {
     case 'pdf': return '📕';
     case 'doc':
     case 'docx': return '📘';
@@ -257,7 +258,7 @@ export default function StaffEventDetail() {
   const handleSaveEdit = () => {
     if (!editContent.trim()) return;
 
-    setComments(comments.map(comment => 
+    setComments(comments.map(comment =>
       comment.id === editingComment
         ? { ...comment, content: editContent }
         : comment
@@ -362,9 +363,8 @@ export default function StaffEventDetail() {
                   <button
                     key={t.id}
                     onClick={() => setActiveTab(t.id)}
-                    className={`px-6 py-4 text-sm font-semibold transition ${
-                      activeTab === t.id ? "text-blue-700" : "text-gray-500 hover:text-gray-700"
-                    }`}
+                    className={`px-6 py-4 text-sm font-semibold transition ${activeTab === t.id ? "text-blue-700" : "text-gray-500 hover:text-gray-700"
+                      }`}
                     style={{
                       borderBottom: activeTab === t.id ? "2px solid var(--primary-blue)" : "2px solid transparent",
                     }}
@@ -488,7 +488,7 @@ export default function StaffEventDetail() {
               {activeTab === "agenda" && (
                 <div className="p-6">
                   <SectionTitle title="Meeting Agenda" />
-                  
+
                   <div className="mt-6 space-y-4">
                     {event.agenda.map((item, index) => (
                       <div key={index} className="flex items-start gap-4 p-3 rounded-2xl hover:bg-gray-50 border border-transparent">
@@ -519,7 +519,7 @@ export default function StaffEventDetail() {
               {activeTab === "attendees" && (
                 <div className="p-6">
                   <SectionTitle title="Attendees" subtitle={`${event.attendees.length} invited`} />
-                  
+
                   <div className="mt-6 space-y-3">
                     {event.attendees.map((attendee, index) => (
                       <div key={index} className="flex items-center justify-between p-4 rounded-2xl border border-gray-200/70 hover:bg-gray-50 transition">
@@ -548,7 +548,7 @@ export default function StaffEventDetail() {
               {activeTab === "documents" && (
                 <div className="p-6">
                   <SectionTitle title="Event Documents" subtitle={`${event.documents.length} files`} />
-                  
+
                   <div className="mt-6 space-y-3">
                     {event.documents.map((doc) => (
                       <div key={doc.id} className="p-4 rounded-2xl border border-gray-200/70 hover:bg-gray-50 transition">
@@ -587,8 +587,8 @@ export default function StaffEventDetail() {
               {/* Comments Tab */}
               {activeTab === "comments" && (
                 <div className="p-6">
-                  <SectionTitle 
-                    title="💬 Discussion & Comments" 
+                  <SectionTitle
+                    title="💬 Discussion & Comments"
                     subtitle={`${comments.filter(c => !c.isDeleted).length} comments`}
                   />
 
@@ -646,7 +646,7 @@ export default function StaffEventDetail() {
                               </div>
                               <span className="text-xs text-gray-500">{fmtShortDateTime(comment.createdAt)}</span>
                             </div>
-                            
+
                             {editingComment === comment.id ? (
                               <div className="mt-2">
                                 <textarea
@@ -674,7 +674,7 @@ export default function StaffEventDetail() {
                             ) : (
                               <p className="text-sm text-gray-700 whitespace-pre-line">{comment.content}</p>
                             )}
-                            
+
                             {/* Comment Actions */}
                             {comment.userId === currentUser.id && !editingComment && (
                               <div className="mt-3 flex gap-4 text-xs">
@@ -714,19 +714,17 @@ export default function StaffEventDetail() {
             {/* RSVP Status */}
             <Card className="p-6">
               <SectionTitle title="Your RSVP Status" />
-              
+
               <div className="mt-4 space-y-4">
-                <div className={`p-5 rounded-2xl border text-center ${
-                  rsvpStatus === 'ACCEPTED' ? 'border-emerald-200 bg-emerald-50' :
-                  rsvpStatus === 'TENTATIVE' ? 'border-amber-200 bg-amber-50' :
-                  rsvpStatus === 'DECLINED' ? 'border-red-200 bg-red-50' : 'border-gray-200 bg-gray-50'
-                }`}>
-                  <p className="text-sm text-gray-600">Current Status</p>
-                  <p className={`text-xl font-extrabold mt-1 ${
-                    rsvpStatus === 'ACCEPTED' ? 'text-emerald-700' :
-                    rsvpStatus === 'TENTATIVE' ? 'text-amber-700' :
-                    rsvpStatus === 'DECLINED' ? 'text-red-700' : 'text-gray-700'
+                <div className={`p-5 rounded-2xl border text-center ${rsvpStatus === 'ACCEPTED' ? 'border-emerald-200 bg-emerald-50' :
+                    rsvpStatus === 'TENTATIVE' ? 'border-amber-200 bg-amber-50' :
+                      rsvpStatus === 'DECLINED' ? 'border-red-200 bg-red-50' : 'border-gray-200 bg-gray-50'
                   }`}>
+                  <p className="text-sm text-gray-600">Current Status</p>
+                  <p className={`text-xl font-extrabold mt-1 ${rsvpStatus === 'ACCEPTED' ? 'text-emerald-700' :
+                      rsvpStatus === 'TENTATIVE' ? 'text-amber-700' :
+                        rsvpStatus === 'DECLINED' ? 'text-red-700' : 'text-gray-700'
+                    }`}>
                     {rsvpStatus}
                   </p>
                 </div>
@@ -736,33 +734,30 @@ export default function StaffEventDetail() {
                   <div className="space-y-2">
                     <button
                       onClick={() => handleRSVP('ACCEPTED')}
-                      className={`w-full px-4 py-3 rounded-2xl text-sm font-semibold transition active:scale-[0.99] ${
-                        rsvpStatus === 'ACCEPTED'
+                      className={`w-full px-4 py-3 rounded-2xl text-sm font-semibold transition active:scale-[0.99] ${rsvpStatus === 'ACCEPTED'
                           ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200'
                           : 'border bg-white hover:bg-gray-50'
-                      }`}
+                        }`}
                       style={rsvpStatus !== 'ACCEPTED' ? { borderColor: "rgba(16,185,129,0.35)", color: "#10B981" } : {}}
                     >
                       Accept
                     </button>
                     <button
                       onClick={() => handleRSVP('TENTATIVE')}
-                      className={`w-full px-4 py-3 rounded-2xl text-sm font-semibold transition active:scale-[0.99] ${
-                        rsvpStatus === 'TENTATIVE'
+                      className={`w-full px-4 py-3 rounded-2xl text-sm font-semibold transition active:scale-[0.99] ${rsvpStatus === 'TENTATIVE'
                           ? 'bg-amber-50 text-amber-700 ring-1 ring-amber-200'
                           : 'border bg-white hover:bg-gray-50'
-                      }`}
+                        }`}
                       style={rsvpStatus !== 'TENTATIVE' ? { borderColor: "rgba(245,158,11,0.35)", color: "#F59E0B" } : {}}
                     >
                       Tentative
                     </button>
                     <button
                       onClick={() => handleRSVP('DECLINED')}
-                      className={`w-full px-4 py-3 rounded-2xl text-sm font-semibold transition active:scale-[0.99] ${
-                        rsvpStatus === 'DECLINED'
+                      className={`w-full px-4 py-3 rounded-2xl text-sm font-semibold transition active:scale-[0.99] ${rsvpStatus === 'DECLINED'
                           ? 'bg-red-50 text-red-700 ring-1 ring-red-200'
                           : 'border bg-white hover:bg-gray-50'
-                      }`}
+                        }`}
                       style={rsvpStatus !== 'DECLINED' ? { borderColor: "rgba(239,68,68,0.35)", color: "#EF4444" } : {}}
                     >
                       Decline
@@ -775,7 +770,7 @@ export default function StaffEventDetail() {
             {/* Event Quick Info */}
             <Card className="p-6">
               <SectionTitle title="Event Quick Info" />
-              
+
               <div className="mt-4 space-y-3 text-sm">
                 <div className="flex items-center gap-3">
                   <span className="w-5 h-5 text-gray-400">⏰</span>
@@ -814,7 +809,7 @@ export default function StaffEventDetail() {
             {/* Reminder Settings */}
             <Card className="p-6">
               <SectionTitle title="Reminder Settings" />
-              
+
               <div className="mt-4 space-y-3">
                 {[
                   { label: '15 minutes before', enabled: true },
@@ -836,23 +831,23 @@ export default function StaffEventDetail() {
             {/* Related Events */}
             <Card className="p-6">
               <SectionTitle title="Related Events" />
-              
+
               <div className="mt-4 space-y-3">
-                <div 
+                <div
                   className="p-4 rounded-2xl border border-gray-200/70 hover:bg-gray-50 transition cursor-pointer"
                   onClick={() => router.push('/staff-dashboard/event/EVT-002')}
                 >
                   <p className="font-extrabold text-sm text-gray-900">Technical Department Review</p>
                   <p className="text-xs text-gray-500 mt-1">Dec 16 • 2:00 PM • Technical Dept</p>
                 </div>
-                <div 
+                <div
                   className="p-4 rounded-2xl border border-gray-200/70 hover:bg-gray-50 transition cursor-pointer"
                   onClick={() => router.push('/staff-dashboard/event/EVT-003')}
                 >
                   <p className="font-extrabold text-sm text-gray-900">Workshop Equipment Training</p>
                   <p className="text-xs text-gray-500 mt-1">Dec 17 • 10:00 AM • Workshop</p>
                 </div>
-                <div 
+                <div
                   className="p-4 rounded-2xl border border-gray-200/70 hover:bg-gray-50 transition cursor-pointer"
                   onClick={() => router.push('/staff-dashboard/event/EVT-005')}
                 >

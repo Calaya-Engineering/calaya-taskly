@@ -1,0 +1,32 @@
+
+> calaya-taskly@0.0.0 build
+> next build
+
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /Users/admin/package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * /Users/admin/Desktop/calaya-taskly/package-lock.json
+
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env
+- Experiments (use with caution):
+  · optimizePackageImports
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 16.1s
+  Running TypeScript ...
+Failed to compile.
+
+./test-auth-fetch.ts:7:15
+Type error: 'cloudinaryUrl' is possibly 'undefined'.
+
+[0m [90m  5 |[39m [36mconst[39m cloudinaryUrl [33m=[39m process[33m.[39menv[33m.[39m[33mCLOUDINARY_URL[39m[33m;[39m
+ [90m  6 |[39m [90m// Parse: cloudinary://API_KEY:API_SECRET@CLOUD_NAME[39m
+[31m[1m>[22m[39m[90m  7 |[39m [36mconst[39m match [33m=[39m cloudinaryUrl[33m.[39mmatch([35m/cloudinary:\/\/(\d+):([^@]+)@(.+)/[39m)[33m;[39m
+ [90m    |[39m               [31m[1m^[22m[39m
+ [90m  8 |[39m [36mif[39m ([33m![39mmatch) {
+ [90m  9 |[39m     console[33m.[39merror([32m"Invalid CLOUDINARY_URL"[39m)[33m;[39m
+ [90m 10 |[39m     process[33m.[39mexit([35m1[39m)[33m;[39m[0m
+Next.js build worker exited with code: 1 and signal: null
