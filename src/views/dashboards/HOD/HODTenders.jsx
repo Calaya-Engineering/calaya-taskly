@@ -1,7 +1,7 @@
 "use client";
 
 // pages/dashboards/HOD/HODTenders.jsx
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
@@ -10,6 +10,7 @@ import { HODMenuItems } from "@/utils/menus";
 import { DownloadIcon, DeleteIcon, EditIcon } from "@/lib/icons";
 import { toast } from "@/lib/toast";
 import { fetchWithAuth } from "@/lib/api";
+import { useSSE } from "@/hooks/useSSE";
 
 
 /* ---------- UI helpers ---------- */
@@ -89,23 +90,27 @@ export default function HODTenders() {
   const [tendersData, setTendersData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function getTenders() {
-      try {
-        const res = await fetchWithAuth("/api/tenders");
-        if (res.ok) {
-          const data = await res.json();
-          setTendersData(data);
-        }
-      } catch (err) {
-        console.error("Failed to fetch tenders:", err);
-        toast.error("Failed to load tenders");
-      } finally {
-        setLoading(false);
+  const getTenders = useCallback(async () => {
+    try {
+      const res = await fetchWithAuth("/api/tenders");
+      if (res.ok) {
+        const data = await res.json();
+        setTendersData(data);
       }
+    } catch (err) {
+      console.error("Failed to fetch tenders:", err);
+      toast.error("Failed to load tenders");
+    } finally {
+      setLoading(false);
     }
-    getTenders();
   }, []);
+
+  useEffect(() => { getTenders(); }, [getTenders]);
+
+  // Real-time: re-fetch on task/tender events
+  useSSE("/api/tasks/events", (ev) => {
+    if (ev.type?.startsWith("task:")) getTenders();
+  });
 
   const departments = useMemo(() => ["all", ...Array.from(new Set(tendersData.map((t) => t.department)))], [tendersData]);
   const openTenders = useMemo(() => tendersData.filter((t) => t.status === "OPEN"), [tendersData]);

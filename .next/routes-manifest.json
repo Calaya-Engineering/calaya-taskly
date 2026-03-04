@@ -126,6 +126,14 @@
       "namedRegex": "^/hod\\-dashboard/edit\\-event/(?<nxtPeventId>[^/]+?)(?:/)?$"
     },
     {
+      "page": "/hod-dashboard/edit-task/[taskId]",
+      "regex": "^/hod\\-dashboard/edit\\-task/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPtaskId": "nxtPtaskId"
+      },
+      "namedRegex": "^/hod\\-dashboard/edit\\-task/(?<nxtPtaskId>[^/]+?)(?:/)?$"
+    },
+    {
       "page": "/hod-dashboard/event/[eventId]",
       "regex": "^/hod\\-dashboard/event/([^/]+?)(?:/)?$",
       "routeKeys": {

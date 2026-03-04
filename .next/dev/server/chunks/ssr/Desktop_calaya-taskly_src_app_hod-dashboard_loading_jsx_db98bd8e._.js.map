@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///Users/admin/Desktop/calaya-taskly/src/app/hod-dashboard/loading.jsx"],"sourcesContent":["export default function Loading() {\n    return (\n        <div className=\"flex min-h-[60vh] items-center justify-center\">\n            <div className=\"flex flex-col items-center gap-3\">\n                <div className=\"h-10 w-10 animate-spin rounded-full border-[3px] border-[#2C4B9B] border-t-transparent\" />\n                <p className=\"text-sm text-gray-400 animate-pulse\">Loading…</p>\n            </div>\n        </div>\n    );\n}\n"],"names":[],"mappings":";;;;;;AAAe,SAAS;IACpB,qBACI,6QAAC;QAAI,WAAU;kBACX,cAAA,6QAAC;YAAI,WAAU;;8BACX,6QAAC;oBAAI,WAAU;;;;;;8BACf,6QAAC;oBAAE,WAAU;8BAAsC;;;;;;;;;;;;;;;;;AAInE"}}]
+}

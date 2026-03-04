@@ -66,6 +66,8 @@ export default function HODDepartmentUsers() {
     load();
   }, []);
 
+  // Note: user list is refreshed after create/edit/delete actions — no need for SSE here
+
   const openCreate = () => {
     setModal({ type: "create" });
     setForm({

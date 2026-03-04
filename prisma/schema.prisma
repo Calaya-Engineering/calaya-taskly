@@ -46,20 +46,23 @@ model User {
 }
 
 model Task {
-  id             Int       @id @default(autoincrement())
-  title          String
-  description    String?   @db.Text
-  department     String?
-  priority       String    @default("MEDIUM")
-  status         String    @default("PENDING")
-  type           String    @default("TASK")
-  createdById    Int
-  startDate      DateTime?
-  dueDate        DateTime?
-  estimatedHours Int?
-  visibility     String    @default("ASSIGNED_ONLY")
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  id               Int       @id @default(autoincrement())
+  title            String
+  description      String?   @db.Text
+  department       String?
+  priority         String    @default("MEDIUM")
+  status           String    @default("PENDING")
+  type             String    @default("TASK")
+  createdById      Int
+  startDate        DateTime?
+  dueDate          DateTime?
+  estimatedHours   Int?
+  visibility       String    @default("ASSIGNED_ONLY")
+  escalated        Boolean   @default(false)
+  escalatedAt      DateTime?
+  escalationReason String?   @db.Text
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
   createdBy   User             @relation("CreatedBy", fields: [createdById], references: [id])
   assignments TaskAssignment[]
@@ -68,6 +71,7 @@ model Task {
   @@index([status])
   @@index([department])
   @@index([createdAt])
+  @@index([escalated])
 }
 
 

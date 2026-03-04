@@ -1805,7 +1805,7 @@ const scopeTone = (scope)=>{
     }
 };
 const getDocIcon = (type)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["getDocIconComponent"])(type);
-const fmtDate = (iso)=>new Date(iso).toLocaleDateString(undefined, {
+const fmtDate = (iso)=>new Date(iso).toLocaleDateString("en-GB", {
         year: "numeric",
         month: "short",
         day: "numeric"

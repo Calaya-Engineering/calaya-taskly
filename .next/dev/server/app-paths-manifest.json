@@ -1,14 +1,25 @@
 {
+  "/api/announcements/events/route": "app/api/announcements/events/route.js",
+  "/api/announcements/route": "app/api/announcements/route.js",
   "/api/auth/send-otp/route": "app/api/auth/send-otp/route.js",
   "/api/auth/verify-otp/route": "app/api/auth/verify-otp/route.js",
+  "/api/documents/route": "app/api/documents/route.js",
   "/api/me/route": "app/api/me/route.js",
+  "/api/notifications/route": "app/api/notifications/route.js",
+  "/api/tasks/[id]/escalate/route": "app/api/tasks/[id]/escalate/route.js",
   "/api/tasks/[id]/route": "app/api/tasks/[id]/route.js",
   "/api/tasks/events/route": "app/api/tasks/events/route.js",
   "/api/tasks/route": "app/api/tasks/route.js",
+  "/api/tenders/route": "app/api/tenders/route.js",
+  "/hod-dashboard/announcements/page": "app/hod-dashboard/announcements/page.js",
+  "/hod-dashboard/documents/page": "app/hod-dashboard/documents/page.js",
+  "/hod-dashboard/events/page": "app/hod-dashboard/events/page.js",
   "/hod-dashboard/my-tasks/page": "app/hod-dashboard/my-tasks/page.js",
   "/hod-dashboard/page": "app/hod-dashboard/page.js",
+  "/hod-dashboard/reports/page": "app/hod-dashboard/reports/page.js",
   "/hod-dashboard/task/[taskId]/page": "app/hod-dashboard/task/[taskId]/page.js",
   "/hod-dashboard/tasks/page": "app/hod-dashboard/tasks/page.js",
+  "/hod-dashboard/tenders/page": "app/hod-dashboard/tenders/page.js",
   "/login/page": "app/login/page.js",
-  "/md-dashboard/task/[taskId]/page": "app/md-dashboard/task/[taskId]/page.js"
+  "/page": "app/page.js"
 }

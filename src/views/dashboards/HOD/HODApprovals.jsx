@@ -1,12 +1,14 @@
 "use client";
 
 // pages/dashboards/HOD/HODApprovals.jsx
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { toast } from "@/lib/toast";
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import { HODMenuItems } from "@/utils/menus";
 import { getIconByKey } from "@/lib/icons";
+import { fetchWithAuth } from "@/lib/api";
+import { useSSE } from "@/hooks/useSSE";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children, ...props }) => (
   <div
@@ -34,12 +36,12 @@ const Pill = ({ children, tone = "default" }) => {
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
       : tone === "success"
-      ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-      : tone === "warn"
-      ? "bg-amber-50 text-amber-800 ring-amber-100"
-      : tone === "info"
-      ? "bg-blue-50 text-blue-700 ring-blue-100"
-      : "bg-gray-50 text-gray-700 ring-gray-100";
+        ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 ring-amber-100"
+          : tone === "info"
+            ? "bg-blue-50 text-blue-700 ring-blue-100"
+            : "bg-gray-50 text-gray-700 ring-gray-100";
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
       {children}
@@ -47,169 +49,9 @@ const Pill = ({ children, tone = "default" }) => {
   );
 };
 
-const approvalsData = [
-  {
-    id: "APR-001",
-    title: "Pipeline Inspection Report Approval",
-    type: "TASK_COMPLETION",
-    submittedBy: "Alex Johnson",
-    department: "Technical",
-    submittedDate: "2024-12-15",
-    dueDate: "2024-12-18",
-    priority: "HIGH",
-    status: "PENDING",
-    description: "Completion of pipeline inspection task requires HOD approval before closing",
-    reference: "TASK-2024-00123",
-    attachments: 3,
-    daysPending: 1,
-    documents: [
-      { name: "Inspection Report.pdf", size: "2.4 MB", uploadedBy: "Alex Johnson", date: "2024-12-15", type: "pdf" },
-      { name: "Site Photos.zip", size: "15.2 MB", uploadedBy: "Alex Johnson", date: "2024-12-15", type: "zip" },
-      { name: "Findings Summary.xlsx", size: "1.8 MB", uploadedBy: "Alex Johnson", date: "2024-12-15", type: "excel" },
-    ],
-  },
-  {
-    id: "APR-002",
-    title: "Safety Equipment Purchase Request",
-    type: "DOCUMENT",
-    submittedBy: "Maria Garcia",
-    department: "HSE",
-    submittedDate: "2024-12-14",
-    dueDate: "2024-12-16",
-    priority: "URGENT",
-    status: "PENDING",
-    description: "Purchase order for new safety equipment needs budget approval",
-    reference: "PO-2024-0456",
-    attachments: 2,
-    daysPending: 2,
-    documents: [
-      { name: "Purchase Order.pdf", size: "1.2 MB", uploadedBy: "Maria Garcia", date: "2024-12-14", type: "pdf" },
-      { name: "Budget Allocation.xlsx", size: "0.8 MB", uploadedBy: "Maria Garcia", date: "2024-12-14", type: "excel" },
-    ],
-  },
-  {
-    id: "APR-003",
-    title: "Workshop Tool Calibration Report",
-    type: "REPORT",
-    submittedBy: "David Chen",
-    department: "Workshop",
-    submittedDate: "2024-12-13",
-    dueDate: "2024-12-17",
-    priority: "MEDIUM",
-    status: "PENDING",
-    description: "Monthly calibration report for workshop equipment requires review",
-    reference: "CAL-2024-012",
-    attachments: 4,
-    daysPending: 3,
-    documents: [
-      { name: "Calibration Report.pdf", size: "3.2 MB", uploadedBy: "David Chen", date: "2024-12-13", type: "pdf" },
-      { name: "Equipment List.xlsx", size: "1.5 MB", uploadedBy: "David Chen", date: "2024-12-13", type: "excel" },
-      { name: "Certificates.zip", size: "8.4 MB", uploadedBy: "David Chen", date: "2024-12-13", type: "zip" },
-      { name: "Maintenance Log.docx", size: "2.1 MB", uploadedBy: "David Chen", date: "2024-12-13", type: "doc" },
-    ],
-  },
-  {
-    id: "APR-004",
-    title: "Project Budget Revision",
-    type: "DOCUMENT",
-    submittedBy: "Emma Wilson",
-    department: "Technical",
-    submittedDate: "2024-12-12",
-    dueDate: "2024-12-15",
-    priority: "HIGH",
-    status: "PENDING",
-    description: "Revised budget for Q1 project requires approval",
-    reference: "BUD-2024-089",
-    attachments: 1,
-    daysPending: 4,
-    documents: [
-      { name: "Budget Revision Q1.xlsx", size: "2.2 MB", uploadedBy: "Emma Wilson", date: "2024-12-12", type: "excel" },
-    ],
-  },
-  {
-    id: "APR-005",
-    title: "Leave Request - Team Lead",
-    type: "OTHER",
-    submittedBy: "Michael Brown",
-    department: "Technical",
-    submittedDate: "2024-12-11",
-    dueDate: "2024-12-14",
-    priority: "MEDIUM",
-    status: "APPROVED",
-    description: "Annual leave request for team lead approval",
-    reference: "LEAVE-2024-123",
-    attachments: 0,
-    daysPending: 0,
-    approvedDate: "2024-12-12",
-    approvedBy: "HOD - Technical",
-    approvalComment: "Approved. Ensure handover plan is documented.",
-    documents: [],
-  },
-  {
-    id: "APR-006",
-    title: "Expense Report Approval",
-    type: "REPORT",
-    submittedBy: "Sarah Taylor",
-    department: "Workshop",
-    submittedDate: "2024-12-10",
-    dueDate: "2024-12-13",
-    priority: "MEDIUM",
-    status: "REJECTED",
-    description: "Monthly expense report requires HOD approval",
-    reference: "EXP-2024-011",
-    attachments: 5,
-    daysPending: 0,
-    rejectedDate: "2024-12-11",
-    rejectedBy: "HOD - Workshop",
-    rejectionReason: "Missing receipts for several items. Please resubmit with complete documentation.",
-    documents: [
-      { name: "Expense Summary.pdf", size: "1.8 MB", uploadedBy: "Sarah Taylor", date: "2024-12-10", type: "pdf" },
-      { name: "Receipts.zip", size: "12.5 MB", uploadedBy: "Sarah Taylor", date: "2024-12-10", type: "zip" },
-    ],
-  },
-  {
-    id: "APR-007",
-    title: "Training Program Approval",
-    type: "DOCUMENT",
-    submittedBy: "Robert Lee",
-    department: "Technical",
-    submittedDate: "2024-12-09",
-    dueDate: "2024-12-12",
-    priority: "HIGH",
-    status: "PENDING",
-    description: "New safety training program requires department head approval",
-    reference: "TRN-2024-034",
-    attachments: 2,
-    daysPending: 6,
-    documents: [
-      { name: "Training Proposal.pdf", size: "3.4 MB", uploadedBy: "Robert Lee", date: "2024-12-09", type: "pdf" },
-      { name: "Budget Breakdown.xlsx", size: "1.2 MB", uploadedBy: "Robert Lee", date: "2024-12-09", type: "excel" },
-    ],
-  },
-  {
-    id: "APR-008",
-    title: "Weekly Operations Report",
-    type: "REPORT",
-    submittedBy: "James Miller",
-    department: "Workshop",
-    submittedDate: "2024-12-08",
-    dueDate: "2024-12-10",
-    priority: "MEDIUM",
-    status: "APPROVED",
-    description: "Weekly operations and maintenance report",
-    reference: "OPS-WK49",
-    attachments: 2,
-    daysPending: 0,
-    approvedDate: "2024-12-09",
-    approvedBy: "HOD - Workshop",
-    approvalComment: "Good work. Keep it up.",
-    documents: [
-      { name: "Operations Report.pdf", size: "2.1 MB", uploadedBy: "James Miller", date: "2024-12-08", type: "pdf" },
-    ],
-  },
-];
-
 export default function HODApprovals() {
+  const [approvalsData, setApprovalsData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [approvalType, setApprovalType] = useState("All");
   const [priorityFilter, setPriorityFilter] = useState("All");
   const [statusFilter, setStatusFilter] = useState("PENDING");
@@ -219,14 +61,57 @@ export default function HODApprovals() {
   const [activeDocTab, setActiveDocTab] = useState("details");
   const [reviewedDocs, setReviewedDocs] = useState({});
 
-  const approvalHistory = useMemo(() => approvalsData.filter((a) => a.status !== "PENDING"), []);
-  
-  const filteredApprovals = approvalsData.filter((approval) => {
+  const fetchApprovals = useCallback(async () => {
+    try {
+      const res = await fetchWithAuth("/api/tasks?limit=100");
+      if (res.ok) {
+        const tasks = await res.json();
+        // Map tasks to the approval shape the UI expects
+        const mapped = tasks.map((t) => ({
+          id: `TSK-${t.id}`,
+          dbId: t.id,
+          title: t.title,
+          type: t.type === "JOB" ? "TASK_COMPLETION" : "DOCUMENT",
+          submittedBy: t.assignments?.[0]?.user?.name || t.assignments?.[0]?.user?.email || "Unassigned",
+          department: t.department || "—",
+          submittedDate: t.createdAt?.split("T")[0] || "",
+          dueDate: t.dueDate || "",
+          priority: t.priority || "MEDIUM",
+          status: t.status || "PENDING",
+          description: t.description || "",
+          reference: t.type === "JOB" ? `JOB-${t.id}` : `TSK-${t.id}`,
+          attachments: 0,
+          daysPending: t.dueDate ? Math.max(0, Math.ceil((Date.now() - new Date(t.createdAt)) / 86400000)) : 0,
+          documents: [],
+          approvedDate: t.completedAt?.split("T")[0] || null,
+          rejectedDate: null,
+          approvalComment: null,
+          rejectionReason: null,
+        }));
+        setApprovalsData(mapped);
+      }
+    } catch (e) {
+      console.error("Failed to fetch approvals:", e);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => { fetchApprovals(); }, [fetchApprovals]);
+
+  // Real-time: re-fetch on task events
+  useSSE("/api/tasks/events", (ev) => {
+    if (ev.type?.startsWith("task:")) fetchApprovals();
+  });
+
+  const approvalHistory = useMemo(() => approvalsData.filter((a) => a.status === "COMPLETED" || a.status === "APPROVED" || a.status === "REJECTED"), [approvalsData]);
+
+  const filteredApprovals = useMemo(() => approvalsData.filter((approval) => {
     if (approvalType !== "All" && approval.type !== approvalType) return false;
     if (priorityFilter !== "All" && approval.priority !== priorityFilter) return false;
     if (statusFilter !== "All" && approval.status !== statusFilter) return false;
     return true;
-  });
+  }), [approvalsData, approvalType, priorityFilter, statusFilter]);
 
   const getPriorityTone = (priority) => {
     switch (priority) {
@@ -315,16 +200,44 @@ export default function HODApprovals() {
     };
   }, [isModalOpen]);
 
-  const handleApprove = () => {
+  const handleApprove = async () => {
     if (!selectedApproval) return;
-    toast.success(`Approval ${selectedApproval.id} approved${comment ? ` with comment: ${comment}` : ""}`);
+    try {
+      const res = await fetchWithAuth(`/api/tasks/${selectedApproval.dbId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "COMPLETED" }),
+      });
+      if (res.ok) {
+        toast.success(`Task ${selectedApproval.id} approved`);
+        fetchApprovals();
+      } else {
+        toast.error("Failed to approve task");
+      }
+    } catch {
+      toast.error("Failed to approve task");
+    }
     closeModal();
   };
 
-  const handleReject = () => {
+  const handleReject = async () => {
     if (!selectedApproval) return;
     const reason = comment.trim() || "No reason provided";
-    toast.warning(`Approval ${selectedApproval.id} rejected with reason: ${reason}`);
+    try {
+      const res = await fetchWithAuth(`/api/tasks/${selectedApproval.dbId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "ON_HOLD", comment: reason }),
+      });
+      if (res.ok) {
+        toast.warning(`Task ${selectedApproval.id} placed on hold: ${reason}`);
+        fetchApprovals();
+      } else {
+        toast.error("Failed to reject task");
+      }
+    } catch {
+      toast.error("Failed to reject task");
+    }
     closeModal();
   };
 
@@ -332,14 +245,22 @@ export default function HODApprovals() {
   const handleViewDocument = (doc) => toast.info(`Opening ${doc.name} for preview`);
 
   const fmtDate = (iso) =>
-    iso ? new Date(iso).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" }) : "Not set";
+    iso ? new Date(iso).toLocaleDateString("en-GB", { year: "numeric", month: "short", day: "numeric" }) : "Not set";
 
-  const pendingCount = approvalsData.filter((a) => a.status === "PENDING").length;
-  const urgentPendingCount = approvalsData.filter((a) => a.priority === "URGENT" && a.status === "PENDING").length;
+  const pendingCount = useMemo(() => approvalsData.filter((a) => a.status === "PENDING").length, [approvalsData]);
+  const urgentPendingCount = useMemo(() => approvalsData.filter((a) => a.priority === "URGENT" && a.status === "PENDING").length, [approvalsData]);
 
   const reviewedCount = selectedApproval?.documents
     ? selectedApproval.documents.filter((d) => reviewedDocs[d.name]).length
     : 0;
+
+  if (loading) return (
+    <Layout menuItems={HODMenuItems} userRole="HOD">
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="w-10 h-10 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin" />
+      </div>
+    </Layout>
+  );
 
   return (
     <Layout menuItems={HODMenuItems} userRole="HOD">
@@ -763,9 +684,8 @@ export default function HODApprovals() {
                       <button
                         key={tab.id}
                         onClick={() => setActiveDocTab(tab.id)}
-                        className={`pb-2 px-1 font-semibold transition border-b-2 ${
-                          activeDocTab === tab.id ? "text-gray-900" : "text-gray-500 hover:text-gray-700"
-                        }`}
+                        className={`pb-2 px-1 font-semibold transition border-b-2 ${activeDocTab === tab.id ? "text-gray-900" : "text-gray-500 hover:text-gray-700"
+                          }`}
                         style={{ borderBottomColor: activeDocTab === tab.id ? "var(--primary-blue)" : "transparent" }}
                       >
                         {tab.label}

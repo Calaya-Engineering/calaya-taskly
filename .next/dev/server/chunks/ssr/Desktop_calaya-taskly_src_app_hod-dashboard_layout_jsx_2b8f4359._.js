@@ -4,11 +4,8 @@ module.exports = [
 
 __turbopack_context__.s([
     "default",
-    ()=>HODDashboardLayout,
-    "dynamic",
-    ()=>dynamic
+    ()=>HODDashboardLayout
 ]);
-const dynamic = "force-dynamic";
 function HODDashboardLayout({ children }) {
     return children;
 }

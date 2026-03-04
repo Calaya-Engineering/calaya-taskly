@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
+import { useBadges } from "@/contexts/BadgeContext";
 import { MenuIcon, CloseMenuIcon } from "@/lib/icons";
 
 export default function Layout({ children, menuItems, userRole }) {
@@ -12,6 +13,7 @@ export default function Layout({ children, menuItems, userRole }) {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+  const { getBadge } = useBadges();
   const { isAuthenticated, loading, logout } = useAuth();
 
   const handleLogoutClick = () => setShowLogoutModal(true);
@@ -201,16 +203,20 @@ export default function Layout({ children, menuItems, userRole }) {
                                 )}
                               </span>
                               <span className="truncate">{item.label}</span>
-                              {item.badge && (
-                                <span
-                                  className={[
-                                    "ml-auto text-xs font-semibold px-2 py-1 rounded-full",
-                                    active ? "bg-white/15 text-white" : "bg-red-500 text-white",
-                                  ].join(" ")}
-                                >
-                                  {item.badge}
-                                </span>
-                              )}
+                              {(() => {
+                                const liveBadge = getBadge(path);
+                                if (!liveBadge) return null;
+                                return (
+                                  <span
+                                    className={[
+                                      "ml-auto text-xs font-semibold px-2 py-1 rounded-full",
+                                      active ? "bg-white/15 text-white" : "bg-red-500 text-white",
+                                    ].join(" ")}
+                                  >
+                                    {liveBadge}
+                                  </span>
+                                );
+                              })()}
                             </Link>
                           ) : (
                             <span key={item._idx} className={linkClass} style={linkStyle}>
@@ -234,16 +240,20 @@ export default function Layout({ children, menuItems, userRole }) {
                                 )}
                               </span>
                               <span className="truncate">{item.label}</span>
-                              {item.badge && (
-                                <span
-                                  className={[
-                                    "ml-auto text-xs font-semibold px-2 py-1 rounded-full",
-                                    active ? "bg-white/15 text-white" : "bg-red-500 text-white",
-                                  ].join(" ")}
-                                >
-                                  {item.badge}
-                                </span>
-                              )}
+                              {(() => {
+                                const liveBadge = getBadge(path);
+                                if (!liveBadge) return null;
+                                return (
+                                  <span
+                                    className={[
+                                      "ml-auto text-xs font-semibold px-2 py-1 rounded-full",
+                                      active ? "bg-white/15 text-white" : "bg-red-500 text-white",
+                                    ].join(" ")}
+                                  >
+                                    {liveBadge}
+                                  </span>
+                                );
+                              })()}
                             </span>
                           );
                         })}

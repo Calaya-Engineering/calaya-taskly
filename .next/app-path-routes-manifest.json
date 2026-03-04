@@ -43,6 +43,7 @@
   "/hod-dashboard/document/[docId]/page": "/hod-dashboard/document/[docId]",
   "/hod-dashboard/documents/page": "/hod-dashboard/documents",
   "/hod-dashboard/edit-event/[eventId]/page": "/hod-dashboard/edit-event/[eventId]",
+  "/hod-dashboard/edit-task/[taskId]/page": "/hod-dashboard/edit-task/[taskId]",
   "/hod-dashboard/escalations/page": "/hod-dashboard/escalations",
   "/hod-dashboard/event/[eventId]/page": "/hod-dashboard/event/[eventId]",
   "/hod-dashboard/events/page": "/hod-dashboard/events",

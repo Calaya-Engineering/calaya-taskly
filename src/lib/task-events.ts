@@ -7,7 +7,9 @@ export type TaskEvent =
   | { type: "task:created"; taskId: number }
   | { type: "task:assigned"; taskId: number; userId: number }
   | { type: "task:unassigned"; taskId: number; userId: number }
-  | { type: "task:updated"; taskId: number };
+  | { type: "task:updated"; taskId: number }
+  | { type: "task:escalated"; taskId: number };
+
 
 type Listener = (event: TaskEvent) => void;
 

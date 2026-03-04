@@ -146,6 +146,8 @@ export default function HODCreateDocument() {
     tagsText: '',
   });
 
+  const [saving, setSaving] = useState(false);
+
   const [files, setFiles] = useState([]);
 
   const tags = useMemo(() =>
@@ -175,8 +177,20 @@ export default function HODCreateDocument() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!formData.title.trim()) {
+      toast.warning("Please enter a document title.");
+      setActiveTab("info");
+      return;
+    }
+
+    if (!formData.documentType) {
+      toast.warning("Please select a document type.");
+      setActiveTab("info");
+      return;
+    }
 
     if (!files.length) {
       toast.warning("Please upload at least one file.");
@@ -208,15 +222,52 @@ export default function HODCreateDocument() {
       return;
     }
 
-    console.log("Creating document:", {
-      docId,
-      ...formData,
-      tags,
-      files: files.map((f) => ({ name: f.name, size: f.size, type: f.type })),
-    });
+    setSaving(true);
+    try {
+      let fileUrl = null;
+      if (files.length > 0) {
+        toast.info("Uploading file to cloud...");
+        const formDataUpload = new FormData();
+        formDataUpload.append("file", files[0]);
+        const uploadRes = await fetchWithAuth("/api/upload/cloudinary", {
+          method: "POST",
+          body: formDataUpload,
+        });
+        if (!uploadRes.ok) {
+          const err = await uploadRes.json().catch(() => ({}));
+          throw new Error(err.error || "Failed to upload file");
+        }
+        const { url } = await uploadRes.json();
+        fileUrl = url;
+      }
 
-    toast.success("Document uploaded successfully!");
-    router.push("/hod-dashboard/documents");
+      const fileSizeMB = files.length ? (files.reduce((s, f) => s + f.size, 0) / 1024 / 1024).toFixed(2) + " MB" : null;
+      const res = await fetchWithAuth("/api/documents", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: formData.title.trim(),
+          type: formData.documentType,
+          department: formData.department,
+          scope: formData.scope,
+          fileSize: fileSizeMB,
+          fileUrl,
+          uploadedBy: null, // backend will process token
+        }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || "Failed to create document");
+      }
+
+      toast.success("Document created successfully!");
+      router.push("/hod-dashboard/documents");
+    } catch (err) {
+      toast.error(err.message || "Failed to create document");
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleFileUpload = (e) => {
@@ -1059,10 +1110,10 @@ export default function HODCreateDocument() {
                       <button
                         type="submit"
                         className="flex-1 px-5 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition"
-                        style={{ backgroundColor: files.length ? "var(--accent-red)" : "#D1D5DB" }}
-                        disabled={!files.length}
+                        style={{ backgroundColor: files.length && !saving ? "var(--accent-red)" : "#D1D5DB" }}
+                        disabled={!files.length || saving}
                       >
-                        Upload Document
+                        {saving ? "Uploading..." : "Upload Document"}
                       </button>
                     </div>
 

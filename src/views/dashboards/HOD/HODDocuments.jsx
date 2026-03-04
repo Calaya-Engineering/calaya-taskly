@@ -1,13 +1,14 @@
 "use client";
 
 // pages/dashboards/HOD/HODDocuments.jsx
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import { TaskIcon, DocumentIcon, LockIcon, DownloadIcon, ClockIcon, getDocIconComponent } from "@/lib/icons";
 import { HODMenuItems } from "@/utils/menus";
 import { fetchWithAuth, getAuthToken } from "@/lib/api";
 import { toast } from "@/lib/toast";
+import { useSSE } from "@/hooks/useSSE";
 
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
@@ -66,7 +67,7 @@ const scopeTone = (scope) => {
 
 const getDocIcon = (type) => getDocIconComponent(type);
 
-const fmtDate = (iso) => new Date(iso).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+const fmtDate = (iso) => new Date(iso).toLocaleDateString("en-GB", { year: "numeric", month: "short", day: "numeric" });
 const formatScope = (scope) => scope.replace(/_/g, " ");
 
 const toMB = (sizeStr) => {
@@ -83,78 +84,48 @@ export default function HODDocuments() {
   });
 
   const [view, setView] = useState("cards");
+  const [documentsData, setDocumentsData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const documentsData = [
-    {
-      id: 'DOC-001',
-      title: 'Pipeline Safety Inspection Report',
-      type: 'Report',
-      department: 'Technical',
-      scope: 'PUBLIC',
-      uploadedBy: 'Alex Johnson',
-      uploadedDate: '2024-12-10',
-      fileSize: '2.4 MB',
-      fileType: 'PDF',
-      downloads: 24,
-      description: 'Quarterly safety inspection report for pipeline infrastructure',
-    },
-    {
-      id: 'DOC-002',
-      title: 'HSE Compliance Checklist',
-      type: 'Checklist',
-      department: 'HSE',
-      scope: 'ALL_HODS',
-      uploadedBy: 'Maria Garcia',
-      uploadedDate: '2024-12-08',
-      fileSize: '1.8 MB',
-      fileType: 'DOCX',
-      downloads: 18,
-      description: 'Complete HSE compliance checklist for offshore operations',
-    },
-    {
-      id: 'DOC-003',
-      title: 'Workshop Equipment Manual',
-      type: 'Manual',
-      department: 'Workshop',
-      scope: 'SPECIFIC_DEPARTMENTS',
-      uploadedBy: 'David Chen',
-      uploadedDate: '2024-12-05',
-      fileSize: '5.2 MB',
-      fileType: 'PDF',
-      downloads: 32,
-      description: 'Operation and maintenance manual for workshop equipment',
-    },
-    {
-      id: 'DOC-004',
-      title: 'Project Budget Approval',
-      type: 'Financial',
-      department: 'Technical',
-      scope: 'SPECIFIC_HODS',
-      uploadedBy: 'HOD - Technical',
-      uploadedDate: '2024-12-03',
-      fileSize: '3.1 MB',
-      fileType: 'XLSX',
-      downloads: 12,
-      description: 'Approved budget for Q1 pipeline maintenance project',
-    },
-    {
-      id: 'DOC-005',
-      title: 'Emergency Response Plan',
-      type: 'Procedure',
-      department: 'HSE',
-      scope: 'PUBLIC',
-      uploadedBy: 'Emma Wilson',
-      uploadedDate: '2024-12-01',
-      fileSize: '4.5 MB',
-      fileType: 'PDF',
-      downloads: 45,
-      description: 'Updated emergency response plan for offshore facilities',
-    },
-  ];
+  const fetchDocs = useCallback(async () => {
+    try {
+      const res = await fetchWithAuth("/api/documents");
+      if (res.ok) {
+        const data = await res.json();
+        // Normalise API shape → component shape
+        const mapped = data.map((d) => ({
+          id: d.id,
+          title: d.title,
+          type: d.type || "Document",
+          department: d.department || "—",
+          scope: d.scope || "PUBLIC",
+          uploadedBy: d.uploadedBy || "—",
+          uploadedDate: d.date || d.createdAt,
+          fileSize: d.size || "—",
+          fileType: d.fileUrl ? d.fileUrl.split(".").pop().toUpperCase() : "FILE",
+          downloads: d.downloads || 0,
+          description: d.description || "",
+          fileUrl: d.fileUrl,
+        }));
+        setDocumentsData(mapped);
+      }
+    } catch (e) {
+      console.error("Failed to fetch documents:", e);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-  const documentTypes = useMemo(() => ["All Types", ...new Set(documentsData.map((d) => d.type))], []);
-  const scopeTypes = useMemo(() => ["All Scopes", ...new Set(documentsData.map((d) => d.scope))], []);
-  const departments = useMemo(() => ["all", ...new Set(documentsData.map((d) => d.department))], []);
+  useEffect(() => { fetchDocs(); }, [fetchDocs]);
+
+  // Re-fetch on any document-related SSE event
+  useSSE("/api/tasks/events", (ev) => {
+    if (ev.type?.startsWith("task:")) fetchDocs();
+  });
+
+  const documentTypes = useMemo(() => ["All Types", ...new Set(documentsData.map((d) => d.type))], [documentsData]);
+  const scopeTypes = useMemo(() => ["All Scopes", ...new Set(documentsData.map((d) => d.scope))], [documentsData]);
+  const departments = useMemo(() => ["all", ...new Set(documentsData.map((d) => d.department))], [documentsData]);
 
   const filteredDocs = useMemo(() => {
     const q = filters.search.trim().toLowerCase();
@@ -165,22 +136,22 @@ export default function HODDocuments() {
       const matchesQ =
         !q ||
         doc.title.toLowerCase().includes(q) ||
-        doc.id.toLowerCase().includes(q) ||
-        doc.uploadedBy.toLowerCase().includes(q) ||
-        doc.department.toLowerCase().includes(q) ||
-        doc.type.toLowerCase().includes(q);
+        String(doc.id).toLowerCase().includes(q) ||
+        (doc.uploadedBy || "").toLowerCase().includes(q) ||
+        (doc.department || "").toLowerCase().includes(q) ||
+        (doc.type || "").toLowerCase().includes(q);
       return matchesType && matchesScope && matchesDept && matchesQ;
     });
-  }, [filters]);
+  }, [filters, documentsData]);
 
   const stats = useMemo(() => {
     const total = documentsData.length;
     const publicCount = documentsData.filter((d) => d.scope === "PUBLIC").length;
     const privateCount = documentsData.filter((d) => d.scope === "PRIVATE").length;
-    const totalDownloads = documentsData.reduce((sum, d) => sum + d.downloads, 0);
+    const totalDownloads = documentsData.reduce((sum, d) => sum + (d.downloads || 0), 0);
     const avgSize = total ? (documentsData.reduce((sum, d) => sum + toMB(d.fileSize), 0) / total).toFixed(1) : "0.0";
     return { total, publicCount, privateCount, totalDownloads, avgSize };
-  }, []);
+  }, [documentsData]);
 
   const handleDownload = (doc, e) => {
     if (e) {
@@ -196,7 +167,15 @@ export default function HODDocuments() {
     window.open(url, "_blank");
   };
 
-  const maxDownloads = useMemo(() => Math.max(1, ...documentsData.map((d) => d.downloads)), []);
+  const maxDownloads = useMemo(() => Math.max(1, ...documentsData.map((d) => d.downloads || 0)), [documentsData]);
+
+  if (loading) return (
+    <Layout menuItems={HODMenuItems} userRole="HOD">
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="w-10 h-10 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin" />
+      </div>
+    </Layout>
+  );
 
   return (
     <Layout menuItems={HODMenuItems} userRole="HOD">

@@ -1,11 +1,12 @@
 "use client";
 
 // pages/dashboards/HOD/HODNotifications.jsx
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import { fetchWithAuth } from "@/lib/api";
 import { HODMenuItems } from "@/utils/menus";
+import { useSSE } from "@/hooks/useSSE";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -204,39 +205,47 @@ export default function HODNotifications() {
     "CREATE_ANNOUNCEMENT",
   ];
 
-  useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
-        const res = await fetchWithAuth("/api/notifications");
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || "Failed to fetch");
+  const fetchNotifications = useCallback(async () => {
+    try {
+      const res = await fetchWithAuth("/api/notifications");
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to fetch");
 
-        const mapped = data.map(n => ({
-          id: n.id,
-          type: n.actionType || "SYSTEM_ALERT",
-          title: (n.actionType || "System Alert").replace(/_/g, " "),
-          message: n.message,
-          time: new Date(n.createdAt).toLocaleString(),
-          timestamp: n.createdAt,
-          read: n.read,
-          link: "#",
-          priority: "NORMAL",
-          sender: {
-            name: n.actor?.name || n.actorRole || "System",
-            avatar: "👤",
-            department: n.actor?.department || "General",
-          }
-        }));
-        setNotifications(mapped);
-      } catch (error) {
-        console.error("Failed to fetch notifications:", error);
-      }
-    };
-
-    fetchNotifications();
-    const interval = setInterval(fetchNotifications, 5000);
-    return () => clearInterval(interval);
+      const mapped = data.map(n => ({
+        id: n.id,
+        type: n.actionType || "SYSTEM_ALERT",
+        title: (n.actionType || "System Alert").replace(/_/g, " "),
+        message: n.message,
+        time: new Date(n.createdAt).toLocaleString(),
+        timestamp: n.createdAt,
+        read: n.read,
+        link: "#",
+        priority: "NORMAL",
+        sender: {
+          name: n.actor?.name || n.actorRole || "System",
+          avatar: "👤",
+          department: n.actor?.department || "General",
+        }
+      }));
+      setNotifications(mapped);
+    } catch (error) {
+      console.error("Failed to fetch notifications:", error);
+    }
   }, []);
+
+  useEffect(() => { fetchNotifications(); }, [fetchNotifications]);
+
+  // Real-time: re-fetch only for events that generate notifications
+  useSSE("/api/tasks/events", (ev) => {
+    if (["task:created", "task:assigned", "task:escalated"].includes(ev.type)) {
+      fetchNotifications();
+    }
+  });
+  useSSE("/api/announcements/events", (ev) => {
+    if (ev.type?.startsWith("announcement:")) {
+      fetchNotifications();
+    }
+  });
 
   const filteredNotifications = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();

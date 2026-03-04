@@ -7,6 +7,7 @@ import Layout from "@/components/Layout";
 import { HODMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
 import { fetchWithAuth } from "@/lib/api";
+import { useSSE } from "@/hooks/useSSE";
 
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
@@ -75,6 +76,11 @@ export default function HODAnnouncements() {
   useEffect(() => {
     fetchAnnouncements();
   }, [fetchAnnouncements]);
+
+  // Real-time: re-fetch when announcements change
+  useSSE("/api/announcements/events", (ev) => {
+    if (ev.type?.startsWith("announcement:")) fetchAnnouncements();
+  });
 
   const unreadCount = useMemo(() => announcementsData.filter((a) => !a.read).length, [announcementsData]);
   const urgentCount = useMemo(() => announcementsData.filter((a) => a.priority === 'URGENT' && !a.read).length, [announcementsData]);

@@ -1,12 +1,13 @@
 "use client";
 
 // pages/dashboards/HOD/HODDailyReports.jsx
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import { HODMenuItems } from "@/utils/menus";
 import { fetchWithAuth } from "@/lib/api";
 import { toast } from "@/lib/toast";
+import { useSSE } from "@/hooks/useSSE";
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
 );
@@ -123,35 +124,39 @@ export default function HODDailyReports() {
     }
   ]);
 
-  useEffect(() => {
-    async function getReports() {
-      try {
-        const resp = await fetchWithAuth("/api/documents?type=Report");
-        if (resp.ok) {
-          const data = await resp.json();
-          const mapped = data.map(d => ({
-            id: d.id,
-            dbId: d.dbId,
-            date: d.date ? d.date.split('T')[0] : '',
-            department: d.department,
-            submittedBy: d.uploadedBy,
-            submittedAt: d.date,
-            entries: [], // Documents don't have nested entries in this schema
-            fileSize: d.size || '—',
-            fileType: d.fileUrl ? d.fileUrl.split('.').pop().toUpperCase() : 'PDF',
-            status: 'APPROVED',
-            fileUrl: d.fileUrl
-          }));
-          setDailyReports(mapped);
-        }
-      } catch (err) {
-        console.error("Failed to fetch reports:", err);
-      } finally {
-        setLoading(false);
+  const getReports = useCallback(async () => {
+    try {
+      const resp = await fetchWithAuth("/api/documents?type=Report");
+      if (resp.ok) {
+        const data = await resp.json();
+        const mapped = data.map(d => ({
+          id: d.id,
+          dbId: d.dbId,
+          date: d.date ? d.date.split('T')[0] : '',
+          department: d.department,
+          submittedBy: d.uploadedBy,
+          submittedAt: d.date,
+          entries: [], // Documents don't have nested entries in this schema
+          fileSize: d.size || '—',
+          fileType: d.fileUrl ? d.fileUrl.split('.').pop().toUpperCase() : 'PDF',
+          status: 'APPROVED',
+          fileUrl: d.fileUrl
+        }));
+        setDailyReports(mapped);
       }
+    } catch (err) {
+      console.error("Failed to fetch reports:", err);
+    } finally {
+      setLoading(false);
     }
-    getReports();
   }, []);
+
+  useEffect(() => { getReports(); }, [getReports]);
+
+  // Real-time: re-fetch when documents change
+  useSSE("/api/tasks/events", (ev) => {
+    if (ev.type?.startsWith("task:")) getReports();
+  });
 
   // Load saved form data from sessionStorage on mount
   useEffect(() => {
