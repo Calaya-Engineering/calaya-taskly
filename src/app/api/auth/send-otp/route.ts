@@ -2,9 +2,27 @@ import { NextRequest, NextResponse } from "next/server";
 import { DEMO_CREDENTIALS, getRouteForRole, ADMIN_EMAIL, ADMIN_PASSWORD } from "@/lib/auth-config";
 import { prisma } from "@/lib/prisma";
 import { verifyPassword } from "@/lib/password";
-import { resend } from "@/lib/resend";
+import { getResendClient } from "@/lib/resend";
 import { saveOtp } from "../otp-store";
 import { signAuthToken } from "@/lib/jwt";
+
+async function sendOtpEmail(email: string, otp: string): Promise<string | null> {
+  const resend = getResendClient();
+  if (!resend) {
+    // eslint-disable-next-line no-console
+    console.log(`OTP for ${email}: ${otp} (RESEND_API_KEY not set, email not sent)`);
+    return null;
+  }
+
+  const { error } = await resend.emails.send({
+    from: "Calaya Taskly <noreply@calayaengineering.com>",
+    to: [email],
+    subject: "Your Calaya Taskly verification code",
+    text: `Your one-time verification code is ${otp}. It expires in 5 minutes.`,
+  });
+
+  return error?.message || null;
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -53,24 +71,13 @@ export async function POST(req: NextRequest) {
       const otp = Math.floor(100000 + Math.random() * 900000).toString();
       saveOtp(userInfo.email, otp, userInfo);
 
-      if (!process.env.RESEND_API_KEY) {
-
-        console.log(`OTP for ${userInfo.email}: ${otp} (RESEND_API_KEY not set, email not sent)`);
-      } else {
-        const { data, error } = await resend.emails.send({
-          from: "Calaya Taskly <noreply@calayaengineering.com>",
-          to: [userInfo.email],
-          subject: "Your Calaya Taskly verification code",
-          text: `Your one-time verification code is ${otp}. It expires in 5 minutes.`,
-        });
-        if (error) {
-
-          console.error("Resend error:", error);
-          return NextResponse.json(
-            { error: `Email failed: ${error.message}. Check Resend dashboard and domain verification.` },
-            { status: 500 }
-          );
-        }
+      const sendError = await sendOtpEmail(userInfo.email, otp);
+      if (sendError) {
+        console.error("Resend error:", sendError);
+        return NextResponse.json(
+          { error: `Email failed: ${sendError}. Check Resend dashboard and domain verification.` },
+          { status: 500 }
+        );
       }
 
       return NextResponse.json({
@@ -98,24 +105,13 @@ export async function POST(req: NextRequest) {
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     saveOtp(userInfo.email, otp, userInfo);
 
-    if (!process.env.RESEND_API_KEY) {
-      // eslint-disable-next-line no-console
-      console.log(`OTP for ${userInfo.email}: ${otp} (RESEND_API_KEY not set, email not sent)`);
-    } else {
-      const { data, error } = await resend.emails.send({
-        from: "Calaya Taskly <noreply@calayaengineering.com>",
-        to: [userInfo.email],
-        subject: "Your Calaya Taskly verification code",
-        text: `Your one-time verification code is ${otp}. It expires in 5 minutes.`,
-      });
-      if (error) {
-
-        console.error("Resend error:", error);
-        return NextResponse.json(
-          { error: `Email failed: ${error.message}. Check Resend dashboard and domain verification.` },
-          { status: 500 }
-        );
-      }
+    const sendError = await sendOtpEmail(userInfo.email, otp);
+    if (sendError) {
+      console.error("Resend error:", sendError);
+      return NextResponse.json(
+        { error: `Email failed: ${sendError}. Check Resend dashboard and domain verification.` },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({
@@ -133,4 +129,3 @@ export async function POST(req: NextRequest) {
   }
 
 }
-

@@ -1,10 +1,25 @@
 import { Resend } from "resend";
 
-if (!process.env.RESEND_API_KEY) {
-  // In dev we log a warning; in production this should be configured properly.
-  // eslint-disable-next-line no-console
-  console.warn("RESEND_API_KEY is not set. OTP emails will not be sent.");
+let cachedClient: Resend | null = null;
+let warnedMissingKey = false;
+
+/**
+ * Build-safe lazy Resend client.
+ * Avoid creating the client at module load time, which can fail during CI builds.
+ */
+export function getResendClient(): Resend | null {
+  const apiKey = process.env.RESEND_API_KEY?.trim();
+  if (!apiKey) {
+    if (!warnedMissingKey) {
+      // eslint-disable-next-line no-console
+      console.warn("RESEND_API_KEY is not set. OTP emails will not be sent.");
+      warnedMissingKey = true;
+    }
+    return null;
+  }
+
+  if (!cachedClient) {
+    cachedClient = new Resend(apiKey);
+  }
+  return cachedClient;
 }
-
-export const resend = new Resend(process.env.RESEND_API_KEY || "");
-
