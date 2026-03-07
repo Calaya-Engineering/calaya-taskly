@@ -1,9 +1,0 @@
-1:"$Sreact.fragment"
-2:I[61304,[],"ClientPageRoot"]
-3:I[51017,["6253","static/chunks/app/admin-dashboard/roles/page-626540be2a096128.js"],"default"]
-6:I[90484,[],"OutletBoundary"]
-7:"$Sreact.suspense"
-0:{"buildId":"fqQ6XnXCNWdvJ2OuNdA8N","rsc":["$","$1","c",{"children":[["$","$L2",null,{"Component":"$3","serverProvidedParams":{"searchParams":{},"params":{},"promises":["$@4","$@5"]}}],null,["$","$L6",null,{"children":["$","$7",null,{"name":"Next.MetadataOutlet","children":"$@8"}]}]]}],"loading":null,"isPartial":false}
-4:{}
-5:"$0:rsc:props:children:0:props:serverProvidedParams:params"
-8:null
