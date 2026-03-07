@@ -399,8 +399,10 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/node_modules/next/dist/client/app-dir/link.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/node_modules/next/navigation.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$contexts$2f$AuthContext$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/contexts/AuthContext.tsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$contexts$2f$BadgeContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/contexts/BadgeContext.jsx [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/lib/icons.jsx [app-ssr] (ecmascript)");
 "use client";
+;
 ;
 ;
 ;
@@ -413,6 +415,7 @@ function Layout({ children, menuItems, userRole }) {
     const [showLogoutModal, setShowLogoutModal] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
     const pathname = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["usePathname"])();
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRouter"])();
+    const { getBadge } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$contexts$2f$BadgeContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useBadges"])();
     const { isAuthenticated, loading, logout } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$contexts$2f$AuthContext$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useAuth"])();
     const handleLogoutClick = ()=>setShowLogoutModal(true);
     const handleConfirmLogout = ()=>{
@@ -491,23 +494,23 @@ function Layout({ children, menuItems, userRole }) {
                                                 size: 24
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 80,
+                                                lineNumber: 82,
                                                 columnNumber: 34
                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["MenuIcon"], {
                                                 size: 24
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 80,
+                                                lineNumber: 82,
                                                 columnNumber: 64
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                            lineNumber: 79,
+                                            lineNumber: 81,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 73,
+                                        lineNumber: 75,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -524,12 +527,12 @@ function Layout({ children, menuItems, userRole }) {
                                                     className: "h-9 w-auto object-contain object-left"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                    lineNumber: 87,
+                                                    lineNumber: 89,
                                                     columnNumber: 19
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 86,
+                                                lineNumber: 88,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -541,19 +544,19 @@ function Layout({ children, menuItems, userRole }) {
                                                 children: userRole
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 96,
+                                                lineNumber: 98,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 85,
+                                        lineNumber: 87,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 72,
+                                lineNumber: 74,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -567,28 +570,28 @@ function Layout({ children, menuItems, userRole }) {
                                     children: "Logout"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                    lineNumber: 108,
+                                    lineNumber: 110,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 106,
+                                lineNumber: 108,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                        lineNumber: 70,
+                        lineNumber: 72,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                    lineNumber: 69,
+                    lineNumber: 71,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                lineNumber: 68,
+                lineNumber: 70,
                 columnNumber: 7
             }, this),
             sidebarOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -597,7 +600,7 @@ function Layout({ children, menuItems, userRole }) {
                 "aria-hidden": "true"
             }, void 0, false, {
                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                lineNumber: 122,
+                lineNumber: 124,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("aside", {
@@ -635,12 +638,12 @@ function Layout({ children, menuItems, userRole }) {
                                                             children: label
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                            lineNumber: 155,
+                                                            lineNumber: 157,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 154,
+                                                        lineNumber: 156,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -673,7 +676,7 @@ function Layout({ children, menuItems, userRole }) {
                                                                         }
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 184,
+                                                                        lineNumber: 186,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -686,12 +689,12 @@ function Layout({ children, menuItems, userRole }) {
                                                                             children: item.icon
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                            lineNumber: 198,
+                                                                            lineNumber: 200,
                                                                             columnNumber: 35
                                                                         }, this) : item.icon
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 191,
+                                                                        lineNumber: 193,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -699,24 +702,28 @@ function Layout({ children, menuItems, userRole }) {
                                                                         children: item.label
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 203,
+                                                                        lineNumber: 205,
                                                                         columnNumber: 31
                                                                     }, this),
-                                                                    item.badge && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                        className: [
-                                                                            "ml-auto text-xs font-semibold px-2 py-1 rounded-full",
-                                                                            active ? "bg-white/15 text-white" : "bg-red-500 text-white"
-                                                                        ].join(" "),
-                                                                        children: item.badge
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 205,
-                                                                        columnNumber: 33
-                                                                    }, this)
+                                                                    (()=>{
+                                                                        const liveBadge = getBadge(path);
+                                                                        if (!liveBadge) return null;
+                                                                        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            className: [
+                                                                                "ml-auto text-xs font-semibold px-2 py-1 rounded-full",
+                                                                                active ? "bg-white/15 text-white" : "bg-red-500 text-white"
+                                                                            ].join(" "),
+                                                                            children: liveBadge
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
+                                                                            lineNumber: 210,
+                                                                            columnNumber: 35
+                                                                        }, this);
+                                                                    })()
                                                                 ]
                                                             }, item._idx, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                lineNumber: 177,
+                                                                lineNumber: 179,
                                                                 columnNumber: 29
                                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                 className: linkClass,
@@ -732,7 +739,7 @@ function Layout({ children, menuItems, userRole }) {
                                                                         }
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 217,
+                                                                        lineNumber: 223,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -745,12 +752,12 @@ function Layout({ children, menuItems, userRole }) {
                                                                             children: item.icon
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                            lineNumber: 231,
+                                                                            lineNumber: 237,
                                                                             columnNumber: 35
                                                                         }, this) : item.icon
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 224,
+                                                                        lineNumber: 230,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -758,41 +765,45 @@ function Layout({ children, menuItems, userRole }) {
                                                                         children: item.label
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 236,
+                                                                        lineNumber: 242,
                                                                         columnNumber: 31
                                                                     }, this),
-                                                                    item.badge && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                        className: [
-                                                                            "ml-auto text-xs font-semibold px-2 py-1 rounded-full",
-                                                                            active ? "bg-white/15 text-white" : "bg-red-500 text-white"
-                                                                        ].join(" "),
-                                                                        children: item.badge
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 238,
-                                                                        columnNumber: 33
-                                                                    }, this)
+                                                                    (()=>{
+                                                                        const liveBadge = getBadge(path);
+                                                                        if (!liveBadge) return null;
+                                                                        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            className: [
+                                                                                "ml-auto text-xs font-semibold px-2 py-1 rounded-full",
+                                                                                active ? "bg-white/15 text-white" : "bg-red-500 text-white"
+                                                                            ].join(" "),
+                                                                            children: liveBadge
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
+                                                                            lineNumber: 247,
+                                                                            columnNumber: 35
+                                                                        }, this);
+                                                                    })()
                                                                 ]
                                                             }, item._idx, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                lineNumber: 216,
+                                                                lineNumber: 222,
                                                                 columnNumber: 29
                                                             }, this);
                                                         })
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 159,
+                                                        lineNumber: 161,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, label, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 153,
+                                                lineNumber: 155,
                                                 columnNumber: 21
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 151,
+                                        lineNumber: 153,
                                         columnNumber: 17
                                     }, this);
                                 })(),
@@ -815,7 +826,7 @@ function Layout({ children, menuItems, userRole }) {
                                                         children: "Quick Stats"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 264,
+                                                        lineNumber: 274,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -823,13 +834,13 @@ function Layout({ children, menuItems, userRole }) {
                                                         children: "Today"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 267,
+                                                        lineNumber: 277,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 263,
+                                                lineNumber: 273,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -842,7 +853,7 @@ function Layout({ children, menuItems, userRole }) {
                                                                 children: s.label
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                lineNumber: 273,
+                                                                lineNumber: 283,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -853,18 +864,18 @@ function Layout({ children, menuItems, userRole }) {
                                                                 children: s.value
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                lineNumber: 274,
+                                                                lineNumber: 284,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, s.label, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 272,
+                                                        lineNumber: 282,
                                                         columnNumber: 21
                                                     }, this))
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 270,
+                                                lineNumber: 280,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -880,12 +891,12 @@ function Layout({ children, menuItems, userRole }) {
                                                             }
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                            lineNumber: 286,
+                                                            lineNumber: 296,
                                                             columnNumber: 21
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 285,
+                                                        lineNumber: 295,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -893,30 +904,30 @@ function Layout({ children, menuItems, userRole }) {
                                                         children: "Progress overview"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 295,
+                                                        lineNumber: 305,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 284,
+                                                lineNumber: 294,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 259,
+                                        lineNumber: 269,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                    lineNumber: 258,
+                                    lineNumber: 268,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                            lineNumber: 140,
+                            lineNumber: 142,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -932,7 +943,7 @@ function Layout({ children, menuItems, userRole }) {
                                         children: "C"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 306,
+                                        lineNumber: 316,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -943,7 +954,7 @@ function Layout({ children, menuItems, userRole }) {
                                                 children: "Calaya"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 313,
+                                                lineNumber: 323,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -951,35 +962,35 @@ function Layout({ children, menuItems, userRole }) {
                                                 children: userRole
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 314,
+                                                lineNumber: 324,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 312,
+                                        lineNumber: 322,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 305,
+                                lineNumber: 315,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                            lineNumber: 304,
+                            lineNumber: 314,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                    lineNumber: 138,
+                    lineNumber: 140,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                lineNumber: 130,
+                lineNumber: 132,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
@@ -991,17 +1002,17 @@ function Layout({ children, menuItems, userRole }) {
                         children: children
                     }, void 0, false, {
                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                        lineNumber: 324,
+                        lineNumber: 334,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                    lineNumber: 323,
+                    lineNumber: 333,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                lineNumber: 322,
+                lineNumber: 332,
                 columnNumber: 7
             }, this),
             showLogoutModal && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1013,7 +1024,7 @@ function Layout({ children, menuItems, userRole }) {
                         "aria-hidden": "true"
                     }, void 0, false, {
                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                        lineNumber: 331,
+                        lineNumber: 341,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1027,7 +1038,7 @@ function Layout({ children, menuItems, userRole }) {
                                 children: "System log out?"
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 337,
+                                lineNumber: 347,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1035,7 +1046,7 @@ function Layout({ children, menuItems, userRole }) {
                                 children: "Are you sure you want to log out of your session?"
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 340,
+                                lineNumber: 350,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1048,7 +1059,7 @@ function Layout({ children, menuItems, userRole }) {
                                         children: "No"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 344,
+                                        lineNumber: 354,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1061,31 +1072,31 @@ function Layout({ children, menuItems, userRole }) {
                                         children: "Yes"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 351,
+                                        lineNumber: 361,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 343,
+                                lineNumber: 353,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                        lineNumber: 336,
+                        lineNumber: 346,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                lineNumber: 330,
+                lineNumber: 340,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-        lineNumber: 59,
+        lineNumber: 61,
         columnNumber: 5
     }, this);
 }
@@ -1193,7 +1204,6 @@ const HODMenuItems = [
             lineNumber: 30,
             columnNumber: 68
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "18",
         group: "Tasks"
     },
     {
@@ -1204,7 +1214,6 @@ const HODMenuItems = [
             lineNumber: 31,
             columnNumber: 63
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Tasks"
     },
     {
@@ -1245,7 +1254,6 @@ const HODMenuItems = [
             lineNumber: 35,
             columnNumber: 61
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Tenders"
     },
     {
@@ -1256,7 +1264,6 @@ const HODMenuItems = [
             lineNumber: 36,
             columnNumber: 79
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Tenders"
     },
     {
@@ -1277,7 +1284,6 @@ const HODMenuItems = [
             lineNumber: 38,
             columnNumber: 65
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "4",
         group: "Workflow"
     },
     {
@@ -1288,7 +1294,6 @@ const HODMenuItems = [
             lineNumber: 39,
             columnNumber: 77
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "2",
         group: "Workflow"
     },
     {
@@ -1299,7 +1304,6 @@ const HODMenuItems = [
             lineNumber: 40,
             columnNumber: 73
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "8",
         group: "Account"
     },
     {
@@ -1332,7 +1336,6 @@ const MDMenuItems = [
             lineNumber: 46,
             columnNumber: 62
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "24",
         group: "Tasks"
     },
     {
@@ -1343,7 +1346,6 @@ const MDMenuItems = [
             lineNumber: 47,
             columnNumber: 61
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "8",
         group: "Tasks"
     },
     {
@@ -1354,7 +1356,6 @@ const MDMenuItems = [
             lineNumber: 48,
             columnNumber: 64
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Documents & Reports"
     },
     {
@@ -1375,7 +1376,6 @@ const MDMenuItems = [
             lineNumber: 50,
             columnNumber: 67
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "2",
         group: "Calendar"
     },
     {
@@ -1396,7 +1396,6 @@ const MDMenuItems = [
             lineNumber: 52,
             columnNumber: 78
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Tenders"
     },
     {
@@ -1417,7 +1416,6 @@ const MDMenuItems = [
             lineNumber: 54,
             columnNumber: 64
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "7",
         group: "Workflow"
     },
     {
@@ -1428,7 +1426,6 @@ const MDMenuItems = [
             lineNumber: 55,
             columnNumber: 76
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Workflow"
     },
     {
@@ -1439,7 +1436,6 @@ const MDMenuItems = [
             lineNumber: 56,
             columnNumber: 72
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "12",
         group: "Account"
     },
     {
@@ -1472,7 +1468,6 @@ const StaffMenuItems = [
             lineNumber: 62,
             columnNumber: 62
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "8",
         group: "Tasks"
     },
     {
@@ -1523,7 +1518,6 @@ const StaffMenuItems = [
             lineNumber: 67,
             columnNumber: 63
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Tenders"
     },
     {
@@ -1534,7 +1528,6 @@ const StaffMenuItems = [
             lineNumber: 68,
             columnNumber: 81
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Tenders"
     },
     {
@@ -1555,7 +1548,6 @@ const StaffMenuItems = [
             lineNumber: 70,
             columnNumber: 75
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Account"
     },
     {
@@ -1598,7 +1590,6 @@ const SecretaryMenuItems = [
             lineNumber: 77,
             columnNumber: 89
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "24",
         group: "Documents & Reports"
     },
     {
@@ -1609,7 +1600,6 @@ const SecretaryMenuItems = [
             lineNumber: 78,
             columnNumber: 85
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "45",
         group: "Documents & Reports"
     },
     {
@@ -1630,7 +1620,6 @@ const SecretaryMenuItems = [
             lineNumber: 80,
             columnNumber: 74
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Calendar"
     },
     {
@@ -1641,7 +1630,6 @@ const SecretaryMenuItems = [
             lineNumber: 81,
             columnNumber: 67
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Tenders"
     },
     {
@@ -1652,7 +1640,6 @@ const SecretaryMenuItems = [
             lineNumber: 82,
             columnNumber: 79
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Communications"
     },
     {
@@ -1663,7 +1650,6 @@ const SecretaryMenuItems = [
             lineNumber: 83,
             columnNumber: 79
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "12",
         group: "Account"
     },
     {

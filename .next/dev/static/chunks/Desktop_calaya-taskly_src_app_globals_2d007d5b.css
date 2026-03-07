@@ -646,6 +646,10 @@ img, video {
   margin-top: .25rem;
 }
 
+.mt-1\.5 {
+  margin-top: .375rem;
+}
+
 .mt-2 {
   margin-top: .5rem;
 }
@@ -1161,6 +1165,10 @@ img, video {
   max-width: 150px;
 }
 
+.max-w-\[200px\] {
+  max-width: 200px;
+}
+
 .max-w-\[220px\] {
   max-width: 220px;
 }
@@ -1308,6 +1316,10 @@ img, video {
 
 .grid-cols-2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.grid-cols-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .grid-cols-7 {
@@ -1718,11 +1730,6 @@ img, video {
   border-color: hsl(var(--input));
 }
 
-.border-orange-200 {
-  --tw-border-opacity: 1;
-  border-color: rgb(254 215 170 / var(--tw-border-opacity, 1));
-}
-
 .border-primary {
   border-color: hsl(var(--primary));
 }
@@ -1730,6 +1737,11 @@ img, video {
 .border-purple-100 {
   --tw-border-opacity: 1;
   border-color: rgb(243 232 255 / var(--tw-border-opacity, 1));
+}
+
+.border-red-100 {
+  --tw-border-opacity: 1;
+  border-color: rgb(254 226 226 / var(--tw-border-opacity, 1));
 }
 
 .border-red-200 {
@@ -1854,6 +1866,10 @@ img, video {
 
 .bg-blue-50\/30 {
   background-color: #eff6ff4d;
+}
+
+.bg-blue-50\/40 {
+  background-color: #eff6ff66;
 }
 
 .bg-blue-50\/60 {
@@ -2027,10 +2043,6 @@ img, video {
   background-color: rgb(254 242 242 / var(--tw-bg-opacity, 1));
 }
 
-.bg-red-50\/20 {
-  background-color: #fef2f233;
-}
-
 .bg-red-50\/30 {
   background-color: #fef2f24d;
 }
@@ -2072,6 +2084,10 @@ img, video {
 
 .bg-white\/15 {
   background-color: #ffffff26;
+}
+
+.bg-white\/20 {
+  background-color: #fff3;
 }
 
 .bg-white\/60 {
@@ -2315,6 +2331,11 @@ img, video {
   padding-bottom: 1.5rem;
 }
 
+.py-8 {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
 .pb-2 {
   padding-bottom: .5rem;
 }
@@ -2393,6 +2414,10 @@ img, video {
 
 .pt-0 {
   padding-top: 0;
+}
+
+.pt-1 {
+  padding-top: .25rem;
 }
 
 .pt-16 {
@@ -3009,6 +3034,10 @@ img, video {
   --tw-ring-color: hsl(var(--sidebar-ring));
 }
 
+.ring-transparent {
+  --tw-ring-color: transparent;
+}
+
 .ring-offset-background {
   --tw-ring-offset-color: hsl(var(--background));
 }
@@ -3102,6 +3131,10 @@ img, video {
   transition-duration: .3s;
 }
 
+.duration-700 {
+  transition-duration: .7s;
+}
+
 .ease-in-out {
   transition-timing-function: cubic-bezier(.4, 0, .2, 1);
 }
@@ -3152,6 +3185,10 @@ img, video {
 
 .duration-300 {
   animation-duration: .3s;
+}
+
+.duration-700 {
+  animation-duration: .7s;
 }
 
 .ease-in-out {
@@ -3624,6 +3661,12 @@ html, body {
 .hover\:shadow-md:hover {
   --tw-shadow: 0 4px 6px -1px #0000001a, 0 2px 4px -2px #0000001a;
   --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.hover\:shadow-sm:hover {
+  --tw-shadow: 0 1px 2px 0 #0000000d;
+  --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 

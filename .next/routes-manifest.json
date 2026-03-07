@@ -86,6 +86,14 @@
       "namedRegex": "^/api/tasks/(?<nxtPid>[^/]+?)/assign(?:/)?$"
     },
     {
+      "page": "/api/tasks/[id]/escalate",
+      "regex": "^/api/tasks/([^/]+?)/escalate(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/tasks/(?<nxtPid>[^/]+?)/escalate(?:/)?$"
+    },
+    {
       "page": "/api/tenders/[id]",
       "regex": "^/api/tenders/([^/]+?)(?:/)?$",
       "routeKeys": {
@@ -422,6 +430,12 @@
       "namedRegex": "^/api/profile/me(?:/)?$"
     },
     {
+      "page": "/api/realtime/events",
+      "regex": "^/api/realtime/events(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/realtime/events(?:/)?$"
+    },
+    {
       "page": "/api/roles",
       "regex": "^/api/roles(?:/)?$",
       "routeKeys": {},
@@ -438,6 +452,12 @@
       "regex": "^/api/tasks/events(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/api/tasks/events(?:/)?$"
+    },
+    {
+      "page": "/api/tasks/my-tasks",
+      "regex": "^/api/tasks/my\\-tasks(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/tasks/my\\-tasks(?:/)?$"
     },
     {
       "page": "/api/tenders",
@@ -710,6 +730,12 @@
       "namedRegex": "^/request\\-access(?:/)?$"
     },
     {
+      "page": "/robots.txt",
+      "regex": "^/robots\\.txt(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/robots\\.txt(?:/)?$"
+    },
+    {
       "page": "/secretary-dashboard",
       "regex": "^/secretary\\-dashboard(?:/)?$",
       "routeKeys": {},
@@ -768,6 +794,12 @@
       "regex": "^/secretary\\-dashboard/upload\\-report(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/secretary\\-dashboard/upload\\-report(?:/)?$"
+    },
+    {
+      "page": "/sitemap.xml",
+      "regex": "^/sitemap\\.xml(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/sitemap\\.xml(?:/)?$"
     },
     {
       "page": "/staff-dashboard",

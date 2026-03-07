@@ -19,6 +19,7 @@ export async function GET(req: NextRequest) {
   const department = searchParams.get("department");
   const assigneeId = searchParams.get("assigneeId");
   const type = searchParams.get("type");
+  const compact = searchParams.get("compact") === "true";
   const limit = Math.min(parseInt(searchParams.get("limit") ?? "50", 10) || 50, 100);
 
   try {
@@ -68,19 +69,35 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    const tasks = await prisma.task.findMany({
+    const baseQuery = {
       where,
       take: limit,
-      include: {
-        createdBy: { select: { id: true, email: true, name: true, role: true } },
-        assignments: {
-          include: {
-            user: { select: { id: true, email: true, name: true, role: true, department: true } },
+      orderBy: { createdAt: "desc" as const },
+    };
+
+    const tasks = compact
+      ? await prisma.task.findMany({
+        ...baseQuery,
+        select: {
+          id: true,
+          status: true,
+          department: true,
+          createdAt: true,
+          escalated: true,
+          escalatedAt: true,
+        },
+      })
+      : await prisma.task.findMany({
+        ...baseQuery,
+        include: {
+          createdBy: { select: { id: true, email: true, name: true, role: true } },
+          assignments: {
+            include: {
+              user: { select: { id: true, email: true, name: true, role: true, department: true } },
+            },
           },
         },
-      },
-      orderBy: { createdAt: "desc" },
-    });
+      });
 
     return NextResponse.json(tasks);
   } catch (error) {

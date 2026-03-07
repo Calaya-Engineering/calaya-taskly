@@ -3,7 +3,7 @@ module.exports = [
 
 __turbopack_context__.v((parentImport) => {
     return Promise.all([
-  "chunks/a96cc_4b6050fb._.js",
+  "chunks/b4111_4b6050fb._.js",
   "chunks/[root-of-the-server]__7d28cfad._.js"
 ].map((chunk) => __turbopack_context__.l(chunk))).then(() => {
         return parentImport("[turbopack-node]/transforms/postcss.ts { CONFIG => \"[project]/Desktop/calaya-taskly/postcss.config.js_.loader.mjs [postcss] (ecmascript)\" } [postcss] (ecmascript)");

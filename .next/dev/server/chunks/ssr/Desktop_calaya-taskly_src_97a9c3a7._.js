@@ -376,8 +376,10 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/node_modules/next/dist/client/app-dir/link.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/node_modules/next/navigation.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$contexts$2f$AuthContext$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/contexts/AuthContext.tsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$contexts$2f$BadgeContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/contexts/BadgeContext.jsx [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/lib/icons.jsx [app-ssr] (ecmascript)");
 "use client";
+;
 ;
 ;
 ;
@@ -390,6 +392,7 @@ function Layout({ children, menuItems, userRole }) {
     const [showLogoutModal, setShowLogoutModal] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
     const pathname = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["usePathname"])();
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRouter"])();
+    const { getBadge } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$contexts$2f$BadgeContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useBadges"])();
     const { isAuthenticated, loading, logout } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$contexts$2f$AuthContext$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useAuth"])();
     const handleLogoutClick = ()=>setShowLogoutModal(true);
     const handleConfirmLogout = ()=>{
@@ -468,23 +471,23 @@ function Layout({ children, menuItems, userRole }) {
                                                 size: 24
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 80,
+                                                lineNumber: 82,
                                                 columnNumber: 34
                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["MenuIcon"], {
                                                 size: 24
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 80,
+                                                lineNumber: 82,
                                                 columnNumber: 64
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                            lineNumber: 79,
+                                            lineNumber: 81,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 73,
+                                        lineNumber: 75,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -501,12 +504,12 @@ function Layout({ children, menuItems, userRole }) {
                                                     className: "h-9 w-auto object-contain object-left"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                    lineNumber: 87,
+                                                    lineNumber: 89,
                                                     columnNumber: 19
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 86,
+                                                lineNumber: 88,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -518,19 +521,19 @@ function Layout({ children, menuItems, userRole }) {
                                                 children: userRole
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 96,
+                                                lineNumber: 98,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 85,
+                                        lineNumber: 87,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 72,
+                                lineNumber: 74,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -544,28 +547,28 @@ function Layout({ children, menuItems, userRole }) {
                                     children: "Logout"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                    lineNumber: 108,
+                                    lineNumber: 110,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 106,
+                                lineNumber: 108,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                        lineNumber: 70,
+                        lineNumber: 72,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                    lineNumber: 69,
+                    lineNumber: 71,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                lineNumber: 68,
+                lineNumber: 70,
                 columnNumber: 7
             }, this),
             sidebarOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -574,7 +577,7 @@ function Layout({ children, menuItems, userRole }) {
                 "aria-hidden": "true"
             }, void 0, false, {
                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                lineNumber: 122,
+                lineNumber: 124,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("aside", {
@@ -612,12 +615,12 @@ function Layout({ children, menuItems, userRole }) {
                                                             children: label
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                            lineNumber: 155,
+                                                            lineNumber: 157,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 154,
+                                                        lineNumber: 156,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -650,7 +653,7 @@ function Layout({ children, menuItems, userRole }) {
                                                                         }
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 184,
+                                                                        lineNumber: 186,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -663,12 +666,12 @@ function Layout({ children, menuItems, userRole }) {
                                                                             children: item.icon
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                            lineNumber: 198,
+                                                                            lineNumber: 200,
                                                                             columnNumber: 35
                                                                         }, this) : item.icon
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 191,
+                                                                        lineNumber: 193,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -676,24 +679,28 @@ function Layout({ children, menuItems, userRole }) {
                                                                         children: item.label
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 203,
+                                                                        lineNumber: 205,
                                                                         columnNumber: 31
                                                                     }, this),
-                                                                    item.badge && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                        className: [
-                                                                            "ml-auto text-xs font-semibold px-2 py-1 rounded-full",
-                                                                            active ? "bg-white/15 text-white" : "bg-red-500 text-white"
-                                                                        ].join(" "),
-                                                                        children: item.badge
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 205,
-                                                                        columnNumber: 33
-                                                                    }, this)
+                                                                    (()=>{
+                                                                        const liveBadge = getBadge(path);
+                                                                        if (!liveBadge) return null;
+                                                                        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            className: [
+                                                                                "ml-auto text-xs font-semibold px-2 py-1 rounded-full",
+                                                                                active ? "bg-white/15 text-white" : "bg-red-500 text-white"
+                                                                            ].join(" "),
+                                                                            children: liveBadge
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
+                                                                            lineNumber: 210,
+                                                                            columnNumber: 35
+                                                                        }, this);
+                                                                    })()
                                                                 ]
                                                             }, item._idx, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                lineNumber: 177,
+                                                                lineNumber: 179,
                                                                 columnNumber: 29
                                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                 className: linkClass,
@@ -709,7 +716,7 @@ function Layout({ children, menuItems, userRole }) {
                                                                         }
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 217,
+                                                                        lineNumber: 223,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -722,12 +729,12 @@ function Layout({ children, menuItems, userRole }) {
                                                                             children: item.icon
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                            lineNumber: 231,
+                                                                            lineNumber: 237,
                                                                             columnNumber: 35
                                                                         }, this) : item.icon
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 224,
+                                                                        lineNumber: 230,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -735,41 +742,45 @@ function Layout({ children, menuItems, userRole }) {
                                                                         children: item.label
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 236,
+                                                                        lineNumber: 242,
                                                                         columnNumber: 31
                                                                     }, this),
-                                                                    item.badge && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                        className: [
-                                                                            "ml-auto text-xs font-semibold px-2 py-1 rounded-full",
-                                                                            active ? "bg-white/15 text-white" : "bg-red-500 text-white"
-                                                                        ].join(" "),
-                                                                        children: item.badge
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 238,
-                                                                        columnNumber: 33
-                                                                    }, this)
+                                                                    (()=>{
+                                                                        const liveBadge = getBadge(path);
+                                                                        if (!liveBadge) return null;
+                                                                        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            className: [
+                                                                                "ml-auto text-xs font-semibold px-2 py-1 rounded-full",
+                                                                                active ? "bg-white/15 text-white" : "bg-red-500 text-white"
+                                                                            ].join(" "),
+                                                                            children: liveBadge
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
+                                                                            lineNumber: 247,
+                                                                            columnNumber: 35
+                                                                        }, this);
+                                                                    })()
                                                                 ]
                                                             }, item._idx, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                lineNumber: 216,
+                                                                lineNumber: 222,
                                                                 columnNumber: 29
                                                             }, this);
                                                         })
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 159,
+                                                        lineNumber: 161,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, label, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 153,
+                                                lineNumber: 155,
                                                 columnNumber: 21
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 151,
+                                        lineNumber: 153,
                                         columnNumber: 17
                                     }, this);
                                 })(),
@@ -792,7 +803,7 @@ function Layout({ children, menuItems, userRole }) {
                                                         children: "Quick Stats"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 264,
+                                                        lineNumber: 274,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -800,13 +811,13 @@ function Layout({ children, menuItems, userRole }) {
                                                         children: "Today"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 267,
+                                                        lineNumber: 277,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 263,
+                                                lineNumber: 273,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -819,7 +830,7 @@ function Layout({ children, menuItems, userRole }) {
                                                                 children: s.label
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                lineNumber: 273,
+                                                                lineNumber: 283,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -830,18 +841,18 @@ function Layout({ children, menuItems, userRole }) {
                                                                 children: s.value
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                lineNumber: 274,
+                                                                lineNumber: 284,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, s.label, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 272,
+                                                        lineNumber: 282,
                                                         columnNumber: 21
                                                     }, this))
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 270,
+                                                lineNumber: 280,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -857,12 +868,12 @@ function Layout({ children, menuItems, userRole }) {
                                                             }
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                            lineNumber: 286,
+                                                            lineNumber: 296,
                                                             columnNumber: 21
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 285,
+                                                        lineNumber: 295,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -870,30 +881,30 @@ function Layout({ children, menuItems, userRole }) {
                                                         children: "Progress overview"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 295,
+                                                        lineNumber: 305,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 284,
+                                                lineNumber: 294,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 259,
+                                        lineNumber: 269,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                    lineNumber: 258,
+                                    lineNumber: 268,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                            lineNumber: 140,
+                            lineNumber: 142,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -909,7 +920,7 @@ function Layout({ children, menuItems, userRole }) {
                                         children: "C"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 306,
+                                        lineNumber: 316,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -920,7 +931,7 @@ function Layout({ children, menuItems, userRole }) {
                                                 children: "Calaya"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 313,
+                                                lineNumber: 323,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -928,35 +939,35 @@ function Layout({ children, menuItems, userRole }) {
                                                 children: userRole
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 314,
+                                                lineNumber: 324,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 312,
+                                        lineNumber: 322,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 305,
+                                lineNumber: 315,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                            lineNumber: 304,
+                            lineNumber: 314,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                    lineNumber: 138,
+                    lineNumber: 140,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                lineNumber: 130,
+                lineNumber: 132,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
@@ -968,17 +979,17 @@ function Layout({ children, menuItems, userRole }) {
                         children: children
                     }, void 0, false, {
                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                        lineNumber: 324,
+                        lineNumber: 334,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                    lineNumber: 323,
+                    lineNumber: 333,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                lineNumber: 322,
+                lineNumber: 332,
                 columnNumber: 7
             }, this),
             showLogoutModal && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -990,7 +1001,7 @@ function Layout({ children, menuItems, userRole }) {
                         "aria-hidden": "true"
                     }, void 0, false, {
                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                        lineNumber: 331,
+                        lineNumber: 341,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1004,7 +1015,7 @@ function Layout({ children, menuItems, userRole }) {
                                 children: "System log out?"
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 337,
+                                lineNumber: 347,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1012,7 +1023,7 @@ function Layout({ children, menuItems, userRole }) {
                                 children: "Are you sure you want to log out of your session?"
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 340,
+                                lineNumber: 350,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1025,7 +1036,7 @@ function Layout({ children, menuItems, userRole }) {
                                         children: "No"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 344,
+                                        lineNumber: 354,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1038,31 +1049,31 @@ function Layout({ children, menuItems, userRole }) {
                                         children: "Yes"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 351,
+                                        lineNumber: 361,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 343,
+                                lineNumber: 353,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                        lineNumber: 336,
+                        lineNumber: 346,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                lineNumber: 330,
+                lineNumber: 340,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-        lineNumber: 59,
+        lineNumber: 61,
         columnNumber: 5
     }, this);
 }
@@ -1170,7 +1181,6 @@ const HODMenuItems = [
             lineNumber: 30,
             columnNumber: 68
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "18",
         group: "Tasks"
     },
     {
@@ -1181,7 +1191,6 @@ const HODMenuItems = [
             lineNumber: 31,
             columnNumber: 63
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Tasks"
     },
     {
@@ -1222,7 +1231,6 @@ const HODMenuItems = [
             lineNumber: 35,
             columnNumber: 61
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Tenders"
     },
     {
@@ -1233,7 +1241,6 @@ const HODMenuItems = [
             lineNumber: 36,
             columnNumber: 79
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Tenders"
     },
     {
@@ -1254,7 +1261,6 @@ const HODMenuItems = [
             lineNumber: 38,
             columnNumber: 65
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "4",
         group: "Workflow"
     },
     {
@@ -1265,7 +1271,6 @@ const HODMenuItems = [
             lineNumber: 39,
             columnNumber: 77
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "2",
         group: "Workflow"
     },
     {
@@ -1276,7 +1281,6 @@ const HODMenuItems = [
             lineNumber: 40,
             columnNumber: 73
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "8",
         group: "Account"
     },
     {
@@ -1309,7 +1313,6 @@ const MDMenuItems = [
             lineNumber: 46,
             columnNumber: 62
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "24",
         group: "Tasks"
     },
     {
@@ -1320,7 +1323,6 @@ const MDMenuItems = [
             lineNumber: 47,
             columnNumber: 61
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "8",
         group: "Tasks"
     },
     {
@@ -1331,7 +1333,6 @@ const MDMenuItems = [
             lineNumber: 48,
             columnNumber: 64
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Documents & Reports"
     },
     {
@@ -1352,7 +1353,6 @@ const MDMenuItems = [
             lineNumber: 50,
             columnNumber: 67
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "2",
         group: "Calendar"
     },
     {
@@ -1373,7 +1373,6 @@ const MDMenuItems = [
             lineNumber: 52,
             columnNumber: 78
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Tenders"
     },
     {
@@ -1394,7 +1393,6 @@ const MDMenuItems = [
             lineNumber: 54,
             columnNumber: 64
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "7",
         group: "Workflow"
     },
     {
@@ -1405,7 +1403,6 @@ const MDMenuItems = [
             lineNumber: 55,
             columnNumber: 76
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Workflow"
     },
     {
@@ -1416,7 +1413,6 @@ const MDMenuItems = [
             lineNumber: 56,
             columnNumber: 72
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "12",
         group: "Account"
     },
     {
@@ -1449,7 +1445,6 @@ const StaffMenuItems = [
             lineNumber: 62,
             columnNumber: 62
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "8",
         group: "Tasks"
     },
     {
@@ -1500,7 +1495,6 @@ const StaffMenuItems = [
             lineNumber: 67,
             columnNumber: 63
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Tenders"
     },
     {
@@ -1511,7 +1505,6 @@ const StaffMenuItems = [
             lineNumber: 68,
             columnNumber: 81
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Tenders"
     },
     {
@@ -1532,7 +1525,6 @@ const StaffMenuItems = [
             lineNumber: 70,
             columnNumber: 75
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Account"
     },
     {
@@ -1575,7 +1567,6 @@ const SecretaryMenuItems = [
             lineNumber: 77,
             columnNumber: 89
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "24",
         group: "Documents & Reports"
     },
     {
@@ -1586,7 +1577,6 @@ const SecretaryMenuItems = [
             lineNumber: 78,
             columnNumber: 85
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "45",
         group: "Documents & Reports"
     },
     {
@@ -1607,7 +1597,6 @@ const SecretaryMenuItems = [
             lineNumber: 80,
             columnNumber: 74
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Calendar"
     },
     {
@@ -1618,7 +1607,6 @@ const SecretaryMenuItems = [
             lineNumber: 81,
             columnNumber: 67
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Tenders"
     },
     {
@@ -1629,7 +1617,6 @@ const SecretaryMenuItems = [
             lineNumber: 82,
             columnNumber: 79
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Communications"
     },
     {
@@ -1640,7 +1627,6 @@ const SecretaryMenuItems = [
             lineNumber: 83,
             columnNumber: 79
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "12",
         group: "Account"
     },
     {
@@ -1667,8 +1653,10 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/node_modules/next/dist/client/app-dir/link.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$components$2f$Layout$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/components/Layout.jsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/lib/api.ts [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$utils$2f$menus$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/utils/menus.jsx [app-ssr] (ecmascript)");
 "use client";
+;
 ;
 ;
 ;
@@ -1679,7 +1667,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$
         children: children
     }, void 0, false, {
         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-        lineNumber: 10,
+        lineNumber: 11,
         columnNumber: 3
     }, ("TURBOPACK compile-time value", void 0));
 const SectionTitle = ({ title, subtitle, action })=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1695,7 +1683,7 @@ const SectionTitle = ({ title, subtitle, action })=>/*#__PURE__*/ (0, __TURBOPAC
                         children: title
                     }, void 0, false, {
                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                        lineNumber: 16,
+                        lineNumber: 17,
                         columnNumber: 7
                     }, ("TURBOPACK compile-time value", void 0)),
                     subtitle ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1703,20 +1691,20 @@ const SectionTitle = ({ title, subtitle, action })=>/*#__PURE__*/ (0, __TURBOPAC
                         children: subtitle
                     }, void 0, false, {
                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                        lineNumber: 19,
+                        lineNumber: 20,
                         columnNumber: 19
                     }, ("TURBOPACK compile-time value", void 0)) : null
                 ]
             }, void 0, true, {
                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                lineNumber: 15,
+                lineNumber: 16,
                 columnNumber: 5
             }, ("TURBOPACK compile-time value", void 0)),
             action
         ]
     }, void 0, true, {
         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-        lineNumber: 14,
+        lineNumber: 15,
         columnNumber: 3
     }, ("TURBOPACK compile-time value", void 0));
 const Pill = ({ children, tone = "default" })=>{
@@ -1726,7 +1714,7 @@ const Pill = ({ children, tone = "default" })=>{
         children: children
     }, void 0, false, {
         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-        lineNumber: 37,
+        lineNumber: 38,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
@@ -1870,7 +1858,7 @@ function MDNotifications() {
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
         const fetchNotifications = async ()=>{
             try {
-                const res = await fetch("/api/notifications");
+                const res = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["fetchWithAuth"])("/api/notifications");
                 const data = await res.json();
                 if (!res.ok) throw new Error(data.error || "Failed to fetch");
                 const mapped = data.map((n)=>({
@@ -1926,7 +1914,7 @@ function MDNotifications() {
                 read: true
             } : notif));
         try {
-            await fetch("/api/notifications", {
+            await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["fetchWithAuth"])("/api/notifications", {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json"
@@ -1945,7 +1933,7 @@ function MDNotifications() {
                 read: true
             })));
         try {
-            await fetch("/api/notifications", {
+            await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["fetchWithAuth"])("/api/notifications", {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json"
@@ -2068,7 +2056,7 @@ function MDNotifications() {
                                                         children: "Notifications Center"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                        lineNumber: 329,
+                                                        lineNumber: 330,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -2079,7 +2067,7 @@ function MDNotifications() {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                        lineNumber: 330,
+                                                        lineNumber: 331,
                                                         columnNumber: 19
                                                     }, this),
                                                     criticalCount > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -2090,13 +2078,13 @@ function MDNotifications() {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                        lineNumber: 331,
+                                                        lineNumber: 332,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                lineNumber: 328,
+                                                lineNumber: 329,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
@@ -2107,7 +2095,7 @@ function MDNotifications() {
                                                 children: "Notifications Center"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                lineNumber: 334,
+                                                lineNumber: 335,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2115,13 +2103,13 @@ function MDNotifications() {
                                                 children: "Stay updated with all system activities, alerts, and important updates"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                lineNumber: 337,
+                                                lineNumber: 338,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                        lineNumber: 327,
+                                        lineNumber: 328,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2136,7 +2124,7 @@ function MDNotifications() {
                                                 children: "Mark All Read"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                lineNumber: 343,
+                                                lineNumber: 344,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2149,24 +2137,24 @@ function MDNotifications() {
                                                 children: "Clear Filters"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                lineNumber: 350,
+                                                lineNumber: 351,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                        lineNumber: 342,
+                                        lineNumber: 343,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                lineNumber: 326,
+                                lineNumber: 327,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                            lineNumber: 319,
+                            lineNumber: 320,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2203,7 +2191,7 @@ function MDNotifications() {
                                                     children: s.label
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                    lineNumber: 371,
+                                                    lineNumber: 372,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -2211,13 +2199,13 @@ function MDNotifications() {
                                                     children: "Live"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                    lineNumber: 372,
+                                                    lineNumber: 373,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                            lineNumber: 370,
+                                            lineNumber: 371,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2228,24 +2216,24 @@ function MDNotifications() {
                                             children: s.value
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                            lineNumber: 374,
+                                            lineNumber: 375,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, s.label, true, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                    lineNumber: 369,
+                                    lineNumber: 370,
                                     columnNumber: 15
                                 }, this))
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                            lineNumber: 362,
+                            lineNumber: 363,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                    lineNumber: 318,
+                    lineNumber: 319,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
@@ -2263,7 +2251,7 @@ function MDNotifications() {
                                         children: filteredNotifications.length
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                        lineNumber: 389,
+                                        lineNumber: 390,
                                         columnNumber: 25
                                     }, void 0),
                                     " of",
@@ -2273,18 +2261,18 @@ function MDNotifications() {
                                         children: notifications.length
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                        lineNumber: 390,
+                                        lineNumber: 391,
                                         columnNumber: 17
                                     }, void 0)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                lineNumber: 388,
+                                lineNumber: 389,
                                 columnNumber: 15
                             }, void 0)
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                            lineNumber: 384,
+                            lineNumber: 385,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2297,7 +2285,7 @@ function MDNotifications() {
                                             children: "Status"
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                            lineNumber: 397,
+                                            lineNumber: 398,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -2310,7 +2298,7 @@ function MDNotifications() {
                                                     children: "All Notifications"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                    lineNumber: 403,
+                                                    lineNumber: 404,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2318,19 +2306,19 @@ function MDNotifications() {
                                                     children: "Unread Only"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                    lineNumber: 404,
+                                                    lineNumber: 405,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                            lineNumber: 398,
+                                            lineNumber: 399,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                    lineNumber: 396,
+                                    lineNumber: 397,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2340,7 +2328,7 @@ function MDNotifications() {
                                             children: "Priority"
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                            lineNumber: 409,
+                                            lineNumber: 410,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -2353,7 +2341,7 @@ function MDNotifications() {
                                                     children: "All Priorities"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                    lineNumber: 415,
+                                                    lineNumber: 416,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2361,7 +2349,7 @@ function MDNotifications() {
                                                     children: "Critical"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                    lineNumber: 416,
+                                                    lineNumber: 417,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2369,7 +2357,7 @@ function MDNotifications() {
                                                     children: "High"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                    lineNumber: 417,
+                                                    lineNumber: 418,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2377,7 +2365,7 @@ function MDNotifications() {
                                                     children: "Medium"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                    lineNumber: 418,
+                                                    lineNumber: 419,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2385,7 +2373,7 @@ function MDNotifications() {
                                                     children: "Important"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                    lineNumber: 419,
+                                                    lineNumber: 420,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2393,19 +2381,19 @@ function MDNotifications() {
                                                     children: "Normal"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                    lineNumber: 420,
+                                                    lineNumber: 421,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                            lineNumber: 410,
+                                            lineNumber: 411,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                    lineNumber: 408,
+                                    lineNumber: 409,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2415,7 +2403,7 @@ function MDNotifications() {
                                             children: "Type"
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                            lineNumber: 425,
+                                            lineNumber: 426,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -2428,7 +2416,7 @@ function MDNotifications() {
                                                     children: "All Types"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                    lineNumber: 431,
+                                                    lineNumber: 432,
                                                     columnNumber: 17
                                                 }, this),
                                                 notificationTypes.map((type)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2436,19 +2424,19 @@ function MDNotifications() {
                                                         children: type.replace("_", " ")
                                                     }, type, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                        lineNumber: 433,
+                                                        lineNumber: 434,
                                                         columnNumber: 19
                                                     }, this))
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                            lineNumber: 426,
+                                            lineNumber: 427,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                    lineNumber: 424,
+                                    lineNumber: 425,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2458,7 +2446,7 @@ function MDNotifications() {
                                             children: "Search"
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                            lineNumber: 441,
+                                            lineNumber: 442,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2472,7 +2460,7 @@ function MDNotifications() {
                                                     onChange: (e)=>setSearchTerm(e.target.value)
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                    lineNumber: 443,
+                                                    lineNumber: 444,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2480,31 +2468,31 @@ function MDNotifications() {
                                                     children: "🔎"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                    lineNumber: 450,
+                                                    lineNumber: 451,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                            lineNumber: 442,
+                                            lineNumber: 443,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                    lineNumber: 440,
+                                    lineNumber: 441,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                            lineNumber: 395,
+                            lineNumber: 396,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                    lineNumber: 383,
+                    lineNumber: 384,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2522,12 +2510,12 @@ function MDNotifications() {
                                             subtitle: `${filteredNotifications.length} items`
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                            lineNumber: 462,
+                                            lineNumber: 463,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                        lineNumber: 461,
+                                        lineNumber: 462,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2540,7 +2528,7 @@ function MDNotifications() {
                                                     children: "🔔"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                    lineNumber: 471,
+                                                    lineNumber: 472,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2551,7 +2539,7 @@ function MDNotifications() {
                                                     children: "No notifications found"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                    lineNumber: 472,
+                                                    lineNumber: 473,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2559,13 +2547,13 @@ function MDNotifications() {
                                                     children: "Try adjusting your filters or search criteria"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                    lineNumber: 475,
+                                                    lineNumber: 476,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                            lineNumber: 470,
+                                            lineNumber: 471,
                                             columnNumber: 19
                                         }, this) : filteredNotifications.map((notification)=>{
                                             const style = getNotificationStyle(notification.type);
@@ -2588,12 +2576,12 @@ function MDNotifications() {
                                                                             children: style.icon
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                            lineNumber: 494,
+                                                                            lineNumber: 495,
                                                                             columnNumber: 33
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                        lineNumber: 491,
+                                                                        lineNumber: 492,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2613,7 +2601,7 @@ function MDNotifications() {
                                                                                                 children: notification.title
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                                                lineNumber: 501,
+                                                                                                lineNumber: 502,
                                                                                                 columnNumber: 37
                                                                                             }, this),
                                                                                             isUnread && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2623,13 +2611,13 @@ function MDNotifications() {
                                                                                                 }
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                                                lineNumber: 508,
+                                                                                                lineNumber: 509,
                                                                                                 columnNumber: 39
                                                                                             }, this)
                                                                                         ]
                                                                                     }, void 0, true, {
                                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                                        lineNumber: 500,
+                                                                                        lineNumber: 501,
                                                                                         columnNumber: 35
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2637,13 +2625,13 @@ function MDNotifications() {
                                                                                         children: notification.time
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                                        lineNumber: 514,
+                                                                                        lineNumber: 515,
                                                                                         columnNumber: 35
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                                lineNumber: 499,
+                                                                                lineNumber: 500,
                                                                                 columnNumber: 33
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2651,7 +2639,7 @@ function MDNotifications() {
                                                                                 children: notification.message
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                                lineNumber: 517,
+                                                                                lineNumber: 518,
                                                                                 columnNumber: 33
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2662,7 +2650,7 @@ function MDNotifications() {
                                                                                         children: notification.priority
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                                        lineNumber: 520,
+                                                                                        lineNumber: 521,
                                                                                         columnNumber: 35
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -2670,7 +2658,7 @@ function MDNotifications() {
                                                                                         children: notification.type.replace("_", " ")
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                                        lineNumber: 521,
+                                                                                        lineNumber: 522,
                                                                                         columnNumber: 35
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2682,41 +2670,41 @@ function MDNotifications() {
                                                                                                 children: notification.sender.name
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                                                lineNumber: 523,
+                                                                                                lineNumber: 524,
                                                                                                 columnNumber: 43
                                                                                             }, this)
                                                                                         ]
                                                                                     }, void 0, true, {
                                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                                        lineNumber: 522,
+                                                                                        lineNumber: 523,
                                                                                         columnNumber: 35
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                                lineNumber: 519,
+                                                                                lineNumber: 520,
                                                                                 columnNumber: 33
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                        lineNumber: 498,
+                                                                        lineNumber: 499,
                                                                         columnNumber: 31
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                lineNumber: 489,
+                                                                lineNumber: 490,
                                                                 columnNumber: 29
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                            lineNumber: 488,
+                                                            lineNumber: 489,
                                                             columnNumber: 27
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                        lineNumber: 487,
+                                                        lineNumber: 488,
                                                         columnNumber: 25
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2727,24 +2715,24 @@ function MDNotifications() {
                                                             children: "🗑️"
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                            lineNumber: 536,
+                                                            lineNumber: 537,
                                                             columnNumber: 27
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                        lineNumber: 532,
+                                                        lineNumber: 533,
                                                         columnNumber: 25
                                                     }, this)
                                                 ]
                                             }, notification.id, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                lineNumber: 483,
+                                                lineNumber: 484,
                                                 columnNumber: 23
                                             }, this);
                                         })
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                        lineNumber: 468,
+                                        lineNumber: 469,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2763,7 +2751,7 @@ function MDNotifications() {
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                    lineNumber: 546,
+                                                    lineNumber: 547,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2774,29 +2762,29 @@ function MDNotifications() {
                                                     children: "Load More →"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                    lineNumber: 549,
+                                                    lineNumber: 550,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                            lineNumber: 545,
+                                            lineNumber: 546,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                        lineNumber: 544,
+                                        lineNumber: 545,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                lineNumber: 460,
+                                lineNumber: 461,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                            lineNumber: 459,
+                            lineNumber: 460,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2810,7 +2798,7 @@ function MDNotifications() {
                                             subtitle: "Distribution by priority"
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                            lineNumber: 561,
+                                            lineNumber: 562,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2835,7 +2823,7 @@ function MDNotifications() {
                                                                     children: priority
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                    lineNumber: 571,
+                                                                    lineNumber: 572,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2847,13 +2835,13 @@ function MDNotifications() {
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                    lineNumber: 572,
+                                                                    lineNumber: 573,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                            lineNumber: 570,
+                                                            lineNumber: 571,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2866,30 +2854,30 @@ function MDNotifications() {
                                                                 }
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                lineNumber: 577,
+                                                                lineNumber: 578,
                                                                 columnNumber: 25
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                            lineNumber: 576,
+                                                            lineNumber: 577,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, priority, true, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                    lineNumber: 569,
+                                                    lineNumber: 570,
                                                     columnNumber: 21
                                                 }, this);
                                             })
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                            lineNumber: 563,
+                                            lineNumber: 564,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                    lineNumber: 560,
+                                    lineNumber: 561,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
@@ -2900,7 +2888,7 @@ function MDNotifications() {
                                             subtitle: "Common notification tasks"
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                            lineNumber: 602,
+                                            lineNumber: 603,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2921,12 +2909,12 @@ function MDNotifications() {
                                                                     children: "🔔"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                    lineNumber: 611,
+                                                                    lineNumber: 612,
                                                                     columnNumber: 23
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                lineNumber: 607,
+                                                                lineNumber: 608,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2939,7 +2927,7 @@ function MDNotifications() {
                                                                         children: "Configure Notifications"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                        lineNumber: 614,
+                                                                        lineNumber: 615,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2947,24 +2935,24 @@ function MDNotifications() {
                                                                         children: "Customize your alert preferences"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                        lineNumber: 617,
+                                                                        lineNumber: 618,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                lineNumber: 613,
+                                                                lineNumber: 614,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                        lineNumber: 606,
+                                                        lineNumber: 607,
                                                         columnNumber: 19
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                    lineNumber: 605,
+                                                    lineNumber: 606,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2982,12 +2970,12 @@ function MDNotifications() {
                                                                     children: "📧"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                    lineNumber: 628,
+                                                                    lineNumber: 629,
                                                                     columnNumber: 23
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                lineNumber: 624,
+                                                                lineNumber: 625,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3000,7 +2988,7 @@ function MDNotifications() {
                                                                         children: "Email Digest"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                        lineNumber: 631,
+                                                                        lineNumber: 632,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3008,24 +2996,24 @@ function MDNotifications() {
                                                                         children: "Receive daily notification summary"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                        lineNumber: 634,
+                                                                        lineNumber: 635,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                lineNumber: 630,
+                                                                lineNumber: 631,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                        lineNumber: 623,
+                                                        lineNumber: 624,
                                                         columnNumber: 19
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                    lineNumber: 622,
+                                                    lineNumber: 623,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3043,12 +3031,12 @@ function MDNotifications() {
                                                                     children: "📊"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                    lineNumber: 645,
+                                                                    lineNumber: 646,
                                                                     columnNumber: 23
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                lineNumber: 641,
+                                                                lineNumber: 642,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3061,7 +3049,7 @@ function MDNotifications() {
                                                                         children: "Activity Report"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                        lineNumber: 648,
+                                                                        lineNumber: 649,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3069,36 +3057,36 @@ function MDNotifications() {
                                                                         children: "Export notification analytics"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                        lineNumber: 651,
+                                                                        lineNumber: 652,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                lineNumber: 647,
+                                                                lineNumber: 648,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                        lineNumber: 640,
+                                                        lineNumber: 641,
                                                         columnNumber: 19
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                    lineNumber: 639,
+                                                    lineNumber: 640,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                            lineNumber: 604,
+                                            lineNumber: 605,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                    lineNumber: 601,
+                                    lineNumber: 602,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
@@ -3109,7 +3097,7 @@ function MDNotifications() {
                                             subtitle: "Recent activity summary"
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                            lineNumber: 660,
+                                            lineNumber: 661,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3158,12 +3146,12 @@ function MDNotifications() {
                                                                         children: item.icon
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                        lineNumber: 675,
+                                                                        lineNumber: 676,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                    lineNumber: 671,
+                                                                    lineNumber: 672,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3171,13 +3159,13 @@ function MDNotifications() {
                                                                     children: item.label
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                                    lineNumber: 679,
+                                                                    lineNumber: 680,
                                                                     columnNumber: 23
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                            lineNumber: 670,
+                                                            lineNumber: 671,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3188,47 +3176,47 @@ function MDNotifications() {
                                                             children: item.value
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                            lineNumber: 681,
+                                                            lineNumber: 682,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, index, true, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                                    lineNumber: 669,
+                                                    lineNumber: 670,
                                                     columnNumber: 19
                                                 }, this))
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                            lineNumber: 662,
+                                            lineNumber: 663,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                                    lineNumber: 659,
+                                    lineNumber: 660,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                            lineNumber: 558,
+                            lineNumber: 559,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-                    lineNumber: 457,
+                    lineNumber: 458,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-            lineNumber: 316,
+            lineNumber: 317,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDNotifications.jsx",
-        lineNumber: 315,
+        lineNumber: 316,
         columnNumber: 5
     }, this);
 }

@@ -1,3 +1,5 @@
+import { emitRealtimeEvent } from "@/lib/realtime-events";
+
 export type AnnouncementEvent =
     | { type: "announcement:created"; announcementId: number }
     | { type: "announcement:updated"; announcementId: number }
@@ -13,6 +15,14 @@ export function subscribeAnnouncementEvents(listener: Listener): () => void {
 }
 
 export function emitAnnouncementEvent(event: AnnouncementEvent): void {
+    emitRealtimeEvent({
+        type: event.type,
+        entity: "announcement",
+        action: event.type.split(":")[1] || "updated",
+        entityId: event.announcementId,
+        payload: event as unknown as Record<string, unknown>,
+    });
+
     listeners.forEach((fn) => {
         try {
             fn(event);

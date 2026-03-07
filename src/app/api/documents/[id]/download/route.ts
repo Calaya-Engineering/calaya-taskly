@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
+import { emitRealtimeEvent } from "@/lib/realtime-events";
 
 function parseDocId(id: string): number | null {
     const num = parseInt(id, 10);
@@ -71,6 +72,13 @@ export async function GET(
         await prisma.document.update({
             where: { id: docId },
             data: { downloads: { increment: 1 } },
+        });
+
+        emitRealtimeEvent({
+            type: "document:downloaded",
+            entity: "document",
+            action: "downloaded",
+            entityId: docId,
         });
 
         // Determine filename and extension

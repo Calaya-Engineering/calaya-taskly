@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
+import { emitRealtimeEvent } from "@/lib/realtime-events";
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     const auth = await getAuthFromRequest(req);
@@ -28,6 +29,14 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
                 announcementId: id,
                 userId: user.id,
             },
+        });
+
+        emitRealtimeEvent({
+            type: "announcement:read",
+            entity: "announcement",
+            action: "read",
+            entityId: id,
+            payload: { userId: user.id },
         });
 
         return NextResponse.json({ success: true });

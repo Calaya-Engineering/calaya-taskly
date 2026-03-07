@@ -376,8 +376,10 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/node_modules/next/dist/client/app-dir/link.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/node_modules/next/navigation.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$contexts$2f$AuthContext$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/contexts/AuthContext.tsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$contexts$2f$BadgeContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/contexts/BadgeContext.jsx [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/lib/icons.jsx [app-ssr] (ecmascript)");
 "use client";
+;
 ;
 ;
 ;
@@ -390,6 +392,7 @@ function Layout({ children, menuItems, userRole }) {
     const [showLogoutModal, setShowLogoutModal] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
     const pathname = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["usePathname"])();
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRouter"])();
+    const { getBadge } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$contexts$2f$BadgeContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useBadges"])();
     const { isAuthenticated, loading, logout } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$contexts$2f$AuthContext$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useAuth"])();
     const handleLogoutClick = ()=>setShowLogoutModal(true);
     const handleConfirmLogout = ()=>{
@@ -468,23 +471,23 @@ function Layout({ children, menuItems, userRole }) {
                                                 size: 24
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 80,
+                                                lineNumber: 82,
                                                 columnNumber: 34
                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["MenuIcon"], {
                                                 size: 24
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 80,
+                                                lineNumber: 82,
                                                 columnNumber: 64
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                            lineNumber: 79,
+                                            lineNumber: 81,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 73,
+                                        lineNumber: 75,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -501,12 +504,12 @@ function Layout({ children, menuItems, userRole }) {
                                                     className: "h-9 w-auto object-contain object-left"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                    lineNumber: 87,
+                                                    lineNumber: 89,
                                                     columnNumber: 19
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 86,
+                                                lineNumber: 88,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -518,19 +521,19 @@ function Layout({ children, menuItems, userRole }) {
                                                 children: userRole
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 96,
+                                                lineNumber: 98,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 85,
+                                        lineNumber: 87,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 72,
+                                lineNumber: 74,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -544,28 +547,28 @@ function Layout({ children, menuItems, userRole }) {
                                     children: "Logout"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                    lineNumber: 108,
+                                    lineNumber: 110,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 106,
+                                lineNumber: 108,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                        lineNumber: 70,
+                        lineNumber: 72,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                    lineNumber: 69,
+                    lineNumber: 71,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                lineNumber: 68,
+                lineNumber: 70,
                 columnNumber: 7
             }, this),
             sidebarOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -574,7 +577,7 @@ function Layout({ children, menuItems, userRole }) {
                 "aria-hidden": "true"
             }, void 0, false, {
                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                lineNumber: 122,
+                lineNumber: 124,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("aside", {
@@ -612,12 +615,12 @@ function Layout({ children, menuItems, userRole }) {
                                                             children: label
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                            lineNumber: 155,
+                                                            lineNumber: 157,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 154,
+                                                        lineNumber: 156,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -650,7 +653,7 @@ function Layout({ children, menuItems, userRole }) {
                                                                         }
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 184,
+                                                                        lineNumber: 186,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -663,12 +666,12 @@ function Layout({ children, menuItems, userRole }) {
                                                                             children: item.icon
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                            lineNumber: 198,
+                                                                            lineNumber: 200,
                                                                             columnNumber: 35
                                                                         }, this) : item.icon
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 191,
+                                                                        lineNumber: 193,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -676,24 +679,28 @@ function Layout({ children, menuItems, userRole }) {
                                                                         children: item.label
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 203,
+                                                                        lineNumber: 205,
                                                                         columnNumber: 31
                                                                     }, this),
-                                                                    item.badge && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                        className: [
-                                                                            "ml-auto text-xs font-semibold px-2 py-1 rounded-full",
-                                                                            active ? "bg-white/15 text-white" : "bg-red-500 text-white"
-                                                                        ].join(" "),
-                                                                        children: item.badge
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 205,
-                                                                        columnNumber: 33
-                                                                    }, this)
+                                                                    (()=>{
+                                                                        const liveBadge = getBadge(path);
+                                                                        if (!liveBadge) return null;
+                                                                        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            className: [
+                                                                                "ml-auto text-xs font-semibold px-2 py-1 rounded-full",
+                                                                                active ? "bg-white/15 text-white" : "bg-red-500 text-white"
+                                                                            ].join(" "),
+                                                                            children: liveBadge
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
+                                                                            lineNumber: 210,
+                                                                            columnNumber: 35
+                                                                        }, this);
+                                                                    })()
                                                                 ]
                                                             }, item._idx, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                lineNumber: 177,
+                                                                lineNumber: 179,
                                                                 columnNumber: 29
                                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                 className: linkClass,
@@ -709,7 +716,7 @@ function Layout({ children, menuItems, userRole }) {
                                                                         }
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 217,
+                                                                        lineNumber: 223,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -722,12 +729,12 @@ function Layout({ children, menuItems, userRole }) {
                                                                             children: item.icon
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                            lineNumber: 231,
+                                                                            lineNumber: 237,
                                                                             columnNumber: 35
                                                                         }, this) : item.icon
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 224,
+                                                                        lineNumber: 230,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -735,41 +742,45 @@ function Layout({ children, menuItems, userRole }) {
                                                                         children: item.label
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 236,
+                                                                        lineNumber: 242,
                                                                         columnNumber: 31
                                                                     }, this),
-                                                                    item.badge && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                        className: [
-                                                                            "ml-auto text-xs font-semibold px-2 py-1 rounded-full",
-                                                                            active ? "bg-white/15 text-white" : "bg-red-500 text-white"
-                                                                        ].join(" "),
-                                                                        children: item.badge
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 238,
-                                                                        columnNumber: 33
-                                                                    }, this)
+                                                                    (()=>{
+                                                                        const liveBadge = getBadge(path);
+                                                                        if (!liveBadge) return null;
+                                                                        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            className: [
+                                                                                "ml-auto text-xs font-semibold px-2 py-1 rounded-full",
+                                                                                active ? "bg-white/15 text-white" : "bg-red-500 text-white"
+                                                                            ].join(" "),
+                                                                            children: liveBadge
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
+                                                                            lineNumber: 247,
+                                                                            columnNumber: 35
+                                                                        }, this);
+                                                                    })()
                                                                 ]
                                                             }, item._idx, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                lineNumber: 216,
+                                                                lineNumber: 222,
                                                                 columnNumber: 29
                                                             }, this);
                                                         })
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 159,
+                                                        lineNumber: 161,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, label, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 153,
+                                                lineNumber: 155,
                                                 columnNumber: 21
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 151,
+                                        lineNumber: 153,
                                         columnNumber: 17
                                     }, this);
                                 })(),
@@ -792,7 +803,7 @@ function Layout({ children, menuItems, userRole }) {
                                                         children: "Quick Stats"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 264,
+                                                        lineNumber: 274,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -800,13 +811,13 @@ function Layout({ children, menuItems, userRole }) {
                                                         children: "Today"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 267,
+                                                        lineNumber: 277,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 263,
+                                                lineNumber: 273,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -819,7 +830,7 @@ function Layout({ children, menuItems, userRole }) {
                                                                 children: s.label
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                lineNumber: 273,
+                                                                lineNumber: 283,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -830,18 +841,18 @@ function Layout({ children, menuItems, userRole }) {
                                                                 children: s.value
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                lineNumber: 274,
+                                                                lineNumber: 284,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, s.label, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 272,
+                                                        lineNumber: 282,
                                                         columnNumber: 21
                                                     }, this))
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 270,
+                                                lineNumber: 280,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -857,12 +868,12 @@ function Layout({ children, menuItems, userRole }) {
                                                             }
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                            lineNumber: 286,
+                                                            lineNumber: 296,
                                                             columnNumber: 21
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 285,
+                                                        lineNumber: 295,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -870,30 +881,30 @@ function Layout({ children, menuItems, userRole }) {
                                                         children: "Progress overview"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 295,
+                                                        lineNumber: 305,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 284,
+                                                lineNumber: 294,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 259,
+                                        lineNumber: 269,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                    lineNumber: 258,
+                                    lineNumber: 268,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                            lineNumber: 140,
+                            lineNumber: 142,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -909,7 +920,7 @@ function Layout({ children, menuItems, userRole }) {
                                         children: "C"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 306,
+                                        lineNumber: 316,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -920,7 +931,7 @@ function Layout({ children, menuItems, userRole }) {
                                                 children: "Calaya"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 313,
+                                                lineNumber: 323,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -928,35 +939,35 @@ function Layout({ children, menuItems, userRole }) {
                                                 children: userRole
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 314,
+                                                lineNumber: 324,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 312,
+                                        lineNumber: 322,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 305,
+                                lineNumber: 315,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                            lineNumber: 304,
+                            lineNumber: 314,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                    lineNumber: 138,
+                    lineNumber: 140,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                lineNumber: 130,
+                lineNumber: 132,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
@@ -968,17 +979,17 @@ function Layout({ children, menuItems, userRole }) {
                         children: children
                     }, void 0, false, {
                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                        lineNumber: 324,
+                        lineNumber: 334,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                    lineNumber: 323,
+                    lineNumber: 333,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                lineNumber: 322,
+                lineNumber: 332,
                 columnNumber: 7
             }, this),
             showLogoutModal && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -990,7 +1001,7 @@ function Layout({ children, menuItems, userRole }) {
                         "aria-hidden": "true"
                     }, void 0, false, {
                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                        lineNumber: 331,
+                        lineNumber: 341,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1004,7 +1015,7 @@ function Layout({ children, menuItems, userRole }) {
                                 children: "System log out?"
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 337,
+                                lineNumber: 347,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1012,7 +1023,7 @@ function Layout({ children, menuItems, userRole }) {
                                 children: "Are you sure you want to log out of your session?"
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 340,
+                                lineNumber: 350,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1025,7 +1036,7 @@ function Layout({ children, menuItems, userRole }) {
                                         children: "No"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 344,
+                                        lineNumber: 354,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1038,31 +1049,31 @@ function Layout({ children, menuItems, userRole }) {
                                         children: "Yes"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 351,
+                                        lineNumber: 361,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 343,
+                                lineNumber: 353,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                        lineNumber: 336,
+                        lineNumber: 346,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                lineNumber: 330,
+                lineNumber: 340,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-        lineNumber: 59,
+        lineNumber: 61,
         columnNumber: 5
     }, this);
 }
@@ -1170,7 +1181,6 @@ const HODMenuItems = [
             lineNumber: 30,
             columnNumber: 68
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "18",
         group: "Tasks"
     },
     {
@@ -1181,7 +1191,6 @@ const HODMenuItems = [
             lineNumber: 31,
             columnNumber: 63
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Tasks"
     },
     {
@@ -1222,7 +1231,6 @@ const HODMenuItems = [
             lineNumber: 35,
             columnNumber: 61
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Tenders"
     },
     {
@@ -1233,7 +1241,6 @@ const HODMenuItems = [
             lineNumber: 36,
             columnNumber: 79
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Tenders"
     },
     {
@@ -1254,7 +1261,6 @@ const HODMenuItems = [
             lineNumber: 38,
             columnNumber: 65
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "4",
         group: "Workflow"
     },
     {
@@ -1265,7 +1271,6 @@ const HODMenuItems = [
             lineNumber: 39,
             columnNumber: 77
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "2",
         group: "Workflow"
     },
     {
@@ -1276,7 +1281,6 @@ const HODMenuItems = [
             lineNumber: 40,
             columnNumber: 73
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "8",
         group: "Account"
     },
     {
@@ -1309,7 +1313,6 @@ const MDMenuItems = [
             lineNumber: 46,
             columnNumber: 62
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "24",
         group: "Tasks"
     },
     {
@@ -1320,7 +1323,6 @@ const MDMenuItems = [
             lineNumber: 47,
             columnNumber: 61
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "8",
         group: "Tasks"
     },
     {
@@ -1331,7 +1333,6 @@ const MDMenuItems = [
             lineNumber: 48,
             columnNumber: 64
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Documents & Reports"
     },
     {
@@ -1352,7 +1353,6 @@ const MDMenuItems = [
             lineNumber: 50,
             columnNumber: 67
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "2",
         group: "Calendar"
     },
     {
@@ -1373,7 +1373,6 @@ const MDMenuItems = [
             lineNumber: 52,
             columnNumber: 78
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Tenders"
     },
     {
@@ -1394,7 +1393,6 @@ const MDMenuItems = [
             lineNumber: 54,
             columnNumber: 64
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "7",
         group: "Workflow"
     },
     {
@@ -1405,7 +1403,6 @@ const MDMenuItems = [
             lineNumber: 55,
             columnNumber: 76
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Workflow"
     },
     {
@@ -1416,7 +1413,6 @@ const MDMenuItems = [
             lineNumber: 56,
             columnNumber: 72
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "12",
         group: "Account"
     },
     {
@@ -1449,7 +1445,6 @@ const StaffMenuItems = [
             lineNumber: 62,
             columnNumber: 62
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "8",
         group: "Tasks"
     },
     {
@@ -1500,7 +1495,6 @@ const StaffMenuItems = [
             lineNumber: 67,
             columnNumber: 63
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Tenders"
     },
     {
@@ -1511,7 +1505,6 @@ const StaffMenuItems = [
             lineNumber: 68,
             columnNumber: 81
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Tenders"
     },
     {
@@ -1532,7 +1525,6 @@ const StaffMenuItems = [
             lineNumber: 70,
             columnNumber: 75
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Account"
     },
     {
@@ -1575,7 +1567,6 @@ const SecretaryMenuItems = [
             lineNumber: 77,
             columnNumber: 89
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "24",
         group: "Documents & Reports"
     },
     {
@@ -1586,7 +1577,6 @@ const SecretaryMenuItems = [
             lineNumber: 78,
             columnNumber: 85
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "45",
         group: "Documents & Reports"
     },
     {
@@ -1607,7 +1597,6 @@ const SecretaryMenuItems = [
             lineNumber: 80,
             columnNumber: 74
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Calendar"
     },
     {
@@ -1618,7 +1607,6 @@ const SecretaryMenuItems = [
             lineNumber: 81,
             columnNumber: 67
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Tenders"
     },
     {
@@ -1629,7 +1617,6 @@ const SecretaryMenuItems = [
             lineNumber: 82,
             columnNumber: 79
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Communications"
     },
     {
@@ -1640,7 +1627,6 @@ const SecretaryMenuItems = [
             lineNumber: 83,
             columnNumber: 79
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "12",
         group: "Account"
     },
     {
@@ -1686,13 +1672,17 @@ __turbopack_context__.s([
     ()=>MDEscalations
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
-// pages/dashboards/MD/MDEscalations.jsx
+// views/dashboards/MD/MDEscalations.jsx
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/node_modules/next/dist/client/app-dir/link.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$components$2f$Layout$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/components/Layout.jsx [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$utils$2f$menus$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/utils/menus.jsx [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$toast$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/lib/toast.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/lib/api.ts [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$hooks$2f$useSSE$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/hooks/useSSE.js [app-ssr] (ecmascript)");
 "use client";
+;
+;
 ;
 ;
 ;
@@ -1704,7 +1694,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$
         children: children
     }, void 0, false, {
         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-        lineNumber: 11,
+        lineNumber: 14,
         columnNumber: 3
     }, ("TURBOPACK compile-time value", void 0));
 const SectionTitle = ({ title, subtitle, action })=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1720,7 +1710,7 @@ const SectionTitle = ({ title, subtitle, action })=>/*#__PURE__*/ (0, __TURBOPAC
                         children: title
                     }, void 0, false, {
                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                        lineNumber: 17,
+                        lineNumber: 20,
                         columnNumber: 7
                     }, ("TURBOPACK compile-time value", void 0)),
                     subtitle ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1728,30 +1718,30 @@ const SectionTitle = ({ title, subtitle, action })=>/*#__PURE__*/ (0, __TURBOPAC
                         children: subtitle
                     }, void 0, false, {
                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                        lineNumber: 20,
+                        lineNumber: 23,
                         columnNumber: 19
                     }, ("TURBOPACK compile-time value", void 0)) : null
                 ]
             }, void 0, true, {
                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                lineNumber: 16,
+                lineNumber: 19,
                 columnNumber: 5
             }, ("TURBOPACK compile-time value", void 0)),
             action
         ]
     }, void 0, true, {
         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-        lineNumber: 15,
+        lineNumber: 18,
         columnNumber: 3
     }, ("TURBOPACK compile-time value", void 0));
 const Pill = ({ children, tone = "default" })=>{
-    const styles = tone === "danger" ? "bg-red-50 text-red-700 ring-red-100" : tone === "success" ? "bg-emerald-50 text-emerald-700 ring-emerald-100" : tone === "warn" ? "bg-amber-50 text-amber-800 ring-amber-100" : tone === "info" ? "bg-blue-50 text-blue-700 ring-blue-100" : "bg-gray-50 text-gray-700 ring-gray-100";
+    const styles = tone === "danger" ? "bg-red-50 text-red-700 ring-red-100" : tone === "success" ? "bg-emerald-50 text-emerald-700 ring-emerald-100" : tone === "warn" ? "bg-amber-50 text-amber-800 ring-amber-100" : tone === "info" ? "bg-blue-50 text-blue-700 ring-blue-100" : tone === "purple" ? "bg-purple-50 text-purple-700 ring-purple-100" : "bg-gray-50 text-gray-700 ring-gray-100";
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
         className: `inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`,
         children: children
     }, void 0, false, {
         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-        lineNumber: 38,
+        lineNumber: 43,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
@@ -1760,102 +1750,198 @@ const fmtDate = (iso)=>iso ? new Date(iso).toLocaleDateString(undefined, {
         month: "short",
         day: "numeric"
     }) : "Not set";
-const escalationsData = [];
+const getStatusTone = (status)=>{
+    if (status === "ESCALATED") return "danger";
+    if (status === "OVERDUE") return "danger";
+    if (status === "AT_RISK") return "warn";
+    if (status === "RESOLVED") return "success";
+    return "default";
+};
+const getLevelTone = (level)=>{
+    if (level === "LEVEL_3") return "danger";
+    if (level === "LEVEL_2") return "warn";
+    if (level === "LEVEL_1") return "info";
+    return "default";
+};
+const getPriorityTone = (priority)=>{
+    if (priority === "CRITICAL" || priority === "URGENT") return "danger";
+    if (priority === "HIGH") return "warn";
+    if (priority === "MEDIUM") return "info";
+    return "default";
+};
+const getLevelLabel = (level)=>{
+    if (level === "LEVEL_3") return "Critical (MD)";
+    if (level === "LEVEL_2") return "Overdue (HOD)";
+    if (level === "LEVEL_1") return "At Risk";
+    return level;
+};
+// Map a raw API task into the escalation shape expected by the UI.
+function mapTaskToEscalation(t) {
+    const now = Date.now();
+    const due = t.dueDate ? new Date(t.dueDate) : null;
+    const overdueDays = due ? Math.ceil((now - due.getTime()) / 86400000) : 0;
+    const status = t.escalated ? "ESCALATED" : overdueDays > 0 ? "OVERDUE" : "AT_RISK";
+    const escalationLevel = t.escalated ? "LEVEL_3" : overdueDays >= 7 ? "LEVEL_3" : overdueDays > 0 ? "LEVEL_2" : "LEVEL_1";
+    return {
+        id: `TSK-${t.id}`,
+        taskId: String(t.id),
+        dbId: t.id,
+        title: t.title || "Untitled Task",
+        type: "TASK",
+        department: t.department || "—",
+        assignee: t.assignments?.[0]?.user?.name || t.assignments?.[0]?.user?.email || "Unassigned",
+        dueDate: t.dueDate ? t.dueDate.split("T")[0] : null,
+        overdueDays,
+        escalationLevel,
+        status,
+        priority: t.priority || "MEDIUM",
+        assignedTo: t.escalated ? "MD" : "HOD",
+        description: t.description || "No description",
+        escalationReason: t.escalationReason || null,
+        escalatedAt: t.escalatedAt || null,
+        comments: 0,
+        lastUpdate: t.updatedAt || t.createdAt,
+        nextAction: t.escalated ? "Escalated to MD – requires resolution" : overdueDays > 0 ? "Requires immediate attention" : "Monitor progress"
+    };
+}
+// Tabs
+const TABS = [
+    {
+        key: "escalated",
+        label: "🚨 Escalated",
+        tone: "danger"
+    },
+    {
+        key: "overdue",
+        label: "⏰ Overdue",
+        tone: "warn"
+    },
+    {
+        key: "at_risk",
+        label: "⚠️ At Risk",
+        tone: "info"
+    },
+    {
+        key: "all",
+        label: "All Items",
+        tone: "default"
+    }
+];
 function MDEscalations() {
-    const [selectedStatus, setSelectedStatus] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("all");
+    const [allData, setAllData] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(true);
+    const [activeTab, setActiveTab] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("escalated");
     const [selectedLevel, setSelectedLevel] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("all");
+    const [selectedDepartment, setSelectedDepartment] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("all");
     const [searchQuery, setSearchQuery] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
-    const [view, setView] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("cards"); // cards or table
+    const [view, setView] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("cards");
+    const [deescalating, setDeescalating] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
+    const fetchData = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useCallback"])(async ()=>{
+        try {
+            const res = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["fetchWithAuth"])("/api/tasks?limit=200");
+            if (res.ok) {
+                const tasks = await res.json();
+                const now = Date.now();
+                // Include all tasks that are escalated, overdue, or at-risk (within 3 days)
+                const relevant = (Array.isArray(tasks) ? tasks : []).filter((t)=>{
+                    if (t.status === "COMPLETED") return false;
+                    if (t.escalated) return true;
+                    const due = t.dueDate ? new Date(t.dueDate) : null;
+                    if (!due) return false;
+                    const diffDays = Math.ceil((due.getTime() - now) / 86400000);
+                    return diffDays <= 3;
+                });
+                setAllData(relevant.map(mapTaskToEscalation));
+            }
+        } catch (e) {
+            console.error("Failed to fetch escalations:", e);
+            __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$toast$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].error("Failed to load escalation data");
+        } finally{
+            setLoading(false);
+        }
+    }, []);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
+        fetchData();
+    }, [
+        fetchData
+    ]);
+    // Real-time updates
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$hooks$2f$useSSE$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useSSE"])("/api/tasks/events", (ev)=>{
+        if (ev.type?.startsWith("task:")) fetchData();
+    });
+    const departments = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useMemo"])(()=>[
+            ...new Set(allData.map((e)=>e.department))
+        ], [
+        allData
+    ]);
+    // Tab-filtered data
+    const tabFilteredData = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useMemo"])(()=>{
+        if (activeTab === "escalated") return allData.filter((e)=>e.status === "ESCALATED");
+        if (activeTab === "overdue") return allData.filter((e)=>e.status === "OVERDUE");
+        if (activeTab === "at_risk") return allData.filter((e)=>e.status === "AT_RISK");
+        return allData;
+    }, [
+        allData,
+        activeTab
+    ]);
+    // Apply secondary filters
     const filteredEscalations = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useMemo"])(()=>{
         const query = searchQuery.trim().toLowerCase();
-        return escalationsData.filter((escalation)=>{
-            const matchesStatus = selectedStatus === "all" || escalation.status === selectedStatus;
+        return tabFilteredData.filter((escalation)=>{
             const matchesLevel = selectedLevel === "all" || escalation.escalationLevel === selectedLevel;
+            const matchesDept = selectedDepartment === "all" || escalation.department === selectedDepartment;
             const matchesSearch = !query || escalation.id.toLowerCase().includes(query) || escalation.title.toLowerCase().includes(query) || escalation.department.toLowerCase().includes(query) || escalation.assignee.toLowerCase().includes(query);
-            return matchesStatus && matchesLevel && matchesSearch;
+            return matchesLevel && matchesDept && matchesSearch;
         });
     }, [
-        selectedStatus,
+        tabFilteredData,
         selectedLevel,
+        selectedDepartment,
         searchQuery
     ]);
     const overview = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useMemo"])(()=>{
-        const total = escalationsData.length;
-        const overdue = escalationsData.filter((e)=>e.status === "OVERDUE").length;
-        const atRisk = escalationsData.filter((e)=>e.status === "AT_RISK").length;
-        const level3 = escalationsData.filter((e)=>e.escalationLevel === "LEVEL_3").length;
-        const overdueItems = escalationsData.filter((e)=>e.overdueDays > 0);
-        const avgOverdue = overdueItems.length ? Math.round(overdueItems.reduce((sum, e)=>sum + e.overdueDays, 0) / overdueItems.length) : 0;
+        const total = allData.length;
+        const escalated = allData.filter((e)=>e.status === "ESCALATED").length;
+        const overdue = allData.filter((e)=>e.status === "OVERDUE").length;
+        const atRisk = allData.filter((e)=>e.status === "AT_RISK").length;
+        const avgOverdue = total > 0 ? Math.round(allData.reduce((sum, e)=>sum + Math.max(0, e.overdueDays), 0) / total) : 0;
         return {
             total,
+            escalated,
             overdue,
             atRisk,
-            level3,
             avgOverdue
         };
-    }, []);
-    const getStatusTone = (status)=>{
-        switch(status){
-            case "OVERDUE":
-                return "danger";
-            case "AT_RISK":
-                return "warn";
-            default:
-                return "default";
-        }
-    };
-    const getLevelTone = (level)=>{
-        switch(level){
-            case "LEVEL_3":
-                return "danger";
-            case "LEVEL_2":
-                return "warn";
-            case "LEVEL_1":
-                return "info";
-            default:
-                return "default";
-        }
-    };
-    const getLevelLabel = (level)=>{
-        switch(level){
-            case "LEVEL_3":
-                return "Escalated to MD";
-            case "LEVEL_2":
-                return "Escalated to HOD";
-            case "LEVEL_1":
-                return "Warning Stage";
-            default:
-                return level;
-        }
-    };
-    const getPriorityTone = (priority)=>{
-        switch(priority){
-            case "CRITICAL":
-                return "danger";
-            case "HIGH":
-                return "warn";
-            case "MEDIUM":
-                return "info";
-            default:
-                return "success";
-        }
-    };
-    const departments = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useMemo"])(()=>[
-            ...new Set(escalationsData.map((e)=>e.department))
-        ], []);
-    const handleReassign = (id)=>{
-        __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$toast$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].info(`Reassigning escalation ${id}`);
-    };
-    const handleExtend = (id)=>{
-        __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$toast$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].info(`Extending deadline for ${id}`);
-    };
-    const handleResolve = (id)=>{
-        __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$toast$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].success(`Resolving escalation ${id}`);
-    };
+    }, [
+        allData
+    ]);
     const clearFilters = ()=>{
-        setSelectedStatus("all");
         setSelectedLevel("all");
+        setSelectedDepartment("all");
         setSearchQuery("");
+    };
+    const handleDeescalate = async (escalation)=>{
+        if (!window.confirm(`De-escalate task "${escalation.title}"?`)) return;
+        setDeescalating(escalation.dbId);
+        try {
+            const res = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["fetchWithAuth"])(`/api/tasks/${escalation.dbId}/escalate`, {
+                method: "DELETE"
+            });
+            if (res.ok) {
+                __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$toast$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].success(`Task "${escalation.title}" has been de-escalated.`);
+                fetchData();
+            } else {
+                const err = await res.json().catch(()=>({}));
+                __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$toast$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].error(err.error || "Failed to de-escalate task");
+            }
+        } catch (e) {
+            __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$toast$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].error("Network error. Please try again.");
+        } finally{
+            setDeescalating(null);
+        }
+    };
+    const handleReassign = (id)=>{
+        __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$toast$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].info(`Reassigning task ${id} — connect to your reassign API.`);
     };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$components$2f$Layout$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
         menuItems: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$utils$2f$menus$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["MDMenuItems"],
@@ -1869,7 +1955,7 @@ function MDEscalations() {
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "p-6 md:p-8",
                             style: {
-                                background: "linear-gradient(135deg, rgba(44,75,155,0.10) 0%, rgba(109,198,223,0.18) 50%, rgba(237,50,55,0.06) 100%)"
+                                background: "linear-gradient(135deg, rgba(237,50,55,0.08) 0%, rgba(44,75,155,0.10) 50%, rgba(109,198,223,0.12) 100%)"
                             },
                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5",
@@ -1880,49 +1966,50 @@ function MDEscalations() {
                                                 className: "flex flex-wrap items-center gap-2 mb-2",
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
-                                                        children: "Escalations & Overdue"
+                                                        children: "MD Escalations Center"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                        lineNumber: 165,
+                                                        lineNumber: 270,
                                                         columnNumber: 19
                                                     }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
-                                                        tone: overview.overdue > 0 ? "danger" : "success",
+                                                    overview.escalated > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
+                                                        tone: "danger",
+                                                        children: [
+                                                            "🚨 ",
+                                                            overview.escalated,
+                                                            " Escalated"
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                        lineNumber: 272,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    overview.overdue > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
+                                                        tone: "warn",
                                                         children: [
                                                             overview.overdue,
                                                             " Overdue"
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                        lineNumber: 166,
-                                                        columnNumber: 19
+                                                        lineNumber: 275,
+                                                        columnNumber: 21
                                                     }, this),
                                                     overview.atRisk > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
-                                                        tone: "warn",
+                                                        tone: "info",
                                                         children: [
                                                             overview.atRisk,
                                                             " At Risk"
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                        lineNumber: 167,
-                                                        columnNumber: 43
-                                                    }, this),
-                                                    overview.level3 > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
-                                                        tone: "danger",
-                                                        children: [
-                                                            overview.level3,
-                                                            " Escalated to MD"
-                                                        ]
-                                                    }, void 0, true, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                        lineNumber: 168,
-                                                        columnNumber: 43
+                                                        lineNumber: 278,
+                                                        columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                lineNumber: 164,
+                                                lineNumber: 269,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
@@ -1933,21 +2020,21 @@ function MDEscalations() {
                                                 children: "Escalations & Overdue Tasks"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                lineNumber: 171,
+                                                lineNumber: 281,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                 className: "text-gray-600 mt-2 max-w-2xl",
-                                                children: "Monitor and resolve escalated tasks and overdue assignments across all departments"
+                                                children: "Monitor and resolve tasks escalated by HODs, overdue assignments, and at-risk items across all departments."
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                lineNumber: 174,
+                                                lineNumber: 287,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                        lineNumber: 163,
+                                        lineNumber: 268,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1956,89 +2043,76 @@ function MDEscalations() {
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 className: "flex w-full sm:w-auto gap-2",
                                                 children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                        className: `flex-1 sm:flex-none px-4 py-3 rounded-2xl font-semibold border transition ${view === "cards" ? "bg-white" : "bg-gray-50"}`,
+                                                    "cards",
+                                                    "table"
+                                                ].map((v)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                        onClick: ()=>setView(v),
+                                                        className: `flex-1 sm:flex-none px-4 py-3 rounded-2xl font-semibold border transition ${view === v ? "bg-white" : "bg-gray-50"}`,
                                                         style: {
-                                                            borderColor: "rgba(109, 198, 223, 0.7)",
+                                                            borderColor: "rgba(109,198,223,0.7)",
                                                             color: "var(--primary-blue)"
                                                         },
-                                                        onClick: ()=>setView("cards"),
-                                                        children: "Cards"
-                                                    }, void 0, false, {
+                                                        children: v === "cards" ? "Cards" : "Table"
+                                                    }, v, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                        lineNumber: 181,
-                                                        columnNumber: 19
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                        className: `flex-1 sm:flex-none px-4 py-3 rounded-2xl font-semibold border transition ${view === "table" ? "bg-white" : "bg-gray-50"}`,
-                                                        style: {
-                                                            borderColor: "rgba(109, 198, 223, 0.7)",
-                                                            color: "var(--primary-blue)"
-                                                        },
-                                                        onClick: ()=>setView("table"),
-                                                        children: "Table"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                        lineNumber: 190,
-                                                        columnNumber: 19
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
+                                                        lineNumber: 296,
+                                                        columnNumber: 21
+                                                    }, this))
+                                            }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                lineNumber: 180,
+                                                lineNumber: 294,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                onClick: clearFilters,
-                                                className: "w-full sm:w-auto px-5 py-3 rounded-2xl font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition",
+                                                onClick: ()=>fetchData(),
+                                                className: "w-full sm:w-auto px-5 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition",
                                                 style: {
-                                                    borderColor: "rgba(109, 198, 223, 0.7)",
-                                                    color: "var(--primary-blue)"
+                                                    backgroundColor: "var(--primary-blue)"
                                                 },
-                                                children: "Clear Filters"
+                                                children: "Refresh"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                lineNumber: 200,
+                                                lineNumber: 307,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                        lineNumber: 179,
+                                        lineNumber: 293,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                lineNumber: 162,
+                                lineNumber: 267,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                            lineNumber: 155,
+                            lineNumber: 260,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "grid grid-cols-1 md:grid-cols-4 gap-3 p-4 md:p-5 bg-white border-t border-gray-200/70",
+                            className: "grid grid-cols-2 md:grid-cols-4 gap-3 p-4 md:p-5 bg-white border-t border-gray-200/70",
                             children: [
                                 {
-                                    label: "Total Escalations",
+                                    label: "Total Items",
                                     value: overview.total,
                                     tone: "default"
                                 },
                                 {
-                                    label: "Overdue",
-                                    value: overview.overdue,
-                                    tone: overview.overdue ? "danger" : "success"
+                                    label: "Escalated to MD",
+                                    value: overview.escalated,
+                                    tone: overview.escalated > 0 ? "danger" : "success"
                                 },
                                 {
-                                    label: "At Risk",
-                                    value: overview.atRisk,
-                                    tone: overview.atRisk ? "warn" : "success"
+                                    label: "Overdue",
+                                    value: overview.overdue,
+                                    tone: overview.overdue > 0 ? "warn" : "success"
                                 },
                                 {
                                     label: "Avg Overdue Days",
-                                    value: overview.avgOverdue || 0,
+                                    value: `${overview.avgOverdue}d`,
                                     tone: "info"
                                 }
                             ].map((s)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2052,7 +2126,7 @@ function MDEscalations() {
                                                     children: s.label
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                    lineNumber: 221,
+                                                    lineNumber: 328,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -2060,13 +2134,13 @@ function MDEscalations() {
                                                     children: "Live"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                    lineNumber: 222,
+                                                    lineNumber: 329,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                            lineNumber: 220,
+                                            lineNumber: 327,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2077,24 +2151,57 @@ function MDEscalations() {
                                             children: s.value
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                            lineNumber: 224,
+                                            lineNumber: 331,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, s.label, true, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                    lineNumber: 219,
+                                    lineNumber: 326,
                                     columnNumber: 15
                                 }, this))
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                            lineNumber: 212,
+                            lineNumber: 319,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                    lineNumber: 154,
+                    lineNumber: 259,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "flex flex-wrap gap-2",
+                    children: TABS.map((tab)=>{
+                        const count = tab.key === "escalated" ? overview.escalated : tab.key === "overdue" ? overview.overdue : tab.key === "at_risk" ? overview.atRisk : overview.total;
+                        const isActive = activeTab === tab.key;
+                        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                            onClick: ()=>setActiveTab(tab.key),
+                            className: `px-4 py-2.5 rounded-2xl font-semibold text-sm ring-1 transition ${isActive ? "text-white ring-transparent" : "bg-white text-gray-700 ring-gray-200 hover:bg-gray-50"}`,
+                            style: isActive ? {
+                                backgroundColor: "var(--primary-blue)"
+                            } : {},
+                            children: [
+                                tab.label,
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                    className: `ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-bold ${isActive ? "bg-white/20 text-white" : "bg-gray-100 text-gray-600"}`,
+                                    children: count
+                                }, void 0, false, {
+                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                    lineNumber: 362,
+                                    columnNumber: 17
+                                }, this)
+                            ]
+                        }, tab.key, true, {
+                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                            lineNumber: 352,
+                            columnNumber: 15
+                        }, this);
+                    })
+                }, void 0, false, {
+                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                    lineNumber: 340,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
@@ -2102,38 +2209,39 @@ function MDEscalations() {
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(SectionTitle, {
                             title: "Filters",
-                            subtitle: "Filter escalations by status, level, and search",
+                            subtitle: "Narrow down by escalation level, department, or search",
                             action: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "text-sm text-gray-500",
                                 children: [
-                                    "Showing ",
+                                    "Showing",
+                                    " ",
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                         className: "font-semibold text-gray-800",
                                         children: filteredEscalations.length
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                        lineNumber: 239,
-                                        columnNumber: 25
+                                        lineNumber: 381,
+                                        columnNumber: 17
                                     }, void 0),
                                     " of",
                                     " ",
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                         className: "font-semibold text-gray-800",
-                                        children: escalationsData.length
+                                        children: tabFilteredData.length
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                        lineNumber: 240,
+                                        lineNumber: 382,
                                         columnNumber: 17
                                     }, void 0)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                lineNumber: 238,
+                                lineNumber: 379,
                                 columnNumber: 15
                             }, void 0)
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                            lineNumber: 234,
+                            lineNumber: 375,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2143,61 +2251,10 @@ function MDEscalations() {
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                             className: "block text-sm font-semibold text-gray-700 mb-1",
-                                            children: "Status"
-                                        }, void 0, false, {
-                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                            lineNumber: 247,
-                                            columnNumber: 15
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
-                                            className: "w-full px-3 py-2.5 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100",
-                                            value: selectedStatus,
-                                            onChange: (e)=>setSelectedStatus(e.target.value),
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                                    value: "all",
-                                                    children: "All Status"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                    lineNumber: 253,
-                                                    columnNumber: 17
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                                    value: "OVERDUE",
-                                                    children: "Overdue"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                    lineNumber: 254,
-                                                    columnNumber: 17
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                                    value: "AT_RISK",
-                                                    children: "At Risk"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                    lineNumber: 255,
-                                                    columnNumber: 17
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                            lineNumber: 248,
-                                            columnNumber: 15
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                    lineNumber: 246,
-                                    columnNumber: 13
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                            className: "block text-sm font-semibold text-gray-700 mb-1",
                                             children: "Escalation Level"
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                            lineNumber: 260,
+                                            lineNumber: 389,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -2210,43 +2267,86 @@ function MDEscalations() {
                                                     children: "All Levels"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                    lineNumber: 266,
+                                                    lineNumber: 395,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
                                                     value: "LEVEL_3",
-                                                    children: "Level 3 (MD)"
+                                                    children: "Level 3 – Critical (MD)"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                    lineNumber: 267,
+                                                    lineNumber: 396,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
                                                     value: "LEVEL_2",
-                                                    children: "Level 2 (HOD)"
+                                                    children: "Level 2 – Overdue (HOD)"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                    lineNumber: 268,
+                                                    lineNumber: 397,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
                                                     value: "LEVEL_1",
-                                                    children: "Level 1 (Warning)"
+                                                    children: "Level 1 – At Risk"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                    lineNumber: 269,
+                                                    lineNumber: 398,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                            lineNumber: 261,
+                                            lineNumber: 390,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                    lineNumber: 259,
+                                    lineNumber: 388,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                            className: "block text-sm font-semibold text-gray-700 mb-1",
+                                            children: "Department"
+                                        }, void 0, false, {
+                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                            lineNumber: 403,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
+                                            className: "w-full px-3 py-2.5 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100",
+                                            value: selectedDepartment,
+                                            onChange: (e)=>setSelectedDepartment(e.target.value),
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                    value: "all",
+                                                    children: "All Departments"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                    lineNumber: 409,
+                                                    columnNumber: 17
+                                                }, this),
+                                                departments.map((d)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                        value: d,
+                                                        children: d
+                                                    }, d, false, {
+                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                        lineNumber: 411,
+                                                        columnNumber: 19
+                                                    }, this))
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                            lineNumber: 404,
+                                            columnNumber: 15
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                    lineNumber: 402,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2256,7 +2356,7 @@ function MDEscalations() {
                                             children: "Search"
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                            lineNumber: 274,
+                                            lineNumber: 419,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2270,7 +2370,7 @@ function MDEscalations() {
                                                     onChange: (e)=>setSearchQuery(e.target.value)
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                    lineNumber: 276,
+                                                    lineNumber: 421,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2278,25 +2378,25 @@ function MDEscalations() {
                                                     children: "🔎"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                    lineNumber: 283,
+                                                    lineNumber: 428,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                            lineNumber: 275,
+                                            lineNumber: 420,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                    lineNumber: 273,
+                                    lineNumber: 418,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                            lineNumber: 245,
+                            lineNumber: 387,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2304,1021 +2404,1178 @@ function MDEscalations() {
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                     onClick: ()=>{
-                                        setSelectedStatus("OVERDUE");
-                                        setSelectedLevel("all");
+                                        setActiveTab("escalated");
+                                        clearFilters();
                                     },
                                     className: "px-3.5 py-2 rounded-2xl text-sm font-semibold border bg-red-50 text-red-700 hover:bg-red-100 transition",
+                                    children: "🚨 Escalated Only"
+                                }, void 0, false, {
+                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                    lineNumber: 434,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    onClick: ()=>{
+                                        setActiveTab("overdue");
+                                        clearFilters();
+                                    },
+                                    className: "px-3.5 py-2 rounded-2xl text-sm font-semibold border bg-amber-50 text-amber-800 hover:bg-amber-100 transition",
                                     children: "⏰ Overdue Only"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                    lineNumber: 290,
+                                    lineNumber: 440,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                     onClick: ()=>{
-                                        setSelectedStatus("AT_RISK");
-                                        setSelectedLevel("all");
+                                        setActiveTab("at_risk");
+                                        clearFilters();
                                     },
-                                    className: "px-3.5 py-2 rounded-2xl text-sm font-semibold border bg-amber-50 text-amber-800 hover:bg-amber-100 transition",
+                                    className: "px-3.5 py-2 rounded-2xl text-sm font-semibold border bg-blue-50 text-blue-700 hover:bg-blue-100 transition",
                                     children: "⚠️ At Risk Only"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                    lineNumber: 299,
+                                    lineNumber: 446,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                     onClick: ()=>{
-                                        setSelectedStatus("all");
-                                        setSelectedLevel("LEVEL_3");
+                                        setActiveTab("all");
+                                        clearFilters();
                                     },
-                                    className: "px-3.5 py-2 rounded-2xl text-sm font-semibold border bg-red-50 text-red-700 hover:bg-red-100 transition",
-                                    children: "👔 Escalated to MD"
-                                }, void 0, false, {
-                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                    lineNumber: 308,
-                                    columnNumber: 13
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                    onClick: clearFilters,
                                     className: "px-3.5 py-2 rounded-2xl text-sm font-semibold border bg-white hover:bg-gray-50 transition",
                                     children: "🔄 Clear All"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                    lineNumber: 317,
+                                    lineNumber: 452,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                            lineNumber: 289,
+                            lineNumber: 433,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                    lineNumber: 233,
+                    lineNumber: 374,
                     columnNumber: 9
                 }, this),
-                view === "cards" ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "grid grid-cols-1 xl:grid-cols-2 gap-6",
-                    children: [
-                        filteredEscalations.map((escalation)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
-                                className: "p-6 hover:-translate-y-0.5 transition-all",
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "flex items-start justify-between gap-4 mb-4",
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "flex flex-wrap items-center gap-2",
-                                                        children: [
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                className: "text-sm font-extrabold",
-                                                                style: {
-                                                                    color: "var(--primary-blue)"
-                                                                },
-                                                                children: escalation.id
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                                lineNumber: 334,
-                                                                columnNumber: 23
-                                                            }, this),
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
-                                                                tone: getStatusTone(escalation.status),
-                                                                children: escalation.status
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                                lineNumber: 337,
-                                                                columnNumber: 23
-                                                            }, this),
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
-                                                                tone: getLevelTone(escalation.escalationLevel),
-                                                                children: getLevelLabel(escalation.escalationLevel)
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                                lineNumber: 338,
-                                                                columnNumber: 23
-                                                            }, this)
-                                                        ]
-                                                    }, void 0, true, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                        lineNumber: 333,
-                                                        columnNumber: 21
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                                        className: "mt-3 text-lg font-extrabold tracking-tight",
-                                                        style: {
-                                                            color: "var(--primary-blue)"
-                                                        },
-                                                        children: escalation.title
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                        lineNumber: 343,
-                                                        columnNumber: 21
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                        className: "text-sm text-gray-600 mt-1",
-                                                        children: [
-                                                            "Task: ",
-                                                            escalation.taskId
-                                                        ]
-                                                    }, void 0, true, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                        lineNumber: 346,
-                                                        columnNumber: 21
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                lineNumber: 332,
-                                                columnNumber: 19
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "w-12 h-12 rounded-2xl flex items-center justify-center  shrink-0",
-                                                style: {
-                                                    backgroundColor: "rgba(237, 50, 55, 0.1)"
-                                                },
-                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                    className: "text-xl",
-                                                    children: "⚠️"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                    lineNumber: 353,
-                                                    columnNumber: 21
-                                                }, this)
-                                            }, void 0, false, {
-                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                lineNumber: 349,
-                                                columnNumber: 19
-                                            }, this)
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                        lineNumber: 331,
-                                        columnNumber: 17
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "grid grid-cols-2 gap-3",
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "rounded-xl border border-gray-200/70 p-3",
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                        className: "text-xs text-gray-500",
-                                                        children: "Department"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                        lineNumber: 359,
-                                                        columnNumber: 21
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                        className: "text-sm font-semibold mt-1",
-                                                        children: escalation.department
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                        lineNumber: 360,
-                                                        columnNumber: 21
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                lineNumber: 358,
-                                                columnNumber: 19
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "rounded-xl border border-gray-200/70 p-3",
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                        className: "text-xs text-gray-500",
-                                                        children: "Assignee"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                        lineNumber: 363,
-                                                        columnNumber: 21
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "flex items-center gap-2 mt-1",
-                                                        children: [
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                className: "w-6 h-6 rounded-xl flex items-center justify-center text-white font-bold text-xs",
-                                                                style: {
-                                                                    backgroundColor: "var(--secondary-blue)"
-                                                                },
-                                                                children: escalation.assignee.charAt(0)
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                                lineNumber: 365,
-                                                                columnNumber: 23
-                                                            }, this),
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                                className: "text-sm font-semibold",
-                                                                children: escalation.assignee
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                                lineNumber: 371,
-                                                                columnNumber: 23
-                                                            }, this)
-                                                        ]
-                                                    }, void 0, true, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                        lineNumber: 364,
-                                                        columnNumber: 21
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                lineNumber: 362,
-                                                columnNumber: 19
-                                            }, this)
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                        lineNumber: 357,
-                                        columnNumber: 17
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "mt-4 grid grid-cols-2 gap-3",
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                        className: "text-xs text-gray-500",
-                                                        children: "Due Date"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                        lineNumber: 378,
-                                                        columnNumber: 21
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                        className: `text-sm font-semibold mt-1 ${escalation.overdueDays > 0 ? "text-red-600" : escalation.overdueDays < 0 ? "text-amber-600" : ""}`,
-                                                        children: fmtDate(escalation.dueDate)
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                        lineNumber: 379,
-                                                        columnNumber: 21
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                lineNumber: 377,
-                                                columnNumber: 19
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                        className: "text-xs text-gray-500",
-                                                        children: "Priority"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                        lineNumber: 388,
-                                                        columnNumber: 21
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
-                                                        tone: getPriorityTone(escalation.priority),
-                                                        className: "mt-1",
-                                                        children: escalation.priority
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                        lineNumber: 389,
-                                                        columnNumber: 21
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                lineNumber: 387,
-                                                columnNumber: 19
-                                            }, this)
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                        lineNumber: 376,
-                                        columnNumber: 17
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "mt-4 flex items-center gap-2",
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "flex-1 bg-gray-100 rounded-xl p-2",
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                        className: "text-xs text-gray-600",
-                                                        children: "Assigned to:"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                        lineNumber: 397,
-                                                        columnNumber: 21
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                        className: "text-sm font-semibold",
-                                                        children: escalation.assignedTo
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                        lineNumber: 398,
-                                                        columnNumber: 21
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                lineNumber: 396,
-                                                columnNumber: 19
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "flex-1 bg-gray-100 rounded-xl p-2",
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                        className: "text-xs text-gray-600",
-                                                        children: "Comments"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                        lineNumber: 401,
-                                                        columnNumber: 21
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                        className: "text-sm font-semibold",
-                                                        children: escalation.comments
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                        lineNumber: 402,
-                                                        columnNumber: 21
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                lineNumber: 400,
-                                                columnNumber: 19
-                                            }, this)
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                        lineNumber: 395,
-                                        columnNumber: 17
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "mt-6 flex items-center gap-2",
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-                                                href: `/md-dashboard/task/${escalation.taskId}`,
-                                                className: "flex-1",
-                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                    className: "w-full px-4 py-2.5 rounded-2xl font-semibold text-sm text-white active:scale-[0.99] transition",
-                                                    style: {
-                                                        backgroundColor: "var(--secondary-blue)"
-                                                    },
-                                                    children: "View Task"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                    lineNumber: 408,
-                                                    columnNumber: 21
-                                                }, this)
-                                            }, void 0, false, {
-                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                lineNumber: 407,
-                                                columnNumber: 19
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                onClick: ()=>handleReassign(escalation.id),
-                                                className: "flex-1 px-4 py-2.5 rounded-2xl font-semibold text-sm border bg-white hover:bg-gray-50 active:scale-[0.99] transition",
-                                                style: {
-                                                    borderColor: "rgba(44, 75, 155, 0.35)",
-                                                    color: "var(--primary-blue)"
-                                                },
-                                                children: "Reassign"
-                                            }, void 0, false, {
-                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                lineNumber: 415,
-                                                columnNumber: 19
-                                            }, this)
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                        lineNumber: 406,
-                                        columnNumber: 17
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "mt-2 flex items-center gap-2",
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                onClick: ()=>handleExtend(escalation.id),
-                                                className: "flex-1 px-4 py-2.5 rounded-2xl font-semibold text-sm border bg-white hover:bg-gray-50 active:scale-[0.99] transition",
-                                                style: {
-                                                    borderColor: "rgba(16, 185, 129, 0.35)",
-                                                    color: "#10B981"
-                                                },
-                                                children: "Extend Deadline"
-                                            }, void 0, false, {
-                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                lineNumber: 425,
-                                                columnNumber: 19
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                onClick: ()=>handleResolve(escalation.id),
-                                                className: "flex-1 px-4 py-2.5 rounded-2xl font-semibold text-sm text-white active:scale-[0.99] transition",
-                                                style: {
-                                                    backgroundColor: "#10B981"
-                                                },
-                                                children: "Mark Resolved"
-                                            }, void 0, false, {
-                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                lineNumber: 432,
-                                                columnNumber: 19
-                                            }, this)
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                        lineNumber: 424,
-                                        columnNumber: 17
-                                    }, this)
-                                ]
-                            }, escalation.id, true, {
+                loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
+                    className: "p-12",
+                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "flex flex-col items-center justify-center gap-4",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "w-12 h-12 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin"
+                            }, void 0, false, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                lineNumber: 330,
+                                lineNumber: 465,
                                 columnNumber: 15
-                            }, this)),
-                        filteredEscalations.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
-                            className: "p-10 text-center xl:col-span-2",
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                className: "text-gray-500 font-semibold",
+                                children: "Loading real-time escalation data..."
+                            }, void 0, false, {
+                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                lineNumber: 466,
+                                columnNumber: 15
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                        lineNumber: 464,
+                        columnNumber: 13
+                    }, this)
+                }, void 0, false, {
+                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                    lineNumber: 463,
+                    columnNumber: 11
+                }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
+                    children: [
+                        activeTab === "escalated" && filteredEscalations.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "flex items-start gap-3 p-4 rounded-2xl border text-sm font-medium",
+                            style: {
+                                backgroundColor: "rgba(237,50,55,0.06)",
+                                borderColor: "rgba(237,50,55,0.2)",
+                                color: "#991b1b"
+                            },
                             children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "text-4xl",
-                                    children: "✅"
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                    className: "text-lg",
+                                    children: "🚨"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                    lineNumber: 445,
+                                    lineNumber: 481,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "mt-3 font-extrabold",
-                                    style: {
-                                        color: "var(--primary-blue)"
-                                    },
-                                    children: "No escalations found"
-                                }, void 0, false, {
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                            className: "font-bold",
+                                            children: [
+                                                filteredEscalations.length,
+                                                " task",
+                                                filteredEscalations.length !== 1 ? "s" : "",
+                                                " escalated to you."
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                            lineNumber: 483,
+                                            columnNumber: 19
+                                        }, this),
+                                        " ",
+                                        "These were escalated by HODs and require your direct attention or resolution. You can de-escalate tasks once addressed."
+                                    ]
+                                }, void 0, true, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                    lineNumber: 446,
-                                    columnNumber: 17
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "text-sm text-gray-500 mt-1",
-                                    children: "Try adjusting your filters or search criteria"
-                                }, void 0, false, {
-                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                    lineNumber: 449,
+                                    lineNumber: 482,
                                     columnNumber: 17
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                            lineNumber: 444,
+                            lineNumber: 473,
                             columnNumber: 15
-                        }, this)
-                    ]
-                }, void 0, true, {
-                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                    lineNumber: 328,
-                    columnNumber: 11
-                }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
-                    className: "overflow-hidden",
-                    children: [
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "hidden lg:block overflow-x-auto",
-                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("table", {
-                                className: "min-w-full",
+                        }, this),
+                        view === "cards" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "grid grid-cols-1 xl:grid-cols-2 gap-6",
+                            children: filteredEscalations.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
+                                className: "p-10 text-center xl:col-span-2",
                                 children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("thead", {
-                                        className: "bg-gray-50 border-b border-gray-200/70",
-                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
-                                            className: "text-[11px] font-semibold text-gray-500 uppercase tracking-wider",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                    className: "px-5 py-3 text-left",
-                                                    children: "Escalation"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                    lineNumber: 459,
-                                                    columnNumber: 21
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                    className: "px-5 py-3 text-left",
-                                                    children: "Department"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                    lineNumber: 460,
-                                                    columnNumber: 21
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                    className: "px-5 py-3 text-left",
-                                                    children: "Assignee"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                    lineNumber: 461,
-                                                    columnNumber: 21
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                    className: "px-5 py-3 text-left",
-                                                    children: "Status/Level"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                    lineNumber: 462,
-                                                    columnNumber: 21
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                    className: "px-5 py-3 text-left",
-                                                    children: "Due Date"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                    lineNumber: 463,
-                                                    columnNumber: 21
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                    className: "px-5 py-3 text-left",
-                                                    children: "Priority"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                    lineNumber: 464,
-                                                    columnNumber: 21
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                    className: "px-5 py-3 text-right",
-                                                    children: "Actions"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                    lineNumber: 465,
-                                                    columnNumber: 21
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                            lineNumber: 458,
-                                            columnNumber: 19
-                                        }, this)
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "text-4xl",
+                                        children: activeTab === "escalated" ? "✅" : "📋"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                        lineNumber: 457,
-                                        columnNumber: 17
+                                        lineNumber: 497,
+                                        columnNumber: 21
                                     }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
-                                        className: "divide-y divide-gray-200/70 text-[13px]",
-                                        children: filteredEscalations.map((escalation)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
-                                                className: "hover:bg-gray-50/70 transition",
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                        className: "px-5 py-3",
-                                                        children: [
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                className: "font-extrabold",
-                                                                style: {
-                                                                    color: "var(--primary-blue)"
-                                                                },
-                                                                children: escalation.id
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                                lineNumber: 473,
-                                                                columnNumber: 25
-                                                            }, this),
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                className: "text-[13px] font-semibold text-gray-900 mt-1",
-                                                                children: escalation.title
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                                lineNumber: 476,
-                                                                columnNumber: 25
-                                                            }, this),
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                className: "text-[11px] text-gray-500",
-                                                                children: [
-                                                                    "Task: ",
-                                                                    escalation.taskId
-                                                                ]
-                                                            }, void 0, true, {
-                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                                lineNumber: 477,
-                                                                columnNumber: 25
-                                                            }, this)
-                                                        ]
-                                                    }, void 0, true, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                        lineNumber: 472,
-                                                        columnNumber: 23
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                        className: "px-5 py-3 whitespace-nowrap",
-                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
-                                                            children: escalation.department
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                            lineNumber: 480,
-                                                            columnNumber: 25
-                                                        }, this)
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                        lineNumber: 479,
-                                                        columnNumber: 23
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                        className: "px-5 py-3 whitespace-nowrap",
-                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                            className: "flex items-center gap-2",
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "mt-3 font-extrabold",
+                                        style: {
+                                            color: "var(--primary-blue)"
+                                        },
+                                        children: activeTab === "escalated" ? "No escalated tasks" : "No items found"
+                                    }, void 0, false, {
+                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                        lineNumber: 500,
+                                        columnNumber: 21
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "text-sm text-gray-500 mt-1",
+                                        children: activeTab === "escalated" ? "No tasks have been escalated to you. Well done!" : "Try adjusting your filters or search criteria."
+                                    }, void 0, false, {
+                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                        lineNumber: 508,
+                                        columnNumber: 21
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                lineNumber: 496,
+                                columnNumber: 19
+                            }, this) : filteredEscalations.map((escalation)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
+                                    className: "p-6 hover:-translate-y-0.5 transition-all",
+                                    style: {
+                                        borderColor: escalation.status === "ESCALATED" ? "rgba(237,50,55,0.3)" : escalation.status === "OVERDUE" ? "rgba(245,158,11,0.3)" : "rgba(0,0,0,0.07)"
+                                    },
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "flex items-start justify-between gap-4 mb-4",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "flex-1 min-w-0",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "flex flex-wrap items-center gap-2",
                                                             children: [
-                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                    className: "w-7 h-7 rounded-xl flex items-center justify-center text-white font-bold text-xs",
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    className: "text-sm font-extrabold",
                                                                     style: {
-                                                                        backgroundColor: "var(--secondary-blue)"
+                                                                        color: "var(--primary-blue)"
                                                                     },
-                                                                    children: escalation.assignee.charAt(0)
+                                                                    children: escalation.id
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                                    lineNumber: 484,
-                                                                    columnNumber: 27
+                                                                    lineNumber: 532,
+                                                                    columnNumber: 29
                                                                 }, this),
-                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                    children: [
-                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                            className: "text-[13px] font-semibold",
-                                                                            children: escalation.assignee
-                                                                        }, void 0, false, {
-                                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                                            lineNumber: 491,
-                                                                            columnNumber: 29
-                                                                        }, this),
-                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                            className: "text-[11px] text-gray-500",
-                                                                            children: [
-                                                                                "→ ",
-                                                                                escalation.assignedTo
-                                                                            ]
-                                                                        }, void 0, true, {
-                                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                                            lineNumber: 492,
-                                                                            columnNumber: 29
-                                                                        }, this)
-                                                                    ]
-                                                                }, void 0, true, {
-                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                                    lineNumber: 490,
-                                                                    columnNumber: 27
-                                                                }, this)
-                                                            ]
-                                                        }, void 0, true, {
-                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                            lineNumber: 483,
-                                                            columnNumber: 25
-                                                        }, this)
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                        lineNumber: 482,
-                                                        columnNumber: 23
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                        className: "px-5 py-3 whitespace-nowrap",
-                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                            className: "space-y-1",
-                                                            children: [
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
                                                                     tone: getStatusTone(escalation.status),
-                                                                    children: escalation.status
+                                                                    children: escalation.status.replace("_", " ")
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                                    lineNumber: 498,
-                                                                    columnNumber: 27
+                                                                    lineNumber: 538,
+                                                                    columnNumber: 29
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
                                                                     tone: getLevelTone(escalation.escalationLevel),
                                                                     children: getLevelLabel(escalation.escalationLevel)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                                    lineNumber: 499,
-                                                                    columnNumber: 27
+                                                                    lineNumber: 541,
+                                                                    columnNumber: 29
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                            lineNumber: 497,
-                                                            columnNumber: 25
+                                                            lineNumber: 531,
+                                                            columnNumber: 27
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                                            className: "mt-3 text-lg font-extrabold tracking-tight",
+                                                            style: {
+                                                                color: "var(--primary-blue)"
+                                                            },
+                                                            children: escalation.title
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                            lineNumber: 545,
+                                                            columnNumber: 27
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                            className: "text-sm text-gray-500 mt-1 line-clamp-2",
+                                                            children: escalation.description
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                            lineNumber: 551,
+                                                            columnNumber: 27
                                                         }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                    lineNumber: 530,
+                                                    columnNumber: 25
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "w-12 h-12 rounded-2xl flex items-center justify-center shrink-0",
+                                                    style: {
+                                                        backgroundColor: escalation.status === "ESCALATED" ? "rgba(237,50,55,0.1)" : "rgba(245,158,11,0.1)"
+                                                    },
+                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "text-xl",
+                                                        children: escalation.status === "ESCALATED" ? "🚨" : "⚠️"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                        lineNumber: 496,
-                                                        columnNumber: 23
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                        className: "px-5 py-3 whitespace-nowrap",
-                                                        children: [
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                className: `text-[13px] font-semibold ${escalation.overdueDays > 0 ? "text-red-600" : ""}`,
-                                                                children: fmtDate(escalation.dueDate)
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                                lineNumber: 505,
-                                                                columnNumber: 25
-                                                            }, this),
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                className: "text-[11px] text-gray-500",
-                                                                children: escalation.overdueDays > 0 ? `${escalation.overdueDays} days overdue` : escalation.overdueDays < 0 ? `${Math.abs(escalation.overdueDays)} days left` : "Due today"
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                                lineNumber: 512,
-                                                                columnNumber: 25
-                                                            }, this)
-                                                        ]
-                                                    }, void 0, true, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                        lineNumber: 504,
-                                                        columnNumber: 23
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                        className: "px-5 py-3 whitespace-nowrap",
-                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
+                                                        lineNumber: 564,
+                                                        columnNumber: 27
+                                                    }, this)
+                                                }, void 0, false, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                    lineNumber: 555,
+                                                    columnNumber: 25
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                            lineNumber: 529,
+                                            columnNumber: 23
+                                        }, this),
+                                        escalation.status === "ESCALATED" && escalation.escalationReason && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "mb-4 p-3 rounded-xl bg-red-50 border border-red-100",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                    className: "text-xs font-semibold text-red-700",
+                                                    children: "Escalation Reason:"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                    lineNumber: 573,
+                                                    columnNumber: 27
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                    className: "text-sm text-red-800 mt-0.5",
+                                                    children: escalation.escalationReason
+                                                }, void 0, false, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                    lineNumber: 574,
+                                                    columnNumber: 27
+                                                }, this),
+                                                escalation.escalatedAt && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                    className: "text-xs text-red-500 mt-1",
+                                                    children: [
+                                                        "Escalated on ",
+                                                        fmtDate(escalation.escalatedAt)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                    lineNumber: 576,
+                                                    columnNumber: 29
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                            lineNumber: 572,
+                                            columnNumber: 25
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "grid grid-cols-2 gap-3",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "rounded-xl border border-gray-200/70 p-3",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                            className: "text-xs text-gray-500",
+                                                            children: "Department"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                            lineNumber: 586,
+                                                            columnNumber: 27
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                            className: "text-sm font-semibold mt-1",
+                                                            children: escalation.department
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                            lineNumber: 587,
+                                                            columnNumber: 27
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                    lineNumber: 585,
+                                                    columnNumber: 25
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "rounded-xl border border-gray-200/70 p-3",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                            className: "text-xs text-gray-500",
+                                                            children: "Assignee"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                            lineNumber: 590,
+                                                            columnNumber: 27
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "flex items-center gap-2 mt-1",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "w-6 h-6 rounded-xl flex items-center justify-center text-white font-bold text-xs",
+                                                                    style: {
+                                                                        backgroundColor: "var(--secondary-blue)"
+                                                                    },
+                                                                    children: escalation.assignee.charAt(0)
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                    lineNumber: 592,
+                                                                    columnNumber: 29
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                    className: "text-sm font-semibold truncate",
+                                                                    children: escalation.assignee
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                    lineNumber: 598,
+                                                                    columnNumber: 29
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                            lineNumber: 591,
+                                                            columnNumber: 27
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                    lineNumber: 589,
+                                                    columnNumber: 25
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "rounded-xl border border-gray-200/70 p-3",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                            className: "text-xs text-gray-500",
+                                                            children: "Due Date"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                            lineNumber: 602,
+                                                            columnNumber: 27
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                            className: `text-sm font-semibold mt-1 ${escalation.overdueDays > 0 ? "text-red-600" : "text-amber-600"}`,
+                                                            children: fmtDate(escalation.dueDate)
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                            lineNumber: 603,
+                                                            columnNumber: 27
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                    lineNumber: 601,
+                                                    columnNumber: 25
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: `rounded-xl p-3 ${escalation.overdueDays > 0 ? "bg-red-50" : "bg-amber-50"}`,
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                            className: "text-xs text-gray-500",
+                                                            children: escalation.overdueDays > 0 ? "Days Overdue" : "Days Until Due"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                            lineNumber: 614,
+                                                            columnNumber: 27
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                            className: `text-sm font-bold mt-1 ${escalation.overdueDays > 0 ? "text-red-700" : "text-amber-700"}`,
+                                                            children: Math.abs(escalation.overdueDays)
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                            lineNumber: 617,
+                                                            columnNumber: 27
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                    lineNumber: 610,
+                                                    columnNumber: 25
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                            lineNumber: 584,
+                                            columnNumber: 23
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "mt-4 flex items-center gap-2",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "flex-1 bg-gray-100 rounded-xl p-2",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                            className: "text-xs text-gray-600",
+                                                            children: "Priority"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                            lineNumber: 628,
+                                                            columnNumber: 27
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
                                                             tone: getPriorityTone(escalation.priority),
                                                             children: escalation.priority
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                            lineNumber: 521,
-                                                            columnNumber: 25
+                                                            lineNumber: 629,
+                                                            columnNumber: 27
                                                         }, this)
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                        lineNumber: 520,
-                                                        columnNumber: 23
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                        className: "px-5 py-3 text-right whitespace-nowrap",
-                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                            className: "flex items-center justify-end gap-2",
-                                                            children: [
-                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-                                                                    href: `/md-dashboard/task/${escalation.taskId}`,
-                                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                                        className: "px-3 py-1.5 rounded-xl text-[12px] font-semibold text-white active:scale-[0.99] transition",
-                                                                        style: {
-                                                                            backgroundColor: "var(--secondary-blue)"
-                                                                        },
-                                                                        children: "View"
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                                        lineNumber: 526,
-                                                                        columnNumber: 29
-                                                                    }, this)
-                                                                }, void 0, false, {
-                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                                    lineNumber: 525,
-                                                                    columnNumber: 27
-                                                                }, this),
-                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                                    onClick: ()=>handleReassign(escalation.id),
-                                                                    className: "px-3 py-1.5 rounded-xl text-[12px] font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition",
-                                                                    style: {
-                                                                        borderColor: "rgba(44, 75, 155, 0.35)",
-                                                                        color: "var(--primary-blue)"
-                                                                    },
-                                                                    children: "Reassign"
-                                                                }, void 0, false, {
-                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                                    lineNumber: 533,
-                                                                    columnNumber: 27
-                                                                }, this)
-                                                            ]
-                                                        }, void 0, true, {
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                    lineNumber: 627,
+                                                    columnNumber: 25
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "flex-1 bg-gray-100 rounded-xl p-2",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                            className: "text-xs text-gray-600",
+                                                            children: "Next Action"
+                                                        }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                            lineNumber: 524,
-                                                            columnNumber: 25
+                                                            lineNumber: 634,
+                                                            columnNumber: 27
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                            className: "text-sm font-semibold text-gray-800 line-clamp-1",
+                                                            children: escalation.nextAction
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                            lineNumber: 635,
+                                                            columnNumber: 27
                                                         }, this)
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                        lineNumber: 523,
-                                                        columnNumber: 23
-                                                    }, this)
-                                                ]
-                                            }, escalation.id, true, {
-                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                lineNumber: 471,
-                                                columnNumber: 21
-                                            }, this))
-                                    }, void 0, false, {
-                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                        lineNumber: 469,
-                                        columnNumber: 17
-                                    }, this)
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                lineNumber: 456,
-                                columnNumber: 15
-                            }, this)
-                        }, void 0, false, {
-                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                            lineNumber: 455,
-                            columnNumber: 13
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "lg:hidden p-4 text-sm text-gray-600",
-                            children: [
-                                "Switch to ",
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                    className: "font-semibold",
-                                    children: "Cards"
-                                }, void 0, false, {
-                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                    lineNumber: 550,
-                                    columnNumber: 25
-                                }, this),
-                                " view for mobile-friendly layout."
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                            lineNumber: 549,
-                            columnNumber: 13
-                        }, this)
-                    ]
-                }, void 0, true, {
-                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                    lineNumber: 454,
-                    columnNumber: 11
-                }, this),
-                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
-                    className: "p-6",
-                    children: [
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(SectionTitle, {
-                            title: "Escalations by Department",
-                            subtitle: "Overview of escalations across departments"
-                        }, void 0, false, {
-                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                            lineNumber: 557,
-                            columnNumber: 11
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "mt-5 space-y-3",
-                            children: departments.map((dept)=>{
-                                const deptEscalations = escalationsData.filter((e)=>e.department === dept);
-                                const overdueCount = deptEscalations.filter((e)=>e.status === "OVERDUE").length;
-                                const level3Count = deptEscalations.filter((e)=>e.escalationLevel === "LEVEL_3").length;
-                                return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "rounded-2xl border border-gray-200/70 p-4 hover:bg-gray-50 transition",
-                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "flex flex-col md:flex-row md:items-center md:justify-between gap-4",
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "flex items-center gap-3",
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "w-10 h-10 rounded-2xl flex items-center justify-center text-white font-bold ",
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                    lineNumber: 633,
+                                                    columnNumber: 25
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                            lineNumber: 626,
+                                            columnNumber: 23
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "mt-6 flex items-center gap-2",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                                                    href: `/md-dashboard/task/${escalation.taskId}`,
+                                                    className: "flex-1",
+                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                        className: "w-full px-4 py-2.5 rounded-2xl font-semibold text-sm text-white active:scale-[0.99] transition",
                                                         style: {
                                                             backgroundColor: "var(--secondary-blue)"
                                                         },
-                                                        children: dept.charAt(0)
+                                                        children: "View Task"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                        lineNumber: 569,
-                                                        columnNumber: 23
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        children: [
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                className: "font-extrabold",
-                                                                style: {
-                                                                    color: "var(--primary-blue)"
-                                                                },
-                                                                children: dept
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                                lineNumber: 576,
-                                                                columnNumber: 25
-                                                            }, this),
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                className: "text-sm text-gray-500",
-                                                                children: [
-                                                                    deptEscalations.length,
-                                                                    " total escalations"
-                                                                ]
-                                                            }, void 0, true, {
-                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                                lineNumber: 579,
-                                                                columnNumber: 25
-                                                            }, this)
-                                                        ]
-                                                    }, void 0, true, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                        lineNumber: 575,
-                                                        columnNumber: 23
+                                                        lineNumber: 642,
+                                                        columnNumber: 27
                                                     }, this)
-                                                ]
-                                            }, void 0, true, {
+                                                }, void 0, false, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                    lineNumber: 641,
+                                                    columnNumber: 25
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                    onClick: ()=>handleReassign(escalation.id),
+                                                    className: "flex-1 px-4 py-2.5 rounded-2xl font-semibold text-sm border bg-white hover:bg-gray-50 active:scale-[0.99] transition",
+                                                    style: {
+                                                        borderColor: "rgba(44,75,155,0.35)",
+                                                        color: "var(--primary-blue)"
+                                                    },
+                                                    children: "Reassign"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                    lineNumber: 649,
+                                                    columnNumber: 25
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                            lineNumber: 640,
+                                            columnNumber: 23
+                                        }, this),
+                                        escalation.status === "ESCALATED" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "mt-2",
+                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                onClick: ()=>handleDeescalate(escalation),
+                                                disabled: deescalating === escalation.dbId,
+                                                className: "w-full px-4 py-2.5 rounded-2xl font-semibold text-sm text-white active:scale-[0.99] transition disabled:opacity-60",
+                                                style: {
+                                                    backgroundColor: "#10B981"
+                                                },
+                                                children: deescalating === escalation.dbId ? "De-escalating..." : "✅ Mark Resolved / De-escalate"
+                                            }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                lineNumber: 568,
+                                                lineNumber: 661,
+                                                columnNumber: 27
+                                            }, this)
+                                        }, void 0, false, {
+                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                            lineNumber: 660,
+                                            columnNumber: 25
+                                        }, this)
+                                    ]
+                                }, escalation.id, true, {
+                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                    lineNumber: 516,
+                                    columnNumber: 21
+                                }, this))
+                        }, void 0, false, {
+                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                            lineNumber: 494,
+                            columnNumber: 15
+                        }, this),
+                        view === "table" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
+                            className: "overflow-hidden",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "p-5 border-b border-gray-200/70",
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(SectionTitle, {
+                                        title: "Escalations Table",
+                                        subtitle: `${filteredEscalations.length} result(s)`
+                                    }, void 0, false, {
+                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                        lineNumber: 681,
+                                        columnNumber: 19
+                                    }, this)
+                                }, void 0, false, {
+                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                    lineNumber: 680,
+                                    columnNumber: 17
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "hidden lg:block overflow-x-auto",
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("table", {
+                                        className: "min-w-full",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("thead", {
+                                                className: "bg-gray-50 border-b border-gray-200/70",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
+                                                    className: "text-[11px] font-semibold text-gray-500 uppercase tracking-wider",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                            className: "px-5 py-3 text-left",
+                                                            children: "Task"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                            lineNumber: 690,
+                                                            columnNumber: 25
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                            className: "px-5 py-3 text-left",
+                                                            children: "Status"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                            lineNumber: 691,
+                                                            columnNumber: 25
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                            className: "px-5 py-3 text-left",
+                                                            children: "Level"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                            lineNumber: 692,
+                                                            columnNumber: 25
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                            className: "px-5 py-3 text-left",
+                                                            children: "Department"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                            lineNumber: 693,
+                                                            columnNumber: 25
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                            className: "px-5 py-3 text-left",
+                                                            children: "Assignee"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                            lineNumber: 694,
+                                                            columnNumber: 25
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                            className: "px-5 py-3 text-left",
+                                                            children: "Due Date"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                            lineNumber: 695,
+                                                            columnNumber: 25
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                            className: "px-5 py-3 text-left",
+                                                            children: "Overdue"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                            lineNumber: 696,
+                                                            columnNumber: 25
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                            className: "px-5 py-3 text-left",
+                                                            children: "Priority"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                            lineNumber: 697,
+                                                            columnNumber: 25
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                            className: "px-5 py-3 text-right",
+                                                            children: "Actions"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                            lineNumber: 698,
+                                                            columnNumber: 25
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                    lineNumber: 689,
+                                                    columnNumber: 23
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                lineNumber: 688,
                                                 columnNumber: 21
                                             }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "flex items-center gap-4",
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "text-right",
-                                                        children: [
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                className: "text-sm",
-                                                                children: [
-                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                        className: "text-red-600 font-bold",
-                                                                        children: overdueCount
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                                        lineNumber: 586,
-                                                                        columnNumber: 27
-                                                                    }, this),
-                                                                    " ",
-                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                        className: "text-gray-500",
-                                                                        children: "overdue"
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                                        lineNumber: 587,
-                                                                        columnNumber: 27
-                                                                    }, this)
-                                                                ]
-                                                            }, void 0, true, {
-                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                                lineNumber: 585,
-                                                                columnNumber: 25
-                                                            }, this),
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                className: "text-sm",
-                                                                children: [
-                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                        className: "text-red-600 font-bold",
-                                                                        children: level3Count
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                                        lineNumber: 590,
-                                                                        columnNumber: 27
-                                                                    }, this),
-                                                                    " ",
-                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                        className: "text-gray-500",
-                                                                        children: "escalated to MD"
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                                        lineNumber: 591,
-                                                                        columnNumber: 27
-                                                                    }, this)
-                                                                ]
-                                                            }, void 0, true, {
-                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                                lineNumber: 589,
-                                                                columnNumber: 25
-                                                            }, this)
-                                                        ]
-                                                    }, void 0, true, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                        lineNumber: 584,
-                                                        columnNumber: 23
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                        className: "px-4 py-2 rounded-2xl text-sm font-semibold text-white active:scale-[0.99] transition",
-                                                        style: {
-                                                            backgroundColor: "var(--primary-blue)"
-                                                        },
-                                                        children: "View Details"
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
+                                                className: "divide-y divide-gray-200/70 text-[13px]",
+                                                children: filteredEscalations.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
+                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                        colSpan: 9,
+                                                        className: "px-5 py-10 text-center text-gray-500",
+                                                        children: activeTab === "escalated" ? "No escalated tasks — all clear! ✅" : "No items found for the selected filters."
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                        lineNumber: 595,
-                                                        columnNumber: 23
+                                                        lineNumber: 704,
+                                                        columnNumber: 27
                                                     }, this)
-                                                ]
-                                            }, void 0, true, {
+                                                }, void 0, false, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                    lineNumber: 703,
+                                                    columnNumber: 25
+                                                }, this) : filteredEscalations.map((escalation)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
+                                                        className: "hover:bg-gray-50/70 transition",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                className: "px-5 py-3",
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        className: "font-extrabold",
+                                                                        style: {
+                                                                            color: "var(--primary-blue)"
+                                                                        },
+                                                                        children: escalation.id
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                        lineNumber: 714,
+                                                                        columnNumber: 31
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        className: "text-[13px] font-semibold text-gray-900 mt-0.5 max-w-[200px] truncate",
+                                                                        children: escalation.title
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                        lineNumber: 720,
+                                                                        columnNumber: 31
+                                                                    }, this),
+                                                                    escalation.escalationReason && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        className: "text-[11px] text-red-500 mt-0.5 max-w-[200px] truncate",
+                                                                        children: [
+                                                                            "Reason: ",
+                                                                            escalation.escalationReason
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                        lineNumber: 724,
+                                                                        columnNumber: 33
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                lineNumber: 713,
+                                                                columnNumber: 29
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                className: "px-5 py-3 whitespace-nowrap",
+                                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
+                                                                    tone: getStatusTone(escalation.status),
+                                                                    children: escalation.status.replace("_", " ")
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                    lineNumber: 730,
+                                                                    columnNumber: 31
+                                                                }, this)
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                lineNumber: 729,
+                                                                columnNumber: 29
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                className: "px-5 py-3 whitespace-nowrap",
+                                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
+                                                                    tone: getLevelTone(escalation.escalationLevel),
+                                                                    children: getLevelLabel(escalation.escalationLevel)
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                    lineNumber: 735,
+                                                                    columnNumber: 31
+                                                                }, this)
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                lineNumber: 734,
+                                                                columnNumber: 29
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                className: "px-5 py-3 whitespace-nowrap",
+                                                                children: escalation.department
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                lineNumber: 739,
+                                                                columnNumber: 29
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                className: "px-5 py-3 whitespace-nowrap",
+                                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "flex items-center gap-2",
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                            className: "w-7 h-7 rounded-xl flex items-center justify-center text-white font-bold text-xs",
+                                                                            style: {
+                                                                                backgroundColor: "var(--secondary-blue)"
+                                                                            },
+                                                                            children: escalation.assignee.charAt(0)
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                            lineNumber: 742,
+                                                                            columnNumber: 33
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                            children: [
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                                    className: "text-[13px] font-semibold",
+                                                                                    children: escalation.assignee
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                                    lineNumber: 749,
+                                                                                    columnNumber: 35
+                                                                                }, this),
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                                    className: "text-[11px] text-gray-500",
+                                                                                    children: [
+                                                                                        "→ ",
+                                                                                        escalation.assignedTo
+                                                                                    ]
+                                                                                }, void 0, true, {
+                                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                                    lineNumber: 750,
+                                                                                    columnNumber: 35
+                                                                                }, this)
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                            lineNumber: 748,
+                                                                            columnNumber: 33
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                    lineNumber: 741,
+                                                                    columnNumber: 31
+                                                                }, this)
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                lineNumber: 740,
+                                                                columnNumber: 29
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                className: "px-5 py-3 whitespace-nowrap",
+                                                                children: fmtDate(escalation.dueDate)
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                lineNumber: 754,
+                                                                columnNumber: 29
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                className: "px-5 py-3 whitespace-nowrap",
+                                                                children: escalation.overdueDays > 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    className: "text-red-600 font-bold",
+                                                                    children: [
+                                                                        escalation.overdueDays,
+                                                                        "d"
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                    lineNumber: 757,
+                                                                    columnNumber: 33
+                                                                }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    className: "text-amber-600 font-bold",
+                                                                    children: [
+                                                                        Math.abs(escalation.overdueDays),
+                                                                        "d left"
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                    lineNumber: 759,
+                                                                    columnNumber: 33
+                                                                }, this)
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                lineNumber: 755,
+                                                                columnNumber: 29
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                className: "px-5 py-3 whitespace-nowrap",
+                                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
+                                                                    tone: getPriorityTone(escalation.priority),
+                                                                    children: escalation.priority
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                    lineNumber: 763,
+                                                                    columnNumber: 31
+                                                                }, this)
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                lineNumber: 762,
+                                                                columnNumber: 29
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                className: "px-5 py-3 text-right whitespace-nowrap",
+                                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "flex items-center justify-end gap-2",
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                                                                            href: `/md-dashboard/task/${escalation.taskId}`,
+                                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                                className: "px-3 py-1.5 rounded-xl text-[12px] font-semibold text-white active:scale-[0.99] transition",
+                                                                                style: {
+                                                                                    backgroundColor: "var(--secondary-blue)"
+                                                                                },
+                                                                                children: "View"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                                lineNumber: 768,
+                                                                                columnNumber: 35
+                                                                            }, this)
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                            lineNumber: 767,
+                                                                            columnNumber: 33
+                                                                        }, this),
+                                                                        escalation.status === "ESCALATED" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                            onClick: ()=>handleDeescalate(escalation),
+                                                                            disabled: deescalating === escalation.dbId,
+                                                                            className: "px-3 py-1.5 rounded-xl text-[12px] font-semibold text-white active:scale-[0.99] transition disabled:opacity-60",
+                                                                            style: {
+                                                                                backgroundColor: "#10B981"
+                                                                            },
+                                                                            children: deescalating === escalation.dbId ? "..." : "De-escalate"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                            lineNumber: 776,
+                                                                            columnNumber: 35
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                            onClick: ()=>handleReassign(escalation.id),
+                                                                            className: "px-3 py-1.5 rounded-xl text-[12px] font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition",
+                                                                            style: {
+                                                                                borderColor: "rgba(44,75,155,0.35)",
+                                                                                color: "var(--primary-blue)"
+                                                                            },
+                                                                            children: "Reassign"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                            lineNumber: 785,
+                                                                            columnNumber: 33
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                    lineNumber: 766,
+                                                                    columnNumber: 31
+                                                                }, this)
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                lineNumber: 765,
+                                                                columnNumber: 29
+                                                            }, this)
+                                                        ]
+                                                    }, escalation.id, true, {
+                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                        lineNumber: 712,
+                                                        columnNumber: 27
+                                                    }, this))
+                                            }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                                lineNumber: 583,
+                                                lineNumber: 701,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                        lineNumber: 567,
+                                        lineNumber: 687,
                                         columnNumber: 19
                                     }, this)
-                                }, dept, false, {
+                                }, void 0, false, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                                    lineNumber: 566,
+                                    lineNumber: 686,
                                     columnNumber: 17
-                                }, this);
-                            })
-                        }, void 0, false, {
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "lg:hidden p-4 text-sm text-gray-600",
+                                    children: [
+                                        "Switch to ",
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                            className: "font-semibold",
+                                            children: "Cards"
+                                        }, void 0, false, {
+                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                            lineNumber: 801,
+                                            columnNumber: 29
+                                        }, this),
+                                        " view for mobile-friendly layout."
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                    lineNumber: 800,
+                                    columnNumber: 17
+                                }, this)
+                            ]
+                        }, void 0, true, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                            lineNumber: 559,
-                            columnNumber: 11
+                            lineNumber: 679,
+                            columnNumber: 15
+                        }, this),
+                        departments.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
+                            className: "p-6",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(SectionTitle, {
+                                    title: "Escalations by Department",
+                                    subtitle: "Overview across departments"
+                                }, void 0, false, {
+                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                    lineNumber: 809,
+                                    columnNumber: 17
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "mt-5 space-y-3",
+                                    children: departments.map((dept)=>{
+                                        const deptItems = allData.filter((e)=>e.department === dept);
+                                        const escalatedCount = deptItems.filter((e)=>e.status === "ESCALATED").length;
+                                        const overdueCount = deptItems.filter((e)=>e.status === "OVERDUE").length;
+                                        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "rounded-2xl border border-gray-200/70 p-4 hover:bg-gray-50 transition",
+                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "flex flex-col md:flex-row md:items-center md:justify-between gap-4",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "flex items-center gap-3",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "w-10 h-10 rounded-2xl flex items-center justify-center text-white font-bold",
+                                                                style: {
+                                                                    backgroundColor: "var(--secondary-blue)"
+                                                                },
+                                                                children: dept.charAt(0)
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                lineNumber: 823,
+                                                                columnNumber: 29
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        className: "font-extrabold",
+                                                                        style: {
+                                                                            color: "var(--primary-blue)"
+                                                                        },
+                                                                        children: dept
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                        lineNumber: 830,
+                                                                        columnNumber: 31
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        className: "text-sm text-gray-500",
+                                                                        children: [
+                                                                            deptItems.length,
+                                                                            " total items"
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                        lineNumber: 833,
+                                                                        columnNumber: 31
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                lineNumber: 829,
+                                                                columnNumber: 29
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                        lineNumber: 822,
+                                                        columnNumber: 27
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "flex items-center gap-6",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "text-right",
+                                                                children: [
+                                                                    escalatedCount > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        className: "text-sm",
+                                                                        children: [
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                className: "text-red-600 font-bold",
+                                                                                children: escalatedCount
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                                lineNumber: 840,
+                                                                                columnNumber: 35
+                                                                            }, this),
+                                                                            " ",
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                className: "text-gray-500",
+                                                                                children: "escalated to MD"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                                lineNumber: 841,
+                                                                                columnNumber: 35
+                                                                            }, this)
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                        lineNumber: 839,
+                                                                        columnNumber: 33
+                                                                    }, this),
+                                                                    overdueCount > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        className: "text-sm",
+                                                                        children: [
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                className: "text-amber-600 font-bold",
+                                                                                children: overdueCount
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                                lineNumber: 846,
+                                                                                columnNumber: 35
+                                                                            }, this),
+                                                                            " ",
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                className: "text-gray-500",
+                                                                                children: "overdue"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                                lineNumber: 847,
+                                                                                columnNumber: 35
+                                                                            }, this)
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                        lineNumber: 845,
+                                                                        columnNumber: 33
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                lineNumber: 837,
+                                                                columnNumber: 29
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                onClick: ()=>setSelectedDepartment(dept),
+                                                                className: "px-4 py-2 rounded-2xl text-sm font-semibold text-white active:scale-[0.99] transition",
+                                                                style: {
+                                                                    backgroundColor: "var(--primary-blue)"
+                                                                },
+                                                                children: "Filter"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                                lineNumber: 851,
+                                                                columnNumber: 29
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                        lineNumber: 836,
+                                                        columnNumber: 27
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                                lineNumber: 821,
+                                                columnNumber: 25
+                                            }, this)
+                                        }, dept, false, {
+                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                            lineNumber: 817,
+                                            columnNumber: 23
+                                        }, this);
+                                    })
+                                }, void 0, false, {
+                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                                    lineNumber: 810,
+                                    columnNumber: 17
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
+                            lineNumber: 808,
+                            columnNumber: 15
                         }, this)
                     ]
-                }, void 0, true, {
-                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-                    lineNumber: 556,
-                    columnNumber: 9
-                }, this)
+                }, void 0, true)
             ]
         }, void 0, true, {
             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-            lineNumber: 152,
+            lineNumber: 257,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDEscalations.jsx",
-        lineNumber: 151,
+        lineNumber: 256,
         columnNumber: 5
     }, this);
 }

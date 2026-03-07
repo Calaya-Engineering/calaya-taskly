@@ -526,10 +526,12 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/node_modules/next/dist/client/app-dir/link.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/node_modules/next/navigation.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$contexts$2f$AuthContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/contexts/AuthContext.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$contexts$2f$BadgeContext$2e$jsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/contexts/BadgeContext.jsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/lib/icons.jsx [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
 "use client";
+;
 ;
 ;
 ;
@@ -542,6 +544,7 @@ function Layout({ children, menuItems, userRole }) {
     const [showLogoutModal, setShowLogoutModal] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const pathname = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["usePathname"])();
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"])();
+    const { getBadge } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$contexts$2f$BadgeContext$2e$jsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useBadges"])();
     const { isAuthenticated, loading, logout } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$contexts$2f$AuthContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAuth"])();
     const handleLogoutClick = ()=>setShowLogoutModal(true);
     const handleConfirmLogout = ()=>{
@@ -632,23 +635,23 @@ function Layout({ children, menuItems, userRole }) {
                                                 size: 24
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 80,
+                                                lineNumber: 82,
                                                 columnNumber: 34
                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["MenuIcon"], {
                                                 size: 24
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 80,
+                                                lineNumber: 82,
                                                 columnNumber: 64
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                            lineNumber: 79,
+                                            lineNumber: 81,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 73,
+                                        lineNumber: 75,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -665,12 +668,12 @@ function Layout({ children, menuItems, userRole }) {
                                                     className: "h-9 w-auto object-contain object-left"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                    lineNumber: 87,
+                                                    lineNumber: 89,
                                                     columnNumber: 19
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 86,
+                                                lineNumber: 88,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -682,19 +685,19 @@ function Layout({ children, menuItems, userRole }) {
                                                 children: userRole
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 96,
+                                                lineNumber: 98,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 85,
+                                        lineNumber: 87,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 72,
+                                lineNumber: 74,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -708,28 +711,28 @@ function Layout({ children, menuItems, userRole }) {
                                     children: "Logout"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                    lineNumber: 108,
+                                    lineNumber: 110,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 106,
+                                lineNumber: 108,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                        lineNumber: 70,
+                        lineNumber: 72,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                    lineNumber: 69,
+                    lineNumber: 71,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                lineNumber: 68,
+                lineNumber: 70,
                 columnNumber: 7
             }, this),
             sidebarOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -738,7 +741,7 @@ function Layout({ children, menuItems, userRole }) {
                 "aria-hidden": "true"
             }, void 0, false, {
                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                lineNumber: 122,
+                lineNumber: 124,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("aside", {
@@ -776,12 +779,12 @@ function Layout({ children, menuItems, userRole }) {
                                                             children: label
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                            lineNumber: 155,
+                                                            lineNumber: 157,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 154,
+                                                        lineNumber: 156,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -814,7 +817,7 @@ function Layout({ children, menuItems, userRole }) {
                                                                         }
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 184,
+                                                                        lineNumber: 186,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -827,12 +830,12 @@ function Layout({ children, menuItems, userRole }) {
                                                                             children: item.icon
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                            lineNumber: 198,
+                                                                            lineNumber: 200,
                                                                             columnNumber: 35
                                                                         }, this) : item.icon
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 191,
+                                                                        lineNumber: 193,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -840,24 +843,28 @@ function Layout({ children, menuItems, userRole }) {
                                                                         children: item.label
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 203,
+                                                                        lineNumber: 205,
                                                                         columnNumber: 31
                                                                     }, this),
-                                                                    item.badge && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                        className: [
-                                                                            "ml-auto text-xs font-semibold px-2 py-1 rounded-full",
-                                                                            active ? "bg-white/15 text-white" : "bg-red-500 text-white"
-                                                                        ].join(" "),
-                                                                        children: item.badge
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 205,
-                                                                        columnNumber: 33
-                                                                    }, this)
+                                                                    (()=>{
+                                                                        const liveBadge = getBadge(path);
+                                                                        if (!liveBadge) return null;
+                                                                        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            className: [
+                                                                                "ml-auto text-xs font-semibold px-2 py-1 rounded-full",
+                                                                                active ? "bg-white/15 text-white" : "bg-red-500 text-white"
+                                                                            ].join(" "),
+                                                                            children: liveBadge
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
+                                                                            lineNumber: 210,
+                                                                            columnNumber: 35
+                                                                        }, this);
+                                                                    })()
                                                                 ]
                                                             }, item._idx, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                lineNumber: 177,
+                                                                lineNumber: 179,
                                                                 columnNumber: 29
                                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                 className: linkClass,
@@ -873,7 +880,7 @@ function Layout({ children, menuItems, userRole }) {
                                                                         }
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 217,
+                                                                        lineNumber: 223,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -886,12 +893,12 @@ function Layout({ children, menuItems, userRole }) {
                                                                             children: item.icon
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                            lineNumber: 231,
+                                                                            lineNumber: 237,
                                                                             columnNumber: 35
                                                                         }, this) : item.icon
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 224,
+                                                                        lineNumber: 230,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -899,41 +906,45 @@ function Layout({ children, menuItems, userRole }) {
                                                                         children: item.label
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 236,
+                                                                        lineNumber: 242,
                                                                         columnNumber: 31
                                                                     }, this),
-                                                                    item.badge && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                        className: [
-                                                                            "ml-auto text-xs font-semibold px-2 py-1 rounded-full",
-                                                                            active ? "bg-white/15 text-white" : "bg-red-500 text-white"
-                                                                        ].join(" "),
-                                                                        children: item.badge
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 238,
-                                                                        columnNumber: 33
-                                                                    }, this)
+                                                                    (()=>{
+                                                                        const liveBadge = getBadge(path);
+                                                                        if (!liveBadge) return null;
+                                                                        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            className: [
+                                                                                "ml-auto text-xs font-semibold px-2 py-1 rounded-full",
+                                                                                active ? "bg-white/15 text-white" : "bg-red-500 text-white"
+                                                                            ].join(" "),
+                                                                            children: liveBadge
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
+                                                                            lineNumber: 247,
+                                                                            columnNumber: 35
+                                                                        }, this);
+                                                                    })()
                                                                 ]
                                                             }, item._idx, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                lineNumber: 216,
+                                                                lineNumber: 222,
                                                                 columnNumber: 29
                                                             }, this);
                                                         })
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 159,
+                                                        lineNumber: 161,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, label, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 153,
+                                                lineNumber: 155,
                                                 columnNumber: 21
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 151,
+                                        lineNumber: 153,
                                         columnNumber: 17
                                     }, this);
                                 })(),
@@ -956,7 +967,7 @@ function Layout({ children, menuItems, userRole }) {
                                                         children: "Quick Stats"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 264,
+                                                        lineNumber: 274,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -964,13 +975,13 @@ function Layout({ children, menuItems, userRole }) {
                                                         children: "Today"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 267,
+                                                        lineNumber: 277,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 263,
+                                                lineNumber: 273,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -983,7 +994,7 @@ function Layout({ children, menuItems, userRole }) {
                                                                 children: s.label
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                lineNumber: 273,
+                                                                lineNumber: 283,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -994,18 +1005,18 @@ function Layout({ children, menuItems, userRole }) {
                                                                 children: s.value
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                lineNumber: 274,
+                                                                lineNumber: 284,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, s.label, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 272,
+                                                        lineNumber: 282,
                                                         columnNumber: 21
                                                     }, this))
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 270,
+                                                lineNumber: 280,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1021,12 +1032,12 @@ function Layout({ children, menuItems, userRole }) {
                                                             }
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                            lineNumber: 286,
+                                                            lineNumber: 296,
                                                             columnNumber: 21
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 285,
+                                                        lineNumber: 295,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1034,30 +1045,30 @@ function Layout({ children, menuItems, userRole }) {
                                                         children: "Progress overview"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 295,
+                                                        lineNumber: 305,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 284,
+                                                lineNumber: 294,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 259,
+                                        lineNumber: 269,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                    lineNumber: 258,
+                                    lineNumber: 268,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                            lineNumber: 140,
+                            lineNumber: 142,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1073,7 +1084,7 @@ function Layout({ children, menuItems, userRole }) {
                                         children: "C"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 306,
+                                        lineNumber: 316,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1084,7 +1095,7 @@ function Layout({ children, menuItems, userRole }) {
                                                 children: "Calaya"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 313,
+                                                lineNumber: 323,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1092,35 +1103,35 @@ function Layout({ children, menuItems, userRole }) {
                                                 children: userRole
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 314,
+                                                lineNumber: 324,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 312,
+                                        lineNumber: 322,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 305,
+                                lineNumber: 315,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                            lineNumber: 304,
+                            lineNumber: 314,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                    lineNumber: 138,
+                    lineNumber: 140,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                lineNumber: 130,
+                lineNumber: 132,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
@@ -1132,17 +1143,17 @@ function Layout({ children, menuItems, userRole }) {
                         children: children
                     }, void 0, false, {
                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                        lineNumber: 324,
+                        lineNumber: 334,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                    lineNumber: 323,
+                    lineNumber: 333,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                lineNumber: 322,
+                lineNumber: 332,
                 columnNumber: 7
             }, this),
             showLogoutModal && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1154,7 +1165,7 @@ function Layout({ children, menuItems, userRole }) {
                         "aria-hidden": "true"
                     }, void 0, false, {
                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                        lineNumber: 331,
+                        lineNumber: 341,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1168,7 +1179,7 @@ function Layout({ children, menuItems, userRole }) {
                                 children: "System log out?"
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 337,
+                                lineNumber: 347,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1176,7 +1187,7 @@ function Layout({ children, menuItems, userRole }) {
                                 children: "Are you sure you want to log out of your session?"
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 340,
+                                lineNumber: 350,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1189,7 +1200,7 @@ function Layout({ children, menuItems, userRole }) {
                                         children: "No"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 344,
+                                        lineNumber: 354,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1202,38 +1213,39 @@ function Layout({ children, menuItems, userRole }) {
                                         children: "Yes"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 351,
+                                        lineNumber: 361,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 343,
+                                lineNumber: 353,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                        lineNumber: 336,
+                        lineNumber: 346,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                lineNumber: 330,
+                lineNumber: 340,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-        lineNumber: 59,
+        lineNumber: 61,
         columnNumber: 5
     }, this);
 }
-_s(Layout, "cayK46VauH0B/L7dk84mP2Rtjys=", false, function() {
+_s(Layout, "hlnuutwBMxO9AxscStEVWDulehw=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["usePathname"],
         __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"],
+        __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$contexts$2f$BadgeContext$2e$jsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useBadges"],
         __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$contexts$2f$AuthContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAuth"]
     ];
 });
@@ -1347,7 +1359,6 @@ const HODMenuItems = [
             lineNumber: 30,
             columnNumber: 68
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "18",
         group: "Tasks"
     },
     {
@@ -1358,7 +1369,6 @@ const HODMenuItems = [
             lineNumber: 31,
             columnNumber: 63
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Tasks"
     },
     {
@@ -1399,7 +1409,6 @@ const HODMenuItems = [
             lineNumber: 35,
             columnNumber: 61
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Tenders"
     },
     {
@@ -1410,7 +1419,6 @@ const HODMenuItems = [
             lineNumber: 36,
             columnNumber: 79
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Tenders"
     },
     {
@@ -1431,7 +1439,6 @@ const HODMenuItems = [
             lineNumber: 38,
             columnNumber: 65
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "4",
         group: "Workflow"
     },
     {
@@ -1442,7 +1449,6 @@ const HODMenuItems = [
             lineNumber: 39,
             columnNumber: 77
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "2",
         group: "Workflow"
     },
     {
@@ -1453,7 +1459,6 @@ const HODMenuItems = [
             lineNumber: 40,
             columnNumber: 73
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "8",
         group: "Account"
     },
     {
@@ -1486,7 +1491,6 @@ const MDMenuItems = [
             lineNumber: 46,
             columnNumber: 62
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "24",
         group: "Tasks"
     },
     {
@@ -1497,7 +1501,6 @@ const MDMenuItems = [
             lineNumber: 47,
             columnNumber: 61
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "8",
         group: "Tasks"
     },
     {
@@ -1508,7 +1511,6 @@ const MDMenuItems = [
             lineNumber: 48,
             columnNumber: 64
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Documents & Reports"
     },
     {
@@ -1529,7 +1531,6 @@ const MDMenuItems = [
             lineNumber: 50,
             columnNumber: 67
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "2",
         group: "Calendar"
     },
     {
@@ -1550,7 +1551,6 @@ const MDMenuItems = [
             lineNumber: 52,
             columnNumber: 78
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Tenders"
     },
     {
@@ -1571,7 +1571,6 @@ const MDMenuItems = [
             lineNumber: 54,
             columnNumber: 64
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "7",
         group: "Workflow"
     },
     {
@@ -1582,7 +1581,6 @@ const MDMenuItems = [
             lineNumber: 55,
             columnNumber: 76
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Workflow"
     },
     {
@@ -1593,7 +1591,6 @@ const MDMenuItems = [
             lineNumber: 56,
             columnNumber: 72
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "12",
         group: "Account"
     },
     {
@@ -1626,7 +1623,6 @@ const StaffMenuItems = [
             lineNumber: 62,
             columnNumber: 62
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "8",
         group: "Tasks"
     },
     {
@@ -1677,7 +1673,6 @@ const StaffMenuItems = [
             lineNumber: 67,
             columnNumber: 63
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Tenders"
     },
     {
@@ -1688,7 +1683,6 @@ const StaffMenuItems = [
             lineNumber: 68,
             columnNumber: 81
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Tenders"
     },
     {
@@ -1709,7 +1703,6 @@ const StaffMenuItems = [
             lineNumber: 70,
             columnNumber: 75
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Account"
     },
     {
@@ -1752,7 +1745,6 @@ const SecretaryMenuItems = [
             lineNumber: 77,
             columnNumber: 89
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "24",
         group: "Documents & Reports"
     },
     {
@@ -1763,7 +1755,6 @@ const SecretaryMenuItems = [
             lineNumber: 78,
             columnNumber: 85
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "45",
         group: "Documents & Reports"
     },
     {
@@ -1784,7 +1775,6 @@ const SecretaryMenuItems = [
             lineNumber: 80,
             columnNumber: 74
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Calendar"
     },
     {
@@ -1795,7 +1785,6 @@ const SecretaryMenuItems = [
             lineNumber: 81,
             columnNumber: 67
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Tenders"
     },
     {
@@ -1806,7 +1795,6 @@ const SecretaryMenuItems = [
             lineNumber: 82,
             columnNumber: 79
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Communications"
     },
     {
@@ -1817,7 +1805,6 @@ const SecretaryMenuItems = [
             lineNumber: 83,
             columnNumber: 79
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "12",
         group: "Account"
     },
     {
@@ -1852,6 +1839,9 @@ const toast = {
     error: (message)=>__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toast"].error(message),
     warning: (message)=>__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toast"].warning(message),
     info: (message)=>__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toast"].info(message),
+    promise: (promise, data)=>__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toast"].promise(promise, data),
+    loading: (message)=>__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toast"].loading(message),
+    dismiss: (id)=>__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toast"].dismiss(id),
     /** Generic toast (default style) */ message: (message)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toast"])(message)
 };
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
@@ -1871,6 +1861,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/node_modules/next/dist/client/app-dir/link.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$components$2f$Layout$2e$jsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/components/Layout.jsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$utils$2f$menus$2e$jsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/utils/menus.jsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/lib/api.ts [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$toast$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/lib/toast.js [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
@@ -1880,102 +1871,13 @@ var _s = __turbopack_context__.k.signature();
 ;
 ;
 ;
-const reportsData = [
-    {
-        id: "REP-001",
-        date: "2024-12-15",
-        department: "All",
-        title: "Company Daily Report",
-        uploadedBy: "Secretary",
-        size: "4.2 MB",
-        downloads: 45,
-        summary: "Daily summary of all company operations, including production metrics, safety incidents, and key achievements.",
-        content: "This is a comprehensive daily report covering all departments. It includes production numbers from Technical department, safety statistics from HSE, logistics updates, workshop productivity, and financial summaries. The report indicates overall positive performance with 98% of targets met."
-    },
-    {
-        id: "REP-002",
-        date: "2024-12-14",
-        department: "Technical",
-        title: "Technical Department Report",
-        uploadedBy: "Technical HOD",
-        size: "2.8 MB",
-        downloads: 32,
-        summary: "Technical department daily operations, project progress, and equipment status.",
-        content: "The Technical department completed pipeline inspection at Site A with 85% progress. Equipment maintenance schedules are on track. Three minor issues were identified and are being addressed. Team productivity at 92%."
-    },
-    {
-        id: "REP-003",
-        date: "2024-12-13",
-        department: "HSE",
-        title: "Safety Compliance Report",
-        uploadedBy: "HSE HOD",
-        size: "3.1 MB",
-        downloads: 28,
-        summary: "Daily safety metrics, incidents, and compliance status.",
-        content: "Zero lost time incidents reported. Safety audits conducted at Site B and Workshop. All compliance requirements met. One near-miss reported and investigated. Safety training completed for 15 staff members."
-    },
-    {
-        id: "REP-004",
-        date: "2024-12-12",
-        department: "Workshop",
-        title: "Workshop Production Report",
-        uploadedBy: "Workshop HOD",
-        size: "1.9 MB",
-        downloads: 21,
-        summary: "Workshop production output, maintenance activities, and resource utilization.",
-        content: "Workshop produced 45 units with 98% quality rate. Preventive maintenance completed on 3 major equipment. Resource utilization at 87%. One equipment breakdown reported and repaired."
-    },
-    {
-        id: "REP-005",
-        date: "2024-12-11",
-        department: "Logistics",
-        title: "Logistics Operations Report",
-        uploadedBy: "Logistics HOD",
-        size: "2.5 MB",
-        downloads: 24,
-        summary: "Logistics operations, fleet status, and delivery performance.",
-        content: "All deliveries completed on time. Fleet availability at 92%. Fuel consumption within budget. One vehicle under maintenance. Route optimization implemented saving 15% in fuel costs."
-    },
-    {
-        id: "REP-006",
-        date: "2024-12-10",
-        department: "Accounts",
-        title: "Financial Daily Summary",
-        uploadedBy: "Accounts HOD",
-        size: "5.7 MB",
-        downloads: 18,
-        summary: "Daily financial transactions, budget utilization, and forecasts.",
-        content: "Daily transactions processed: 156 invoices, 89 payments. Budget utilization at 78% YTD. Cash flow positive. Projections for next quarter show 12% growth."
-    },
-    {
-        id: "REP-007",
-        date: "2024-12-09",
-        department: "All",
-        title: "Company Daily Report",
-        uploadedBy: "Secretary",
-        size: "4.0 MB",
-        downloads: 42,
-        summary: "Consolidated company performance report.",
-        content: "All departments reporting normal operations. Overall company performance index at 8.7/10. Highlights: Technical department completed major milestone, HSE reported zero incidents, Accounts processed month-end closing."
-    },
-    {
-        id: "REP-008",
-        date: "2024-12-08",
-        department: "HR",
-        title: "HR Daily Activities",
-        uploadedBy: "HR HOD",
-        size: "2.1 MB",
-        downloads: 15,
-        summary: "HR daily operations, attendance, and recruitment updates.",
-        content: "Attendance rate: 94%. Three new candidates interviewed for Technical positions. One resignation processed. Training sessions conducted for 25 employees. Payroll processing completed."
-    }
-];
+;
 /* ---------------- UI helpers ---------------- */ const Card = ({ className = "", children })=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: `bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`,
         children: children
     }, void 0, false, {
         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-        lineNumber: 102,
+        lineNumber: 14,
         columnNumber: 3
     }, ("TURBOPACK compile-time value", void 0));
 _c = Card;
@@ -1992,7 +1894,7 @@ const SectionTitle = ({ title, subtitle, action })=>/*#__PURE__*/ (0, __TURBOPAC
                         children: title
                     }, void 0, false, {
                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                        lineNumber: 108,
+                        lineNumber: 20,
                         columnNumber: 7
                     }, ("TURBOPACK compile-time value", void 0)),
                     subtitle ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2000,20 +1902,20 @@ const SectionTitle = ({ title, subtitle, action })=>/*#__PURE__*/ (0, __TURBOPAC
                         children: subtitle
                     }, void 0, false, {
                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                        lineNumber: 111,
+                        lineNumber: 23,
                         columnNumber: 19
                     }, ("TURBOPACK compile-time value", void 0)) : null
                 ]
             }, void 0, true, {
                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                lineNumber: 107,
+                lineNumber: 19,
                 columnNumber: 5
             }, ("TURBOPACK compile-time value", void 0)),
             action
         ]
     }, void 0, true, {
         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-        lineNumber: 106,
+        lineNumber: 18,
         columnNumber: 3
     }, ("TURBOPACK compile-time value", void 0));
 _c1 = SectionTitle;
@@ -2024,7 +1926,7 @@ const Pill = ({ children, tone = "default" })=>{
         children: children
     }, void 0, false, {
         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-        lineNumber: 132,
+        lineNumber: 44,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
@@ -2069,6 +1971,41 @@ const toISO = (d)=>{
 };
 function MDDailyReports() {
     _s();
+    const [reportsData, setReportsData] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(true);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "MDDailyReports.useEffect": ()=>{
+            async function getReports() {
+                try {
+                    const resp = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["fetchWithAuth"])("/api/documents?type=Report");
+                    if (resp.ok) {
+                        const data = await resp.json();
+                        const mapped = data.map({
+                            "MDDailyReports.useEffect.getReports.mapped": (d)=>({
+                                    id: d.id,
+                                    dbId: d.dbId,
+                                    date: d.date ? d.date.split('T')[0] : '',
+                                    department: d.department,
+                                    title: d.title,
+                                    uploadedBy: d.uploadedBy,
+                                    size: d.size || '—',
+                                    downloads: d.downloads || 0,
+                                    summary: d.title,
+                                    content: "Real document from archive.",
+                                    fileUrl: d.fileUrl
+                                })
+                        }["MDDailyReports.useEffect.getReports.mapped"]);
+                        setReportsData(mapped);
+                    }
+                } catch (err) {
+                    console.error("Failed to fetch reports:", err);
+                } finally{
+                    setLoading(false);
+                }
+            }
+            getReports();
+        }
+    }["MDDailyReports.useEffect"], []);
     const latestDate = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
         "MDDailyReports.useMemo[latestDate]": ()=>{
             const sorted = [
@@ -2078,7 +2015,9 @@ function MDDailyReports() {
             }["MDDailyReports.useMemo[latestDate].sorted"]);
             return sorted?.[0]?.date || "";
         }
-    }["MDDailyReports.useMemo[latestDate]"], []);
+    }["MDDailyReports.useMemo[latestDate]"], [
+        reportsData
+    ]);
     const yesterdayOfLatest = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
         "MDDailyReports.useMemo[yesterdayOfLatest]": ()=>{
             if (!latestDate) return "";
@@ -2124,7 +2063,9 @@ function MDDailyReports() {
                     "MDDailyReports.useMemo[departments]": (d)=>d !== "All"
                 }["MDDailyReports.useMemo[departments]"]))
             ]
-    }["MDDailyReports.useMemo[departments]"], []);
+    }["MDDailyReports.useMemo[departments]"], [
+        reportsData
+    ]);
     const filteredReports = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
         "MDDailyReports.useMemo[filteredReports]": ()=>{
             return reportsData.filter({
@@ -2169,7 +2110,9 @@ function MDDailyReports() {
                 "MDDailyReports.useMemo[topDownloaded]": (a, b)=>b.downloads - a.downloads
             }["MDDailyReports.useMemo[topDownloaded]"]).slice(0, 3);
         }
-    }["MDDailyReports.useMemo[topDownloaded]"], []);
+    }["MDDailyReports.useMemo[topDownloaded]"], [
+        reportsData
+    ]);
     const deptCounts = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
         "MDDailyReports.useMemo[deptCounts]": ()=>{
             const map = new Map();
@@ -2180,7 +2123,9 @@ function MDDailyReports() {
                 "MDDailyReports.useMemo[deptCounts]": (a, b)=>b[1] - a[1]
             }["MDDailyReports.useMemo[deptCounts]"]);
         }
-    }["MDDailyReports.useMemo[deptCounts]"], []);
+    }["MDDailyReports.useMemo[deptCounts]"], [
+        reportsData
+    ]);
     // Calendar (December 2024)
     const calYear = 2024;
     const calMonthIndex = 11;
@@ -2250,6 +2195,30 @@ function MDDailyReports() {
     const handleDownloadReport = (report)=>{
         __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$toast$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toast"].info(`Downloading ${report.title} (${report.id}) in PDF format`);
     };
+    if (loading) {
+        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$components$2f$Layout$2e$jsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+            menuItems: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$utils$2f$menus$2e$jsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["MDMenuItems"],
+            userRole: "MD",
+            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "flex items-center justify-center min-h-[60vh]",
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"
+                }, void 0, false, {
+                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
+                    lineNumber: 254,
+                    columnNumber: 11
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
+                lineNumber: 253,
+                columnNumber: 9
+            }, this)
+        }, void 0, false, {
+            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
+            lineNumber: 252,
+            columnNumber: 7
+        }, this);
+    }
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$components$2f$Layout$2e$jsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
         menuItems: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$utils$2f$menus$2e$jsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["MDMenuItems"],
         userRole: "MD",
@@ -2276,7 +2245,7 @@ function MDDailyReports() {
                                                     children: "Daily Reports Archive"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                    lineNumber: 319,
+                                                    lineNumber: 274,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2284,7 +2253,7 @@ function MDDailyReports() {
                                                     children: "Access daily reports from all departments (filter, search, download)."
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                    lineNumber: 322,
+                                                    lineNumber: 277,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2298,7 +2267,7 @@ function MDDailyReports() {
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                            lineNumber: 325,
+                                                            lineNumber: 280,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -2309,7 +2278,7 @@ function MDDailyReports() {
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                            lineNumber: 326,
+                                                            lineNumber: 281,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -2320,32 +2289,32 @@ function MDDailyReports() {
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                            lineNumber: 327,
+                                                            lineNumber: 282,
                                                             columnNumber: 19
                                                         }, this),
                                                         selectedDate ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
                                                             children: fmtDate(selectedDate)
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                            lineNumber: 328,
+                                                            lineNumber: 283,
                                                             columnNumber: 35
                                                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
                                                             children: "All dates"
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                            lineNumber: 328,
+                                                            lineNumber: 283,
                                                             columnNumber: 74
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                    lineNumber: 324,
+                                                    lineNumber: 279,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                            lineNumber: 318,
+                                            lineNumber: 273,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2360,7 +2329,7 @@ function MDDailyReports() {
                                                     children: "📥 Download Reports"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                    lineNumber: 333,
+                                                    lineNumber: 288,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2378,19 +2347,19 @@ function MDDailyReports() {
                                                     children: "Reset Filters"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                    lineNumber: 341,
+                                                    lineNumber: 296,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                            lineNumber: 332,
+                                            lineNumber: 287,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                    lineNumber: 317,
+                                    lineNumber: 272,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2403,7 +2372,7 @@ function MDDailyReports() {
                                                     children: "Select Date"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                    lineNumber: 359,
+                                                    lineNumber: 314,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2413,13 +2382,13 @@ function MDDailyReports() {
                                                     onChange: (e)=>setSelectedDate(e.target.value)
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                    lineNumber: 360,
+                                                    lineNumber: 315,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                            lineNumber: 358,
+                                            lineNumber: 313,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2429,7 +2398,7 @@ function MDDailyReports() {
                                                     children: "Department"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                    lineNumber: 369,
+                                                    lineNumber: 324,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -2442,7 +2411,7 @@ function MDDailyReports() {
                                                             children: "All Departments"
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                            lineNumber: 375,
+                                                            lineNumber: 330,
                                                             columnNumber: 19
                                                         }, this),
                                                         departments.map((dept)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2450,19 +2419,19 @@ function MDDailyReports() {
                                                                 children: dept === "All" ? "All" : dept
                                                             }, dept, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                lineNumber: 377,
+                                                                lineNumber: 332,
                                                                 columnNumber: 21
                                                             }, this))
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                    lineNumber: 370,
+                                                    lineNumber: 325,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                            lineNumber: 368,
+                                            lineNumber: 323,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2472,7 +2441,7 @@ function MDDailyReports() {
                                                     children: "Search"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                    lineNumber: 385,
+                                                    lineNumber: 340,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2483,19 +2452,19 @@ function MDDailyReports() {
                                                     onChange: (e)=>setSearch(e.target.value)
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                    lineNumber: 386,
+                                                    lineNumber: 341,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                            lineNumber: 384,
+                                            lineNumber: 339,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                    lineNumber: 357,
+                                    lineNumber: 312,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2512,7 +2481,7 @@ function MDDailyReports() {
                                                     children: "All Dates"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                    lineNumber: 399,
+                                                    lineNumber: 354,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2524,7 +2493,7 @@ function MDDailyReports() {
                                                     children: "Latest"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                    lineNumber: 407,
+                                                    lineNumber: 362,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2536,7 +2505,7 @@ function MDDailyReports() {
                                                     children: "Previous Day"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                    lineNumber: 416,
+                                                    lineNumber: 371,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2549,13 +2518,13 @@ function MDDailyReports() {
                                                     children: "Week Start"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                    lineNumber: 425,
+                                                    lineNumber: 380,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                            lineNumber: 398,
+                                            lineNumber: 353,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2586,30 +2555,30 @@ function MDDailyReports() {
                                                     children: v.label
                                                 }, v.id, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                    lineNumber: 445,
+                                                    lineNumber: 400,
                                                     columnNumber: 21
                                                 }, this);
                                             })
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                            lineNumber: 437,
+                                            lineNumber: 392,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                    lineNumber: 397,
+                                    lineNumber: 352,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                            lineNumber: 310,
+                            lineNumber: 265,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                        lineNumber: 309,
+                        lineNumber: 264,
                         columnNumber: 9
                     }, this),
                     viewMode === "table" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
@@ -2635,17 +2604,17 @@ function MDDailyReports() {
                                                     children: h
                                                 }, h, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                    lineNumber: 475,
+                                                    lineNumber: 429,
                                                     columnNumber: 25
                                                 }, this))
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                            lineNumber: 472,
+                                            lineNumber: 426,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                        lineNumber: 471,
+                                        lineNumber: 425,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
@@ -2657,12 +2626,12 @@ function MDDailyReports() {
                                                 children: "No reports match your filters."
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                lineNumber: 489,
+                                                lineNumber: 443,
                                                 columnNumber: 23
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                            lineNumber: 488,
+                                            lineNumber: 442,
                                             columnNumber: 21
                                         }, this) : filteredReports.map((report)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
                                                 className: "hover:bg-gray-50",
@@ -2678,7 +2647,7 @@ function MDDailyReports() {
                                                                 children: fmtWeekday(report.date)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                lineNumber: 497,
+                                                                lineNumber: 451,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2686,13 +2655,13 @@ function MDDailyReports() {
                                                                 children: fmtDate(report.date)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                lineNumber: 500,
+                                                                lineNumber: 454,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                        lineNumber: 496,
+                                                        lineNumber: 450,
                                                         columnNumber: 25
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -2710,12 +2679,12 @@ function MDDailyReports() {
                                                                         children: fileEmoji(report.title)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                        lineNumber: 509,
+                                                                        lineNumber: 463,
                                                                         columnNumber: 31
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                    lineNumber: 505,
+                                                                    lineNumber: 459,
                                                                     columnNumber: 29
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2727,7 +2696,7 @@ function MDDailyReports() {
                                                                             children: report.title
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                            lineNumber: 512,
+                                                                            lineNumber: 466,
                                                                             columnNumber: 31
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2738,24 +2707,24 @@ function MDDailyReports() {
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                            lineNumber: 518,
+                                                                            lineNumber: 472,
                                                                             columnNumber: 31
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                    lineNumber: 511,
+                                                                    lineNumber: 465,
                                                                     columnNumber: 29
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                            lineNumber: 504,
+                                                            lineNumber: 458,
                                                             columnNumber: 27
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                        lineNumber: 503,
+                                                        lineNumber: 457,
                                                         columnNumber: 25
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -2765,12 +2734,12 @@ function MDDailyReports() {
                                                             children: report.department
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                            lineNumber: 524,
+                                                            lineNumber: 478,
                                                             columnNumber: 27
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                        lineNumber: 523,
+                                                        lineNumber: 477,
                                                         columnNumber: 25
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -2786,7 +2755,7 @@ function MDDailyReports() {
                                                                     children: report.uploadedBy.charAt(0)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                    lineNumber: 529,
+                                                                    lineNumber: 483,
                                                                     columnNumber: 29
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2794,18 +2763,18 @@ function MDDailyReports() {
                                                                     children: report.uploadedBy
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                    lineNumber: 535,
+                                                                    lineNumber: 489,
                                                                     columnNumber: 29
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                            lineNumber: 528,
+                                                            lineNumber: 482,
                                                             columnNumber: 27
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                        lineNumber: 527,
+                                                        lineNumber: 481,
                                                         columnNumber: 25
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -2813,7 +2782,7 @@ function MDDailyReports() {
                                                         children: report.size
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                        lineNumber: 539,
+                                                        lineNumber: 493,
                                                         columnNumber: 25
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -2823,12 +2792,12 @@ function MDDailyReports() {
                                                             children: report.downloads
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                            lineNumber: 542,
+                                                            lineNumber: 496,
                                                             columnNumber: 27
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                        lineNumber: 541,
+                                                        lineNumber: 495,
                                                         columnNumber: 25
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -2844,7 +2813,7 @@ function MDDailyReports() {
                                                                 children: "Download"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                lineNumber: 546,
+                                                                lineNumber: 500,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2858,40 +2827,40 @@ function MDDailyReports() {
                                                                 children: "Preview"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                lineNumber: 554,
+                                                                lineNumber: 508,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                        lineNumber: 545,
+                                                        lineNumber: 499,
                                                         columnNumber: 25
                                                     }, this)
                                                 ]
                                             }, report.id, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                lineNumber: 495,
+                                                lineNumber: 449,
                                                 columnNumber: 23
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                        lineNumber: 486,
+                                        lineNumber: 440,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                lineNumber: 470,
+                                lineNumber: 424,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                            lineNumber: 469,
+                            lineNumber: 423,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                        lineNumber: 468,
+                        lineNumber: 422,
                         columnNumber: 11
                     }, this),
                     viewMode === "cards" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2901,7 +2870,7 @@ function MDDailyReports() {
                             children: "No reports match your filters."
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                            lineNumber: 576,
+                            lineNumber: 530,
                             columnNumber: 15
                         }, this) : filteredReports.map((r)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
                                 className: "p-6 transition",
@@ -2923,12 +2892,12 @@ function MDDailyReports() {
                                                             children: fileEmoji(r.title)
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                            lineNumber: 591,
+                                                            lineNumber: 545,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                        lineNumber: 587,
+                                                        lineNumber: 541,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2939,7 +2908,7 @@ function MDDailyReports() {
                                                                 children: fmtDate(r.date)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                lineNumber: 594,
+                                                                lineNumber: 548,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2947,7 +2916,7 @@ function MDDailyReports() {
                                                                 children: r.title
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                lineNumber: 595,
+                                                                lineNumber: 549,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2958,19 +2927,19 @@ function MDDailyReports() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                lineNumber: 596,
+                                                                lineNumber: 550,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                        lineNumber: 593,
+                                                        lineNumber: 547,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                lineNumber: 583,
+                                                lineNumber: 537,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -2978,13 +2947,13 @@ function MDDailyReports() {
                                                 children: r.department
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                lineNumber: 599,
+                                                lineNumber: 553,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                        lineNumber: 582,
+                                        lineNumber: 536,
                                         columnNumber: 19
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2998,7 +2967,7 @@ function MDDailyReports() {
                                                         children: "Uploaded By"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                        lineNumber: 604,
+                                                        lineNumber: 558,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3006,13 +2975,13 @@ function MDDailyReports() {
                                                         children: r.uploadedBy
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                        lineNumber: 605,
+                                                        lineNumber: 559,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                lineNumber: 603,
+                                                lineNumber: 557,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3023,7 +2992,7 @@ function MDDailyReports() {
                                                         children: "Size"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                        lineNumber: 608,
+                                                        lineNumber: 562,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3031,13 +3000,13 @@ function MDDailyReports() {
                                                         children: r.size
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                        lineNumber: 609,
+                                                        lineNumber: 563,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                lineNumber: 607,
+                                                lineNumber: 561,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3048,7 +3017,7 @@ function MDDailyReports() {
                                                         children: "Downloads"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                        lineNumber: 612,
+                                                        lineNumber: 566,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3056,13 +3025,13 @@ function MDDailyReports() {
                                                         children: r.downloads
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                        lineNumber: 613,
+                                                        lineNumber: 567,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                lineNumber: 611,
+                                                lineNumber: 565,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3073,7 +3042,7 @@ function MDDailyReports() {
                                                         children: "Day"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                        lineNumber: 616,
+                                                        lineNumber: 570,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3081,19 +3050,19 @@ function MDDailyReports() {
                                                         children: fmtWeekday(r.date)
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                        lineNumber: 617,
+                                                        lineNumber: 571,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                lineNumber: 615,
+                                                lineNumber: 569,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                        lineNumber: 602,
+                                        lineNumber: 556,
                                         columnNumber: 19
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3109,7 +3078,7 @@ function MDDailyReports() {
                                                 children: "Download"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                lineNumber: 622,
+                                                lineNumber: 576,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3123,24 +3092,24 @@ function MDDailyReports() {
                                                 children: "Preview"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                lineNumber: 630,
+                                                lineNumber: 584,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                        lineNumber: 621,
+                                        lineNumber: 575,
                                         columnNumber: 19
                                     }, this)
                                 ]
                             }, r.id, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                lineNumber: 581,
+                                lineNumber: 535,
                                 columnNumber: 17
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                        lineNumber: 574,
+                        lineNumber: 528,
                         columnNumber: 11
                     }, this),
                     viewMode === "calendar" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
@@ -3161,7 +3130,7 @@ function MDDailyReports() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                        lineNumber: 649,
+                                        lineNumber: 603,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -3169,13 +3138,13 @@ function MDDailyReports() {
                                         children: "Click a day to filter"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                        lineNumber: 652,
+                                        lineNumber: 606,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                lineNumber: 648,
+                                lineNumber: 602,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3194,7 +3163,7 @@ function MDDailyReports() {
                                             children: day
                                         }, day, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                            lineNumber: 657,
+                                            lineNumber: 611,
                                             columnNumber: 17
                                         }, this)),
                                     calendarCells.map((c)=>{
@@ -3203,7 +3172,7 @@ function MDDailyReports() {
                                                 className: "h-14 rounded-2xl bg-transparent"
                                             }, c.key, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                lineNumber: 664,
+                                                lineNumber: 618,
                                                 columnNumber: 26
                                             }, this);
                                         }
@@ -3222,27 +3191,27 @@ function MDDailyReports() {
                                                     children: c.day
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                    lineNumber: 679,
+                                                    lineNumber: 632,
                                                     columnNumber: 21
                                                 }, this),
                                                 c.hasReport ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                     className: "mt-1 w-1.5 h-1.5 rounded-full bg-blue-600"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                    lineNumber: 680,
+                                                    lineNumber: 633,
                                                     columnNumber: 36
                                                 }, this) : null
                                             ]
                                         }, c.key, true, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                            lineNumber: 669,
+                                            lineNumber: 623,
                                             columnNumber: 19
                                         }, this);
                                     })
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                lineNumber: 655,
+                                lineNumber: 609,
                                 columnNumber: 13
                             }, this),
                             selectedDate && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3258,7 +3227,7 @@ function MDDailyReports() {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                            lineNumber: 689,
+                                            lineNumber: 642,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3272,24 +3241,24 @@ function MDDailyReports() {
                                             children: "Clear Date"
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                            lineNumber: 690,
+                                            lineNumber: 643,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                    lineNumber: 688,
+                                    lineNumber: 641,
                                     columnNumber: 17
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                lineNumber: 687,
+                                lineNumber: 640,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                        lineNumber: 647,
+                        lineNumber: 601,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3306,7 +3275,7 @@ function MDDailyReports() {
                                         children: "Most Downloaded"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                        lineNumber: 708,
+                                        lineNumber: 661,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3323,7 +3292,7 @@ function MDDailyReports() {
                                                                 children: r.title
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                lineNumber: 718,
+                                                                lineNumber: 671,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3331,13 +3300,13 @@ function MDDailyReports() {
                                                                 children: fmtDate(r.date)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                lineNumber: 719,
+                                                                lineNumber: 672,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                        lineNumber: 714,
+                                                        lineNumber: 667,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -3348,24 +3317,24 @@ function MDDailyReports() {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                        lineNumber: 721,
+                                                        lineNumber: 674,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, r.id, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                lineNumber: 713,
+                                                lineNumber: 666,
                                                 columnNumber: 17
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                        lineNumber: 711,
+                                        lineNumber: 664,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                lineNumber: 707,
+                                lineNumber: 660,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
@@ -3379,7 +3348,7 @@ function MDDailyReports() {
                                         children: "Department Activity"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                        lineNumber: 729,
+                                        lineNumber: 682,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3392,7 +3361,7 @@ function MDDailyReports() {
                                                         children: dept
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                        lineNumber: 735,
+                                                        lineNumber: 688,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -3403,24 +3372,24 @@ function MDDailyReports() {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                        lineNumber: 736,
+                                                        lineNumber: 689,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, dept, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                lineNumber: 734,
+                                                lineNumber: 687,
                                                 columnNumber: 17
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                        lineNumber: 732,
+                                        lineNumber: 685,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                lineNumber: 728,
+                                lineNumber: 681,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
@@ -3434,7 +3403,7 @@ function MDDailyReports() {
                                         children: "Quick Actions"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                        lineNumber: 744,
+                                        lineNumber: 697,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3451,7 +3420,7 @@ function MDDailyReports() {
                                                 children: "📥 Download Reports"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                lineNumber: 748,
+                                                lineNumber: 701,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3465,7 +3434,7 @@ function MDDailyReports() {
                                                 children: "📊 Generate Monthly Summary"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                lineNumber: 756,
+                                                lineNumber: 709,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3479,31 +3448,31 @@ function MDDailyReports() {
                                                 children: "📨 Email Report Digest"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                lineNumber: 764,
+                                                lineNumber: 717,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                        lineNumber: 747,
+                                        lineNumber: 700,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                lineNumber: 743,
+                                lineNumber: 696,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                        lineNumber: 705,
+                        lineNumber: 658,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                lineNumber: 307,
+                lineNumber: 262,
                 columnNumber: 7
             }, this),
             isDownloadModalOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3519,7 +3488,7 @@ function MDDailyReports() {
                             onClick: ()=>setIsDownloadModalOpen(false)
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                            lineNumber: 781,
+                            lineNumber: 734,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3542,7 +3511,7 @@ function MDDailyReports() {
                                                             children: "Download Reports"
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                            lineNumber: 792,
+                                                            lineNumber: 745,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3550,13 +3519,13 @@ function MDDailyReports() {
                                                             children: "Select date range, source, and format for downloading reports"
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                            lineNumber: 795,
+                                                            lineNumber: 748,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                    lineNumber: 791,
+                                                    lineNumber: 744,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3567,23 +3536,23 @@ function MDDailyReports() {
                                                         children: "×"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                        lineNumber: 803,
+                                                        lineNumber: 756,
                                                         columnNumber: 23
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                    lineNumber: 799,
+                                                    lineNumber: 752,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                            lineNumber: 790,
+                                            lineNumber: 743,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                        lineNumber: 789,
+                                        lineNumber: 742,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3601,7 +3570,7 @@ function MDDailyReports() {
                                                             children: "Date Range"
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                            lineNumber: 813,
+                                                            lineNumber: 766,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3614,7 +3583,7 @@ function MDDailyReports() {
                                                                             children: "From"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                            lineNumber: 818,
+                                                                            lineNumber: 771,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -3627,13 +3596,13 @@ function MDDailyReports() {
                                                                                 })
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                            lineNumber: 819,
+                                                                            lineNumber: 772,
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                    lineNumber: 817,
+                                                                    lineNumber: 770,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3643,7 +3612,7 @@ function MDDailyReports() {
                                                                             children: "To"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                            lineNumber: 827,
+                                                                            lineNumber: 780,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -3656,19 +3625,19 @@ function MDDailyReports() {
                                                                                 })
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                            lineNumber: 828,
+                                                                            lineNumber: 781,
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                    lineNumber: 826,
+                                                                    lineNumber: 779,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                            lineNumber: 816,
+                                                            lineNumber: 769,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3685,7 +3654,7 @@ function MDDailyReports() {
                                                                     children: "Today"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                    lineNumber: 837,
+                                                                    lineNumber: 790,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3704,7 +3673,7 @@ function MDDailyReports() {
                                                                     children: "Last 7 Days"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                    lineNumber: 848,
+                                                                    lineNumber: 801,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3723,19 +3692,19 @@ function MDDailyReports() {
                                                                     children: "Last 30 Days"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                    lineNumber: 864,
+                                                                    lineNumber: 817,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                            lineNumber: 836,
+                                                            lineNumber: 789,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                    lineNumber: 812,
+                                                    lineNumber: 765,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3748,7 +3717,7 @@ function MDDailyReports() {
                                                             children: "Report Source"
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                            lineNumber: 885,
+                                                            lineNumber: 838,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3794,7 +3763,7 @@ function MDDailyReports() {
                                                                                     children: source.icon
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                                    lineNumber: 906,
+                                                                                    lineNumber: 858,
                                                                                     columnNumber: 31
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3802,13 +3771,13 @@ function MDDailyReports() {
                                                                                     children: source.label
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                                    lineNumber: 907,
+                                                                                    lineNumber: 859,
                                                                                     columnNumber: 31
                                                                                 }, this)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                            lineNumber: 905,
+                                                                            lineNumber: 857,
                                                                             columnNumber: 29
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3816,24 +3785,24 @@ function MDDailyReports() {
                                                                             children: source.desc
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                            lineNumber: 909,
+                                                                            lineNumber: 861,
                                                                             columnNumber: 29
                                                                         }, this)
                                                                     ]
                                                                 }, source.id, true, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                    lineNumber: 895,
+                                                                    lineNumber: 848,
                                                                     columnNumber: 27
                                                                 }, this))
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                            lineNumber: 888,
+                                                            lineNumber: 841,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                    lineNumber: 884,
+                                                    lineNumber: 837,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3846,7 +3815,7 @@ function MDDailyReports() {
                                                             children: "Download Format"
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                            lineNumber: 917,
+                                                            lineNumber: 869,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3889,7 +3858,7 @@ function MDDailyReports() {
                                                                             children: format.icon
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                            lineNumber: 937,
+                                                                            lineNumber: 888,
                                                                             columnNumber: 29
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3897,7 +3866,7 @@ function MDDailyReports() {
                                                                             children: format.label
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                            lineNumber: 938,
+                                                                            lineNumber: 889,
                                                                             columnNumber: 29
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3905,35 +3874,35 @@ function MDDailyReports() {
                                                                             children: format.desc
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                            lineNumber: 939,
+                                                                            lineNumber: 890,
                                                                             columnNumber: 29
                                                                         }, this)
                                                                     ]
                                                                 }, format.id, true, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                    lineNumber: 927,
+                                                                    lineNumber: 879,
                                                                     columnNumber: 27
                                                                 }, this))
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                            lineNumber: 920,
+                                                            lineNumber: 872,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                    lineNumber: 916,
+                                                    lineNumber: 868,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                            lineNumber: 810,
+                                            lineNumber: 763,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                        lineNumber: 809,
+                                        lineNumber: 762,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3949,7 +3918,7 @@ function MDDailyReports() {
                                                 children: "Cancel"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                lineNumber: 949,
+                                                lineNumber: 900,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3961,35 +3930,35 @@ function MDDailyReports() {
                                                 children: "Download Reports"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                lineNumber: 956,
+                                                lineNumber: 907,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                        lineNumber: 948,
+                                        lineNumber: 899,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                lineNumber: 787,
+                                lineNumber: 740,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                            lineNumber: 786,
+                            lineNumber: 739,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                    lineNumber: 780,
+                    lineNumber: 733,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                lineNumber: 779,
+                lineNumber: 732,
                 columnNumber: 9
             }, this),
             isPreviewModalOpen && selectedReport && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4005,7 +3974,7 @@ function MDDailyReports() {
                             onClick: ()=>setIsPreviewModalOpen(false)
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                            lineNumber: 974,
+                            lineNumber: 925,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4028,7 +3997,7 @@ function MDDailyReports() {
                                                                     children: selectedReport.department
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                    lineNumber: 986,
+                                                                    lineNumber: 937,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -4039,13 +4008,13 @@ function MDDailyReports() {
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                    lineNumber: 987,
+                                                                    lineNumber: 938,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                            lineNumber: 985,
+                                                            lineNumber: 936,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -4056,7 +4025,7 @@ function MDDailyReports() {
                                                             children: selectedReport.title
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                            lineNumber: 989,
+                                                            lineNumber: 940,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4069,13 +4038,13 @@ function MDDailyReports() {
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                            lineNumber: 992,
+                                                            lineNumber: 943,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                    lineNumber: 984,
+                                                    lineNumber: 935,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -4086,23 +4055,23 @@ function MDDailyReports() {
                                                         children: "×"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                        lineNumber: 1000,
+                                                        lineNumber: 951,
                                                         columnNumber: 23
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                    lineNumber: 996,
+                                                    lineNumber: 947,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                            lineNumber: 983,
+                                            lineNumber: 934,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                        lineNumber: 982,
+                                        lineNumber: 933,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4121,7 +4090,7 @@ function MDDailyReports() {
                                                             children: "Summary"
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                            lineNumber: 1010,
+                                                            lineNumber: 961,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4129,13 +4098,13 @@ function MDDailyReports() {
                                                             children: selectedReport.summary
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                            lineNumber: 1013,
+                                                            lineNumber: 964,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                    lineNumber: 1009,
+                                                    lineNumber: 960,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4149,7 +4118,7 @@ function MDDailyReports() {
                                                             children: "Report Content"
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                            lineNumber: 1018,
+                                                            lineNumber: 969,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4157,13 +4126,13 @@ function MDDailyReports() {
                                                             children: selectedReport.content
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                            lineNumber: 1021,
+                                                            lineNumber: 972,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                    lineNumber: 1017,
+                                                    lineNumber: 968,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4177,7 +4146,7 @@ function MDDailyReports() {
                                                                     children: "File Size"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                    lineNumber: 1029,
+                                                                    lineNumber: 980,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4185,13 +4154,13 @@ function MDDailyReports() {
                                                                     children: selectedReport.size
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                    lineNumber: 1030,
+                                                                    lineNumber: 981,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                            lineNumber: 1028,
+                                                            lineNumber: 979,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4202,7 +4171,7 @@ function MDDailyReports() {
                                                                     children: "Downloads"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                    lineNumber: 1033,
+                                                                    lineNumber: 984,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4210,13 +4179,13 @@ function MDDailyReports() {
                                                                     children: selectedReport.downloads
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                    lineNumber: 1034,
+                                                                    lineNumber: 985,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                            lineNumber: 1032,
+                                                            lineNumber: 983,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4227,7 +4196,7 @@ function MDDailyReports() {
                                                                     children: "Uploaded By"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                    lineNumber: 1037,
+                                                                    lineNumber: 988,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4235,13 +4204,13 @@ function MDDailyReports() {
                                                                     children: selectedReport.uploadedBy
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                    lineNumber: 1038,
+                                                                    lineNumber: 989,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                            lineNumber: 1036,
+                                                            lineNumber: 987,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4252,7 +4221,7 @@ function MDDailyReports() {
                                                                     children: "Date"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                    lineNumber: 1041,
+                                                                    lineNumber: 992,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4260,30 +4229,30 @@ function MDDailyReports() {
                                                                     children: fmtDate(selectedReport.date)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                                    lineNumber: 1042,
+                                                                    lineNumber: 993,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                            lineNumber: 1040,
+                                                            lineNumber: 991,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                    lineNumber: 1027,
+                                                    lineNumber: 978,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                            lineNumber: 1007,
+                                            lineNumber: 958,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                        lineNumber: 1006,
+                                        lineNumber: 957,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4297,7 +4266,7 @@ function MDDailyReports() {
                                                         children: "Report ID:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                        lineNumber: 1051,
+                                                        lineNumber: 1002,
                                                         columnNumber: 21
                                                     }, this),
                                                     " ",
@@ -4305,7 +4274,7 @@ function MDDailyReports() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                lineNumber: 1050,
+                                                lineNumber: 1001,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4323,7 +4292,7 @@ function MDDailyReports() {
                                                         children: "Download Report"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                        lineNumber: 1054,
+                                                        lineNumber: 1005,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -4336,51 +4305,51 @@ function MDDailyReports() {
                                                         children: "Close"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                        lineNumber: 1064,
+                                                        lineNumber: 1015,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                                lineNumber: 1053,
+                                                lineNumber: 1004,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                        lineNumber: 1049,
+                                        lineNumber: 1000,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                                lineNumber: 980,
+                                lineNumber: 931,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                            lineNumber: 979,
+                            lineNumber: 930,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                    lineNumber: 973,
+                    lineNumber: 924,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-                lineNumber: 972,
+                lineNumber: 923,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDDailyReports.jsx",
-        lineNumber: 306,
+        lineNumber: 261,
         columnNumber: 5
     }, this);
 }
-_s(MDDailyReports, "QpRw+iwgckkRQ/ZU5KMy0m4dOkA=");
+_s(MDDailyReports, "TsGqdZQ5SIv+u0muFwE8VVHhqfc=");
 _c3 = MDDailyReports;
 var _c, _c1, _c2, _c3;
 __turbopack_context__.k.register(_c, "Card");

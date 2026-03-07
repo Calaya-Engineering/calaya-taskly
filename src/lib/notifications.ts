@@ -1,4 +1,5 @@
 import { prisma } from './prisma';
+import { emitRealtimeEvent } from "@/lib/realtime-events";
 
 export async function createNotification(params: {
     actorEmail: string;
@@ -49,6 +50,12 @@ export async function createNotification(params: {
         if (notifications.length > 0) {
             await prisma.notification.createMany({
                 data: notifications
+            });
+            emitRealtimeEvent({
+                type: "notification:created",
+                entity: "notification",
+                action: "created",
+                payload: { recipients: notifications.length },
             });
         }
 

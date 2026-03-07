@@ -526,10 +526,12 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/node_modules/next/dist/client/app-dir/link.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/node_modules/next/navigation.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$contexts$2f$AuthContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/contexts/AuthContext.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$contexts$2f$BadgeContext$2e$jsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/contexts/BadgeContext.jsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/lib/icons.jsx [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
 "use client";
+;
 ;
 ;
 ;
@@ -542,6 +544,7 @@ function Layout({ children, menuItems, userRole }) {
     const [showLogoutModal, setShowLogoutModal] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const pathname = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["usePathname"])();
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"])();
+    const { getBadge } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$contexts$2f$BadgeContext$2e$jsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useBadges"])();
     const { isAuthenticated, loading, logout } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$contexts$2f$AuthContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAuth"])();
     const handleLogoutClick = ()=>setShowLogoutModal(true);
     const handleConfirmLogout = ()=>{
@@ -632,23 +635,23 @@ function Layout({ children, menuItems, userRole }) {
                                                 size: 24
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 80,
+                                                lineNumber: 82,
                                                 columnNumber: 34
                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["MenuIcon"], {
                                                 size: 24
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 80,
+                                                lineNumber: 82,
                                                 columnNumber: 64
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                            lineNumber: 79,
+                                            lineNumber: 81,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 73,
+                                        lineNumber: 75,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -665,12 +668,12 @@ function Layout({ children, menuItems, userRole }) {
                                                     className: "h-9 w-auto object-contain object-left"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                    lineNumber: 87,
+                                                    lineNumber: 89,
                                                     columnNumber: 19
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 86,
+                                                lineNumber: 88,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -682,19 +685,19 @@ function Layout({ children, menuItems, userRole }) {
                                                 children: userRole
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 96,
+                                                lineNumber: 98,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 85,
+                                        lineNumber: 87,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 72,
+                                lineNumber: 74,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -708,28 +711,28 @@ function Layout({ children, menuItems, userRole }) {
                                     children: "Logout"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                    lineNumber: 108,
+                                    lineNumber: 110,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 106,
+                                lineNumber: 108,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                        lineNumber: 70,
+                        lineNumber: 72,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                    lineNumber: 69,
+                    lineNumber: 71,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                lineNumber: 68,
+                lineNumber: 70,
                 columnNumber: 7
             }, this),
             sidebarOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -738,7 +741,7 @@ function Layout({ children, menuItems, userRole }) {
                 "aria-hidden": "true"
             }, void 0, false, {
                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                lineNumber: 122,
+                lineNumber: 124,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("aside", {
@@ -776,12 +779,12 @@ function Layout({ children, menuItems, userRole }) {
                                                             children: label
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                            lineNumber: 155,
+                                                            lineNumber: 157,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 154,
+                                                        lineNumber: 156,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -814,7 +817,7 @@ function Layout({ children, menuItems, userRole }) {
                                                                         }
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 184,
+                                                                        lineNumber: 186,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -827,12 +830,12 @@ function Layout({ children, menuItems, userRole }) {
                                                                             children: item.icon
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                            lineNumber: 198,
+                                                                            lineNumber: 200,
                                                                             columnNumber: 35
                                                                         }, this) : item.icon
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 191,
+                                                                        lineNumber: 193,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -840,24 +843,28 @@ function Layout({ children, menuItems, userRole }) {
                                                                         children: item.label
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 203,
+                                                                        lineNumber: 205,
                                                                         columnNumber: 31
                                                                     }, this),
-                                                                    item.badge && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                        className: [
-                                                                            "ml-auto text-xs font-semibold px-2 py-1 rounded-full",
-                                                                            active ? "bg-white/15 text-white" : "bg-red-500 text-white"
-                                                                        ].join(" "),
-                                                                        children: item.badge
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 205,
-                                                                        columnNumber: 33
-                                                                    }, this)
+                                                                    (()=>{
+                                                                        const liveBadge = getBadge(path);
+                                                                        if (!liveBadge) return null;
+                                                                        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            className: [
+                                                                                "ml-auto text-xs font-semibold px-2 py-1 rounded-full",
+                                                                                active ? "bg-white/15 text-white" : "bg-red-500 text-white"
+                                                                            ].join(" "),
+                                                                            children: liveBadge
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
+                                                                            lineNumber: 210,
+                                                                            columnNumber: 35
+                                                                        }, this);
+                                                                    })()
                                                                 ]
                                                             }, item._idx, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                lineNumber: 177,
+                                                                lineNumber: 179,
                                                                 columnNumber: 29
                                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                 className: linkClass,
@@ -873,7 +880,7 @@ function Layout({ children, menuItems, userRole }) {
                                                                         }
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 217,
+                                                                        lineNumber: 223,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -886,12 +893,12 @@ function Layout({ children, menuItems, userRole }) {
                                                                             children: item.icon
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                            lineNumber: 231,
+                                                                            lineNumber: 237,
                                                                             columnNumber: 35
                                                                         }, this) : item.icon
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 224,
+                                                                        lineNumber: 230,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -899,41 +906,45 @@ function Layout({ children, menuItems, userRole }) {
                                                                         children: item.label
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 236,
+                                                                        lineNumber: 242,
                                                                         columnNumber: 31
                                                                     }, this),
-                                                                    item.badge && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                        className: [
-                                                                            "ml-auto text-xs font-semibold px-2 py-1 rounded-full",
-                                                                            active ? "bg-white/15 text-white" : "bg-red-500 text-white"
-                                                                        ].join(" "),
-                                                                        children: item.badge
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 238,
-                                                                        columnNumber: 33
-                                                                    }, this)
+                                                                    (()=>{
+                                                                        const liveBadge = getBadge(path);
+                                                                        if (!liveBadge) return null;
+                                                                        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            className: [
+                                                                                "ml-auto text-xs font-semibold px-2 py-1 rounded-full",
+                                                                                active ? "bg-white/15 text-white" : "bg-red-500 text-white"
+                                                                            ].join(" "),
+                                                                            children: liveBadge
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
+                                                                            lineNumber: 247,
+                                                                            columnNumber: 35
+                                                                        }, this);
+                                                                    })()
                                                                 ]
                                                             }, item._idx, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                lineNumber: 216,
+                                                                lineNumber: 222,
                                                                 columnNumber: 29
                                                             }, this);
                                                         })
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 159,
+                                                        lineNumber: 161,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, label, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 153,
+                                                lineNumber: 155,
                                                 columnNumber: 21
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 151,
+                                        lineNumber: 153,
                                         columnNumber: 17
                                     }, this);
                                 })(),
@@ -956,7 +967,7 @@ function Layout({ children, menuItems, userRole }) {
                                                         children: "Quick Stats"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 264,
+                                                        lineNumber: 274,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -964,13 +975,13 @@ function Layout({ children, menuItems, userRole }) {
                                                         children: "Today"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 267,
+                                                        lineNumber: 277,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 263,
+                                                lineNumber: 273,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -983,7 +994,7 @@ function Layout({ children, menuItems, userRole }) {
                                                                 children: s.label
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                lineNumber: 273,
+                                                                lineNumber: 283,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -994,18 +1005,18 @@ function Layout({ children, menuItems, userRole }) {
                                                                 children: s.value
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                lineNumber: 274,
+                                                                lineNumber: 284,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, s.label, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 272,
+                                                        lineNumber: 282,
                                                         columnNumber: 21
                                                     }, this))
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 270,
+                                                lineNumber: 280,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1021,12 +1032,12 @@ function Layout({ children, menuItems, userRole }) {
                                                             }
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                            lineNumber: 286,
+                                                            lineNumber: 296,
                                                             columnNumber: 21
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 285,
+                                                        lineNumber: 295,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1034,30 +1045,30 @@ function Layout({ children, menuItems, userRole }) {
                                                         children: "Progress overview"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 295,
+                                                        lineNumber: 305,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 284,
+                                                lineNumber: 294,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 259,
+                                        lineNumber: 269,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                    lineNumber: 258,
+                                    lineNumber: 268,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                            lineNumber: 140,
+                            lineNumber: 142,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1073,7 +1084,7 @@ function Layout({ children, menuItems, userRole }) {
                                         children: "C"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 306,
+                                        lineNumber: 316,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1084,7 +1095,7 @@ function Layout({ children, menuItems, userRole }) {
                                                 children: "Calaya"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 313,
+                                                lineNumber: 323,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1092,35 +1103,35 @@ function Layout({ children, menuItems, userRole }) {
                                                 children: userRole
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 314,
+                                                lineNumber: 324,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 312,
+                                        lineNumber: 322,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 305,
+                                lineNumber: 315,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                            lineNumber: 304,
+                            lineNumber: 314,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                    lineNumber: 138,
+                    lineNumber: 140,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                lineNumber: 130,
+                lineNumber: 132,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
@@ -1132,17 +1143,17 @@ function Layout({ children, menuItems, userRole }) {
                         children: children
                     }, void 0, false, {
                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                        lineNumber: 324,
+                        lineNumber: 334,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                    lineNumber: 323,
+                    lineNumber: 333,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                lineNumber: 322,
+                lineNumber: 332,
                 columnNumber: 7
             }, this),
             showLogoutModal && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1154,7 +1165,7 @@ function Layout({ children, menuItems, userRole }) {
                         "aria-hidden": "true"
                     }, void 0, false, {
                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                        lineNumber: 331,
+                        lineNumber: 341,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1168,7 +1179,7 @@ function Layout({ children, menuItems, userRole }) {
                                 children: "System log out?"
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 337,
+                                lineNumber: 347,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1176,7 +1187,7 @@ function Layout({ children, menuItems, userRole }) {
                                 children: "Are you sure you want to log out of your session?"
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 340,
+                                lineNumber: 350,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1189,7 +1200,7 @@ function Layout({ children, menuItems, userRole }) {
                                         children: "No"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 344,
+                                        lineNumber: 354,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1202,38 +1213,39 @@ function Layout({ children, menuItems, userRole }) {
                                         children: "Yes"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 351,
+                                        lineNumber: 361,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 343,
+                                lineNumber: 353,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                        lineNumber: 336,
+                        lineNumber: 346,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                lineNumber: 330,
+                lineNumber: 340,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-        lineNumber: 59,
+        lineNumber: 61,
         columnNumber: 5
     }, this);
 }
-_s(Layout, "cayK46VauH0B/L7dk84mP2Rtjys=", false, function() {
+_s(Layout, "hlnuutwBMxO9AxscStEVWDulehw=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["usePathname"],
         __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"],
+        __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$contexts$2f$BadgeContext$2e$jsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useBadges"],
         __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$contexts$2f$AuthContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAuth"]
     ];
 });
@@ -1347,7 +1359,6 @@ const HODMenuItems = [
             lineNumber: 30,
             columnNumber: 68
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "18",
         group: "Tasks"
     },
     {
@@ -1358,7 +1369,6 @@ const HODMenuItems = [
             lineNumber: 31,
             columnNumber: 63
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Tasks"
     },
     {
@@ -1399,7 +1409,6 @@ const HODMenuItems = [
             lineNumber: 35,
             columnNumber: 61
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Tenders"
     },
     {
@@ -1410,7 +1419,6 @@ const HODMenuItems = [
             lineNumber: 36,
             columnNumber: 79
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Tenders"
     },
     {
@@ -1431,7 +1439,6 @@ const HODMenuItems = [
             lineNumber: 38,
             columnNumber: 65
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "4",
         group: "Workflow"
     },
     {
@@ -1442,7 +1449,6 @@ const HODMenuItems = [
             lineNumber: 39,
             columnNumber: 77
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "2",
         group: "Workflow"
     },
     {
@@ -1453,7 +1459,6 @@ const HODMenuItems = [
             lineNumber: 40,
             columnNumber: 73
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "8",
         group: "Account"
     },
     {
@@ -1486,7 +1491,6 @@ const MDMenuItems = [
             lineNumber: 46,
             columnNumber: 62
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "24",
         group: "Tasks"
     },
     {
@@ -1497,7 +1501,6 @@ const MDMenuItems = [
             lineNumber: 47,
             columnNumber: 61
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "8",
         group: "Tasks"
     },
     {
@@ -1508,7 +1511,6 @@ const MDMenuItems = [
             lineNumber: 48,
             columnNumber: 64
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Documents & Reports"
     },
     {
@@ -1529,7 +1531,6 @@ const MDMenuItems = [
             lineNumber: 50,
             columnNumber: 67
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "2",
         group: "Calendar"
     },
     {
@@ -1550,7 +1551,6 @@ const MDMenuItems = [
             lineNumber: 52,
             columnNumber: 78
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Tenders"
     },
     {
@@ -1571,7 +1571,6 @@ const MDMenuItems = [
             lineNumber: 54,
             columnNumber: 64
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "7",
         group: "Workflow"
     },
     {
@@ -1582,7 +1581,6 @@ const MDMenuItems = [
             lineNumber: 55,
             columnNumber: 76
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Workflow"
     },
     {
@@ -1593,7 +1591,6 @@ const MDMenuItems = [
             lineNumber: 56,
             columnNumber: 72
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "12",
         group: "Account"
     },
     {
@@ -1626,7 +1623,6 @@ const StaffMenuItems = [
             lineNumber: 62,
             columnNumber: 62
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "8",
         group: "Tasks"
     },
     {
@@ -1677,7 +1673,6 @@ const StaffMenuItems = [
             lineNumber: 67,
             columnNumber: 63
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Tenders"
     },
     {
@@ -1688,7 +1683,6 @@ const StaffMenuItems = [
             lineNumber: 68,
             columnNumber: 81
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Tenders"
     },
     {
@@ -1709,7 +1703,6 @@ const StaffMenuItems = [
             lineNumber: 70,
             columnNumber: 75
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Account"
     },
     {
@@ -1752,7 +1745,6 @@ const SecretaryMenuItems = [
             lineNumber: 77,
             columnNumber: 89
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "24",
         group: "Documents & Reports"
     },
     {
@@ -1763,7 +1755,6 @@ const SecretaryMenuItems = [
             lineNumber: 78,
             columnNumber: 85
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "45",
         group: "Documents & Reports"
     },
     {
@@ -1784,7 +1775,6 @@ const SecretaryMenuItems = [
             lineNumber: 80,
             columnNumber: 74
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Calendar"
     },
     {
@@ -1795,7 +1785,6 @@ const SecretaryMenuItems = [
             lineNumber: 81,
             columnNumber: 67
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Tenders"
     },
     {
@@ -1806,7 +1795,6 @@ const SecretaryMenuItems = [
             lineNumber: 82,
             columnNumber: 79
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Communications"
     },
     {
@@ -1817,7 +1805,6 @@ const SecretaryMenuItems = [
             lineNumber: 83,
             columnNumber: 79
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "12",
         group: "Account"
     },
     {
@@ -1874,6 +1861,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$components$2f$Layout$2e$jsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/components/Layout.jsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$utils$2f$menus$2e$jsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/utils/menus.jsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$toast$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/lib/toast.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/lib/api.ts [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
 "use client";
@@ -1882,116 +1870,13 @@ var _s = __turbopack_context__.k.signature();
 ;
 ;
 ;
-const announcementsData = [
-    {
-        id: "ANN-001",
-        title: "Year-End Holiday Schedule",
-        message: "Please find attached the holiday schedule for the year-end period. All departments should plan their work accordingly.",
-        createdBy: "HR Department",
-        createdDate: "2024-12-15 09:00",
-        scope: "All Company",
-        priority: "IMPORTANT",
-        expiresAt: "2024-12-31",
-        read: true,
-        documents: 1,
-        comments: 3,
-        reads: 142,
-        departments: [
-            "All"
-        ]
-    },
-    {
-        id: "ANN-002",
-        title: "Safety Protocol Updates",
-        message: "Important updates to safety protocols effective immediately. All staff must review the attached document.",
-        createdBy: "HSE Department",
-        createdDate: "2024-12-14 14:30",
-        scope: "All Company",
-        priority: "URGENT",
-        expiresAt: "2024-12-28",
-        read: false,
-        documents: 2,
-        comments: 8,
-        reads: 156,
-        departments: [
-            "All"
-        ]
-    },
-    {
-        id: "ANN-003",
-        title: "Monthly Performance Review",
-        message: "Monthly performance review meetings will be held next week. Department heads should prepare their reports.",
-        createdBy: "Managing Director",
-        createdDate: "2024-12-13 10:15",
-        scope: "HODs Only",
-        priority: "NORMAL",
-        expiresAt: "2024-12-20",
-        read: true,
-        documents: 0,
-        comments: 2,
-        reads: 12,
-        departments: [
-            "All HODs"
-        ]
-    },
-    {
-        id: "ANN-004",
-        title: "IT System Maintenance",
-        message: "Scheduled maintenance for IT systems this weekend. Expect downtime from 10 PM Saturday to 2 AM Sunday.",
-        createdBy: "Technical Department",
-        createdDate: "2024-12-12 16:45",
-        scope: "All Company",
-        priority: "IMPORTANT",
-        expiresAt: "2024-12-18",
-        read: true,
-        documents: 0,
-        comments: 5,
-        reads: 138,
-        departments: [
-            "All"
-        ]
-    },
-    {
-        id: "ANN-005",
-        title: "Workshop Safety Audit",
-        message: "Mandatory safety audit for workshop staff. All personnel must attend the briefing session.",
-        createdBy: "Workshop HOD",
-        createdDate: "2024-12-11 08:30",
-        scope: "Workshop Department",
-        priority: "HIGH",
-        expiresAt: "2024-12-15",
-        read: false,
-        documents: 1,
-        comments: 4,
-        reads: 24,
-        departments: [
-            "Workshop"
-        ]
-    },
-    {
-        id: "ANN-006",
-        title: "Financial Year-End Closing",
-        message: "Important deadlines for financial year-end closing procedures. All departments must comply.",
-        createdBy: "Accounts Department",
-        createdDate: "2024-12-10 11:20",
-        scope: "HODs Only",
-        priority: "URGENT",
-        expiresAt: "2024-12-25",
-        read: false,
-        documents: 3,
-        comments: 6,
-        reads: 15,
-        departments: [
-            "All HODs"
-        ]
-    }
-];
+;
 /* ---------- Shared UI helpers (dashboard style) ---------- */ const Card = ({ className = "", children })=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: `bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`,
         children: children
     }, void 0, false, {
         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-        lineNumber: 106,
+        lineNumber: 12,
         columnNumber: 3
     }, ("TURBOPACK compile-time value", void 0));
 _c = Card;
@@ -2002,7 +1887,7 @@ const Pill = ({ children, tone = "default" })=>{
         children: children
     }, void 0, false, {
         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-        lineNumber: 124,
+        lineNumber: 30,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
@@ -2015,16 +1900,45 @@ function MDAnnouncements() {
     _s();
     const [filter, setFilter] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("all");
     const [search, setSearch] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
+    const [announcementsData, setAnnouncementsData] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [isLoading, setIsLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(true);
+    const fetchAnnouncements = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "MDAnnouncements.useCallback[fetchAnnouncements]": async ()=>{
+            try {
+                setIsLoading(true);
+                const res = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["fetchWithAuth"])("/api/announcements");
+                if (res.ok) {
+                    const data = await res.json();
+                    setAnnouncementsData(data);
+                }
+            } catch (err) {
+                console.error(err);
+            } finally{
+                setIsLoading(false);
+            }
+        }
+    }["MDAnnouncements.useCallback[fetchAnnouncements]"], []);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "MDAnnouncements.useEffect": ()=>{
+            fetchAnnouncements();
+        }
+    }["MDAnnouncements.useEffect"], [
+        fetchAnnouncements
+    ]);
     const unreadCount = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
         "MDAnnouncements.useMemo[unreadCount]": ()=>announcementsData.filter({
                 "MDAnnouncements.useMemo[unreadCount]": (a)=>!a.read
             }["MDAnnouncements.useMemo[unreadCount]"]).length
-    }["MDAnnouncements.useMemo[unreadCount]"], []);
+    }["MDAnnouncements.useMemo[unreadCount]"], [
+        announcementsData
+    ]);
     const urgentUnreadCount = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
         "MDAnnouncements.useMemo[urgentUnreadCount]": ()=>announcementsData.filter({
                 "MDAnnouncements.useMemo[urgentUnreadCount]": (a)=>a.priority === "URGENT" && !a.read
             }["MDAnnouncements.useMemo[urgentUnreadCount]"]).length
-    }["MDAnnouncements.useMemo[urgentUnreadCount]"], []);
+    }["MDAnnouncements.useMemo[urgentUnreadCount]"], [
+        announcementsData
+    ]);
     const filteredAnnouncements = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
         "MDAnnouncements.useMemo[filteredAnnouncements]": ()=>{
             return announcementsData.filter({
@@ -2032,10 +1946,12 @@ function MDAnnouncements() {
                     if (filter === "unread" && ann.read) return false;
                     if (filter === "urgent" && ann.priority !== "URGENT") return false;
                     if (filter === "important" && ann.priority !== "IMPORTANT" && ann.priority !== "HIGH") return false;
-                    if (filter === "hods" && ann.scope !== "HODs Only") return false;
+                    if (filter === "hods" && ann.scope !== "HODs Only" && ann.scope !== "HODS_ONLY") return false;
                     if (search) {
                         const q = search.toLowerCase();
-                        if (!ann.title.toLowerCase().includes(q) && !ann.message.toLowerCase().includes(q)) return false;
+                        const titleMatch = (ann.title || "").toLowerCase().includes(q);
+                        const messageMatch = (ann.message || "").toLowerCase().includes(q);
+                        if (!titleMatch && !messageMatch) return false;
                     }
                     return true;
                 }
@@ -2043,7 +1959,8 @@ function MDAnnouncements() {
         }
     }["MDAnnouncements.useMemo[filteredAnnouncements]"], [
         filter,
-        search
+        search,
+        announcementsData
     ]);
     const priorityTone = (priority)=>{
         switch(priority){
@@ -2093,7 +2010,24 @@ function MDAnnouncements() {
         });
     };
     const isExpired = (expiresAt)=>new Date(expiresAt) < new Date();
-    const markAsRead = (id)=>__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$toast$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toast"].info(`Marked announcement ${id} as read`);
+    const markAsRead = async (id)=>{
+        try {
+            const res = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["fetchWithAuth"])(`/api/announcements/${id}/read`, {
+                method: "PATCH"
+            });
+            if (res.ok) {
+                __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$toast$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toast"].info(`Marked announcement ${id} as read`);
+                setAnnouncementsData((prev)=>prev.map((a)=>a.id === id ? {
+                            ...a,
+                            read: true
+                        } : a));
+            } else {
+                __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$toast$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toast"].error("Failed to mark as read");
+            }
+        } catch (e) {
+            __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$toast$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toast"].error("Failed to mark as read");
+        }
+    };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$components$2f$Layout$2e$jsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
         menuItems: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$utils$2f$menus$2e$jsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["MDMenuItems"],
         userRole: "MD",
@@ -2120,7 +2054,7 @@ function MDAnnouncements() {
                                                         children: "📢 Announcements"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                        lineNumber: 227,
+                                                        lineNumber: 169,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -2131,7 +2065,7 @@ function MDAnnouncements() {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                        lineNumber: 228,
+                                                        lineNumber: 170,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -2142,13 +2076,13 @@ function MDAnnouncements() {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                        lineNumber: 229,
+                                                        lineNumber: 171,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                lineNumber: 226,
+                                                lineNumber: 168,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
@@ -2159,7 +2093,7 @@ function MDAnnouncements() {
                                                 children: "Announcements"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                lineNumber: 232,
+                                                lineNumber: 174,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2167,13 +2101,13 @@ function MDAnnouncements() {
                                                 children: "Company-wide updates and important communications."
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                lineNumber: 235,
+                                                lineNumber: 177,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                        lineNumber: 225,
+                                        lineNumber: 167,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2189,12 +2123,12 @@ function MDAnnouncements() {
                                                     children: "+ Create Announcement"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                    lineNumber: 240,
+                                                    lineNumber: 182,
                                                     columnNumber: 19
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                lineNumber: 239,
+                                                lineNumber: 181,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2208,24 +2142,24 @@ function MDAnnouncements() {
                                                     children: "Back to Dashboard"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                    lineNumber: 245,
+                                                    lineNumber: 187,
                                                     columnNumber: 19
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                lineNumber: 244,
+                                                lineNumber: 186,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                        lineNumber: 238,
+                                        lineNumber: 180,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                lineNumber: 224,
+                                lineNumber: 166,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2270,13 +2204,13 @@ function MDAnnouncements() {
                                                 children: f.label
                                             }, f.id, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                lineNumber: 298,
+                                                lineNumber: 240,
                                                 columnNumber: 21
                                             }, this);
                                         })
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                        lineNumber: 254,
+                                        lineNumber: 196,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2289,7 +2223,7 @@ function MDAnnouncements() {
                                                 className: inputBase
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                lineNumber: 315,
+                                                lineNumber: 257,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
@@ -2304,35 +2238,35 @@ function MDAnnouncements() {
                                                     d: "M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                    lineNumber: 327,
+                                                    lineNumber: 269,
                                                     columnNumber: 19
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                lineNumber: 321,
+                                                lineNumber: 263,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                        lineNumber: 314,
+                                        lineNumber: 256,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                lineNumber: 253,
+                                lineNumber: 195,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                        lineNumber: 217,
+                        lineNumber: 159,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                    lineNumber: 216,
+                    lineNumber: 158,
                     columnNumber: 9
                 }, this),
                 urgentUnreadCount > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
@@ -2348,7 +2282,7 @@ function MDAnnouncements() {
                                         children: "🚨"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                        lineNumber: 339,
+                                        lineNumber: 281,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2358,7 +2292,7 @@ function MDAnnouncements() {
                                                 children: "Urgent announcements need your attention"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                lineNumber: 341,
+                                                lineNumber: 283,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2369,19 +2303,19 @@ function MDAnnouncements() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                lineNumber: 342,
+                                                lineNumber: 284,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                        lineNumber: 340,
+                                        lineNumber: 282,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                lineNumber: 338,
+                                lineNumber: 280,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2393,416 +2327,443 @@ function MDAnnouncements() {
                                 children: "View Urgent"
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                lineNumber: 345,
+                                lineNumber: 287,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                        lineNumber: 337,
+                        lineNumber: 279,
                         columnNumber: 13
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                    lineNumber: 336,
+                    lineNumber: 278,
                     columnNumber: 11
                 }, this),
-                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "grid grid-cols-1 gap-4",
-                    children: filteredAnnouncements.map((a)=>{
-                        const expired = isExpired(a.expiresAt);
-                        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
-                            className: `overflow-hidden ${!a.read ? "ring-2 ring-blue-200" : ""} ${expired ? "opacity-80" : ""}`,
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "p-6",
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "min-w-0",
-                                                    children: [
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                            className: "flex flex-wrap items-center gap-2 mb-3",
-                                                            children: [
-                                                                !a.read ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                    className: "w-2.5 h-2.5 rounded-full bg-blue-500"
-                                                                }, void 0, false, {
-                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                                    lineNumber: 366,
-                                                                    columnNumber: 36
-                                                                }, this) : null,
-                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
-                                                                    tone: priorityTone(a.priority),
-                                                                    children: a.priority
-                                                                }, void 0, false, {
-                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                                    lineNumber: 367,
-                                                                    columnNumber: 25
-                                                                }, this),
-                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
-                                                                    tone: scopeTone(a.scope),
-                                                                    children: a.scope
-                                                                }, void 0, false, {
-                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                                    lineNumber: 368,
-                                                                    columnNumber: 25
-                                                                }, this),
-                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
-                                                                    tone: departmentTone(a.departments?.[0]),
-                                                                    children: a.departments.join(", ")
-                                                                }, void 0, false, {
-                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                                    lineNumber: 369,
-                                                                    columnNumber: 25
-                                                                }, this),
-                                                                expired ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
-                                                                    tone: "muted",
-                                                                    children: "Expired"
-                                                                }, void 0, false, {
-                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                                    lineNumber: 370,
-                                                                    columnNumber: 36
-                                                                }, this) : null
-                                                            ]
-                                                        }, void 0, true, {
-                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                            lineNumber: 365,
-                                                            columnNumber: 23
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                                            className: "text-lg font-extrabold text-gray-900 truncate",
-                                                            children: a.title
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                            lineNumber: 373,
-                                                            columnNumber: 23
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                            className: "text-sm text-gray-600 mt-2",
-                                                            children: a.message.length > 200 ? a.message.substring(0, 200) + "..." : a.message
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                            lineNumber: 374,
-                                                            columnNumber: 23
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                            className: "mt-4 flex flex-wrap items-center gap-3 text-sm text-gray-600",
-                                                            children: [
-                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                    className: "inline-flex items-center gap-2",
-                                                                    children: [
-                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                            className: "w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center",
-                                                                            children: "👤"
-                                                                        }, void 0, false, {
-                                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                                            lineNumber: 380,
-                                                                            columnNumber: 27
-                                                                        }, this),
-                                                                        a.createdBy
-                                                                    ]
-                                                                }, void 0, true, {
-                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                                    lineNumber: 379,
-                                                                    columnNumber: 25
-                                                                }, this),
-                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                    className: "inline-flex items-center gap-2",
-                                                                    children: [
-                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                            className: "w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center",
-                                                                            children: "🗓️"
-                                                                        }, void 0, false, {
-                                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                                            lineNumber: 384,
-                                                                            columnNumber: 27
-                                                                        }, this),
-                                                                        formatDate(a.createdDate)
-                                                                    ]
-                                                                }, void 0, true, {
-                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                                    lineNumber: 383,
-                                                                    columnNumber: 25
-                                                                }, this),
-                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                    className: "inline-flex items-center gap-2",
-                                                                    children: [
-                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                            className: "w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center",
-                                                                            children: "👁️"
-                                                                        }, void 0, false, {
-                                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                                            lineNumber: 388,
-                                                                            columnNumber: 27
-                                                                        }, this),
-                                                                        a.reads,
-                                                                        " views"
-                                                                    ]
-                                                                }, void 0, true, {
-                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                                    lineNumber: 387,
-                                                                    columnNumber: 25
-                                                                }, this),
-                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                    className: "inline-flex items-center gap-2",
-                                                                    children: [
-                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                            className: "w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center",
-                                                                            children: "⏳"
-                                                                        }, void 0, false, {
-                                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                                            lineNumber: 392,
-                                                                            columnNumber: 27
-                                                                        }, this),
-                                                                        "Expires: ",
-                                                                        a.expiresAt
-                                                                    ]
-                                                                }, void 0, true, {
-                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                                    lineNumber: 391,
-                                                                    columnNumber: 25
-                                                                }, this)
-                                                            ]
-                                                        }, void 0, true, {
-                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                            lineNumber: 378,
-                                                            columnNumber: 23
-                                                        }, this)
-                                                    ]
-                                                }, void 0, true, {
-                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                    lineNumber: 364,
-                                                    columnNumber: 21
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "flex flex-col sm:flex-row gap-2 shrink-0",
-                                                    children: [
-                                                        !a.read && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                            onClick: ()=>markAsRead(a.id),
-                                                            className: btnOutline,
-                                                            style: {
-                                                                borderColor: "rgba(109,198,223,0.55)",
-                                                                color: "var(--secondary-blue)"
-                                                            },
-                                                            children: "Mark as Read"
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                            lineNumber: 400,
-                                                            columnNumber: 25
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                                                            href: `/md-dashboard/announcement/${a.id}`,
-                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                                className: btnSolid,
-                                                                style: {
-                                                                    backgroundColor: "var(--primary-blue)"
-                                                                },
-                                                                children: "View Details"
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                                lineNumber: 409,
-                                                                columnNumber: 25
-                                                            }, this)
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                            lineNumber: 408,
-                                                            columnNumber: 23
-                                                        }, this)
-                                                    ]
-                                                }, void 0, true, {
-                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                    lineNumber: 398,
-                                                    columnNumber: 21
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                            lineNumber: 363,
-                                            columnNumber: 19
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "mt-5 pt-4 border-t border-gray-200/70 flex flex-wrap items-center justify-between gap-3 text-sm",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "flex flex-wrap items-center gap-3 text-gray-600",
-                                                    children: [
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                            children: [
-                                                                "📄 ",
-                                                                a.documents,
-                                                                " attachment",
-                                                                a.documents !== 1 ? "s" : ""
-                                                            ]
-                                                        }, void 0, true, {
-                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                            lineNumber: 418,
-                                                            columnNumber: 23
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                            children: [
-                                                                "💬 ",
-                                                                a.comments,
-                                                                " comment",
-                                                                a.comments !== 1 ? "s" : ""
-                                                            ]
-                                                        }, void 0, true, {
-                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                            lineNumber: 419,
-                                                            columnNumber: 23
-                                                        }, this)
-                                                    ]
-                                                }, void 0, true, {
-                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                    lineNumber: 417,
-                                                    columnNumber: 21
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "text-xs text-gray-500 inline-flex items-center gap-2",
-                                                    children: [
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                            className: "font-semibold",
-                                                            style: {
-                                                                color: "var(--primary-blue)"
-                                                            },
-                                                            children: a.read ? "✅ Read" : "📌 New"
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                            lineNumber: 423,
-                                                            columnNumber: 23
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                            children: "•"
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                            lineNumber: 426,
-                                                            columnNumber: 23
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                            children: [
-                                                                "ID: ",
-                                                                a.id
-                                                            ]
-                                                        }, void 0, true, {
-                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                            lineNumber: 427,
-                                                            columnNumber: 23
-                                                        }, this)
-                                                    ]
-                                                }, void 0, true, {
-                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                    lineNumber: 422,
-                                                    columnNumber: 21
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                            lineNumber: 416,
-                                            columnNumber: 19
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                    lineNumber: 362,
-                                    columnNumber: 17
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "px-6 py-3",
-                                    style: {
-                                        backgroundColor: "rgba(109, 198, 223, 0.08)"
-                                    },
-                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "flex items-center justify-between",
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                className: "text-xs font-semibold",
-                                                style: {
-                                                    color: "var(--primary-blue)"
-                                                },
-                                                children: a.scope
-                                            }, void 0, false, {
-                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                lineNumber: 434,
-                                                columnNumber: 21
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                className: "text-xs text-gray-600",
-                                                children: a.createdBy
-                                            }, void 0, false, {
-                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                lineNumber: 437,
-                                                columnNumber: 21
-                                            }, this)
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                        lineNumber: 433,
-                                        columnNumber: 19
-                                    }, this)
-                                }, void 0, false, {
-                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                    lineNumber: 432,
-                                    columnNumber: 17
-                                }, this)
-                            ]
-                        }, a.id, true, {
-                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                            lineNumber: 361,
-                            columnNumber: 15
-                        }, this);
-                    })
-                }, void 0, false, {
-                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                    lineNumber: 357,
-                    columnNumber: 9
-                }, this),
-                filteredAnnouncements.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
-                    className: "p-12 text-center",
+                isLoading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "flex flex-col items-center justify-center p-12 py-20 bg-white rounded-2xl border border-gray-200/70 shadow-sm",
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-4",
-                            style: {
-                                backgroundColor: "rgba(109, 198, 223, 0.12)"
-                            },
-                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                className: "text-2xl",
-                                style: {
-                                    color: "var(--secondary-blue)"
-                                },
-                                children: "🧐"
-                            }, void 0, false, {
-                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                lineNumber: 448,
-                                columnNumber: 15
-                            }, this)
+                            className: "w-10 h-10 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin mb-4"
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                            lineNumber: 447,
-                            columnNumber: 13
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                            className: "text-lg font-extrabold text-gray-900 mb-2",
-                            children: "No announcements found"
-                        }, void 0, false, {
-                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                            lineNumber: 452,
+                            lineNumber: 301,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                            className: "text-gray-600",
-                            children: "Try adjusting your filters or search term."
+                            className: "text-gray-500 font-semibold",
+                            children: "Loading announcements..."
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                            lineNumber: 453,
+                            lineNumber: 302,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                    lineNumber: 446,
+                    lineNumber: 300,
                     columnNumber: 11
-                }, this),
+                }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "grid grid-cols-1 gap-4",
+                            children: filteredAnnouncements.map((a)=>{
+                                const expired = isExpired(a.expiresAt);
+                                return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
+                                    className: `overflow-hidden ${!a.read ? "ring-2 ring-blue-200" : ""} ${expired ? "opacity-80" : ""}`,
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "p-6",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "min-w-0",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "flex flex-wrap items-center gap-2 mb-3",
+                                                                    children: [
+                                                                        !a.read ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            className: "w-2.5 h-2.5 rounded-full bg-blue-500"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                                            lineNumber: 315,
+                                                                            columnNumber: 40
+                                                                        }, this) : null,
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
+                                                                            tone: priorityTone(a.priority),
+                                                                            children: a.priority
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                                            lineNumber: 316,
+                                                                            columnNumber: 29
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
+                                                                            tone: scopeTone(a.scope),
+                                                                            children: a.scope
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                                            lineNumber: 317,
+                                                                            columnNumber: 29
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
+                                                                            tone: departmentTone(a.departments?.[0]),
+                                                                            children: a.departments.join(", ")
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                                            lineNumber: 318,
+                                                                            columnNumber: 29
+                                                                        }, this),
+                                                                        expired ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
+                                                                            tone: "muted",
+                                                                            children: "Expired"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                                            lineNumber: 319,
+                                                                            columnNumber: 40
+                                                                        }, this) : null
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                                    lineNumber: 314,
+                                                                    columnNumber: 27
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                                                    className: "text-lg font-extrabold text-gray-900 truncate",
+                                                                    children: a.title
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                                    lineNumber: 322,
+                                                                    columnNumber: 27
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                    className: "text-sm text-gray-600 mt-2",
+                                                                    children: (a.message || "").length > 200 ? (a.message || "").substring(0, 200) + "..." : a.message || ""
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                                    lineNumber: 323,
+                                                                    columnNumber: 27
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "mt-4 flex flex-wrap items-center gap-3 text-sm text-gray-600",
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            className: "inline-flex items-center gap-2",
+                                                                            children: [
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                    className: "w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center",
+                                                                                    children: "👤"
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                                                    lineNumber: 329,
+                                                                                    columnNumber: 31
+                                                                                }, this),
+                                                                                a.createdBy
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                                            lineNumber: 328,
+                                                                            columnNumber: 29
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            className: "inline-flex items-center gap-2",
+                                                                            children: [
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                    className: "w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center",
+                                                                                    children: "🗓️"
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                                                    lineNumber: 333,
+                                                                                    columnNumber: 31
+                                                                                }, this),
+                                                                                formatDate(a.createdDate)
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                                            lineNumber: 332,
+                                                                            columnNumber: 29
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            className: "inline-flex items-center gap-2",
+                                                                            children: [
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                    className: "w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center",
+                                                                                    children: "👁️"
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                                                    lineNumber: 337,
+                                                                                    columnNumber: 31
+                                                                                }, this),
+                                                                                a.readsCount || 0,
+                                                                                " views"
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                                            lineNumber: 336,
+                                                                            columnNumber: 29
+                                                                        }, this),
+                                                                        a.expiresAt && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            className: "inline-flex items-center gap-2",
+                                                                            children: [
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                    className: "w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center",
+                                                                                    children: "⏳"
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                                                    lineNumber: 342,
+                                                                                    columnNumber: 33
+                                                                                }, this),
+                                                                                "Expires: ",
+                                                                                a.expiresAt ? formatDate(a.expiresAt) : "N/A"
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                                            lineNumber: 341,
+                                                                            columnNumber: 31
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                                    lineNumber: 327,
+                                                                    columnNumber: 27
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                            lineNumber: 313,
+                                                            columnNumber: 25
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "flex flex-col sm:flex-row gap-2 shrink-0",
+                                                            children: [
+                                                                !a.read && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                    onClick: ()=>markAsRead(a.id),
+                                                                    className: btnOutline,
+                                                                    style: {
+                                                                        borderColor: "rgba(109,198,223,0.55)",
+                                                                        color: "var(--secondary-blue)"
+                                                                    },
+                                                                    children: "Mark as Read"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                                    lineNumber: 351,
+                                                                    columnNumber: 29
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                                                                    href: `/md-dashboard/announcement/${a.id}`,
+                                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                        className: btnSolid,
+                                                                        style: {
+                                                                            backgroundColor: "var(--primary-blue)"
+                                                                        },
+                                                                        children: "View Details"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                                        lineNumber: 360,
+                                                                        columnNumber: 29
+                                                                    }, this)
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                                    lineNumber: 359,
+                                                                    columnNumber: 27
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                            lineNumber: 349,
+                                                            columnNumber: 25
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                    lineNumber: 312,
+                                                    columnNumber: 23
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "mt-5 pt-4 border-t border-gray-200/70 flex flex-wrap items-center justify-between gap-3 text-sm",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "flex flex-wrap items-center gap-3 text-gray-600",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    children: [
+                                                                        "📄 ",
+                                                                        a.documents,
+                                                                        " attachment",
+                                                                        a.documents !== 1 ? "s" : ""
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                                    lineNumber: 369,
+                                                                    columnNumber: 27
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    children: [
+                                                                        "💬 ",
+                                                                        a.comments,
+                                                                        " comment",
+                                                                        a.comments !== 1 ? "s" : ""
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                                    lineNumber: 370,
+                                                                    columnNumber: 27
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                            lineNumber: 368,
+                                                            columnNumber: 25
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "text-xs text-gray-500 inline-flex items-center gap-2",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    className: "font-semibold",
+                                                                    style: {
+                                                                        color: "var(--primary-blue)"
+                                                                    },
+                                                                    children: a.read ? "✅ Read" : "📌 New"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                                    lineNumber: 374,
+                                                                    columnNumber: 27
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    children: "•"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                                    lineNumber: 377,
+                                                                    columnNumber: 27
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    children: [
+                                                                        "ID: ",
+                                                                        a.id
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                                    lineNumber: 378,
+                                                                    columnNumber: 27
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                            lineNumber: 373,
+                                                            columnNumber: 25
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                    lineNumber: 367,
+                                                    columnNumber: 23
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                            lineNumber: 311,
+                                            columnNumber: 21
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "px-6 py-3",
+                                            style: {
+                                                backgroundColor: "rgba(109, 198, 223, 0.08)"
+                                            },
+                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "flex items-center justify-between",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "text-xs font-semibold",
+                                                        style: {
+                                                            color: "var(--primary-blue)"
+                                                        },
+                                                        children: a.scope
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                        lineNumber: 385,
+                                                        columnNumber: 25
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "text-xs text-gray-600",
+                                                        children: a.createdBy
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                        lineNumber: 388,
+                                                        columnNumber: 25
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                                lineNumber: 384,
+                                                columnNumber: 23
+                                            }, this)
+                                        }, void 0, false, {
+                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                            lineNumber: 383,
+                                            columnNumber: 21
+                                        }, this)
+                                    ]
+                                }, a.id, true, {
+                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                    lineNumber: 310,
+                                    columnNumber: 19
+                                }, this);
+                            })
+                        }, void 0, false, {
+                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                            lineNumber: 306,
+                            columnNumber: 13
+                        }, this),
+                        filteredAnnouncements.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
+                            className: "p-12 text-center",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-4",
+                                    style: {
+                                        backgroundColor: "rgba(109, 198, 223, 0.12)"
+                                    },
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: "text-2xl",
+                                        style: {
+                                            color: "var(--secondary-blue)"
+                                        },
+                                        children: "🧐"
+                                    }, void 0, false, {
+                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                        lineNumber: 399,
+                                        columnNumber: 19
+                                    }, this)
+                                }, void 0, false, {
+                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                    lineNumber: 398,
+                                    columnNumber: 17
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                    className: "text-lg font-extrabold text-gray-900 mb-2",
+                                    children: "No announcements found"
+                                }, void 0, false, {
+                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                    lineNumber: 403,
+                                    columnNumber: 17
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                    className: "text-gray-600",
+                                    children: "Try adjusting your filters or search term."
+                                }, void 0, false, {
+                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                                    lineNumber: 404,
+                                    columnNumber: 17
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
+                            lineNumber: 397,
+                            columnNumber: 15
+                        }, this)
+                    ]
+                }, void 0, true),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                     className: "grid grid-cols-1 md:grid-cols-4 gap-4",
                     children: [
@@ -2826,7 +2787,7 @@ function MDAnnouncements() {
                         },
                         {
                             label: "Avg. Reads",
-                            value: Math.round(announcementsData.reduce((s, a)=>s + a.reads, 0) / announcementsData.length),
+                            value: announcementsData.length > 0 ? Math.round(announcementsData.reduce((s, a)=>s + (a.readsCount || 0), 0) / announcementsData.length) : 0,
                             icon: "👁️",
                             tone: "purple"
                         }
@@ -2843,7 +2804,7 @@ function MDAnnouncements() {
                                                     children: s.label
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                    lineNumber: 473,
+                                                    lineNumber: 426,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2851,13 +2812,13 @@ function MDAnnouncements() {
                                                     children: s.value
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                    lineNumber: 474,
+                                                    lineNumber: 427,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                            lineNumber: 472,
+                                            lineNumber: 425,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2870,18 +2831,18 @@ function MDAnnouncements() {
                                                 children: s.icon
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                                lineNumber: 477,
+                                                lineNumber: 430,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                            lineNumber: 476,
+                                            lineNumber: 429,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                    lineNumber: 471,
+                                    lineNumber: 424,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2894,38 +2855,38 @@ function MDAnnouncements() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                        lineNumber: 481,
+                                        lineNumber: 434,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                                    lineNumber: 480,
+                                    lineNumber: 433,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, s.label, true, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                            lineNumber: 470,
+                            lineNumber: 423,
                             columnNumber: 13
                         }, this))
                 }, void 0, false, {
                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-                    lineNumber: 458,
+                    lineNumber: 411,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-            lineNumber: 214,
+            lineNumber: 156,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/MD/MDAnnouncements.jsx",
-        lineNumber: 213,
+        lineNumber: 155,
         columnNumber: 5
     }, this);
 }
-_s(MDAnnouncements, "MmiHYRTLBVmEJ3Vg1Npm0H90V+E=");
+_s(MDAnnouncements, "c/8scEA+Z6uI6cCZ2xJ0DA84t28=");
 _c2 = MDAnnouncements;
 var _c, _c1, _c2;
 __turbopack_context__.k.register(_c, "Card");

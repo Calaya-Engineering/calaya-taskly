@@ -1,10 +1,10 @@
 {
-  "[project]/Desktop/calaya-taskly/src/views/dashboards/Admin/AdminUsers.jsx [app-client] (ecmascript, next/dynamic entry)": {
-    "id": "[project]/Desktop/calaya-taskly/src/views/dashboards/Admin/AdminUsers.jsx [app-client] (ecmascript, next/dynamic entry)",
+  "[project]/src/views/dashboards/Admin/AdminUsers.jsx [app-client] (ecmascript, next/dynamic entry)": {
+    "id": "[project]/src/views/dashboards/Admin/AdminUsers.jsx [app-client] (ecmascript, next/dynamic entry)",
     "files": [
-      "static/chunks/Desktop_calaya-taskly_src_8d4b7b29._.js",
-      "static/chunks/a96cc_63fd5b32._.js",
-      "static/chunks/Desktop_calaya-taskly_src_views_dashboards_Admin_AdminUsers_jsx_5a6bc778._.js"
+      "static/chunks/src_b3692d10._.js",
+      "static/chunks/node_modules_9d64a71f._.js",
+      "static/chunks/src_views_dashboards_Admin_AdminUsers_jsx_01fb2957._.js"
     ]
   }
 }

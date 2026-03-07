@@ -482,9 +482,9 @@ function BadgeProvider({ children }) {
                 const tenderDocsPath = `${prefix}/tender-documents`;
                 // Unread notifications count (use read field, not time-based)
                 const unreadNotifCount = Array.isArray(notifications) ? notifications.length : 0;
-                // Escalated tasks
+                // Escalated tasks (filter to those with escalatedAt set)
                 const escalatedTasks = Array.isArray(allTasks) ? allTasks.filter({
-                    "BadgeProvider.useCallback[fetchCounts]": (t)=>t.escalated
+                    "BadgeProvider.useCallback[fetchCounts]": (t)=>t.escalated && t.escalatedAt
                 }["BadgeProvider.useCallback[fetchCounts]"]) : [];
                 // Pending approval tasks
                 const pendingApprovalCount = Array.isArray(pendingTasks) ? pendingTasks.length : 0;
@@ -509,9 +509,9 @@ function BadgeProvider({ children }) {
                 if (pathname !== approvalsPath) {
                     newBadges[approvalsPath] = pendingApprovalCount;
                 }
-                // Escalations: escalated count
+                // Escalations: only count tasks escalated AFTER the user's last visit
                 if (pathname !== escalationsPath) {
-                    newBadges[escalationsPath] = escalatedTasks.length;
+                    newBadges[escalationsPath] = countNewSince(escalatedTasks, escalationsPath, "escalatedAt");
                 }
                 // Announcements: unread count
                 if (pathname !== announcementsPath) {
@@ -525,11 +525,13 @@ function BadgeProvider({ children }) {
             } catch (err) {
                 console.error("Badge fetch error:", err);
             }
+        // Note: intentionally omitting `pathname` from deps — fetching once on
+        // auth is enough. SSE events handle real-time badge bumps thereafter.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         }
     }["BadgeProvider.useCallback[fetchCounts]"], [
         prefix,
-        isAuthenticated,
-        pathname
+        isAuthenticated
     ]);
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "BadgeProvider.useEffect": ()=>{
@@ -652,7 +654,7 @@ function BadgeProvider({ children }) {
         children: children
     }, void 0, false, {
         fileName: "[project]/Desktop/calaya-taskly/src/contexts/BadgeContext.jsx",
-        lineNumber: 317,
+        lineNumber: 324,
         columnNumber: 9
     }, this);
 }

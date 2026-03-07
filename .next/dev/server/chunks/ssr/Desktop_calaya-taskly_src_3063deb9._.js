@@ -1834,6 +1834,7 @@ function HODDailyReports() {
     const [selectedDepartments, setSelectedDepartments] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([
         'Technical'
     ]);
+    const lastRefreshAtRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRef"])(0);
     // Report entries with dynamic rows
     const [reportEntries, setReportEntries] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([
         {
@@ -1846,7 +1847,8 @@ function HODDailyReports() {
     ]);
     const getReports = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useCallback"])(async ()=>{
         try {
-            const resp = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["fetchWithAuth"])("/api/documents?type=Report");
+            const departments = encodeURIComponent(MANAGED_DEPARTMENTS.join(','));
+            const resp = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["fetchWithAuth"])(`/api/documents?type=Report&departments=${departments}`);
             if (resp.ok) {
                 const data = await resp.json();
                 const mapped = data.map((d)=>({
@@ -1875,9 +1877,14 @@ function HODDailyReports() {
     }, [
         getReports
     ]);
-    // Real-time: re-fetch when documents change
+    // Real-time: re-fetch when documents or tasks change
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$hooks$2f$useSSE$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useSSE"])("/api/tasks/events", (ev)=>{
-        if (ev.type?.startsWith("task:")) getReports();
+        if (ev.type?.startsWith("task:") || ev.type?.startsWith("document:")) {
+            const now = Date.now();
+            if (now - lastRefreshAtRef.current < 1500) return;
+            lastRefreshAtRef.current = now;
+            getReports();
+        }
     });
     // Load saved form data from sessionStorage on mount
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
@@ -1995,32 +2002,45 @@ function HODDailyReports() {
         sessionStorage.setItem(STORAGE_KEYS.IS_MODAL_OPEN, JSON.stringify(false));
         resetForm();
     };
-    // Handle submit report
-    const handleSubmitReport = ()=>{
-        const hasValidEntry = reportEntries.some((entry)=>entry.taskName.trim() !== '');
-        if (!hasValidEntry) {
+    // Handle submit report — posts to the API
+    const [submitting, setSubmitting] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
+    const handleSubmitReport = async ()=>{
+        const validEntries = reportEntries.filter((entry)=>entry.taskName.trim() !== '');
+        if (validEntries.length === 0) {
             __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$toast$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].warning('Please add at least one task entry');
             return;
         }
-        const newReports = selectedDepartments.map((dept)=>({
-                id: `DR-${new Date().toISOString().split('T')[0]}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`,
-                date: new Date().toISOString().split('T')[0],
-                department: dept,
-                submittedBy: `HOD - ${dept}`,
-                submittedAt: new Date().toISOString(),
-                entries: reportEntries.filter((entry)=>entry.taskName.trim() !== ''),
-                fileSize: '0.5 MB',
-                fileType: 'PDF',
-                status: 'PENDING'
-            }));
-        setDailyReports([
-            ...newReports,
-            ...dailyReports
-        ]);
-        setIsModalOpen(false);
-        sessionStorage.setItem(STORAGE_KEYS.IS_MODAL_OPEN, JSON.stringify(false));
-        resetForm();
-        __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$toast$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].success(`Daily reports submitted successfully for ${selectedDepartments.length} department(s)!`);
+        if (submitting) return;
+        setSubmitting(true);
+        try {
+            // Submit one report per selected department
+            const results = await Promise.all(selectedDepartments.map((dept)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["fetchWithAuth"])("/api/daily-reports", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        department: dept,
+                        date: new Date().toISOString().split('T')[0],
+                        entries: validEntries
+                    })
+                })));
+            const allOk = results.every((r)=>r.ok);
+            if (allOk) {
+                __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$toast$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].success(`Daily report${selectedDepartments.length > 1 ? 's' : ''} submitted for ${selectedDepartments.join(', ')}!`);
+                setIsModalOpen(false);
+                sessionStorage.setItem(STORAGE_KEYS.IS_MODAL_OPEN, JSON.stringify(false));
+                resetForm();
+                getReports(); // Refresh the list
+            } else {
+                __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$toast$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].error('One or more reports failed to submit. Please try again.');
+            }
+        } catch (err) {
+            console.error("Failed to submit report:", err);
+            __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$toast$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].error('Failed to submit report. Please check your connection.');
+        } finally{
+            setSubmitting(false);
+        }
     };
     // Auto-resize textarea
     const handleTextareaResize = (e)=>{
@@ -2052,17 +2072,17 @@ function HODDailyReports() {
                     className: "animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"
                 }, void 0, false, {
                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                    lineNumber: 327,
+                    lineNumber: 353,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                lineNumber: 326,
+                lineNumber: 352,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-            lineNumber: 325,
+            lineNumber: 351,
             columnNumber: 7
         }, this);
     }
@@ -2092,7 +2112,7 @@ function HODDailyReports() {
                                                         children: "📊 Daily Reports"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 348,
+                                                        lineNumber: 374,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -2103,7 +2123,7 @@ function HODDailyReports() {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 349,
+                                                        lineNumber: 375,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -2114,7 +2134,7 @@ function HODDailyReports() {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 350,
+                                                        lineNumber: 376,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -2125,13 +2145,13 @@ function HODDailyReports() {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 351,
+                                                        lineNumber: 377,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 347,
+                                                lineNumber: 373,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
@@ -2142,7 +2162,7 @@ function HODDailyReports() {
                                                 children: "Daily Reports"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 354,
+                                                lineNumber: 380,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2150,7 +2170,7 @@ function HODDailyReports() {
                                                 children: "View and manage daily reports from your departments."
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 357,
+                                                lineNumber: 383,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2161,7 +2181,7 @@ function HODDailyReports() {
                                                         children: "Managing:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 362,
+                                                        lineNumber: 388,
                                                         columnNumber: 19
                                                     }, this),
                                                     MANAGED_DEPARTMENTS.map((dept)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -2169,19 +2189,19 @@ function HODDailyReports() {
                                                             children: dept
                                                         }, dept, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                            lineNumber: 364,
+                                                            lineNumber: 390,
                                                             columnNumber: 21
                                                         }, this))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 361,
+                                                lineNumber: 387,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                        lineNumber: 346,
+                                        lineNumber: 372,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2199,7 +2219,7 @@ function HODDailyReports() {
                                                         children: "📋"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 371,
+                                                        lineNumber: 397,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2211,13 +2231,13 @@ function HODDailyReports() {
                                                         children: "📅"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 379,
+                                                        lineNumber: 405,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 370,
+                                                lineNumber: 396,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2237,29 +2257,29 @@ function HODDailyReports() {
                                                 children: "+ Create Daily Report"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 389,
+                                                lineNumber: 415,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                        lineNumber: 369,
+                                        lineNumber: 395,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                lineNumber: 345,
+                                lineNumber: 371,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                            lineNumber: 338,
+                            lineNumber: 364,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                        lineNumber: 337,
+                        lineNumber: 363,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
@@ -2274,7 +2294,7 @@ function HODDailyReports() {
                                                 children: "Select Date"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 414,
+                                                lineNumber: 440,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2284,13 +2304,13 @@ function HODDailyReports() {
                                                 className: inputBase
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 415,
+                                                lineNumber: 441,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                        lineNumber: 413,
+                                        lineNumber: 439,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2299,7 +2319,7 @@ function HODDailyReports() {
                                                 children: "Department"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 425,
+                                                lineNumber: 451,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -2312,7 +2332,7 @@ function HODDailyReports() {
                                                         children: "All Departments"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 431,
+                                                        lineNumber: 457,
                                                         columnNumber: 17
                                                     }, this),
                                                     MANAGED_DEPARTMENTS.map((dept)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2320,19 +2340,19 @@ function HODDailyReports() {
                                                             children: dept
                                                         }, dept, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                            lineNumber: 433,
+                                                            lineNumber: 459,
                                                             columnNumber: 19
                                                         }, this))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 426,
+                                                lineNumber: 452,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                        lineNumber: 424,
+                                        lineNumber: 450,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2346,7 +2366,7 @@ function HODDailyReports() {
                                                         children: "Total"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 441,
+                                                        lineNumber: 467,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2357,13 +2377,13 @@ function HODDailyReports() {
                                                         children: stats.total
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 442,
+                                                        lineNumber: 468,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 440,
+                                                lineNumber: 466,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2374,7 +2394,7 @@ function HODDailyReports() {
                                                         children: "Pending"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 447,
+                                                        lineNumber: 473,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2385,25 +2405,25 @@ function HODDailyReports() {
                                                         children: stats.pending
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 448,
+                                                        lineNumber: 474,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 446,
+                                                lineNumber: 472,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                        lineNumber: 439,
+                                        lineNumber: 465,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                lineNumber: 411,
+                                lineNumber: 437,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2414,7 +2434,7 @@ function HODDailyReports() {
                                         children: "Quick Navigation"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                        lineNumber: 457,
+                                        lineNumber: 483,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2430,7 +2450,7 @@ function HODDailyReports() {
                                                 children: "All Dates"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 459,
+                                                lineNumber: 485,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2443,7 +2463,7 @@ function HODDailyReports() {
                                                 children: "Today"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 470,
+                                                lineNumber: 496,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2459,25 +2479,25 @@ function HODDailyReports() {
                                                 children: "Yesterday"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 481,
+                                                lineNumber: 507,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                        lineNumber: 458,
+                                        lineNumber: 484,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                lineNumber: 456,
+                                lineNumber: 482,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                        lineNumber: 410,
+                        lineNumber: 436,
                         columnNumber: 9
                     }, this),
                     viewMode === 'list' ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
@@ -2498,7 +2518,7 @@ function HODDailyReports() {
                                                         children: "Date"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 503,
+                                                        lineNumber: 529,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -2506,7 +2526,7 @@ function HODDailyReports() {
                                                         children: "Department"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 504,
+                                                        lineNumber: 530,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -2514,7 +2534,7 @@ function HODDailyReports() {
                                                         children: "Submitted By"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 505,
+                                                        lineNumber: 531,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -2522,7 +2542,7 @@ function HODDailyReports() {
                                                         children: "Tasks"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 506,
+                                                        lineNumber: 532,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -2530,7 +2550,7 @@ function HODDailyReports() {
                                                         children: "Status"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 507,
+                                                        lineNumber: 533,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -2538,7 +2558,7 @@ function HODDailyReports() {
                                                         children: "File"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 508,
+                                                        lineNumber: 534,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -2546,18 +2566,18 @@ function HODDailyReports() {
                                                         children: "Actions"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 509,
+                                                        lineNumber: 535,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 502,
+                                                lineNumber: 528,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                            lineNumber: 501,
+                                            lineNumber: 527,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
@@ -2573,7 +2593,7 @@ function HODDailyReports() {
                                                                     children: formatDate(report.date)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                    lineNumber: 516,
+                                                                    lineNumber: 542,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2581,13 +2601,13 @@ function HODDailyReports() {
                                                                     children: report.date
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                    lineNumber: 517,
+                                                                    lineNumber: 543,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                            lineNumber: 515,
+                                                            lineNumber: 541,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -2597,12 +2617,12 @@ function HODDailyReports() {
                                                                 children: report.department
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                lineNumber: 520,
+                                                                lineNumber: 546,
                                                                 columnNumber: 25
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                            lineNumber: 519,
+                                                            lineNumber: 545,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -2618,7 +2638,7 @@ function HODDailyReports() {
                                                                         children: report.submittedBy.charAt(0)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                        lineNumber: 524,
+                                                                        lineNumber: 550,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2628,7 +2648,7 @@ function HODDailyReports() {
                                                                                 children: report.submittedBy
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                                lineNumber: 531,
+                                                                                lineNumber: 557,
                                                                                 columnNumber: 29
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2636,24 +2656,24 @@ function HODDailyReports() {
                                                                                 children: formatDateTime(report.submittedAt)
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                                lineNumber: 532,
+                                                                                lineNumber: 558,
                                                                                 columnNumber: 29
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                        lineNumber: 530,
+                                                                        lineNumber: 556,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                lineNumber: 523,
+                                                                lineNumber: 549,
                                                                 columnNumber: 25
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                            lineNumber: 522,
+                                                            lineNumber: 548,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -2667,7 +2687,7 @@ function HODDailyReports() {
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                    lineNumber: 537,
+                                                                    lineNumber: 563,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2681,7 +2701,7 @@ function HODDailyReports() {
                                                                                 ]
                                                                             }, i, true, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                                lineNumber: 540,
+                                                                                lineNumber: 566,
                                                                                 columnNumber: 29
                                                                             }, this)),
                                                                         report.entries.length > 2 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2693,19 +2713,19 @@ function HODDailyReports() {
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                            lineNumber: 543,
+                                                                            lineNumber: 569,
                                                                             columnNumber: 29
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                    lineNumber: 538,
+                                                                    lineNumber: 564,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                            lineNumber: 536,
+                                                            lineNumber: 562,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -2715,12 +2735,12 @@ function HODDailyReports() {
                                                                 children: report.status
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                lineNumber: 548,
+                                                                lineNumber: 574,
                                                                 columnNumber: 25
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                            lineNumber: 547,
+                                                            lineNumber: 573,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -2731,7 +2751,7 @@ function HODDailyReports() {
                                                                     children: report.fileSize
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                    lineNumber: 551,
+                                                                    lineNumber: 577,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2739,13 +2759,13 @@ function HODDailyReports() {
                                                                     children: report.fileType
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                    lineNumber: 552,
+                                                                    lineNumber: 578,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                            lineNumber: 550,
+                                                            lineNumber: 576,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -2761,7 +2781,7 @@ function HODDailyReports() {
                                                                         children: "View"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                        lineNumber: 556,
+                                                                        lineNumber: 582,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2773,40 +2793,40 @@ function HODDailyReports() {
                                                                         children: "Download"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                        lineNumber: 562,
+                                                                        lineNumber: 588,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                lineNumber: 555,
+                                                                lineNumber: 581,
                                                                 columnNumber: 25
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                            lineNumber: 554,
+                                                            lineNumber: 580,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, report.id, true, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                    lineNumber: 514,
+                                                    lineNumber: 540,
                                                     columnNumber: 21
                                                 }, this))
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                            lineNumber: 512,
+                                            lineNumber: 538,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                    lineNumber: 500,
+                                    lineNumber: 526,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                lineNumber: 499,
+                                lineNumber: 525,
                                 columnNumber: 13
                             }, this),
                             filteredReports.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2817,7 +2837,7 @@ function HODDailyReports() {
                                         children: "📊"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                        lineNumber: 578,
+                                        lineNumber: 604,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2828,7 +2848,7 @@ function HODDailyReports() {
                                         children: "No reports found"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                        lineNumber: 579,
+                                        lineNumber: 605,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2836,19 +2856,19 @@ function HODDailyReports() {
                                         children: "Try selecting a different date or department."
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                        lineNumber: 582,
+                                        lineNumber: 608,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                lineNumber: 577,
+                                lineNumber: 603,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                        lineNumber: 498,
+                        lineNumber: 524,
                         columnNumber: 11
                     }, this) : /* Calendar View */ /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
                         className: "p-6",
@@ -2858,7 +2878,7 @@ function HODDailyReports() {
                                 subtitle: "Click on a date to filter reports"
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                lineNumber: 589,
+                                lineNumber: 615,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2879,12 +2899,12 @@ function HODDailyReports() {
                                                 children: day
                                             }, day, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 597,
+                                                lineNumber: 623,
                                                 columnNumber: 19
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                        lineNumber: 595,
+                                        lineNumber: 621,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2908,20 +2928,20 @@ function HODDailyReports() {
                                                                 children: day
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                lineNumber: 622,
+                                                                lineNumber: 648,
                                                                 columnNumber: 25
                                                             }, this),
                                                             hasReport && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                 className: "w-2 h-2 rounded-full bg-green-500"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                lineNumber: 626,
+                                                                lineNumber: 652,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 621,
+                                                        lineNumber: 647,
                                                         columnNumber: 23
                                                     }, this),
                                                     hasReport && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2941,7 +2961,7 @@ function HODDailyReports() {
                                                                     ]
                                                                 }, idx, true, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                    lineNumber: 633,
+                                                                    lineNumber: 659,
                                                                     columnNumber: 29
                                                                 }, this)),
                                                             dayReports.length > 2 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2953,37 +2973,37 @@ function HODDailyReports() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                lineNumber: 649,
+                                                                lineNumber: 675,
                                                                 columnNumber: 29
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 631,
+                                                        lineNumber: 657,
                                                         columnNumber: 25
                                                     }, this)
                                                 ]
                                             }, day, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 611,
+                                                lineNumber: 637,
                                                 columnNumber: 21
                                             }, this);
                                         })
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                        lineNumber: 603,
+                                        lineNumber: 629,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                lineNumber: 594,
+                                lineNumber: 620,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                        lineNumber: 588,
+                        lineNumber: 614,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3009,7 +3029,7 @@ function HODDailyReports() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 673,
+                                                lineNumber: 699,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -3020,13 +3040,13 @@ function HODDailyReports() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 676,
+                                                lineNumber: 702,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                        lineNumber: 672,
+                                        lineNumber: 698,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3040,7 +3060,7 @@ function HODDailyReports() {
                                                         children: "This Month"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 681,
+                                                        lineNumber: 707,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3048,13 +3068,13 @@ function HODDailyReports() {
                                                         children: deptReports.filter((r)=>r.date.startsWith('2024-12')).length
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 682,
+                                                        lineNumber: 708,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 680,
+                                                lineNumber: 706,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3065,7 +3085,7 @@ function HODDailyReports() {
                                                         children: "Pending Approval"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 688,
+                                                        lineNumber: 714,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -3073,13 +3093,13 @@ function HODDailyReports() {
                                                         children: pendingCount
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 689,
+                                                        lineNumber: 715,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 687,
+                                                lineNumber: 713,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3090,7 +3110,7 @@ function HODDailyReports() {
                                                         children: "Approved"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 693,
+                                                        lineNumber: 719,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -3098,13 +3118,13 @@ function HODDailyReports() {
                                                         children: approvedCount
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 694,
+                                                        lineNumber: 720,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 692,
+                                                lineNumber: 718,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3117,7 +3137,7 @@ function HODDailyReports() {
                                                                 children: "Completion Rate"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                lineNumber: 699,
+                                                                lineNumber: 725,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3127,13 +3147,13 @@ function HODDailyReports() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                lineNumber: 700,
+                                                                lineNumber: 726,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 698,
+                                                        lineNumber: 724,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3146,18 +3166,18 @@ function HODDailyReports() {
                                                             }
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                            lineNumber: 703,
+                                                            lineNumber: 729,
                                                             columnNumber: 23
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 702,
+                                                        lineNumber: 728,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 697,
+                                                lineNumber: 723,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3174,31 +3194,31 @@ function HODDailyReports() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 713,
+                                                lineNumber: 739,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                        lineNumber: 679,
+                                        lineNumber: 705,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, dept, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                lineNumber: 671,
+                                lineNumber: 697,
                                 columnNumber: 15
                             }, this);
                         })
                     }, void 0, false, {
                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                        lineNumber: 664,
+                        lineNumber: 690,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                lineNumber: 335,
+                lineNumber: 361,
                 columnNumber: 7
             }, this),
             isModalOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3214,7 +3234,7 @@ function HODDailyReports() {
                             onClick: handleModalClose
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                            lineNumber: 731,
+                            lineNumber: 757,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3235,7 +3255,7 @@ function HODDailyReports() {
                                                         children: "Create Daily Report"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 737,
+                                                        lineNumber: 763,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3243,7 +3263,7 @@ function HODDailyReports() {
                                                         children: "Add tasks completed today and plan for next day. You can submit for multiple departments at once."
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 740,
+                                                        lineNumber: 766,
                                                         columnNumber: 21
                                                     }, this),
                                                     sessionStorage.getItem(STORAGE_KEYS.REPORT_ENTRIES) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3251,13 +3271,13 @@ function HODDailyReports() {
                                                         children: "⚡ Draft saved from previous session"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 744,
+                                                        lineNumber: 770,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 736,
+                                                lineNumber: 762,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3266,13 +3286,13 @@ function HODDailyReports() {
                                                 children: "×"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 749,
+                                                lineNumber: 775,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                        lineNumber: 735,
+                                        lineNumber: 761,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
@@ -3286,7 +3306,7 @@ function HODDailyReports() {
                                                         children: "Select Departments"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 760,
+                                                        lineNumber: 786,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3300,13 +3320,13 @@ function HODDailyReports() {
                                                         children: "Select All"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 761,
+                                                        lineNumber: 787,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 759,
+                                                lineNumber: 785,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3326,18 +3346,18 @@ function HODDailyReports() {
                                                                 children: "✓"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                lineNumber: 786,
+                                                                lineNumber: 812,
                                                                 columnNumber: 64
                                                             }, this)
                                                         ]
                                                     }, dept, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 772,
+                                                        lineNumber: 798,
                                                         columnNumber: 23
                                                     }, this))
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 770,
+                                                lineNumber: 796,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3350,13 +3370,13 @@ function HODDailyReports() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 790,
+                                                lineNumber: 816,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                        lineNumber: 758,
+                                        lineNumber: 784,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
@@ -3370,7 +3390,7 @@ function HODDailyReports() {
                                                             children: "Report Date"
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                            lineNumber: 799,
+                                                            lineNumber: 825,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -3380,13 +3400,13 @@ function HODDailyReports() {
                                                             className: `${inputBase} bg-gray-100`
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                            lineNumber: 800,
+                                                            lineNumber: 826,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                    lineNumber: 798,
+                                                    lineNumber: 824,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3395,7 +3415,7 @@ function HODDailyReports() {
                                                             children: "Submitted By"
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                            lineNumber: 808,
+                                                            lineNumber: 834,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -3405,24 +3425,24 @@ function HODDailyReports() {
                                                             className: `${inputBase} bg-gray-100`
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                            lineNumber: 809,
+                                                            lineNumber: 835,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                    lineNumber: 807,
+                                                    lineNumber: 833,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                            lineNumber: 797,
+                                            lineNumber: 823,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                        lineNumber: 796,
+                                        lineNumber: 822,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3439,7 +3459,7 @@ function HODDailyReports() {
                                                         children: "Task Entries"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 822,
+                                                        lineNumber: 848,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3452,13 +3472,13 @@ function HODDailyReports() {
                                                         children: "+ Add Row"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                        lineNumber: 825,
+                                                        lineNumber: 851,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 821,
+                                                lineNumber: 847,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3476,7 +3496,7 @@ function HODDailyReports() {
                                                                         children: "S/N"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                        lineNumber: 839,
+                                                                        lineNumber: 865,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -3484,7 +3504,7 @@ function HODDailyReports() {
                                                                         children: "Name of Task"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                        lineNumber: 840,
+                                                                        lineNumber: 866,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -3492,7 +3512,7 @@ function HODDailyReports() {
                                                                         children: "Objective/Mission"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                        lineNumber: 841,
+                                                                        lineNumber: 867,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -3500,7 +3520,7 @@ function HODDailyReports() {
                                                                         children: "Target"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                        lineNumber: 842,
+                                                                        lineNumber: 868,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -3508,7 +3528,7 @@ function HODDailyReports() {
                                                                         children: "Next Day Task"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                        lineNumber: 843,
+                                                                        lineNumber: 869,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -3516,18 +3536,18 @@ function HODDailyReports() {
                                                                         children: "Action"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                        lineNumber: 844,
+                                                                        lineNumber: 870,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                lineNumber: 838,
+                                                                lineNumber: 864,
                                                                 columnNumber: 25
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                            lineNumber: 837,
+                                                            lineNumber: 863,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
@@ -3540,7 +3560,7 @@ function HODDailyReports() {
                                                                             children: index + 1
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                            lineNumber: 850,
+                                                                            lineNumber: 876,
                                                                             columnNumber: 29
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3560,12 +3580,12 @@ function HODDailyReports() {
                                                                                 }
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                                lineNumber: 852,
+                                                                                lineNumber: 878,
                                                                                 columnNumber: 31
                                                                             }, this)
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                            lineNumber: 851,
+                                                                            lineNumber: 877,
                                                                             columnNumber: 29
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3585,12 +3605,12 @@ function HODDailyReports() {
                                                                                 }
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                                lineNumber: 866,
+                                                                                lineNumber: 892,
                                                                                 columnNumber: 31
                                                                             }, this)
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                            lineNumber: 865,
+                                                                            lineNumber: 891,
                                                                             columnNumber: 29
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3610,12 +3630,12 @@ function HODDailyReports() {
                                                                                 }
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                                lineNumber: 880,
+                                                                                lineNumber: 906,
                                                                                 columnNumber: 31
                                                                             }, this)
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                            lineNumber: 879,
+                                                                            lineNumber: 905,
                                                                             columnNumber: 29
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3635,12 +3655,12 @@ function HODDailyReports() {
                                                                                 }
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                                lineNumber: 894,
+                                                                                lineNumber: 920,
                                                                                 columnNumber: 31
                                                                             }, this)
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                            lineNumber: 893,
+                                                                            lineNumber: 919,
                                                                             columnNumber: 29
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3653,34 +3673,34 @@ function HODDailyReports() {
                                                                                 children: "Remove"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                                lineNumber: 908,
+                                                                                lineNumber: 934,
                                                                                 columnNumber: 31
                                                                             }, this)
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                            lineNumber: 907,
+                                                                            lineNumber: 933,
                                                                             columnNumber: 29
                                                                         }, this)
                                                                     ]
                                                                 }, entry.id, true, {
                                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                                    lineNumber: 849,
+                                                                    lineNumber: 875,
                                                                     columnNumber: 27
                                                                 }, this))
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                            lineNumber: 847,
+                                                            lineNumber: 873,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                    lineNumber: 836,
+                                                    lineNumber: 862,
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 835,
+                                                lineNumber: 861,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3688,13 +3708,13 @@ function HODDailyReports() {
                                                 children: "* At least one task entry is required. Text areas expand automatically as you type."
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 925,
+                                                lineNumber: 951,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                        lineNumber: 820,
+                                        lineNumber: 846,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
@@ -3710,7 +3730,7 @@ function HODDailyReports() {
                                                             className: "w-4 h-4 rounded border-gray-300 text-blue-600"
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                            lineNumber: 934,
+                                                            lineNumber: 960,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3718,13 +3738,13 @@ function HODDailyReports() {
                                                             children: "Attach supporting documents"
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                            lineNumber: 935,
+                                                            lineNumber: 961,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                    lineNumber: 933,
+                                                    lineNumber: 959,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -3735,7 +3755,7 @@ function HODDailyReports() {
                                                             className: "w-4 h-4 rounded border-gray-300 text-blue-600"
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                            lineNumber: 938,
+                                                            lineNumber: 964,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3743,24 +3763,24 @@ function HODDailyReports() {
                                                             children: "Request urgent review"
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                            lineNumber: 939,
+                                                            lineNumber: 965,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                    lineNumber: 937,
+                                                    lineNumber: 963,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                            lineNumber: 932,
+                                            lineNumber: 958,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                        lineNumber: 931,
+                                        lineNumber: 957,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3777,57 +3797,56 @@ function HODDailyReports() {
                                                 children: "Cancel"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 946,
+                                                lineNumber: 972,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                                 type: "button",
                                                 onClick: handleSubmitReport,
+                                                disabled: submitting,
                                                 className: btnSolid,
                                                 style: {
-                                                    backgroundColor: "var(--accent-red)"
+                                                    backgroundColor: "var(--accent-red)",
+                                                    opacity: submitting ? 0.7 : 1
                                                 },
-                                                children: [
-                                                    "Submit Report",
-                                                    selectedDepartments.length > 1 ? `s (${selectedDepartments.length})` : ''
-                                                ]
-                                            }, void 0, true, {
+                                                children: submitting ? "Submitting..." : `Submit Report${selectedDepartments.length > 1 ? `s (${selectedDepartments.length})` : ''}`
+                                            }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                                lineNumber: 954,
+                                                lineNumber: 980,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                        lineNumber: 945,
+                                        lineNumber: 971,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                                lineNumber: 734,
+                                lineNumber: 760,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                            lineNumber: 733,
+                            lineNumber: 759,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                    lineNumber: 730,
+                    lineNumber: 756,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-                lineNumber: 729,
+                lineNumber: 755,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODDailyReports.jsx",
-        lineNumber: 334,
+        lineNumber: 360,
         columnNumber: 5
     }, this);
 }

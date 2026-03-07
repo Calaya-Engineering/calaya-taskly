@@ -4,11 +4,8 @@ module.exports = [
 
 __turbopack_context__.s([
     "default",
-    ()=>MDDashboardLayout,
-    "dynamic",
-    ()=>dynamic
+    ()=>MDDashboardLayout
 ]);
-const dynamic = "force-dynamic";
 function MDDashboardLayout({ children }) {
     return children;
 }

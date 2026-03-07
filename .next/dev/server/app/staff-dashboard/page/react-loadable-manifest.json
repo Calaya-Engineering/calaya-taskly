@@ -1,1 +1,10 @@
-{}
+{
+  "[project]/src/views/dashboards/StaffDashboard.tsx [app-client] (ecmascript, next/dynamic entry)": {
+    "id": "[project]/src/views/dashboards/StaffDashboard.tsx [app-client] (ecmascript, next/dynamic entry)",
+    "files": [
+      "static/chunks/src_cec18397._.js",
+      "static/chunks/node_modules_0e52b38c._.js",
+      "static/chunks/src_views_dashboards_StaffDashboard_tsx_8f8468b9._.js"
+    ]
+  }
+}

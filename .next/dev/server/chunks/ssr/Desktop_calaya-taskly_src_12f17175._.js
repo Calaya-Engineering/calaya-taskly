@@ -376,8 +376,10 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/node_modules/next/dist/client/app-dir/link.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/node_modules/next/navigation.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$contexts$2f$AuthContext$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/contexts/AuthContext.tsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$contexts$2f$BadgeContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/contexts/BadgeContext.jsx [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/lib/icons.jsx [app-ssr] (ecmascript)");
 "use client";
+;
 ;
 ;
 ;
@@ -390,6 +392,7 @@ function Layout({ children, menuItems, userRole }) {
     const [showLogoutModal, setShowLogoutModal] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
     const pathname = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["usePathname"])();
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRouter"])();
+    const { getBadge } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$contexts$2f$BadgeContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useBadges"])();
     const { isAuthenticated, loading, logout } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$contexts$2f$AuthContext$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useAuth"])();
     const handleLogoutClick = ()=>setShowLogoutModal(true);
     const handleConfirmLogout = ()=>{
@@ -468,23 +471,23 @@ function Layout({ children, menuItems, userRole }) {
                                                 size: 24
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 80,
+                                                lineNumber: 82,
                                                 columnNumber: 34
                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["MenuIcon"], {
                                                 size: 24
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 80,
+                                                lineNumber: 82,
                                                 columnNumber: 64
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                            lineNumber: 79,
+                                            lineNumber: 81,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 73,
+                                        lineNumber: 75,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -501,12 +504,12 @@ function Layout({ children, menuItems, userRole }) {
                                                     className: "h-9 w-auto object-contain object-left"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                    lineNumber: 87,
+                                                    lineNumber: 89,
                                                     columnNumber: 19
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 86,
+                                                lineNumber: 88,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -518,19 +521,19 @@ function Layout({ children, menuItems, userRole }) {
                                                 children: userRole
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 96,
+                                                lineNumber: 98,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 85,
+                                        lineNumber: 87,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 72,
+                                lineNumber: 74,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -544,28 +547,28 @@ function Layout({ children, menuItems, userRole }) {
                                     children: "Logout"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                    lineNumber: 108,
+                                    lineNumber: 110,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 106,
+                                lineNumber: 108,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                        lineNumber: 70,
+                        lineNumber: 72,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                    lineNumber: 69,
+                    lineNumber: 71,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                lineNumber: 68,
+                lineNumber: 70,
                 columnNumber: 7
             }, this),
             sidebarOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -574,7 +577,7 @@ function Layout({ children, menuItems, userRole }) {
                 "aria-hidden": "true"
             }, void 0, false, {
                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                lineNumber: 122,
+                lineNumber: 124,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("aside", {
@@ -612,12 +615,12 @@ function Layout({ children, menuItems, userRole }) {
                                                             children: label
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                            lineNumber: 155,
+                                                            lineNumber: 157,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 154,
+                                                        lineNumber: 156,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -650,7 +653,7 @@ function Layout({ children, menuItems, userRole }) {
                                                                         }
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 184,
+                                                                        lineNumber: 186,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -663,12 +666,12 @@ function Layout({ children, menuItems, userRole }) {
                                                                             children: item.icon
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                            lineNumber: 198,
+                                                                            lineNumber: 200,
                                                                             columnNumber: 35
                                                                         }, this) : item.icon
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 191,
+                                                                        lineNumber: 193,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -676,24 +679,28 @@ function Layout({ children, menuItems, userRole }) {
                                                                         children: item.label
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 203,
+                                                                        lineNumber: 205,
                                                                         columnNumber: 31
                                                                     }, this),
-                                                                    item.badge && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                        className: [
-                                                                            "ml-auto text-xs font-semibold px-2 py-1 rounded-full",
-                                                                            active ? "bg-white/15 text-white" : "bg-red-500 text-white"
-                                                                        ].join(" "),
-                                                                        children: item.badge
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 205,
-                                                                        columnNumber: 33
-                                                                    }, this)
+                                                                    (()=>{
+                                                                        const liveBadge = getBadge(path);
+                                                                        if (!liveBadge) return null;
+                                                                        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            className: [
+                                                                                "ml-auto text-xs font-semibold px-2 py-1 rounded-full",
+                                                                                active ? "bg-white/15 text-white" : "bg-red-500 text-white"
+                                                                            ].join(" "),
+                                                                            children: liveBadge
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
+                                                                            lineNumber: 210,
+                                                                            columnNumber: 35
+                                                                        }, this);
+                                                                    })()
                                                                 ]
                                                             }, item._idx, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                lineNumber: 177,
+                                                                lineNumber: 179,
                                                                 columnNumber: 29
                                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                 className: linkClass,
@@ -709,7 +716,7 @@ function Layout({ children, menuItems, userRole }) {
                                                                         }
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 217,
+                                                                        lineNumber: 223,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -722,12 +729,12 @@ function Layout({ children, menuItems, userRole }) {
                                                                             children: item.icon
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                            lineNumber: 231,
+                                                                            lineNumber: 237,
                                                                             columnNumber: 35
                                                                         }, this) : item.icon
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 224,
+                                                                        lineNumber: 230,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -735,41 +742,45 @@ function Layout({ children, menuItems, userRole }) {
                                                                         children: item.label
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 236,
+                                                                        lineNumber: 242,
                                                                         columnNumber: 31
                                                                     }, this),
-                                                                    item.badge && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                        className: [
-                                                                            "ml-auto text-xs font-semibold px-2 py-1 rounded-full",
-                                                                            active ? "bg-white/15 text-white" : "bg-red-500 text-white"
-                                                                        ].join(" "),
-                                                                        children: item.badge
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                        lineNumber: 238,
-                                                                        columnNumber: 33
-                                                                    }, this)
+                                                                    (()=>{
+                                                                        const liveBadge = getBadge(path);
+                                                                        if (!liveBadge) return null;
+                                                                        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            className: [
+                                                                                "ml-auto text-xs font-semibold px-2 py-1 rounded-full",
+                                                                                active ? "bg-white/15 text-white" : "bg-red-500 text-white"
+                                                                            ].join(" "),
+                                                                            children: liveBadge
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
+                                                                            lineNumber: 247,
+                                                                            columnNumber: 35
+                                                                        }, this);
+                                                                    })()
                                                                 ]
                                                             }, item._idx, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                lineNumber: 216,
+                                                                lineNumber: 222,
                                                                 columnNumber: 29
                                                             }, this);
                                                         })
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 159,
+                                                        lineNumber: 161,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, label, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 153,
+                                                lineNumber: 155,
                                                 columnNumber: 21
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 151,
+                                        lineNumber: 153,
                                         columnNumber: 17
                                     }, this);
                                 })(),
@@ -792,7 +803,7 @@ function Layout({ children, menuItems, userRole }) {
                                                         children: "Quick Stats"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 264,
+                                                        lineNumber: 274,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -800,13 +811,13 @@ function Layout({ children, menuItems, userRole }) {
                                                         children: "Today"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 267,
+                                                        lineNumber: 277,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 263,
+                                                lineNumber: 273,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -819,7 +830,7 @@ function Layout({ children, menuItems, userRole }) {
                                                                 children: s.label
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                lineNumber: 273,
+                                                                lineNumber: 283,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -830,18 +841,18 @@ function Layout({ children, menuItems, userRole }) {
                                                                 children: s.value
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                                lineNumber: 274,
+                                                                lineNumber: 284,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, s.label, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 272,
+                                                        lineNumber: 282,
                                                         columnNumber: 21
                                                     }, this))
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 270,
+                                                lineNumber: 280,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -857,12 +868,12 @@ function Layout({ children, menuItems, userRole }) {
                                                             }
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                            lineNumber: 286,
+                                                            lineNumber: 296,
                                                             columnNumber: 21
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 285,
+                                                        lineNumber: 295,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -870,30 +881,30 @@ function Layout({ children, menuItems, userRole }) {
                                                         children: "Progress overview"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                        lineNumber: 295,
+                                                        lineNumber: 305,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 284,
+                                                lineNumber: 294,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 259,
+                                        lineNumber: 269,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                    lineNumber: 258,
+                                    lineNumber: 268,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                            lineNumber: 140,
+                            lineNumber: 142,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -909,7 +920,7 @@ function Layout({ children, menuItems, userRole }) {
                                         children: "C"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 306,
+                                        lineNumber: 316,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -920,7 +931,7 @@ function Layout({ children, menuItems, userRole }) {
                                                 children: "Calaya"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 313,
+                                                lineNumber: 323,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -928,35 +939,35 @@ function Layout({ children, menuItems, userRole }) {
                                                 children: userRole
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                                lineNumber: 314,
+                                                lineNumber: 324,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 312,
+                                        lineNumber: 322,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 305,
+                                lineNumber: 315,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                            lineNumber: 304,
+                            lineNumber: 314,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                    lineNumber: 138,
+                    lineNumber: 140,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                lineNumber: 130,
+                lineNumber: 132,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
@@ -968,17 +979,17 @@ function Layout({ children, menuItems, userRole }) {
                         children: children
                     }, void 0, false, {
                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                        lineNumber: 324,
+                        lineNumber: 334,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                    lineNumber: 323,
+                    lineNumber: 333,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                lineNumber: 322,
+                lineNumber: 332,
                 columnNumber: 7
             }, this),
             showLogoutModal && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -990,7 +1001,7 @@ function Layout({ children, menuItems, userRole }) {
                         "aria-hidden": "true"
                     }, void 0, false, {
                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                        lineNumber: 331,
+                        lineNumber: 341,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1004,7 +1015,7 @@ function Layout({ children, menuItems, userRole }) {
                                 children: "System log out?"
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 337,
+                                lineNumber: 347,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1012,7 +1023,7 @@ function Layout({ children, menuItems, userRole }) {
                                 children: "Are you sure you want to log out of your session?"
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 340,
+                                lineNumber: 350,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1025,7 +1036,7 @@ function Layout({ children, menuItems, userRole }) {
                                         children: "No"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 344,
+                                        lineNumber: 354,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1038,31 +1049,31 @@ function Layout({ children, menuItems, userRole }) {
                                         children: "Yes"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                        lineNumber: 351,
+                                        lineNumber: 361,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                                lineNumber: 343,
+                                lineNumber: 353,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                        lineNumber: 336,
+                        lineNumber: 346,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-                lineNumber: 330,
+                lineNumber: 340,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/Desktop/calaya-taskly/src/components/Layout.jsx",
-        lineNumber: 59,
+        lineNumber: 61,
         columnNumber: 5
     }, this);
 }
@@ -1170,7 +1181,6 @@ const HODMenuItems = [
             lineNumber: 30,
             columnNumber: 68
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "18",
         group: "Tasks"
     },
     {
@@ -1181,7 +1191,6 @@ const HODMenuItems = [
             lineNumber: 31,
             columnNumber: 63
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Tasks"
     },
     {
@@ -1222,7 +1231,6 @@ const HODMenuItems = [
             lineNumber: 35,
             columnNumber: 61
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Tenders"
     },
     {
@@ -1233,7 +1241,6 @@ const HODMenuItems = [
             lineNumber: 36,
             columnNumber: 79
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Tenders"
     },
     {
@@ -1254,7 +1261,6 @@ const HODMenuItems = [
             lineNumber: 38,
             columnNumber: 65
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "4",
         group: "Workflow"
     },
     {
@@ -1265,7 +1271,6 @@ const HODMenuItems = [
             lineNumber: 39,
             columnNumber: 77
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "2",
         group: "Workflow"
     },
     {
@@ -1276,7 +1281,6 @@ const HODMenuItems = [
             lineNumber: 40,
             columnNumber: 73
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "8",
         group: "Account"
     },
     {
@@ -1309,7 +1313,6 @@ const MDMenuItems = [
             lineNumber: 46,
             columnNumber: 62
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "24",
         group: "Tasks"
     },
     {
@@ -1320,7 +1323,6 @@ const MDMenuItems = [
             lineNumber: 47,
             columnNumber: 61
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "8",
         group: "Tasks"
     },
     {
@@ -1331,7 +1333,6 @@ const MDMenuItems = [
             lineNumber: 48,
             columnNumber: 64
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Documents & Reports"
     },
     {
@@ -1352,7 +1353,6 @@ const MDMenuItems = [
             lineNumber: 50,
             columnNumber: 67
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "2",
         group: "Calendar"
     },
     {
@@ -1373,7 +1373,6 @@ const MDMenuItems = [
             lineNumber: 52,
             columnNumber: 78
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Tenders"
     },
     {
@@ -1394,7 +1393,6 @@ const MDMenuItems = [
             lineNumber: 54,
             columnNumber: 64
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "7",
         group: "Workflow"
     },
     {
@@ -1405,7 +1403,6 @@ const MDMenuItems = [
             lineNumber: 55,
             columnNumber: 76
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Workflow"
     },
     {
@@ -1416,7 +1413,6 @@ const MDMenuItems = [
             lineNumber: 56,
             columnNumber: 72
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "12",
         group: "Account"
     },
     {
@@ -1449,7 +1445,6 @@ const StaffMenuItems = [
             lineNumber: 62,
             columnNumber: 62
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "8",
         group: "Tasks"
     },
     {
@@ -1500,7 +1495,6 @@ const StaffMenuItems = [
             lineNumber: 67,
             columnNumber: 63
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Tenders"
     },
     {
@@ -1511,7 +1505,6 @@ const StaffMenuItems = [
             lineNumber: 68,
             columnNumber: 81
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Tenders"
     },
     {
@@ -1532,7 +1525,6 @@ const StaffMenuItems = [
             lineNumber: 70,
             columnNumber: 75
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Account"
     },
     {
@@ -1575,7 +1567,6 @@ const SecretaryMenuItems = [
             lineNumber: 77,
             columnNumber: 89
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "24",
         group: "Documents & Reports"
     },
     {
@@ -1586,7 +1577,6 @@ const SecretaryMenuItems = [
             lineNumber: 78,
             columnNumber: 85
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "45",
         group: "Documents & Reports"
     },
     {
@@ -1607,7 +1597,6 @@ const SecretaryMenuItems = [
             lineNumber: 80,
             columnNumber: 74
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Calendar"
     },
     {
@@ -1618,7 +1607,6 @@ const SecretaryMenuItems = [
             lineNumber: 81,
             columnNumber: 67
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "5",
         group: "Tenders"
     },
     {
@@ -1629,7 +1617,6 @@ const SecretaryMenuItems = [
             lineNumber: 82,
             columnNumber: 79
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "3",
         group: "Communications"
     },
     {
@@ -1640,7 +1627,6 @@ const SecretaryMenuItems = [
             lineNumber: 83,
             columnNumber: 79
         }, ("TURBOPACK compile-time value", void 0)),
-        badge: "12",
         group: "Account"
     },
     {
@@ -1686,14 +1672,18 @@ __turbopack_context__.s([
     ()=>HODEscalations
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
-// pages/dashboards/HOD/HODEscalations.jsx
+// views/dashboards/HOD/HODEscalations.jsx
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/node_modules/next/dist/client/app-dir/link.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$components$2f$Layout$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/components/Layout.jsx [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$utils$2f$menus$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/utils/menus.jsx [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/lib/icons.jsx [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$toast$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/lib/toast.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/lib/api.ts [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$hooks$2f$useSSE$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/calaya-taskly/src/hooks/useSSE.js [app-ssr] (ecmascript)");
 "use client";
+;
+;
 ;
 ;
 ;
@@ -1706,7 +1696,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$
         children: children
     }, void 0, false, {
         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-        lineNumber: 12,
+        lineNumber: 15,
         columnNumber: 3
     }, ("TURBOPACK compile-time value", void 0));
 const SectionTitle = ({ title, subtitle, action })=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1722,7 +1712,7 @@ const SectionTitle = ({ title, subtitle, action })=>/*#__PURE__*/ (0, __TURBOPAC
                         children: title
                     }, void 0, false, {
                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                        lineNumber: 18,
+                        lineNumber: 21,
                         columnNumber: 7
                     }, ("TURBOPACK compile-time value", void 0)),
                     subtitle ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1730,30 +1720,30 @@ const SectionTitle = ({ title, subtitle, action })=>/*#__PURE__*/ (0, __TURBOPAC
                         children: subtitle
                     }, void 0, false, {
                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                        lineNumber: 21,
+                        lineNumber: 24,
                         columnNumber: 19
                     }, ("TURBOPACK compile-time value", void 0)) : null
                 ]
             }, void 0, true, {
                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                lineNumber: 17,
+                lineNumber: 20,
                 columnNumber: 5
             }, ("TURBOPACK compile-time value", void 0)),
             action
         ]
     }, void 0, true, {
         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-        lineNumber: 16,
+        lineNumber: 19,
         columnNumber: 3
     }, ("TURBOPACK compile-time value", void 0));
 const Pill = ({ children, tone = "default" })=>{
-    const styles = tone === "danger" ? "bg-red-50 text-red-700 ring-red-100" : tone === "success" ? "bg-emerald-50 text-emerald-700 ring-emerald-100" : tone === "warn" ? "bg-amber-50 text-amber-800 ring-amber-100" : tone === "info" ? "bg-blue-50 text-blue-700 ring-blue-100" : "bg-gray-50 text-gray-700 ring-gray-100";
+    const styles = tone === "danger" ? "bg-red-50 text-red-700 ring-red-100" : tone === "success" ? "bg-emerald-50 text-emerald-700 ring-emerald-100" : tone === "warn" ? "bg-amber-50 text-amber-800 ring-amber-100" : tone === "info" ? "bg-blue-50 text-blue-700 ring-blue-100" : tone === "purple" ? "bg-purple-50 text-purple-700 ring-purple-100" : "bg-gray-50 text-gray-700 ring-gray-100";
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
         className: `inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`,
         children: children
     }, void 0, false, {
         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-        lineNumber: 39,
+        lineNumber: 44,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
@@ -1762,157 +1752,99 @@ const fmtDate = (iso)=>iso ? new Date(iso).toLocaleDateString(undefined, {
         month: "short",
         day: "numeric"
     }) : "Not set";
-const escalationsData = [
-    {
-        id: "ESC-001",
-        taskId: "TASK-2024-00127",
-        title: "Pipeline Safety Inspection Overdue",
-        type: "TASK_OVERDUE",
-        department: "Technical",
-        assignee: "Alex Johnson",
-        dueDate: "2024-12-10",
-        overdueDays: 5,
-        escalationLevel: "LEVEL_2",
-        status: "OVERDUE",
-        priority: "CRITICAL",
-        assignedTo: "HOD - Technical",
-        description: "Safety inspection report not submitted by deadline",
-        comments: 3,
-        lastReminder: "2024-12-12",
-        nextAction: "Escalate to MD if not completed by tomorrow",
-        actionRequired: true,
-        lastUpdate: "2024-12-14T16:30:00"
-    },
-    {
-        id: "ESC-002",
-        taskId: "TASK-2024-00128",
-        title: "Workshop Equipment Calibration",
-        type: "TASK_OVERDUE",
-        department: "Workshop",
-        assignee: "David Chen",
-        dueDate: "2024-12-08",
-        overdueDays: 7,
-        escalationLevel: "LEVEL_3",
-        status: "OVERDUE",
-        priority: "HIGH",
-        assignedTo: "MD",
-        description: "Equipment calibration overdue, affecting workshop operations",
-        comments: 5,
-        lastReminder: "2024-12-10",
-        nextAction: "Reassign task to backup technician",
-        actionRequired: true,
-        lastUpdate: "2024-12-14T14:15:00"
-    },
-    {
-        id: "ESC-003",
-        taskId: "TASK-2024-00129",
-        title: "Safety Training Completion",
-        type: "TASK_OVERDUE",
-        department: "Technical",
-        assignee: "Emma Wilson",
-        dueDate: "2024-12-05",
-        overdueDays: 10,
-        escalationLevel: "LEVEL_3",
-        status: "ESCALATED",
-        priority: "HIGH",
-        assignedTo: "MD",
-        description: "Mandatory safety training not completed by team",
-        comments: 2,
-        lastReminder: "2024-12-09",
-        nextAction: "Escalated to MD for disciplinary action",
-        actionRequired: false,
-        lastUpdate: "2024-12-13T11:45:00"
-    },
-    {
-        id: "ESC-004",
-        taskId: "TASK-2024-00130",
-        title: "Monthly Maintenance Report",
-        type: "REPORT_OVERDUE",
-        department: "Technical",
-        assignee: "Michael Brown",
-        dueDate: "2024-12-01",
-        overdueDays: 14,
-        escalationLevel: "LEVEL_3",
-        status: "RESOLVED",
-        priority: "MEDIUM",
-        assignedTo: "HOD - Technical",
-        description: "Monthly maintenance report submission overdue",
-        comments: 4,
-        lastReminder: "2024-12-05",
-        nextAction: "Task reassigned to deputy",
-        actionRequired: false,
-        lastUpdate: "2024-12-12T09:20:00"
-    },
-    {
-        id: "ESC-005",
-        taskId: "TASK-2024-00131",
-        title: "Budget Approval Pending",
-        type: "APPROVAL_OVERDUE",
-        department: "Workshop",
-        assignee: "HOD - Technical",
-        dueDate: "2024-12-13",
-        overdueDays: 2,
-        escalationLevel: "LEVEL_1",
-        status: "OVERDUE",
-        priority: "HIGH",
-        assignedTo: "HOD - Technical",
-        description: "Budget approval pending for workshop equipment purchase",
-        comments: 1,
-        lastReminder: "2024-12-14",
-        nextAction: "Send final reminder",
-        actionRequired: true,
-        lastUpdate: "2024-12-15T08:30:00"
-    },
-    {
-        id: "ESC-006",
-        taskId: "TASK-2024-00132",
-        title: "Project Documentation",
-        type: "DOCUMENT_OVERDUE",
-        department: "Technical",
-        assignee: "Sarah Taylor",
-        dueDate: "2024-12-11",
-        overdueDays: 4,
-        escalationLevel: "LEVEL_2",
-        status: "OVERDUE",
-        priority: "MEDIUM",
-        assignedTo: "HOD - Technical",
-        description: "Project documentation not updated as required",
-        comments: 2,
-        lastReminder: "2024-12-13",
-        nextAction: "Set meeting to review progress",
-        actionRequired: true,
-        lastUpdate: "2024-12-14T10:15:00"
-    },
-    {
-        id: "ESC-007",
-        taskId: "TASK-2024-00133",
-        title: "Quarterly Safety Audit",
-        type: "TASK_OVERDUE",
-        department: "HSE",
-        assignee: "John Miller",
-        dueDate: "2024-12-18",
-        overdueDays: -4,
-        escalationLevel: "LEVEL_1",
-        status: "AT_RISK",
-        priority: "CRITICAL",
-        assignedTo: "HOD - HSE",
-        description: "Safety audit approaching deadline",
-        comments: 2,
-        lastReminder: "2024-12-14",
-        nextAction: "Send reminder to team",
-        actionRequired: true,
-        lastUpdate: "2024-12-14T13:45:00"
-    }
-];
+const getStatusTone = (status)=>{
+    if (status === "OVERDUE") return "danger";
+    if (status === "ESCALATED") return "danger";
+    if (status === "AT_RISK") return "warn";
+    if (status === "RESOLVED") return "success";
+    return "default";
+};
+const getPriorityTone = (priority)=>{
+    if (priority === "CRITICAL" || priority === "URGENT") return "danger";
+    if (priority === "HIGH") return "warn";
+    if (priority === "MEDIUM") return "info";
+    return "default";
+};
+const getLevelTone = (level)=>{
+    if (level === "LEVEL_3") return "danger";
+    if (level === "LEVEL_2") return "warn";
+    if (level === "LEVEL_1") return "info";
+    return "default";
+};
+// Map a raw API task into the escalation shape expected by the UI.
+function mapTaskToEscalation(t) {
+    const now = Date.now();
+    const due = t.dueDate ? new Date(t.dueDate) : null;
+    const overdueDays = due ? Math.ceil((now - due.getTime()) / 86400000) : 0;
+    const status = t.escalated ? "ESCALATED" : overdueDays > 0 ? "OVERDUE" : "AT_RISK";
+    const escalationLevel = t.escalated ? "LEVEL_2" : overdueDays >= 7 ? "LEVEL_3" : overdueDays > 0 ? "LEVEL_2" : "LEVEL_1";
+    return {
+        id: `TSK-${t.id}`,
+        taskId: String(t.id),
+        dbId: t.id,
+        title: t.title || "Untitled Task",
+        type: "TASK",
+        department: t.department || "—",
+        assignee: t.assignments?.[0]?.user?.name || t.assignments?.[0]?.user?.email || "Unassigned",
+        dueDate: t.dueDate ? t.dueDate.split("T")[0] : null,
+        overdueDays,
+        escalationLevel,
+        status,
+        priority: t.priority || "MEDIUM",
+        assignedTo: t.escalated ? "MD" : "HOD",
+        description: t.description || "No description",
+        comments: 0,
+        lastReminder: null,
+        nextAction: t.escalated ? "Escalated to MD – awaiting resolution" : overdueDays > 0 ? "Requires immediate attention" : "Monitor progress",
+        actionRequired: !t.escalated && overdueDays >= 0,
+        lastUpdate: t.updatedAt || t.createdAt
+    };
+}
 function HODEscalations() {
+    const [escalationsData, setEscalationsData] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(true);
     const [selectedStatus, setSelectedStatus] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("all");
     const [selectedLevel, setSelectedLevel] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("all");
     const [selectedDepartment, setSelectedDepartment] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("all");
     const [searchQuery, setSearchQuery] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
-    const [view, setView] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("cards"); // cards or table
+    const [view, setView] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("cards"); // cards | table
+    const fetchEscalations = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useCallback"])(async ()=>{
+        try {
+            const res = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["fetchWithAuth"])("/api/tasks?limit=200");
+            if (res.ok) {
+                const tasks = await res.json();
+                const now = Date.now();
+                // Include escalated tasks and tasks due within 3 days (at-risk / overdue)
+                const relevant = (Array.isArray(tasks) ? tasks : []).filter((t)=>{
+                    if (t.status === "COMPLETED") return false;
+                    if (t.escalated) return true;
+                    const due = t.dueDate ? new Date(t.dueDate) : null;
+                    if (!due) return false;
+                    const diffDays = Math.ceil((due.getTime() - now) / 86400000);
+                    return diffDays <= 3;
+                });
+                setEscalationsData(relevant.map(mapTaskToEscalation));
+            }
+        } catch (e) {
+            console.error("Failed to fetch escalations:", e);
+        } finally{
+            setLoading(false);
+        }
+    }, []);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
+        fetchEscalations();
+    }, [
+        fetchEscalations
+    ]);
+    // Real-time updates
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$hooks$2f$useSSE$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useSSE"])("/api/tasks/events", (ev)=>{
+        if (ev.type?.startsWith("task:")) fetchEscalations();
+    });
     const departments = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useMemo"])(()=>[
             ...new Set(escalationsData.map((e)=>e.department))
-        ], []);
+        ], [
+        escalationsData
+    ]);
     const filteredEscalations = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useMemo"])(()=>{
         const query = searchQuery.trim().toLowerCase();
         return escalationsData.filter((escalation)=>{
@@ -1923,6 +1855,7 @@ function HODEscalations() {
             return matchesStatus && matchesLevel && matchesDept && matchesSearch;
         });
     }, [
+        escalationsData,
         selectedStatus,
         selectedLevel,
         selectedDepartment,
@@ -1932,9 +1865,9 @@ function HODEscalations() {
         const total = escalationsData.length;
         const overdue = escalationsData.filter((e)=>e.status === "OVERDUE").length;
         const atRisk = escalationsData.filter((e)=>e.status === "AT_RISK").length;
-        const escalated = escalationsData.filter((e)=>e.escalationLevel === "LEVEL_3").length;
+        const escalated = escalationsData.filter((e)=>e.status === "ESCALATED").length;
         const actionRequired = escalationsData.filter((e)=>e.actionRequired).length;
-        const avgOverdue = Math.round(escalationsData.filter((e)=>e.overdueDays > 0).reduce((sum, e)=>sum + e.overdueDays, 0) / overdue || 0);
+        const avgOverdue = total > 0 ? Math.round(escalationsData.reduce((sum, e)=>sum + Math.max(0, e.overdueDays), 0) / total) : 0;
         return {
             total,
             overdue,
@@ -1943,85 +1876,11 @@ function HODEscalations() {
             actionRequired,
             avgOverdue
         };
-    }, []);
-    const getStatusTone = (status)=>{
-        switch(status){
-            case "OVERDUE":
-                return "danger";
-            case "AT_RISK":
-                return "warn";
-            case "ESCALATED":
-                return "danger";
-            case "RESOLVED":
-                return "success";
-            default:
-                return "default";
-        }
-    };
-    const getLevelTone = (level)=>{
-        switch(level){
-            case "LEVEL_3":
-                return "danger";
-            case "LEVEL_2":
-                return "warn";
-            case "LEVEL_1":
-                return "info";
-            default:
-                return "default";
-        }
-    };
-    const getLevelLabel = (level)=>{
-        switch(level){
-            case "LEVEL_3":
-                return "Critical (MD)";
-            case "LEVEL_2":
-                return "Escalated to MD";
-            case "LEVEL_1":
-                return "Warning Stage";
-            default:
-                return level;
-        }
-    };
-    const getPriorityTone = (priority)=>{
-        switch(priority){
-            case "CRITICAL":
-                return "danger";
-            case "HIGH":
-                return "warn";
-            case "MEDIUM":
-                return "info";
-            default:
-                return "success";
-        }
-    };
-    const getTypeIconKey = (type)=>{
-        switch(type){
-            case "TASK_OVERDUE":
-                return "task";
-            case "REPORT_OVERDUE":
-                return "chart";
-            case "APPROVAL_OVERDUE":
-                return "check";
-            case "DOCUMENT_OVERDUE":
-                return "document";
-            default:
-                return "warning";
-        }
-    };
+    }, [
+        escalationsData
+    ]);
     const handleReassign = (id)=>{
-        __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$toast$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].info(`Reassigning escalation ${id}`);
-    };
-    const handleExtend = (id)=>{
-        const newDate = prompt('Enter new deadline (YYYY-MM-DD):');
-        if (newDate) {
-            __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$toast$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].info(`Deadline extended to ${newDate} for escalation ${id}`);
-        }
-    };
-    const handleResolve = (id)=>{
-        __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$toast$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].success(`Marking escalation ${id} as resolved`);
-    };
-    const handleEscalate = (id)=>{
-        __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$toast$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].info(`Escalating ${id} to MD`);
+        __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$toast$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].info(`Reassign action for escalation ${id} — connect to your API.`);
     };
     const clearFilters = ()=>{
         setSelectedStatus("all");
@@ -2041,7 +1900,7 @@ function HODEscalations() {
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "p-6 md:p-8",
                             style: {
-                                background: "linear-gradient(135deg, rgba(44,75,155,0.10) 0%, rgba(109,198,223,0.18) 50%, rgba(237,50,55,0.06) 100%)"
+                                background: "linear-gradient(135deg, rgba(237,50,55,0.08) 0%, rgba(44,75,155,0.10) 50%, rgba(109,198,223,0.12) 100%)"
                             },
                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5",
@@ -2052,24 +1911,24 @@ function HODEscalations() {
                                                 className: "flex flex-wrap items-center gap-2 mb-2",
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
-                                                        children: "Escalations & Overdue"
+                                                        children: "Escalations Center"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 338,
+                                                        lineNumber: 217,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
-                                                        tone: overview.overdue > 0 ? "danger" : "success",
+                                                        tone: "danger",
                                                         children: [
                                                             overview.overdue,
                                                             " Overdue"
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 339,
+                                                        lineNumber: 218,
                                                         columnNumber: 19
                                                     }, this),
-                                                    overview.atRisk > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
                                                         tone: "warn",
                                                         children: [
                                                             overview.atRisk,
@@ -2077,24 +1936,35 @@ function HODEscalations() {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 340,
-                                                        columnNumber: 43
+                                                        lineNumber: 219,
+                                                        columnNumber: 19
                                                     }, this),
-                                                    overview.actionRequired > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
+                                                    overview.escalated > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
                                                         tone: "danger",
+                                                        children: [
+                                                            overview.escalated,
+                                                            " Escalated"
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                        lineNumber: 221,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
+                                                        tone: "info",
                                                         children: [
                                                             overview.actionRequired,
                                                             " Need Action"
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 341,
-                                                        columnNumber: 51
+                                                        lineNumber: 223,
+                                                        columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                lineNumber: 337,
+                                                lineNumber: 216,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
@@ -2105,112 +1975,89 @@ function HODEscalations() {
                                                 children: "Escalations & Overdue Tasks"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                lineNumber: 344,
+                                                lineNumber: 225,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                 className: "text-gray-600 mt-2 max-w-2xl",
-                                                children: "Monitor and resolve escalated tasks and overdue assignments in your department"
+                                                children: "Monitor and manage overdue tasks, at-risk items, and escalations across your departments."
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                lineNumber: 347,
+                                                lineNumber: 228,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                        lineNumber: 336,
+                                        lineNumber: 215,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "flex flex-col sm:flex-row gap-3",
                                         children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "flex w-full sm:w-auto gap-2",
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                        className: `flex-1 sm:flex-none px-4 py-3 rounded-2xl font-semibold border transition ${view === "cards" ? "bg-white" : "bg-gray-50"}`,
-                                                        style: {
-                                                            borderColor: "rgba(109, 198, 223, 0.7)",
-                                                            color: "var(--primary-blue)"
-                                                        },
-                                                        onClick: ()=>setView("cards"),
-                                                        children: "Cards"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 354,
-                                                        columnNumber: 19
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                        className: `flex-1 sm:flex-none px-4 py-3 rounded-2xl font-semibold border transition ${view === "table" ? "bg-white" : "bg-gray-50"}`,
-                                                        style: {
-                                                            borderColor: "rgba(109, 198, 223, 0.7)",
-                                                            color: "var(--primary-blue)"
-                                                        },
-                                                        onClick: ()=>setView("table"),
-                                                        children: "Table"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 362,
-                                                        columnNumber: 19
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                lineNumber: 353,
-                                                columnNumber: 17
-                                            }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                                 onClick: clearFilters,
                                                 className: "w-full sm:w-auto px-5 py-3 rounded-2xl font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition",
                                                 style: {
-                                                    borderColor: "rgba(109, 198, 223, 0.7)",
+                                                    borderColor: "rgba(109,198,223,0.7)",
                                                     color: "var(--primary-blue)"
                                                 },
                                                 children: "Clear Filters"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                lineNumber: 371,
+                                                lineNumber: 234,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                onClick: ()=>fetchEscalations(),
+                                                className: "w-full sm:w-auto px-5 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition",
+                                                style: {
+                                                    backgroundColor: "var(--primary-blue)"
+                                                },
+                                                children: "Refresh"
+                                            }, void 0, false, {
+                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                lineNumber: 241,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                        lineNumber: 352,
+                                        lineNumber: 233,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                lineNumber: 335,
+                                lineNumber: 214,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                            lineNumber: 328,
+                            lineNumber: 207,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "grid grid-cols-1 md:grid-cols-4 gap-3 p-4 md:p-5 bg-white border-t border-gray-200/70",
+                            className: "grid grid-cols-2 md:grid-cols-4 gap-3 p-4 md:p-5 bg-white border-t border-gray-200/70",
                             children: [
                                 {
-                                    label: "Total Escalations",
+                                    label: "Total Items",
                                     value: overview.total,
                                     tone: "default"
                                 },
                                 {
                                     label: "Overdue",
                                     value: overview.overdue,
-                                    tone: overview.overdue ? "danger" : "success"
+                                    tone: overview.overdue > 0 ? "danger" : "success"
                                 },
                                 {
-                                    label: "Need Action",
-                                    value: overview.actionRequired,
-                                    tone: overview.actionRequired ? "danger" : "success"
+                                    label: "At Risk",
+                                    value: overview.atRisk,
+                                    tone: overview.atRisk > 0 ? "warn" : "success"
                                 },
                                 {
                                     label: "Avg Overdue Days",
-                                    value: overview.avgOverdue || 0,
+                                    value: `${overview.avgOverdue}d`,
                                     tone: "info"
                                 }
                             ].map((s)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2224,7 +2071,7 @@ function HODEscalations() {
                                                     children: s.label
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                    lineNumber: 392,
+                                                    lineNumber: 262,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
@@ -2232,13 +2079,13 @@ function HODEscalations() {
                                                     children: "Live"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                    lineNumber: 393,
+                                                    lineNumber: 263,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                            lineNumber: 391,
+                                            lineNumber: 261,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2249,125 +2096,57 @@ function HODEscalations() {
                                             children: s.value
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                            lineNumber: 395,
+                                            lineNumber: 265,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, s.label, true, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                    lineNumber: 390,
+                                    lineNumber: 260,
                                     columnNumber: 15
                                 }, this))
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                            lineNumber: 383,
+                            lineNumber: 253,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                    lineNumber: 327,
+                    lineNumber: 206,
                     columnNumber: 9
-                }, this),
-                overview.actionRequired > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
-                    className: "border-red-200 bg-red-50/30 overflow-hidden",
-                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "p-4 flex items-center justify-between",
-                        children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "flex items-center gap-3",
-                                children: [
-                                    (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["getIconByKey"])("alert", "w-6 h-6"),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                                className: "font-extrabold text-red-800",
-                                                children: "Immediate Action Required!"
-                                            }, void 0, false, {
-                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                lineNumber: 410,
-                                                columnNumber: 19
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                className: "text-red-600 text-sm",
-                                                children: [
-                                                    overview.actionRequired,
-                                                    " item(s) require your immediate attention"
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                lineNumber: 411,
-                                                columnNumber: 19
-                                            }, this)
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                        lineNumber: 409,
-                                        columnNumber: 17
-                                    }, this)
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                lineNumber: 407,
-                                columnNumber: 15
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                onClick: ()=>setSelectedStatus("OVERDUE"),
-                                className: "px-4 py-2 rounded-xl font-semibold text-sm bg-red-500 text-white hover:bg-red-600 transition",
-                                children: "View Items"
-                            }, void 0, false, {
-                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                lineNumber: 414,
-                                columnNumber: 15
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                        lineNumber: 406,
-                        columnNumber: 13
-                    }, this)
-                }, void 0, false, {
-                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                    lineNumber: 405,
-                    columnNumber: 11
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
                     className: "p-6",
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(SectionTitle, {
                             title: "Filters",
-                            subtitle: "Filter escalations by status, level, department, and search",
+                            subtitle: "Filter escalations by status, level, and department",
                             action: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "text-sm text-gray-500",
+                                className: "flex items-center gap-2",
                                 children: [
-                                    "Showing ",
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        className: "font-semibold text-gray-800",
-                                        children: filteredEscalations.length
-                                    }, void 0, false, {
+                                    "cards",
+                                    "table"
+                                ].map((v)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        onClick: ()=>setView(v),
+                                        className: `px-3.5 py-2 rounded-2xl text-sm font-semibold ring-1 transition ${view === v ? "text-white ring-transparent" : "bg-gray-50 text-gray-700 ring-black/5 hover:bg-gray-100"}`,
+                                        style: view === v ? {
+                                            backgroundColor: "var(--primary-blue)"
+                                        } : {},
+                                        children: v === "cards" ? "Cards" : "Table"
+                                    }, v, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                        lineNumber: 431,
-                                        columnNumber: 25
-                                    }, void 0),
-                                    " of",
-                                    " ",
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        className: "font-semibold text-gray-800",
-                                        children: escalationsData.length
-                                    }, void 0, false, {
-                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                        lineNumber: 432,
-                                        columnNumber: 17
-                                    }, void 0)
-                                ]
-                            }, void 0, true, {
+                                        lineNumber: 282,
+                                        columnNumber: 19
+                                    }, void 0))
+                            }, void 0, false, {
                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                lineNumber: 430,
+                                lineNumber: 279,
                                 columnNumber: 15
                             }, void 0)
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                            lineNumber: 426,
+                            lineNumber: 275,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2380,7 +2159,7 @@ function HODEscalations() {
                                             children: "Status"
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                            lineNumber: 439,
+                                            lineNumber: 298,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -2393,23 +2172,7 @@ function HODEscalations() {
                                                     children: "All Status"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                    lineNumber: 445,
-                                                    columnNumber: 17
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                                    value: "OVERDUE",
-                                                    children: "Overdue"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                    lineNumber: 446,
-                                                    columnNumber: 17
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                                    value: "AT_RISK",
-                                                    children: "At Risk"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                    lineNumber: 447,
+                                                    lineNumber: 304,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2417,7 +2180,23 @@ function HODEscalations() {
                                                     children: "Escalated"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                    lineNumber: 448,
+                                                    lineNumber: 305,
+                                                    columnNumber: 17
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                    value: "OVERDUE",
+                                                    children: "Overdue"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                    lineNumber: 306,
+                                                    columnNumber: 17
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                    value: "AT_RISK",
+                                                    children: "At Risk"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                    lineNumber: 307,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2425,19 +2204,19 @@ function HODEscalations() {
                                                     children: "Resolved"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                    lineNumber: 449,
+                                                    lineNumber: 308,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                            lineNumber: 440,
+                                            lineNumber: 299,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                    lineNumber: 438,
+                                    lineNumber: 297,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2447,7 +2226,7 @@ function HODEscalations() {
                                             children: "Escalation Level"
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                            lineNumber: 454,
+                                            lineNumber: 313,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -2460,43 +2239,43 @@ function HODEscalations() {
                                                     children: "All Levels"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                    lineNumber: 460,
-                                                    columnNumber: 17
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                                    value: "LEVEL_3",
-                                                    children: "Level 3 (Critical - MD)"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                    lineNumber: 461,
-                                                    columnNumber: 17
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                                    value: "LEVEL_2",
-                                                    children: "Level 2 (Escalated to MD)"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                    lineNumber: 462,
+                                                    lineNumber: 319,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
                                                     value: "LEVEL_1",
-                                                    children: "Level 1 (Warning)"
+                                                    children: "Level 1 – At Risk"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                    lineNumber: 463,
+                                                    lineNumber: 320,
+                                                    columnNumber: 17
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                    value: "LEVEL_2",
+                                                    children: "Level 2 – Overdue"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                    lineNumber: 321,
+                                                    columnNumber: 17
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                    value: "LEVEL_3",
+                                                    children: "Level 3 – Critical"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                    lineNumber: 322,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                            lineNumber: 455,
+                                            lineNumber: 314,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                    lineNumber: 453,
+                                    lineNumber: 312,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2506,7 +2285,7 @@ function HODEscalations() {
                                             children: "Department"
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                            lineNumber: 468,
+                                            lineNumber: 327,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -2519,27 +2298,27 @@ function HODEscalations() {
                                                     children: "All Departments"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                    lineNumber: 474,
+                                                    lineNumber: 333,
                                                     columnNumber: 17
                                                 }, this),
-                                                departments.map((dept)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                                        value: dept,
-                                                        children: dept
-                                                    }, dept, false, {
+                                                departments.map((d)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                        value: d,
+                                                        children: d
+                                                    }, d, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 476,
+                                                        lineNumber: 335,
                                                         columnNumber: 19
                                                     }, this))
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                            lineNumber: 469,
+                                            lineNumber: 328,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                    lineNumber: 467,
+                                    lineNumber: 326,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2549,7 +2328,7 @@ function HODEscalations() {
                                             children: "Search"
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                            lineNumber: 482,
+                                            lineNumber: 341,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2558,125 +2337,44 @@ function HODEscalations() {
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                     type: "text",
                                                     className: "w-full pl-10 pr-3 py-2.5 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100",
-                                                    placeholder: "Search by ID, title, assignee...",
+                                                    placeholder: "Search tasks...",
                                                     value: searchQuery,
                                                     onChange: (e)=>setSearchQuery(e.target.value)
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                    lineNumber: 484,
+                                                    lineNumber: 343,
                                                     columnNumber: 17
                                                 }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SearchIcon"], {
-                                                    className: "absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    className: "absolute left-3 top-1/2 -translate-y-1/2 text-gray-400",
+                                                    children: "🔎"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                    lineNumber: 491,
+                                                    lineNumber: 350,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                            lineNumber: 483,
+                                            lineNumber: 342,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                    lineNumber: 481,
+                                    lineNumber: 340,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                            lineNumber: 437,
-                            columnNumber: 11
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "mt-4 flex flex-wrap gap-2",
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                    onClick: ()=>{
-                                        setSelectedStatus("OVERDUE");
-                                        setSelectedLevel("all");
-                                    },
-                                    className: "px-3.5 py-2 rounded-2xl text-sm font-semibold border bg-red-50 text-red-700 hover:bg-red-100 transition",
-                                    children: [
-                                        (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["getIconByKey"])("clock", "w-4 h-4 inline-block mr-1 align-middle"),
-                                        " Overdue Only"
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                    lineNumber: 498,
-                                    columnNumber: 13
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                    onClick: ()=>{
-                                        setSelectedStatus("AT_RISK");
-                                        setSelectedLevel("all");
-                                    },
-                                    className: "px-3.5 py-2 rounded-2xl text-sm font-semibold border bg-amber-50 text-amber-800 hover:bg-amber-100 transition",
-                                    children: [
-                                        (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["getIconByKey"])("warning", "w-4 h-4 inline-block mr-1 align-middle"),
-                                        " At Risk Only"
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                    lineNumber: 507,
-                                    columnNumber: 13
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                    onClick: ()=>{
-                                        setSelectedStatus("all");
-                                        setSelectedLevel("LEVEL_3");
-                                    },
-                                    className: "px-3.5 py-2 rounded-2xl text-sm font-semibold border bg-red-50 text-red-700 hover:bg-red-100 transition",
-                                    children: [
-                                        (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["getIconByKey"])("briefcase", "w-4 h-4 inline-block mr-1 align-middle"),
-                                        " Critical (MD)"
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                    lineNumber: 516,
-                                    columnNumber: 13
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                    onClick: ()=>{
-                                        setSelectedStatus("all");
-                                        setSelectedLevel("all");
-                                        setSelectedDepartment("Technical");
-                                    },
-                                    className: "px-3.5 py-2 rounded-2xl text-sm font-semibold border bg-blue-50 text-blue-700 hover:bg-blue-100 transition",
-                                    children: [
-                                        (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["getIconByKey"])("settings", "w-4 h-4 inline-block mr-1 align-middle"),
-                                        " Technical Dept"
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                    lineNumber: 525,
-                                    columnNumber: 13
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                    onClick: clearFilters,
-                                    className: "px-3.5 py-2 rounded-2xl text-sm font-semibold border bg-white hover:bg-gray-50 transition",
-                                    children: [
-                                        (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["getIconByKey"])("refresh", "w-4 h-4 inline-block mr-1 align-middle"),
-                                        " Clear All"
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                    lineNumber: 535,
-                                    columnNumber: 13
-                                }, this)
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                            lineNumber: 497,
+                            lineNumber: 296,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                    lineNumber: 425,
+                    lineNumber: 274,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
@@ -2684,10 +2382,10 @@ function HODEscalations() {
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(SectionTitle, {
                             title: "Escalation Workflow",
-                            subtitle: "Current status of escalation levels"
+                            subtitle: "How tasks are escalated to higher management"
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                            lineNumber: 546,
+                            lineNumber: 358,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2695,944 +2393,807 @@ function HODEscalations() {
                             children: [
                                 {
                                     level: "Level 1",
-                                    label: "Staff → HOD",
-                                    count: escalationsData.filter((e)=>e.escalationLevel === "LEVEL_1").length,
-                                    color: "var(--primary-blue)",
-                                    bg: "bg-blue-50",
-                                    border: "border-blue-200"
+                                    label: "At Risk (≤3 days)",
+                                    color: "var(--secondary-blue)",
+                                    desc: "Task approaching deadline. HOD monitors."
                                 },
                                 {
                                     level: "Level 2",
-                                    label: "HOD → MD",
-                                    count: escalationsData.filter((e)=>e.escalationLevel === "LEVEL_2").length,
-                                    color: "#F97316",
-                                    bg: "bg-orange-50",
-                                    border: "border-orange-200"
+                                    label: "Overdue (1–6 days)",
+                                    color: "#F59E0B",
+                                    desc: "Task missed deadline. HOD action required."
                                 },
                                 {
                                     level: "Level 3",
-                                    label: "Critical",
-                                    count: escalationsData.filter((e)=>e.escalationLevel === "LEVEL_3").length,
-                                    color: "#EF4444",
-                                    bg: "bg-red-50",
-                                    border: "border-red-200"
+                                    label: "Critical (7+ days)",
+                                    color: "var(--accent-red)",
+                                    desc: "Escalated to MD. Executive intervention needed."
                                 }
-                            ].map((level, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: `p-5 rounded-2xl border ${level.border} ${level.bg} text-center`,
+                            ].map((w)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "p-4 rounded-2xl border border-gray-200/70 flex gap-4 items-start",
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "text-3xl font-extrabold mb-2",
+                                            className: "w-10 h-10 rounded-2xl flex items-center justify-center text-white font-bold shrink-0",
                                             style: {
-                                                color: level.color
+                                                backgroundColor: w.color
                                             },
-                                            children: index + 1
+                                            children: w.level.split(" ")[1]
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                            lineNumber: 555,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                            className: "font-extrabold",
-                                            style: {
-                                                color: level.color
-                                            },
-                                            children: level.level
-                                        }, void 0, false, {
-                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                            lineNumber: 556,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                            className: "text-sm text-gray-600 mt-1",
-                                            children: level.label
-                                        }, void 0, false, {
-                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                            lineNumber: 557,
+                                            lineNumber: 366,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "mt-3 text-2xl font-extrabold",
-                                            style: {
-                                                color: level.color
-                                            },
-                                            children: level.count
-                                        }, void 0, false, {
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "font-extrabold text-sm",
+                                                    style: {
+                                                        color: "var(--primary-blue)"
+                                                    },
+                                                    children: [
+                                                        w.level,
+                                                        " – ",
+                                                        w.label
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                    lineNumber: 373,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "text-xs text-gray-500 mt-1",
+                                                    children: w.desc
+                                                }, void 0, false, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                    lineNumber: 374,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                            lineNumber: 558,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                            className: "text-xs text-gray-500 mt-1",
-                                            children: "items at this level"
-                                        }, void 0, false, {
-                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                            lineNumber: 561,
+                                            lineNumber: 372,
                                             columnNumber: 17
                                         }, this)
                                     ]
-                                }, index, true, {
+                                }, w.level, true, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                    lineNumber: 554,
+                                    lineNumber: 365,
                                     columnNumber: 15
                                 }, this))
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                            lineNumber: 548,
+                            lineNumber: 359,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                    lineNumber: 545,
+                    lineNumber: 357,
                     columnNumber: 9
                 }, this),
-                view === "cards" ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "grid grid-cols-1 xl:grid-cols-2 gap-6",
+                loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
+                    className: "p-12",
+                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "flex flex-col items-center justify-center gap-4",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "w-12 h-12 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin"
+                            }, void 0, false, {
+                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                lineNumber: 385,
+                                columnNumber: 15
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                className: "text-gray-500 font-semibold",
+                                children: "Loading real-time escalation data..."
+                            }, void 0, false, {
+                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                lineNumber: 386,
+                                columnNumber: 15
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                        lineNumber: 384,
+                        columnNumber: 13
+                    }, this)
+                }, void 0, false, {
+                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                    lineNumber: 383,
+                    columnNumber: 11
+                }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
                     children: [
-                        filteredEscalations.map((escalation)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
-                                className: `p-6 hover:-translate-y-0.5 transition-all ${escalation.actionRequired ? "border-l-4" : ""}`,
-                                style: escalation.actionRequired ? {
-                                    borderLeftColor: "var(--accent-red)"
-                                } : {},
+                        view === "cards" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "grid grid-cols-1 lg:grid-cols-2 gap-5",
+                            children: filteredEscalations.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "lg:col-span-2 p-12 text-center",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "flex items-start justify-between gap-4 mb-4",
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "flex flex-wrap items-center gap-2",
-                                                        children: [
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                className: "text-sm font-extrabold",
-                                                                style: {
-                                                                    color: "var(--primary-blue)"
-                                                                },
-                                                                children: escalation.id
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                                lineNumber: 576,
-                                                                columnNumber: 23
-                                                            }, this),
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
-                                                                tone: getStatusTone(escalation.status),
-                                                                children: escalation.status
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                                lineNumber: 579,
-                                                                columnNumber: 23
-                                                            }, this),
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
-                                                                tone: getLevelTone(escalation.escalationLevel),
-                                                                children: getLevelLabel(escalation.escalationLevel)
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                                lineNumber: 580,
-                                                                columnNumber: 23
-                                                            }, this)
-                                                        ]
-                                                    }, void 0, true, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 575,
-                                                        columnNumber: 21
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                                        className: "mt-3 text-lg font-extrabold tracking-tight",
-                                                        style: {
-                                                            color: "var(--primary-blue)"
-                                                        },
-                                                        children: escalation.title
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 585,
-                                                        columnNumber: 21
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                        className: "text-sm text-gray-600 mt-1",
-                                                        children: escalation.description
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 588,
-                                                        columnNumber: 21
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                        className: "text-xs text-gray-500 mt-2",
-                                                        children: [
-                                                            "Task: ",
-                                                            escalation.taskId
-                                                        ]
-                                                    }, void 0, true, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 589,
-                                                        columnNumber: 21
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                lineNumber: 574,
-                                                columnNumber: 19
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "w-12 h-12 rounded-2xl flex items-center justify-center  shrink-0",
-                                                style: {
-                                                    backgroundColor: escalation.actionRequired ? "rgba(237, 50, 55, 0.1)" : "rgba(109, 198, 223, 0.1)"
-                                                },
-                                                children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["getIconByKey"])(getTypeIconKey(escalation.type), "w-6 h-6")
-                                            }, void 0, false, {
-                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                lineNumber: 592,
-                                                columnNumber: 19
-                                            }, this)
-                                        ]
-                                    }, void 0, true, {
+                                        className: "text-4xl mb-3",
+                                        children: "✅"
+                                    }, void 0, false, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                        lineNumber: 573,
-                                        columnNumber: 17
+                                        lineNumber: 396,
+                                        columnNumber: 21
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "grid grid-cols-2 gap-3",
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "rounded-xl border border-gray-200/70 p-3",
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                        className: "text-xs text-gray-500",
-                                                        children: "Department"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 602,
-                                                        columnNumber: 21
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                        className: "text-sm font-semibold mt-1",
-                                                        children: escalation.department
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 603,
-                                                        columnNumber: 21
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                lineNumber: 601,
-                                                columnNumber: 19
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "rounded-xl border border-gray-200/70 p-3",
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                        className: "text-xs text-gray-500",
-                                                        children: "Assignee"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 606,
-                                                        columnNumber: 21
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "flex items-center gap-2 mt-1",
-                                                        children: [
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                className: "w-6 h-6 rounded-xl flex items-center justify-center text-white font-bold text-xs",
+                                        className: "font-extrabold text-gray-900",
+                                        children: "No escalations found"
+                                    }, void 0, false, {
+                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                        lineNumber: 397,
+                                        columnNumber: 21
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                        className: "text-gray-500 text-sm mt-1",
+                                        children: "All tasks are on track for the selected filters."
+                                    }, void 0, false, {
+                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                        lineNumber: 398,
+                                        columnNumber: 21
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                lineNumber: 395,
+                                columnNumber: 19
+                            }, this) : filteredEscalations.map((escalation)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "p-5 rounded-2xl border bg-white transition hover:shadow-sm",
+                                    style: {
+                                        borderColor: escalation.status === "OVERDUE" || escalation.status === "ESCALATED" ? "rgba(237,50,55,0.25)" : escalation.status === "AT_RISK" ? "rgba(245,158,11,0.3)" : "rgba(0,0,0,0.07)"
+                                    },
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "flex items-start justify-between gap-3",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "flex flex-wrap items-center gap-2",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "text-xs font-semibold text-gray-500",
+                                                            children: escalation.id
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                            lineNumber: 416,
+                                                            columnNumber: 27
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
+                                                            tone: getStatusTone(escalation.status),
+                                                            children: escalation.status.replace("_", " ")
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                            lineNumber: 417,
+                                                            columnNumber: 27
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
+                                                            tone: getLevelTone(escalation.escalationLevel),
+                                                            children: escalation.escalationLevel.replace("_", " ")
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                            lineNumber: 418,
+                                                            columnNumber: 27
+                                                        }, this),
+                                                        escalation.actionRequired && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
+                                                            tone: "warn",
+                                                            children: "⚡ Action Required"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                            lineNumber: 419,
+                                                            columnNumber: 57
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                    lineNumber: 415,
+                                                    columnNumber: 25
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
+                                                    tone: getPriorityTone(escalation.priority),
+                                                    children: escalation.priority
+                                                }, void 0, false, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                    lineNumber: 421,
+                                                    columnNumber: 25
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                            lineNumber: 414,
+                                            columnNumber: 23
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                            className: "font-extrabold mt-3",
+                                            style: {
+                                                color: "var(--primary-blue)"
+                                            },
+                                            children: escalation.title
+                                        }, void 0, false, {
+                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                            lineNumber: 424,
+                                            columnNumber: 23
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                            className: "text-sm text-gray-500 mt-1 line-clamp-2",
+                                            children: escalation.description
+                                        }, void 0, false, {
+                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                            lineNumber: 427,
+                                            columnNumber: 23
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "mt-4 grid grid-cols-2 gap-3 text-xs",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "p-2 rounded-xl bg-gray-50",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "text-gray-500",
+                                                            children: "Department"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                            lineNumber: 431,
+                                                            columnNumber: 27
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "font-bold text-gray-900 mt-0.5",
+                                                            children: escalation.department
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                            lineNumber: 432,
+                                                            columnNumber: 27
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                    lineNumber: 430,
+                                                    columnNumber: 25
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "p-2 rounded-xl bg-gray-50",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "text-gray-500",
+                                                            children: "Assignee"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                            lineNumber: 435,
+                                                            columnNumber: 27
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "font-bold text-gray-900 mt-0.5",
+                                                            children: escalation.assignee
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                            lineNumber: 436,
+                                                            columnNumber: 27
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                    lineNumber: 434,
+                                                    columnNumber: 25
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "p-2 rounded-xl bg-gray-50",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "text-gray-500",
+                                                            children: "Due Date"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                            lineNumber: 439,
+                                                            columnNumber: 27
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "font-bold text-gray-900 mt-0.5",
+                                                            children: fmtDate(escalation.dueDate)
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                            lineNumber: 440,
+                                                            columnNumber: 27
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                    lineNumber: 438,
+                                                    columnNumber: 25
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: `p-2 rounded-xl ${escalation.overdueDays > 0 ? "bg-red-50" : "bg-amber-50"}`,
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "text-gray-500",
+                                                            children: escalation.overdueDays > 0 ? "Days Overdue" : "Days Until Due"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                            lineNumber: 443,
+                                                            columnNumber: 27
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: `font-bold mt-0.5 ${escalation.overdueDays > 0 ? "text-red-700" : "text-amber-700"}`,
+                                                            children: Math.abs(escalation.overdueDays)
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                            lineNumber: 444,
+                                                            columnNumber: 27
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                    lineNumber: 442,
+                                                    columnNumber: 25
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                            lineNumber: 429,
+                                            columnNumber: 23
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "mt-4 p-3 rounded-2xl bg-blue-50/60 border border-blue-100",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                    className: "text-xs text-gray-500 font-semibold",
+                                                    children: "Next Action"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                    lineNumber: 451,
+                                                    columnNumber: 25
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                    className: "text-sm font-semibold text-gray-800 mt-0.5",
+                                                    children: escalation.nextAction
+                                                }, void 0, false, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                    lineNumber: 452,
+                                                    columnNumber: 25
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                            lineNumber: 450,
+                                            columnNumber: 23
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "mt-4 flex items-center justify-between gap-2",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    className: "text-xs text-gray-500",
+                                                    children: [
+                                                        "Updated ",
+                                                        fmtDate(escalation.lastUpdate)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                    lineNumber: 456,
+                                                    columnNumber: 25
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "flex gap-2",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                                                            href: `/hod-dashboard/task/${escalation.taskId}`,
+                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                className: "px-3 py-1.5 rounded-xl text-[12px] font-semibold text-white active:scale-[0.99] transition",
                                                                 style: {
                                                                     backgroundColor: "var(--secondary-blue)"
                                                                 },
-                                                                children: escalation.assignee.charAt(0)
+                                                                children: "View Task"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                                lineNumber: 608,
-                                                                columnNumber: 23
+                                                                lineNumber: 461,
+                                                                columnNumber: 29
+                                                            }, this)
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                            lineNumber: 460,
+                                                            columnNumber: 27
+                                                        }, this),
+                                                        escalation.actionRequired && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                            onClick: ()=>handleReassign(escalation.id),
+                                                            className: "px-3 py-1.5 rounded-xl text-[12px] font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition",
+                                                            style: {
+                                                                borderColor: "rgba(44,75,155,0.35)",
+                                                                color: "var(--primary-blue)"
+                                                            },
+                                                            children: "Reassign"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                            lineNumber: 469,
+                                                            columnNumber: 29
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                    lineNumber: 459,
+                                                    columnNumber: 25
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                            lineNumber: 455,
+                                            columnNumber: 23
+                                        }, this)
+                                    ]
+                                }, escalation.id, true, {
+                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                    lineNumber: 402,
+                                    columnNumber: 21
+                                }, this))
+                        }, void 0, false, {
+                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                            lineNumber: 393,
+                            columnNumber: 15
+                        }, this),
+                        view === "table" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
+                            className: "overflow-hidden",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "p-5 border-b border-gray-200/70",
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(SectionTitle, {
+                                        title: "Escalations Table",
+                                        subtitle: `${filteredEscalations.length} result(s)`
+                                    }, void 0, false, {
+                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                        lineNumber: 489,
+                                        columnNumber: 19
+                                    }, this)
+                                }, void 0, false, {
+                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                    lineNumber: 488,
+                                    columnNumber: 17
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "hidden lg:block overflow-x-auto",
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("table", {
+                                        className: "min-w-full",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("thead", {
+                                                className: "bg-gray-50 border-b border-gray-200/70",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
+                                                    className: "text-[11px] font-semibold text-gray-500 uppercase tracking-wider",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                            className: "px-5 py-3 text-left",
+                                                            children: "Task"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                            lineNumber: 499,
+                                                            columnNumber: 25
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                            className: "px-5 py-3 text-left",
+                                                            children: "Status"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                            lineNumber: 500,
+                                                            columnNumber: 25
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                            className: "px-5 py-3 text-left",
+                                                            children: "Level"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                            lineNumber: 501,
+                                                            columnNumber: 25
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                            className: "px-5 py-3 text-left",
+                                                            children: "Department"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                            lineNumber: 502,
+                                                            columnNumber: 25
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                            className: "px-5 py-3 text-left",
+                                                            children: "Assignee"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                            lineNumber: 503,
+                                                            columnNumber: 25
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                            className: "px-5 py-3 text-left",
+                                                            children: "Due Date"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                            lineNumber: 504,
+                                                            columnNumber: 25
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                            className: "px-5 py-3 text-left",
+                                                            children: "Overdue"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                            lineNumber: 505,
+                                                            columnNumber: 25
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                            className: "px-5 py-3 text-left",
+                                                            children: "Priority"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                            lineNumber: 506,
+                                                            columnNumber: 25
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                            className: "px-5 py-3 text-right",
+                                                            children: "Actions"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                            lineNumber: 507,
+                                                            columnNumber: 25
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                    lineNumber: 498,
+                                                    columnNumber: 23
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                lineNumber: 497,
+                                                columnNumber: 21
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
+                                                className: "divide-y divide-gray-200/70 text-[12.5px]",
+                                                children: filteredEscalations.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
+                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                        colSpan: 9,
+                                                        className: "px-5 py-10 text-center text-gray-500",
+                                                        children: "No escalations found"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                        lineNumber: 513,
+                                                        columnNumber: 27
+                                                    }, this)
+                                                }, void 0, false, {
+                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                    lineNumber: 512,
+                                                    columnNumber: 25
+                                                }, this) : filteredEscalations.map((escalation)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
+                                                        className: "hover:bg-gray-50/70 transition",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                className: "px-5 py-3",
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        className: "font-extrabold",
+                                                                        style: {
+                                                                            color: "var(--primary-blue)"
+                                                                        },
+                                                                        children: escalation.id
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                                        lineNumber: 519,
+                                                                        columnNumber: 31
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        className: "text-[12.5px] text-gray-700 mt-0.5 max-w-[200px] truncate",
+                                                                        children: escalation.title
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                                        lineNumber: 520,
+                                                                        columnNumber: 31
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                                lineNumber: 518,
+                                                                columnNumber: 29
                                                             }, this),
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                                className: "text-sm font-semibold",
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                className: "px-5 py-3 whitespace-nowrap",
+                                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
+                                                                    tone: getStatusTone(escalation.status),
+                                                                    children: escalation.status.replace("_", " ")
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                                    lineNumber: 523,
+                                                                    columnNumber: 31
+                                                                }, this)
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                                lineNumber: 522,
+                                                                columnNumber: 29
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                className: "px-5 py-3 whitespace-nowrap",
+                                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
+                                                                    tone: getLevelTone(escalation.escalationLevel),
+                                                                    children: escalation.escalationLevel.replace("_", " ")
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                                    lineNumber: 526,
+                                                                    columnNumber: 31
+                                                                }, this)
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                                lineNumber: 525,
+                                                                columnNumber: 29
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                className: "px-5 py-3 whitespace-nowrap",
+                                                                children: escalation.department
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                                lineNumber: 528,
+                                                                columnNumber: 29
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                className: "px-5 py-3 whitespace-nowrap",
                                                                 children: escalation.assignee
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                                lineNumber: 614,
-                                                                columnNumber: 23
+                                                                lineNumber: 529,
+                                                                columnNumber: 29
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                className: "px-5 py-3 whitespace-nowrap",
+                                                                children: fmtDate(escalation.dueDate)
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                                lineNumber: 530,
+                                                                columnNumber: 29
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                className: "px-5 py-3 whitespace-nowrap",
+                                                                children: escalation.overdueDays > 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    className: "text-red-600 font-bold",
+                                                                    children: [
+                                                                        escalation.overdueDays,
+                                                                        "d"
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                                    lineNumber: 533,
+                                                                    columnNumber: 33
+                                                                }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    className: "text-amber-600 font-bold",
+                                                                    children: [
+                                                                        Math.abs(escalation.overdueDays),
+                                                                        "d left"
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                                    lineNumber: 535,
+                                                                    columnNumber: 33
+                                                                }, this)
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                                lineNumber: 531,
+                                                                columnNumber: 29
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                className: "px-5 py-3 whitespace-nowrap",
+                                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
+                                                                    tone: getPriorityTone(escalation.priority),
+                                                                    children: escalation.priority
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                                    lineNumber: 539,
+                                                                    columnNumber: 31
+                                                                }, this)
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                                lineNumber: 538,
+                                                                columnNumber: 29
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                                                                className: "px-5 py-3 text-right whitespace-nowrap",
+                                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "flex items-center justify-end gap-2",
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                                                                            href: `/hod-dashboard/task/${escalation.taskId}`,
+                                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                                className: "px-3 py-1.5 rounded-xl text-[12px] font-semibold text-white active:scale-[0.99] transition",
+                                                                                style: {
+                                                                                    backgroundColor: "var(--secondary-blue)"
+                                                                                },
+                                                                                children: "View"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                                                lineNumber: 544,
+                                                                                columnNumber: 35
+                                                                            }, this)
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                                            lineNumber: 543,
+                                                                            columnNumber: 33
+                                                                        }, this),
+                                                                        escalation.actionRequired && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                            onClick: ()=>handleReassign(escalation.id),
+                                                                            className: "px-3 py-1.5 rounded-xl text-[12px] font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition",
+                                                                            style: {
+                                                                                borderColor: "rgba(44, 75, 155, 0.35)",
+                                                                                color: "var(--primary-blue)"
+                                                                            },
+                                                                            children: "Reassign"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                                            lineNumber: 552,
+                                                                            columnNumber: 35
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                                    lineNumber: 542,
+                                                                    columnNumber: 31
+                                                                }, this)
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                                                lineNumber: 541,
+                                                                columnNumber: 29
                                                             }, this)
                                                         ]
-                                                    }, void 0, true, {
+                                                    }, escalation.id, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 607,
-                                                        columnNumber: 21
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                lineNumber: 605,
-                                                columnNumber: 19
-                                            }, this)
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                        lineNumber: 600,
-                                        columnNumber: 17
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "mt-4 grid grid-cols-2 gap-3",
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                        className: "text-xs text-gray-500",
-                                                        children: "Due Date"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 621,
-                                                        columnNumber: 21
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                        className: `text-sm font-semibold mt-1 ${escalation.overdueDays > 0 ? "text-red-600" : escalation.overdueDays < 0 ? "text-amber-600" : ""}`,
-                                                        children: fmtDate(escalation.dueDate)
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 622,
-                                                        columnNumber: 21
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                        className: "text-xs text-gray-500 mt-1",
-                                                        children: escalation.overdueDays > 0 ? `${escalation.overdueDays} days overdue` : escalation.overdueDays < 0 ? `${Math.abs(escalation.overdueDays)} days left` : "Due today"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 628,
-                                                        columnNumber: 21
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                lineNumber: 620,
-                                                columnNumber: 19
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                        className: "text-xs text-gray-500",
-                                                        children: "Priority"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 637,
-                                                        columnNumber: 21
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
-                                                        tone: getPriorityTone(escalation.priority),
-                                                        className: "mt-1",
-                                                        children: escalation.priority
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 638,
-                                                        columnNumber: 21
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                lineNumber: 636,
-                                                columnNumber: 19
-                                            }, this)
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                        lineNumber: 619,
-                                        columnNumber: 17
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "mt-4 flex items-center gap-2",
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "flex-1 bg-gray-100 rounded-xl p-2",
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                        className: "text-xs text-gray-600",
-                                                        children: "Next Action:"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 646,
-                                                        columnNumber: 21
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                        className: "text-sm font-semibold",
-                                                        style: {
-                                                            color: escalation.actionRequired ? "var(--accent-red)" : "var(--primary-blue)"
-                                                        },
-                                                        children: escalation.nextAction
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 647,
-                                                        columnNumber: 21
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                lineNumber: 645,
-                                                columnNumber: 19
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "flex-1 bg-gray-100 rounded-xl p-2",
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                        className: "text-xs text-gray-600",
-                                                        children: "Comments"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 652,
-                                                        columnNumber: 21
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                        className: "text-sm font-semibold",
-                                                        children: escalation.comments
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 653,
-                                                        columnNumber: 21
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                lineNumber: 651,
-                                                columnNumber: 19
-                                            }, this)
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                        lineNumber: 644,
-                                        columnNumber: 17
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "mt-6 flex items-center gap-2",
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-                                                href: `/hod-dashboard/task/${escalation.taskId}`,
-                                                className: "flex-1",
-                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                    className: "w-full px-4 py-2.5 rounded-2xl font-semibold text-sm text-white active:scale-[0.99] transition",
-                                                    style: {
-                                                        backgroundColor: "var(--secondary-blue)"
-                                                    },
-                                                    children: "View Task"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                    lineNumber: 659,
-                                                    columnNumber: 21
-                                                }, this)
+                                                        lineNumber: 517,
+                                                        columnNumber: 27
+                                                    }, this))
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                lineNumber: 658,
-                                                columnNumber: 19
-                                            }, this),
-                                            escalation.actionRequired ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
-                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                    onClick: ()=>handleReassign(escalation.id),
-                                                    className: "flex-1 px-4 py-2.5 rounded-2xl font-semibold text-sm border bg-white hover:bg-gray-50 active:scale-[0.99] transition",
-                                                    style: {
-                                                        borderColor: "rgba(44, 75, 155, 0.35)",
-                                                        color: "var(--primary-blue)"
-                                                    },
-                                                    children: "Reassign"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                    lineNumber: 669,
-                                                    columnNumber: 23
-                                                }, this)
-                                            }, void 0, false) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                className: "flex-1 px-4 py-2.5 rounded-2xl font-semibold text-sm border bg-gray-50 text-gray-500 cursor-not-allowed",
-                                                disabled: true,
-                                                children: "Action Taken"
-                                            }, void 0, false, {
-                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                lineNumber: 678,
+                                                lineNumber: 510,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                        lineNumber: 657,
-                                        columnNumber: 17
-                                    }, this),
-                                    escalation.actionRequired && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "mt-2 flex items-center gap-2",
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                onClick: ()=>handleExtend(escalation.id),
-                                                className: "flex-1 px-4 py-2.5 rounded-2xl font-semibold text-sm border bg-white hover:bg-gray-50 active:scale-[0.99] transition",
-                                                style: {
-                                                    borderColor: "rgba(16, 185, 129, 0.35)",
-                                                    color: "#10B981"
-                                                },
-                                                children: "Extend Deadline"
-                                            }, void 0, false, {
-                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                lineNumber: 689,
-                                                columnNumber: 21
-                                            }, this),
-                                            escalation.escalationLevel !== "LEVEL_3" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                onClick: ()=>handleEscalate(escalation.id),
-                                                className: "flex-1 px-4 py-2.5 rounded-2xl font-semibold text-sm border bg-white hover:bg-red-50 active:scale-[0.99] transition",
-                                                style: {
-                                                    borderColor: "rgba(237, 50, 55, 0.35)",
-                                                    color: "var(--accent-red)"
-                                                },
-                                                children: "Escalate to MD"
-                                            }, void 0, false, {
-                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                lineNumber: 697,
-                                                columnNumber: 23
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                onClick: ()=>handleResolve(escalation.id),
-                                                className: "flex-1 px-4 py-2.5 rounded-2xl font-semibold text-sm text-white active:scale-[0.99] transition",
-                                                style: {
-                                                    backgroundColor: "#10B981"
-                                                },
-                                                children: "Mark Resolved"
-                                            }, void 0, false, {
-                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                lineNumber: 705,
-                                                columnNumber: 21
-                                            }, this)
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                        lineNumber: 688,
+                                        lineNumber: 496,
                                         columnNumber: 19
                                     }, this)
-                                ]
-                            }, escalation.id, true, {
-                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                lineNumber: 571,
-                                columnNumber: 15
-                            }, this)),
-                        filteredEscalations.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
-                            className: "p-10 text-center xl:col-span-2",
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "flex justify-center",
-                                    children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["getIconByKey"])("check", "w-16 h-16 text-green-600")
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                    lineNumber: 719,
+                                    lineNumber: 495,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "mt-3 font-extrabold",
-                                    style: {
-                                        color: "var(--primary-blue)"
-                                    },
-                                    children: "No escalations found"
-                                }, void 0, false, {
-                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                    lineNumber: 720,
-                                    columnNumber: 17
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "text-sm text-gray-500 mt-1",
-                                    children: "Great job! All items are under control"
-                                }, void 0, false, {
-                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                    lineNumber: 723,
-                                    columnNumber: 17
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                    onClick: clearFilters,
-                                    className: "mt-4 px-5 py-2.5 rounded-2xl font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition inline-flex items-center gap-2",
-                                    style: {
-                                        borderColor: "rgba(109, 198, 223, 0.7)",
-                                        color: "var(--primary-blue)"
-                                    },
+                                    className: "lg:hidden p-4 text-sm text-gray-600",
                                     children: [
-                                        (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["getIconByKey"])("refresh", "w-4 h-4"),
-                                        " Clear Filters"
+                                        "Switch to ",
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                            className: "font-semibold",
+                                            children: "Cards"
+                                        }, void 0, false, {
+                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
+                                            lineNumber: 570,
+                                            columnNumber: 29
+                                        }, this),
+                                        " view for mobile-friendly layout."
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                    lineNumber: 724,
+                                    lineNumber: 569,
                                     columnNumber: 17
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                            lineNumber: 718,
+                            lineNumber: 487,
                             columnNumber: 15
                         }, this)
                     ]
-                }, void 0, true, {
-                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                    lineNumber: 569,
-                    columnNumber: 11
-                }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
-                    className: "overflow-hidden",
-                    children: [
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "hidden lg:block overflow-x-auto",
-                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("table", {
-                                className: "min-w-full",
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("thead", {
-                                        className: "bg-gray-50 border-b border-gray-200/70",
-                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
-                                            className: "text-[11px] font-semibold text-gray-500 uppercase tracking-wider",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                    className: "px-5 py-3 text-left",
-                                                    children: "Escalation"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                    lineNumber: 740,
-                                                    columnNumber: 21
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                    className: "px-5 py-3 text-left",
-                                                    children: "Department"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                    lineNumber: 741,
-                                                    columnNumber: 21
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                    className: "px-5 py-3 text-left",
-                                                    children: "Assignee"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                    lineNumber: 742,
-                                                    columnNumber: 21
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                    className: "px-5 py-3 text-left",
-                                                    children: "Status/Level"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                    lineNumber: 743,
-                                                    columnNumber: 21
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                    className: "px-5 py-3 text-left",
-                                                    children: "Due Date"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                    lineNumber: 744,
-                                                    columnNumber: 21
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                    className: "px-5 py-3 text-left",
-                                                    children: "Priority"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                    lineNumber: 745,
-                                                    columnNumber: 21
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                    className: "px-5 py-3 text-right",
-                                                    children: "Actions"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                    lineNumber: 746,
-                                                    columnNumber: 21
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                            lineNumber: 739,
-                                            columnNumber: 19
-                                        }, this)
-                                    }, void 0, false, {
-                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                        lineNumber: 738,
-                                        columnNumber: 17
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
-                                        className: "divide-y divide-gray-200/70 text-[13px]",
-                                        children: filteredEscalations.map((escalation)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
-                                                className: `hover:bg-gray-50/70 transition ${escalation.actionRequired ? "bg-red-50/20" : ""}`,
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                        className: "px-5 py-3",
-                                                        children: [
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                className: "font-extrabold",
-                                                                style: {
-                                                                    color: "var(--primary-blue)"
-                                                                },
-                                                                children: escalation.id
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                                lineNumber: 754,
-                                                                columnNumber: 25
-                                                            }, this),
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                className: "text-[13px] font-semibold text-gray-900 mt-1",
-                                                                children: escalation.title
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                                lineNumber: 757,
-                                                                columnNumber: 25
-                                                            }, this),
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                className: "text-[11px] text-gray-500 mt-1",
-                                                                children: [
-                                                                    escalation.description.substring(0, 40),
-                                                                    "..."
-                                                                ]
-                                                            }, void 0, true, {
-                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                                lineNumber: 758,
-                                                                columnNumber: 25
-                                                            }, this)
-                                                        ]
-                                                    }, void 0, true, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 753,
-                                                        columnNumber: 23
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                        className: "px-5 py-3 whitespace-nowrap",
-                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
-                                                            children: escalation.department
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                            lineNumber: 761,
-                                                            columnNumber: 25
-                                                        }, this)
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 760,
-                                                        columnNumber: 23
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                        className: "px-5 py-3 whitespace-nowrap",
-                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                            className: "flex items-center gap-2",
-                                                            children: [
-                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                    className: "w-7 h-7 rounded-xl flex items-center justify-center text-white font-bold text-xs",
-                                                                    style: {
-                                                                        backgroundColor: "var(--secondary-blue)"
-                                                                    },
-                                                                    children: escalation.assignee.charAt(0)
-                                                                }, void 0, false, {
-                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                                    lineNumber: 765,
-                                                                    columnNumber: 27
-                                                                }, this),
-                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                    children: [
-                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                            className: "text-[13px] font-semibold",
-                                                                            children: escalation.assignee
-                                                                        }, void 0, false, {
-                                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                                            lineNumber: 772,
-                                                                            columnNumber: 29
-                                                                        }, this),
-                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                            className: "text-[11px] text-gray-500",
-                                                                            children: [
-                                                                                "→ ",
-                                                                                escalation.assignedTo
-                                                                            ]
-                                                                        }, void 0, true, {
-                                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                                            lineNumber: 773,
-                                                                            columnNumber: 29
-                                                                        }, this)
-                                                                    ]
-                                                                }, void 0, true, {
-                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                                    lineNumber: 771,
-                                                                    columnNumber: 27
-                                                                }, this)
-                                                            ]
-                                                        }, void 0, true, {
-                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                            lineNumber: 764,
-                                                            columnNumber: 25
-                                                        }, this)
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 763,
-                                                        columnNumber: 23
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                        className: "px-5 py-3 whitespace-nowrap",
-                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                            className: "space-y-1",
-                                                            children: [
-                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
-                                                                    tone: getStatusTone(escalation.status),
-                                                                    children: escalation.status
-                                                                }, void 0, false, {
-                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                                    lineNumber: 779,
-                                                                    columnNumber: 27
-                                                                }, this),
-                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
-                                                                    tone: getLevelTone(escalation.escalationLevel),
-                                                                    children: getLevelLabel(escalation.escalationLevel)
-                                                                }, void 0, false, {
-                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                                    lineNumber: 780,
-                                                                    columnNumber: 27
-                                                                }, this)
-                                                            ]
-                                                        }, void 0, true, {
-                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                            lineNumber: 778,
-                                                            columnNumber: 25
-                                                        }, this)
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 777,
-                                                        columnNumber: 23
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                        className: "px-5 py-3 whitespace-nowrap",
-                                                        children: [
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                className: `text-[13px] font-semibold ${escalation.overdueDays > 0 ? "text-red-600" : ""}`,
-                                                                children: fmtDate(escalation.dueDate)
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                                lineNumber: 786,
-                                                                columnNumber: 25
-                                                            }, this),
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                className: "text-[11px] text-gray-500",
-                                                                children: escalation.overdueDays > 0 ? `${escalation.overdueDays} days overdue` : escalation.overdueDays < 0 ? `${Math.abs(escalation.overdueDays)} days left` : "Due today"
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                                lineNumber: 792,
-                                                                columnNumber: 25
-                                                            }, this)
-                                                        ]
-                                                    }, void 0, true, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 785,
-                                                        columnNumber: 23
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                        className: "px-5 py-3 whitespace-nowrap",
-                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Pill, {
-                                                            tone: getPriorityTone(escalation.priority),
-                                                            children: escalation.priority
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                            lineNumber: 801,
-                                                            columnNumber: 25
-                                                        }, this)
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 800,
-                                                        columnNumber: 23
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                        className: "px-5 py-3 text-right whitespace-nowrap",
-                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                            className: "flex items-center justify-end gap-2",
-                                                            children: [
-                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-                                                                    href: `/hod-dashboard/task/${escalation.taskId}`,
-                                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                                        className: "px-3 py-1.5 rounded-xl text-[12px] font-semibold text-white active:scale-[0.99] transition",
-                                                                        style: {
-                                                                            backgroundColor: "var(--secondary-blue)"
-                                                                        },
-                                                                        children: "View"
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                                        lineNumber: 806,
-                                                                        columnNumber: 29
-                                                                    }, this)
-                                                                }, void 0, false, {
-                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                                    lineNumber: 805,
-                                                                    columnNumber: 27
-                                                                }, this),
-                                                                escalation.actionRequired && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                                    onClick: ()=>handleReassign(escalation.id),
-                                                                    className: "px-3 py-1.5 rounded-xl text-[12px] font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition",
-                                                                    style: {
-                                                                        borderColor: "rgba(44, 75, 155, 0.35)",
-                                                                        color: "var(--primary-blue)"
-                                                                    },
-                                                                    children: "Reassign"
-                                                                }, void 0, false, {
-                                                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                                    lineNumber: 814,
-                                                                    columnNumber: 29
-                                                                }, this)
-                                                            ]
-                                                        }, void 0, true, {
-                                                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                            lineNumber: 804,
-                                                            columnNumber: 25
-                                                        }, this)
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 803,
-                                                        columnNumber: 23
-                                                    }, this)
-                                                ]
-                                            }, escalation.id, true, {
-                                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                lineNumber: 752,
-                                                columnNumber: 21
-                                            }, this))
-                                    }, void 0, false, {
-                                        fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                        lineNumber: 750,
-                                        columnNumber: 17
-                                    }, this)
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                lineNumber: 737,
-                                columnNumber: 15
-                            }, this)
-                        }, void 0, false, {
-                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                            lineNumber: 736,
-                            columnNumber: 13
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "lg:hidden p-4 text-sm text-gray-600",
-                            children: [
-                                "Switch to ",
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                    className: "font-semibold",
-                                    children: "Cards"
-                                }, void 0, false, {
-                                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                    lineNumber: 832,
-                                    columnNumber: 25
-                                }, this),
-                                " view for mobile-friendly layout."
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                            lineNumber: 831,
-                            columnNumber: 13
-                        }, this)
-                    ]
-                }, void 0, true, {
-                    fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                    lineNumber: 735,
-                    columnNumber: 11
-                }, this),
-                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
+                }, void 0, true),
+                departments.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
                     className: "p-6",
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(SectionTitle, {
                             title: "Escalations by Department",
-                            subtitle: "Overview of escalations across departments"
+                            subtitle: "Overview across departments"
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                            lineNumber: 839,
-                            columnNumber: 11
+                            lineNumber: 580,
+                            columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "mt-5 space-y-3",
                             children: departments.map((dept)=>{
-                                const deptEscalations = escalationsData.filter((e)=>e.department === dept);
-                                const overdueCount = deptEscalations.filter((e)=>e.status === "OVERDUE").length;
-                                const level3Count = deptEscalations.filter((e)=>e.escalationLevel === "LEVEL_3").length;
-                                const actionRequired = deptEscalations.filter((e)=>e.actionRequired).length;
+                                const deptItems = escalationsData.filter((e)=>e.department === dept);
+                                const overdueCount = deptItems.filter((e)=>e.status === "OVERDUE").length;
+                                const level3Count = deptItems.filter((e)=>e.escalationLevel === "LEVEL_3").length;
+                                const actionRequired = deptItems.filter((e)=>e.actionRequired).length;
                                 return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     className: "rounded-2xl border border-gray-200/70 p-4 hover:bg-gray-50 transition",
                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3642,15 +3203,15 @@ function HODEscalations() {
                                                 className: "flex items-center gap-3",
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "w-10 h-10 rounded-2xl flex items-center justify-center text-white font-bold ",
+                                                        className: "w-10 h-10 rounded-2xl flex items-center justify-center text-white font-bold",
                                                         style: {
                                                             backgroundColor: "var(--secondary-blue)"
                                                         },
                                                         children: dept.charAt(0)
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 852,
-                                                        columnNumber: 23
+                                                        lineNumber: 592,
+                                                        columnNumber: 25
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         children: [
@@ -3662,31 +3223,31 @@ function HODEscalations() {
                                                                 children: dept
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                                lineNumber: 859,
-                                                                columnNumber: 25
+                                                                lineNumber: 599,
+                                                                columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                 className: "text-sm text-gray-500",
                                                                 children: [
-                                                                    deptEscalations.length,
-                                                                    " total escalations"
+                                                                    deptItems.length,
+                                                                    " total items"
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                                lineNumber: 862,
-                                                                columnNumber: 25
+                                                                lineNumber: 600,
+                                                                columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 858,
-                                                        columnNumber: 23
+                                                        lineNumber: 598,
+                                                        columnNumber: 25
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                lineNumber: 851,
-                                                columnNumber: 21
+                                                lineNumber: 591,
+                                                columnNumber: 23
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 className: "flex items-center gap-6",
@@ -3702,8 +3263,8 @@ function HODEscalations() {
                                                                         children: overdueCount
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                                        lineNumber: 869,
-                                                                        columnNumber: 27
+                                                                        lineNumber: 606,
+                                                                        columnNumber: 29
                                                                     }, this),
                                                                     " ",
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3711,14 +3272,14 @@ function HODEscalations() {
                                                                         children: "overdue"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                                        lineNumber: 870,
-                                                                        columnNumber: 27
+                                                                        lineNumber: 607,
+                                                                        columnNumber: 29
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                                lineNumber: 868,
-                                                                columnNumber: 25
+                                                                lineNumber: 605,
+                                                                columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                 className: "text-sm",
@@ -3728,8 +3289,8 @@ function HODEscalations() {
                                                                         children: level3Count
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                                        lineNumber: 873,
-                                                                        columnNumber: 27
+                                                                        lineNumber: 610,
+                                                                        columnNumber: 29
                                                                     }, this),
                                                                     " ",
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3737,25 +3298,25 @@ function HODEscalations() {
                                                                         children: "critical"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                                        lineNumber: 874,
-                                                                        columnNumber: 27
+                                                                        lineNumber: 611,
+                                                                        columnNumber: 29
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                                lineNumber: 872,
-                                                                columnNumber: 25
+                                                                lineNumber: 609,
+                                                                columnNumber: 27
                                                             }, this),
                                                             actionRequired > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                 className: "text-sm mt-1",
                                                                 children: [
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                        className: "text-red-600 font-bold",
+                                                                        className: "text-amber-600 font-bold",
                                                                         children: actionRequired
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                                        lineNumber: 878,
-                                                                        columnNumber: 29
+                                                                        lineNumber: 615,
+                                                                        columnNumber: 31
                                                                     }, this),
                                                                     " ",
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3763,20 +3324,20 @@ function HODEscalations() {
                                                                         children: "need action"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                                        lineNumber: 879,
-                                                                        columnNumber: 29
+                                                                        lineNumber: 616,
+                                                                        columnNumber: 31
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                                lineNumber: 877,
-                                                                columnNumber: 27
+                                                                lineNumber: 614,
+                                                                columnNumber: 29
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 867,
-                                                        columnNumber: 23
+                                                        lineNumber: 604,
+                                                        columnNumber: 25
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                                         onClick: ()=>setSelectedDepartment(dept),
@@ -3787,52 +3348,46 @@ function HODEscalations() {
                                                         children: "View Details"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                        lineNumber: 884,
-                                                        columnNumber: 23
+                                                        lineNumber: 620,
+                                                        columnNumber: 25
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                                lineNumber: 866,
-                                                columnNumber: 21
+                                                lineNumber: 603,
+                                                columnNumber: 23
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                        lineNumber: 850,
-                                        columnNumber: 19
+                                        lineNumber: 590,
+                                        columnNumber: 21
                                     }, this)
                                 }, dept, false, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                    lineNumber: 849,
-                                    columnNumber: 17
+                                    lineNumber: 589,
+                                    columnNumber: 19
                                 }, this);
                             })
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                            lineNumber: 841,
-                            columnNumber: 11
+                            lineNumber: 581,
+                            columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                    lineNumber: 838,
-                    columnNumber: 9
+                    lineNumber: 579,
+                    columnNumber: 11
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Card, {
                     className: "p-6 bg-blue-50/30",
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(SectionTitle, {
-                            title: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
-                                children: [
-                                    " ",
-                                    (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$icons$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["getIconByKey"])("lightbulb", "w-5 h-5 inline-block align-middle mr-1"),
-                                    " Tips to Reduce Escalations"
-                                ]
-                            }, void 0, true)
+                            title: "Tips to Reduce Escalations"
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                            lineNumber: 901,
+                            lineNumber: 638,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3856,7 +3411,7 @@ function HODEscalations() {
                                             children: "•"
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                            lineNumber: 915,
+                                            lineNumber: 651,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3864,35 +3419,35 @@ function HODEscalations() {
                                             children: tip
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                            lineNumber: 916,
+                                            lineNumber: 652,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, index, true, {
                                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                                    lineNumber: 914,
+                                    lineNumber: 650,
                                     columnNumber: 15
                                 }, this))
                         }, void 0, false, {
                             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                            lineNumber: 903,
+                            lineNumber: 639,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-                    lineNumber: 900,
+                    lineNumber: 637,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-            lineNumber: 325,
+            lineNumber: 204,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/Desktop/calaya-taskly/src/views/dashboards/HOD/HODEscalations.jsx",
-        lineNumber: 324,
+        lineNumber: 203,
         columnNumber: 5
     }, this);
 }

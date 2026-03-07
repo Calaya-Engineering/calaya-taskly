@@ -5,9 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "analyze": "npm run build && node scripts/analyze-bundles.mjs",
+    "perf:budgets": "npm run build && node scripts/analyze-bundles.mjs --check",
+    "check:ts-only": "node scripts/enforce-typescript-only.mjs"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

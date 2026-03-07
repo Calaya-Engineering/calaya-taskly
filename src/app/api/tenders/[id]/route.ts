@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
+import { emitRealtimeEvent } from "@/lib/realtime-events";
 
 /**
  * GET /api/tenders/[id] - Get tender details
@@ -96,6 +97,13 @@ export async function PATCH(
             data: body
         });
 
+        emitRealtimeEvent({
+            type: "tender:updated",
+            entity: "tender",
+            action: "updated",
+            entityId: tender.id,
+        });
+
         return NextResponse.json(tender);
     } catch (error: any) {
         console.error("Error updating tender:", error);
@@ -124,6 +132,13 @@ export async function DELETE(
             where: {
                 id: parseInt(id)
             }
+        });
+
+        emitRealtimeEvent({
+            type: "tender:deleted",
+            entity: "tender",
+            action: "deleted",
+            entityId: parseInt(id),
         });
 
         return NextResponse.json({ success: true });

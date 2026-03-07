@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
+import { emitRealtimeEvent } from "@/lib/realtime-events";
 
 /**
  * GET /api/profile/me
@@ -185,6 +186,13 @@ export async function PATCH(req: NextRequest) {
                 ...(department !== undefined && { department: department.trim() || null }),
             },
             select: { id: true, email: true, name: true, role: true, department: true },
+        });
+
+        emitRealtimeEvent({
+            type: "profile:updated",
+            entity: "profile",
+            action: "updated",
+            entityId: updated.id,
         });
 
         return NextResponse.json(updated);

@@ -2,10 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { createNotification } from "@/lib/notifications";
+import { emitRealtimeEvent } from "@/lib/realtime-events";
 
 /**
  * GET /api/documents - List documents (MD, HOD, Secretary, Staff - authenticated)
- * Query params: type, scope, department, search
+ * Query params: type, scope, department, departments, search
  */
 export async function GET(req: NextRequest) {
   try {
@@ -19,16 +20,43 @@ export async function GET(req: NextRequest) {
       const type = searchParams.get("type");
       const scope = searchParams.get("scope");
       const department = searchParams.get("department");
-      const search = searchParams.get("search")?.trim().toLowerCase() || "";
+      const departments = searchParams.get("departments");
+      const search = searchParams.get("search")?.trim() || "";
+      const limitParam = searchParams.get("limit");
+      const offsetParam = searchParams.get("offset");
+
+      const parsedLimit = limitParam ? Number.parseInt(limitParam, 10) : NaN;
+      const parsedOffset = offsetParam ? Number.parseInt(offsetParam, 10) : NaN;
+      const limit = Number.isFinite(parsedLimit) ? Math.min(Math.max(parsedLimit, 1), 500) : undefined;
+      const offset = Number.isFinite(parsedOffset) ? Math.max(parsedOffset, 0) : 0;
 
       const where: any = {};
       if (type && type !== "All Types") where.type = type;
       if (scope && scope !== "All Scopes") where.scope = scope;
-      if (department && department !== "all") where.department = department;
+      if (department && department !== "all") {
+        where.department = department;
+      } else if (departments) {
+        const list = departments
+          .split(",")
+          .map((d) => d.trim())
+          .filter(Boolean);
+        if (list.length === 1) where.department = list[0];
+        if (list.length > 1) where.department = { in: list };
+      }
 
-      let documents = await prisma.document.findMany({
+      if (search) {
+        where.OR = [
+          { title: { contains: search } },
+          { uploadedBy: { contains: search } },
+          { department: { contains: search } },
+          { type: { contains: search } },
+        ];
+      }
+
+      const documents = await prisma.document.findMany({
         where,
         orderBy: { createdAt: "desc" },
+        ...(typeof limit === "number" ? { take: limit, skip: offset } : {}),
         select: {
           id: true,
           title: true,
@@ -42,18 +70,6 @@ export async function GET(req: NextRequest) {
           createdAt: true,
         },
       });
-
-      // Client-side search filter
-      if (search) {
-        const q = search.toLowerCase();
-        documents = documents.filter(
-          (d) =>
-            (d.title || "").toLowerCase().includes(q) ||
-            (d.uploadedBy || "").toLowerCase().includes(q) ||
-            (d.department || "").toLowerCase().includes(q) ||
-            (d.type || "").toLowerCase().includes(q)
-        );
-      }
 
       // Format for frontend
       const formatted = documents.map((d) => ({
@@ -139,6 +155,13 @@ export async function POST(req: NextRequest) {
           fileSize: fileSize && typeof fileSize === "string" ? fileSize.trim() : null,
           fileUrl: fileUrl && typeof fileUrl === "string" ? fileUrl.trim() : null,
         },
+      });
+
+      emitRealtimeEvent({
+        type: "document:created",
+        entity: "document",
+        action: "created",
+        entityId: doc.id,
       });
 
       // Fire and forget notification

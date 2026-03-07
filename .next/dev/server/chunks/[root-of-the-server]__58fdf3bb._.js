@@ -726,12 +726,45 @@ async function GET(req) {
             const type = searchParams.get("type");
             const scope = searchParams.get("scope");
             const department = searchParams.get("department");
-            const search = searchParams.get("search")?.trim().toLowerCase() || "";
+            const departments = searchParams.get("departments");
+            const search = searchParams.get("search")?.trim() || "";
             const where = {};
             if (type && type !== "All Types") where.type = type;
             if (scope && scope !== "All Scopes") where.scope = scope;
-            if (department && department !== "all") where.department = department;
-            let documents = await __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$prisma$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].document.findMany({
+            if (department && department !== "all") {
+                where.department = department;
+            } else if (departments) {
+                const list = departments.split(",").map((d)=>d.trim()).filter(Boolean);
+                if (list.length === 1) where.department = list[0];
+                if (list.length > 1) where.department = {
+                    in: list
+                };
+            }
+            if (search) {
+                where.OR = [
+                    {
+                        title: {
+                            contains: search
+                        }
+                    },
+                    {
+                        uploadedBy: {
+                            contains: search
+                        }
+                    },
+                    {
+                        department: {
+                            contains: search
+                        }
+                    },
+                    {
+                        type: {
+                            contains: search
+                        }
+                    }
+                ];
+            }
+            const documents = await __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$calaya$2d$taskly$2f$src$2f$lib$2f$prisma$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].document.findMany({
                 where,
                 orderBy: {
                     createdAt: "desc"
@@ -749,11 +782,6 @@ async function GET(req) {
                     createdAt: true
                 }
             });
-            // Client-side search filter
-            if (search) {
-                const q = search.toLowerCase();
-                documents = documents.filter((d)=>(d.title || "").toLowerCase().includes(q) || (d.uploadedBy || "").toLowerCase().includes(q) || (d.department || "").toLowerCase().includes(q) || (d.type || "").toLowerCase().includes(q));
-            }
             // Format for frontend
             const formatted = documents.map((d)=>({
                     id: `DOC-${String(d.id).padStart(3, "0")}`,

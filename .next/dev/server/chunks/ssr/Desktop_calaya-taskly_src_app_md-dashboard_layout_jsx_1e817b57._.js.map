@@ -2,5 +2,5 @@
   "version": 3,
   "sources": [],
   "sections": [
-    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///Users/admin/Desktop/calaya-taskly/src/app/md-dashboard/layout.jsx"],"sourcesContent":["export const dynamic = \"force-dynamic\";\n\nexport default function MDDashboardLayout({ children }) {\n  return children;\n}"],"names":[],"mappings":";;;;;;AAAO,MAAM,UAAU;AAER,SAAS,kBAAkB,EAAE,QAAQ,EAAE;IACpD,OAAO;AACT"}}]
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///Users/admin/Desktop/calaya-taskly/src/app/md-dashboard/layout.jsx"],"sourcesContent":["export default function MDDashboardLayout({ children }) {\n  return children;\n}"],"names":[],"mappings":";;;;AAAe,SAAS,kBAAkB,EAAE,QAAQ,EAAE;IACpD,OAAO;AACT"}}]
 }

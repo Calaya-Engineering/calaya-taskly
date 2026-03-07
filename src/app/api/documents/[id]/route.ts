@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
+import { emitRealtimeEvent } from "@/lib/realtime-events";
 
 function parseDocId(id: string): number | null {
   const num = parseInt(id, 10);
@@ -82,6 +83,14 @@ export async function PATCH(
         where: { id: docId },
         data: { downloads: { increment: 1 } },
       });
+
+      emitRealtimeEvent({
+        type: "document:downloaded",
+        entity: "document",
+        action: "downloaded",
+        entityId: doc.id,
+      });
+
       return NextResponse.json({
         id: `DOC-${String(doc.id).padStart(3, "0")}`,
         downloads: doc.downloads,
@@ -109,6 +118,13 @@ export async function PATCH(
     const doc = await prisma.document.update({
       where: { id: docId },
       data: updateData,
+    });
+
+    emitRealtimeEvent({
+      type: "document:updated",
+      entity: "document",
+      action: "updated",
+      entityId: doc.id,
     });
 
     return NextResponse.json({

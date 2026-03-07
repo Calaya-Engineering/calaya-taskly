@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
+import { emitRealtimeEvent } from "@/lib/realtime-events";
 
 export async function GET(req: NextRequest) {
     const auth = await getAuthFromRequest(req);
@@ -19,21 +20,33 @@ export async function GET(req: NextRequest) {
         }
 
         const unreadOnly = req.nextUrl.searchParams.get("unread") === "true";
-        const limit = parseInt(req.nextUrl.searchParams.get("limit") || "50", 10);
+        const compact = req.nextUrl.searchParams.get("compact") === "true";
+        const limit = Math.min(parseInt(req.nextUrl.searchParams.get("limit") || "50", 10) || 50, 100);
 
         const where: any = { recipientId: user.id };
         if (unreadOnly) {
             where.read = false;
         }
 
-        const notifications = await prisma.notification.findMany({
-            where,
-            orderBy: { createdAt: "desc" },
-            take: limit,
-            include: {
-                actor: { select: { id: true, name: true, role: true } },
-            },
-        });
+        const notifications = compact
+            ? await prisma.notification.findMany({
+                where,
+                orderBy: { createdAt: "desc" },
+                take: limit,
+                select: {
+                    id: true,
+                    read: true,
+                    createdAt: true,
+                },
+            })
+            : await prisma.notification.findMany({
+                where,
+                orderBy: { createdAt: "desc" },
+                take: limit,
+                include: {
+                    actor: { select: { id: true, name: true, role: true } },
+                },
+            });
 
         return NextResponse.json(notifications);
     } catch (error) {
@@ -69,6 +82,12 @@ export async function PATCH(req: NextRequest) {
                 where: { recipientId: user.id, read: false },
                 data: { read: true },
             });
+            emitRealtimeEvent({
+                type: "notification:all-read",
+                entity: "notification",
+                action: "all-read",
+                entityId: user.id,
+            });
             return NextResponse.json({ success: true, message: "All marked as read" });
         }
 
@@ -84,6 +103,13 @@ export async function PATCH(req: NextRequest) {
             const updated = await prisma.notification.update({
                 where: { id: Number(id) },
                 data: { read: true },
+            });
+
+            emitRealtimeEvent({
+                type: "notification:read",
+                entity: "notification",
+                action: "read",
+                entityId: updated.id,
             });
 
             return NextResponse.json({ success: true, notification: updated });

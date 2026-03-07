@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { hashPassword } from "@/lib/password";
+import { emitRealtimeEvent } from "@/lib/realtime-events";
 
 function requireAdmin(auth: { role: string } | null) {
   if (!auth || auth.role !== "Admin") {
@@ -128,6 +129,14 @@ export async function PATCH(
       data,
       select: { id: true, email: true, name: true, role: true, department: true },
     });
+
+    emitRealtimeEvent({
+      type: "user:updated",
+      entity: "user",
+      action: "updated",
+      entityId: user.id,
+    });
+
     return NextResponse.json(user);
   } catch (error: unknown) {
     const prismaErr = error as { code?: string };
@@ -171,6 +180,14 @@ export async function DELETE(
     await prisma.user.delete({
       where: { id: userId },
     });
+
+    emitRealtimeEvent({
+      type: "user:deleted",
+      entity: "user",
+      action: "deleted",
+      entityId: userId,
+    });
+
     return NextResponse.json({ success: true });
   } catch (error: unknown) {
     const prismaErr = error as { code?: string };

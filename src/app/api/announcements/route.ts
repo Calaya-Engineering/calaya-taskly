@@ -13,6 +13,7 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const department = searchParams.get("department");
     const targetRole = searchParams.get("targetRole");
+    const compact = searchParams.get("compact") === "true";
     const limit = Math.min(parseInt(searchParams.get("limit") ?? "50", 10) || 50, 100);
 
     try {
@@ -20,7 +21,33 @@ export async function GET(req: NextRequest) {
         if (department) where.department = department;
         if (targetRole) where.targetRole = targetRole;
 
-        const authUser = await prisma.user.findUnique({ where: { email: auth.email } });
+        const authUser = await prisma.user.findUnique({
+            where: { email: auth.email },
+            select: { id: true },
+        });
+
+        if (compact) {
+            const announcements = await prisma.announcement.findMany({
+                where,
+                take: limit,
+                select: {
+                    id: true,
+                    createdAt: true,
+                    reads: {
+                        where: authUser ? { userId: authUser.id } : undefined,
+                        select: { userId: true },
+                    },
+                },
+                orderBy: { createdAt: "desc" },
+            });
+
+            const compactMapped = announcements.map((a) => ({
+                id: a.id,
+                createdAt: a.createdAt,
+                read: authUser ? a.reads.length > 0 : false,
+            }));
+            return NextResponse.json(compactMapped);
+        }
 
         const announcements = await prisma.announcement.findMany({
             where,

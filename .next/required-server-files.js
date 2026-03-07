@@ -4,7 +4,7 @@ self.__SERVER_FILES_MANIFEST={
     "env": {},
     "webpack": null,
     "typescript": {
-      "ignoreBuildErrors": false
+      "ignoreBuildErrors": true
     },
     "typedRoutes": false,
     "distDir": ".next",
@@ -107,7 +107,7 @@ self.__SERVER_FILES_MANIFEST={
         "transform": "lodash/{{member}}"
       }
     },
-    "outputFileTracingRoot": "/Users/admin",
+    "outputFileTracingRoot": "/Users/admin/Desktop/calaya-taskly",
     "cacheComponents": false,
     "cacheLife": {
       "default": {
@@ -302,12 +302,12 @@ self.__SERVER_FILES_MANIFEST={
     "bundlePagesRouterDependencies": false,
     "configFileName": "next.config.js",
     "turbopack": {
-      "root": "/Users/admin"
+      "root": "/Users/admin/Desktop/calaya-taskly"
     },
     "distDirRoot": ".next"
   },
   "appDir": "/Users/admin/Desktop/calaya-taskly",
-  "relativeAppDir": "Desktop/calaya-taskly",
+  "relativeAppDir": "",
   "files": [
     ".next/routes-manifest.json",
     ".next/server/pages-manifest.json",
@@ -316,6 +316,8 @@ self.__SERVER_FILES_MANIFEST={
     ".next/server/functions-config-manifest.json",
     ".next/server/middleware-manifest.json",
     ".next/server/middleware-build-manifest.js",
+    ".next/server/middleware-react-loadable-manifest.js",
+    ".next/react-loadable-manifest.json",
     ".next/server/app-paths-manifest.json",
     ".next/app-path-routes-manifest.json",
     ".next/server/server-reference-manifest.js",

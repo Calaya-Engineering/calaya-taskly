@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
+import { emitRealtimeEvent } from "@/lib/realtime-events";
 
 /**
  * GET /api/tenders - List tenders (Authenticated)
@@ -16,15 +17,38 @@ export async function GET(req: NextRequest) {
         const { searchParams } = req.nextUrl;
         const status = searchParams.get("status");
         const department = searchParams.get("department");
-        const search = searchParams.get("search")?.trim().toLowerCase() || "";
+        const search = searchParams.get("search")?.trim() || "";
+        const compact = searchParams.get("compact") === "true";
+        const limit = Math.min(parseInt(searchParams.get("limit") ?? "50", 10) || 50, 100);
 
         const where: any = {};
         if (status && status !== "all") where.status = status;
         if (department && department !== "all") where.department = department;
+        if (search) {
+            where.OR = [
+                { title: { contains: search } },
+                { referenceNo: { contains: search } },
+                { description: { contains: search } },
+            ];
+        }
+
+        if (compact) {
+            const compactTenders = await prisma.tender.findMany({
+                where,
+                orderBy: { createdAt: "desc" },
+                take: limit,
+                select: {
+                    id: true,
+                    createdAt: true,
+                },
+            });
+            return NextResponse.json(compactTenders);
+        }
 
         const tenders = await prisma.tender.findMany({
             where,
             orderBy: { createdAt: "desc" },
+            take: limit,
             include: {
                 _count: {
                     select: { documents: true }
@@ -32,17 +56,7 @@ export async function GET(req: NextRequest) {
             }
         });
 
-        let filtered = tenders;
-        if (search) {
-            filtered = tenders.filter(
-                (t) =>
-                    t.title.toLowerCase().includes(search) ||
-                    t.referenceNo.toLowerCase().includes(search) ||
-                    (t.description || "").toLowerCase().includes(search)
-            );
-        }
-
-        const formatted = filtered.map((t) => ({
+        const formatted = tenders.map((t) => ({
             id: t.referenceNo, // In frontend, ID is used as the reference No or short ID
             dbId: t.id,
             title: t.title,
@@ -102,6 +116,13 @@ export async function POST(req: NextRequest) {
             }
         });
 
+        emitRealtimeEvent({
+            type: "tender:created",
+            entity: "tender",
+            action: "created",
+            entityId: tender.id,
+        });
+
 
         return NextResponse.json(tender);
     } catch (error: any) {
@@ -112,6 +133,4 @@ export async function POST(req: NextRequest) {
         );
     }
 } 
-
-
 

@@ -11,10 +11,12 @@ node_modules
 dist
 dist-ssr
 *.local
+.next
+*.tsbuildinfo
 
 Environment
-# .env
-# .env.local
+.env
+.env.local
 
 # Editor directories and files
 .vscode/*
@@ -28,3 +30,5 @@ Environment
 *.sw?
 
 /generated/prisma
+
+.next

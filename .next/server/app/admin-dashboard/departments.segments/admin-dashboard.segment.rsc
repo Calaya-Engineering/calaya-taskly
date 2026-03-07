@@ -1,4 +1,5 @@
 1:"$Sreact.fragment"
-2:I[712,["/_next/static/chunks/e19c8693652db3e8.js","/_next/static/chunks/9b910bb93bceb103.js"],"default"]
-3:I[85354,["/_next/static/chunks/e19c8693652db3e8.js","/_next/static/chunks/9b910bb93bceb103.js"],"default"]
-0:{"buildId":"dBdxl8055THBRRU4YFLr5","rsc":["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]]}],"loading":null,"isPartial":false}
+2:I[13096,["3096","static/chunks/3096-225d78d0255467ee.js","3908","static/chunks/app/admin-dashboard/layout-05401eb40115c852.js"],"BadgeProvider"]
+3:I[57121,[],""]
+4:I[74581,[],""]
+0:{"buildId":"vJxIUQ-Zbzspx01rjKFTl","rsc":["$","$1","c",{"children":[null,["$","$L2",null,{"children":["$","$L3",null,{"parallelRouterKey":"children","template":["$","$L4",null,{}]}]}]]}],"loading":null,"isPartial":false}

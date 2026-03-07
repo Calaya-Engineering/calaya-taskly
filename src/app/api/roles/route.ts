@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
+import { emitRealtimeEvent } from "@/lib/realtime-events";
 
 function requireAdmin(auth: { role: string } | null) {
   if (!auth || auth.role !== "Admin") {
@@ -56,6 +57,14 @@ export async function POST(req: NextRequest) {
     const role = await prisma.role.create({
       data: { name: name.trim() },
     });
+
+    emitRealtimeEvent({
+      type: "role:created",
+      entity: "role",
+      action: "created",
+      entityId: role.id,
+    });
+
     return NextResponse.json(role);
   } catch (error: unknown) {
     const prismaErr = error as { code?: string };
