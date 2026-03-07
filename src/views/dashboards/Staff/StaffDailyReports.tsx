@@ -55,6 +55,21 @@ const STORAGE_KEYS = {
   IS_MODAL_OPEN: 'staffDailyReport_modalOpen'
 };
 
+const getSessionItem = (key: string): string | null => {
+  if (typeof window === "undefined") return null;
+  return window.sessionStorage.getItem(key);
+};
+
+const setSessionItem = (key: string, value: string): void => {
+  if (typeof window === "undefined") return;
+  window.sessionStorage.setItem(key, value);
+};
+
+const removeSessionItem = (key: string): void => {
+  if (typeof window === "undefined") return;
+  window.sessionStorage.removeItem(key);
+};
+
 const REPORTS_PAGE_SIZE = 30;
 const REPORTS_VIEWPORT_HEIGHT = 560;
 const REPORTS_ROW_HEIGHT = 76;
@@ -106,6 +121,7 @@ const fmtDateTime = (iso) =>
 
 export default function StaffDailyReports() {
   const router = useRouter();
+  const [isClient, setIsClient] = useState(false);
   const [dailyReports, setDailyReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [dateFilter, setDateFilter] = useState('all');
@@ -180,8 +196,13 @@ export default function StaffDailyReports() {
 
   // Load saved form data from sessionStorage on mount
   useEffect(() => {
-    const savedEntries = sessionStorage.getItem(STORAGE_KEYS.REPORT_ENTRIES);
-    const savedModalState = sessionStorage.getItem(STORAGE_KEYS.IS_MODAL_OPEN);
+    setIsClient(true);
+  }, []);
+
+  // Load saved form data from sessionStorage on mount
+  useEffect(() => {
+    const savedEntries = getSessionItem(STORAGE_KEYS.REPORT_ENTRIES);
+    const savedModalState = getSessionItem(STORAGE_KEYS.IS_MODAL_OPEN);
 
     if (savedEntries) {
       setReportEntries(JSON.parse(savedEntries));
@@ -195,8 +216,8 @@ export default function StaffDailyReports() {
   // Save form data to sessionStorage whenever it changes and modal is open
   useEffect(() => {
     if (isModalOpen) {
-      sessionStorage.setItem(STORAGE_KEYS.REPORT_ENTRIES, JSON.stringify(reportEntries));
-      sessionStorage.setItem(STORAGE_KEYS.IS_MODAL_OPEN, JSON.stringify(isModalOpen));
+      setSessionItem(STORAGE_KEYS.REPORT_ENTRIES, JSON.stringify(reportEntries));
+      setSessionItem(STORAGE_KEYS.IS_MODAL_OPEN, JSON.stringify(isModalOpen));
     }
   }, [reportEntries, isModalOpen]);
 
@@ -317,19 +338,19 @@ export default function StaffDailyReports() {
     }];
 
     setReportEntries(defaultEntries);
-    sessionStorage.removeItem(STORAGE_KEYS.REPORT_ENTRIES);
+    removeSessionItem(STORAGE_KEYS.REPORT_ENTRIES);
   };
 
   // Handle modal close (X button) - DON'T clear data
   const handleModalClose = () => {
     setIsModalOpen(false);
-    sessionStorage.setItem(STORAGE_KEYS.IS_MODAL_OPEN, JSON.stringify(false));
+    setSessionItem(STORAGE_KEYS.IS_MODAL_OPEN, JSON.stringify(false));
   };
 
   // Handle cancel button - Clear data
   const handleCancel = () => {
     setIsModalOpen(false);
-    sessionStorage.setItem(STORAGE_KEYS.IS_MODAL_OPEN, JSON.stringify(false));
+    setSessionItem(STORAGE_KEYS.IS_MODAL_OPEN, JSON.stringify(false));
     resetForm();
   };
 
@@ -359,7 +380,7 @@ export default function StaffDailyReports() {
 
     setDailyReports([newReport, ...dailyReports]);
     setIsModalOpen(false);
-    sessionStorage.setItem(STORAGE_KEYS.IS_MODAL_OPEN, JSON.stringify(false));
+    setSessionItem(STORAGE_KEYS.IS_MODAL_OPEN, JSON.stringify(false));
     resetForm();
     toast.success('Daily report submitted successfully!');
   };
@@ -439,7 +460,7 @@ export default function StaffDailyReports() {
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   onClick={() => {
-                    const savedEntries = sessionStorage.getItem(STORAGE_KEYS.REPORT_ENTRIES);
+                    const savedEntries = getSessionItem(STORAGE_KEYS.REPORT_ENTRIES);
                     if (savedEntries) {
                       setIsModalOpen(true);
                     } else {
@@ -815,7 +836,7 @@ export default function StaffDailyReports() {
                         <Pill tone={getDepartmentTone(STAFF_DEPARTMENT)}>{STAFF_DEPARTMENT} Department</Pill>
                         <span className="text-sm text-gray-500">• {STAFF_NAME}</span>
                       </div>
-                      {sessionStorage.getItem(STORAGE_KEYS.REPORT_ENTRIES) && (
+                      {isClient && getSessionItem(STORAGE_KEYS.REPORT_ENTRIES) && (
                         <div className="mt-2 inline-flex items-center px-3 py-1.5 bg-amber-50 text-amber-800 rounded-xl text-xs ring-1 ring-amber-200">
                           ⚡ Draft saved from previous session
                         </div>

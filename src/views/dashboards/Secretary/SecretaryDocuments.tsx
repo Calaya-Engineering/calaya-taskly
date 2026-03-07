@@ -56,7 +56,23 @@ const STORAGE_KEYS = {
   IS_MODAL_OPEN: 'secretaryDocumentUpload_modalOpen'
 };
 
+const getSessionItem = (key: string): string | null => {
+  if (typeof window === "undefined") return null;
+  return window.sessionStorage.getItem(key);
+};
+
+const setSessionItem = (key: string, value: string): void => {
+  if (typeof window === "undefined") return;
+  window.sessionStorage.setItem(key, value);
+};
+
+const removeSessionItem = (key: string): void => {
+  if (typeof window === "undefined") return;
+  window.sessionStorage.removeItem(key);
+};
+
 export default function SecretaryDocuments() {
+  const [isClient, setIsClient] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [scopeFilter, setScopeFilter] = useState('all');
@@ -224,8 +240,13 @@ export default function SecretaryDocuments() {
 
   // Load saved form data from sessionStorage on mount
   useEffect(() => {
-    const savedFormData = sessionStorage.getItem(STORAGE_KEYS.DOCUMENT_UPLOAD);
-    const savedModalState = sessionStorage.getItem(STORAGE_KEYS.IS_MODAL_OPEN);
+    setIsClient(true);
+  }, []);
+
+  // Load saved form data from sessionStorage on mount
+  useEffect(() => {
+    const savedFormData = getSessionItem(STORAGE_KEYS.DOCUMENT_UPLOAD);
+    const savedModalState = getSessionItem(STORAGE_KEYS.IS_MODAL_OPEN);
 
     if (savedFormData) {
       setUploadFormData(JSON.parse(savedFormData));
@@ -238,8 +259,8 @@ export default function SecretaryDocuments() {
   // Save form data to sessionStorage whenever it changes and modal is open
   useEffect(() => {
     if (isModalOpen) {
-      sessionStorage.setItem(STORAGE_KEYS.DOCUMENT_UPLOAD, JSON.stringify(uploadFormData));
-      sessionStorage.setItem(STORAGE_KEYS.IS_MODAL_OPEN, JSON.stringify(isModalOpen));
+      setSessionItem(STORAGE_KEYS.DOCUMENT_UPLOAD, JSON.stringify(uploadFormData));
+      setSessionItem(STORAGE_KEYS.IS_MODAL_OPEN, JSON.stringify(isModalOpen));
     }
   }, [uploadFormData, isModalOpen]);
 
@@ -370,19 +391,19 @@ export default function SecretaryDocuments() {
     setTagInput('');
 
     // Clear from sessionStorage
-    sessionStorage.removeItem(STORAGE_KEYS.DOCUMENT_UPLOAD);
+    removeSessionItem(STORAGE_KEYS.DOCUMENT_UPLOAD);
   };
 
   // Handle modal close (X button) - DON'T clear data
   const handleModalClose = () => {
     setIsModalOpen(false);
-    sessionStorage.setItem(STORAGE_KEYS.IS_MODAL_OPEN, JSON.stringify(false));
+    setSessionItem(STORAGE_KEYS.IS_MODAL_OPEN, JSON.stringify(false));
   };
 
   // Handle cancel button - Clear data
   const handleCancel = () => {
     setIsModalOpen(false);
-    sessionStorage.setItem(STORAGE_KEYS.IS_MODAL_OPEN, JSON.stringify(false));
+    setSessionItem(STORAGE_KEYS.IS_MODAL_OPEN, JSON.stringify(false));
     resetForm();
   };
 
@@ -433,7 +454,7 @@ export default function SecretaryDocuments() {
           setIsUploading(false);
           toast.success('Document uploaded successfully!');
           setIsModalOpen(false);
-          sessionStorage.setItem(STORAGE_KEYS.IS_MODAL_OPEN, JSON.stringify(false));
+          setSessionItem(STORAGE_KEYS.IS_MODAL_OPEN, JSON.stringify(false));
           resetForm();
           return 0;
         }
@@ -486,7 +507,7 @@ export default function SecretaryDocuments() {
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   onClick={() => {
-                    const savedFormData = sessionStorage.getItem(STORAGE_KEYS.DOCUMENT_UPLOAD);
+                    const savedFormData = getSessionItem(STORAGE_KEYS.DOCUMENT_UPLOAD);
                     if (savedFormData) {
                       setIsModalOpen(true);
                     } else {
@@ -537,7 +558,7 @@ export default function SecretaryDocuments() {
         </div>
 
         {/* Draft Alert */}
-        {sessionStorage.getItem(STORAGE_KEYS.DOCUMENT_UPLOAD) && (
+        {isClient && getSessionItem(STORAGE_KEYS.DOCUMENT_UPLOAD) && (
           <Card className="p-4 border-yellow-200 bg-yellow-50/50">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -552,7 +573,7 @@ export default function SecretaryDocuments() {
               <button
                 onClick={() => {
                   resetForm();
-                  sessionStorage.removeItem(STORAGE_KEYS.DOCUMENT_UPLOAD);
+                  removeSessionItem(STORAGE_KEYS.DOCUMENT_UPLOAD);
                   toast.success('Draft cleared');
                 }}
                 className="px-4 py-2 rounded-xl text-sm font-semibold border border-yellow-500 text-yellow-700 hover:bg-yellow-100 transition"
@@ -891,7 +912,7 @@ export default function SecretaryDocuments() {
                       <Pill>{SECRETARY_DEPARTMENT} Department</Pill>
                       <span className="text-sm text-gray-500">• {SECRETARY_NAME}</span>
                     </div>
-                    {sessionStorage.getItem(STORAGE_KEYS.DOCUMENT_UPLOAD) && (
+                    {isClient && getSessionItem(STORAGE_KEYS.DOCUMENT_UPLOAD) && (
                       <div className="mt-3">
                         <Pill tone="warn">⚡ Draft saved - continue where you left off</Pill>
                       </div>

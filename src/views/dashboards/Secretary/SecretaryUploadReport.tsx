@@ -64,6 +64,21 @@ const STORAGE_KEYS = {
   REPORT_DESCRIPTION: 'secretaryPersonalReport_description'
 };
 
+const getSessionItem = (key: string): string | null => {
+  if (typeof window === "undefined") return null;
+  return window.sessionStorage.getItem(key);
+};
+
+const setSessionItem = (key: string, value: string): void => {
+  if (typeof window === "undefined") return;
+  window.sessionStorage.setItem(key, value);
+};
+
+const removeSessionItem = (key: string): void => {
+  if (typeof window === "undefined") return;
+  window.sessionStorage.removeItem(key);
+};
+
 const getStatusTone = (status) => {
   switch (status) {
     case 'Approved': return 'success';
@@ -93,6 +108,7 @@ const fmtDate = (iso) =>
   iso ? new Date(iso).toLocaleDateString('en-US', { year: "numeric", month: "short", day: "numeric" }) : "Not set";
 
 export default function SecretaryUploadReport() {
+  const [isClient, setIsClient] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [reportTitle, setReportTitle] = useState('');
   const [reportFile, setReportFile] = useState(null);
@@ -197,10 +213,15 @@ export default function SecretaryUploadReport() {
 
   // Load saved form data from sessionStorage on mount
   useEffect(() => {
-    const savedEntries = sessionStorage.getItem(STORAGE_KEYS.REPORT_ENTRIES);
-    const savedTitle = sessionStorage.getItem(STORAGE_KEYS.REPORT_TITLE);
-    const savedDescription = sessionStorage.getItem(STORAGE_KEYS.REPORT_DESCRIPTION);
-    const savedModalState = sessionStorage.getItem(STORAGE_KEYS.IS_MODAL_OPEN);
+    setIsClient(true);
+  }, []);
+
+  // Load saved form data from sessionStorage on mount
+  useEffect(() => {
+    const savedEntries = getSessionItem(STORAGE_KEYS.REPORT_ENTRIES);
+    const savedTitle = getSessionItem(STORAGE_KEYS.REPORT_TITLE);
+    const savedDescription = getSessionItem(STORAGE_KEYS.REPORT_DESCRIPTION);
+    const savedModalState = getSessionItem(STORAGE_KEYS.IS_MODAL_OPEN);
 
     if (savedEntries) {
       setReportEntries(JSON.parse(savedEntries));
@@ -219,10 +240,10 @@ export default function SecretaryUploadReport() {
   // Save form data to sessionStorage whenever it changes and modal is open
   useEffect(() => {
     if (isModalOpen) {
-      sessionStorage.setItem(STORAGE_KEYS.REPORT_ENTRIES, JSON.stringify(reportEntries));
-      sessionStorage.setItem(STORAGE_KEYS.REPORT_TITLE, reportTitle);
-      sessionStorage.setItem(STORAGE_KEYS.REPORT_DESCRIPTION, notes);
-      sessionStorage.setItem(STORAGE_KEYS.IS_MODAL_OPEN, JSON.stringify(isModalOpen));
+      setSessionItem(STORAGE_KEYS.REPORT_ENTRIES, JSON.stringify(reportEntries));
+      setSessionItem(STORAGE_KEYS.REPORT_TITLE, reportTitle);
+      setSessionItem(STORAGE_KEYS.REPORT_DESCRIPTION, notes);
+      setSessionItem(STORAGE_KEYS.IS_MODAL_OPEN, JSON.stringify(isModalOpen));
     }
   }, [reportEntries, reportTitle, notes, isModalOpen]);
 
@@ -302,21 +323,21 @@ export default function SecretaryUploadReport() {
     setNotes('');
     setReportFile(null);
 
-    sessionStorage.removeItem(STORAGE_KEYS.REPORT_ENTRIES);
-    sessionStorage.removeItem(STORAGE_KEYS.REPORT_TITLE);
-    sessionStorage.removeItem(STORAGE_KEYS.REPORT_DESCRIPTION);
+    removeSessionItem(STORAGE_KEYS.REPORT_ENTRIES);
+    removeSessionItem(STORAGE_KEYS.REPORT_TITLE);
+    removeSessionItem(STORAGE_KEYS.REPORT_DESCRIPTION);
   };
 
   // Handle modal close (X button) - DON'T clear data
   const handleModalClose = () => {
     setIsModalOpen(false);
-    sessionStorage.setItem(STORAGE_KEYS.IS_MODAL_OPEN, JSON.stringify(false));
+    setSessionItem(STORAGE_KEYS.IS_MODAL_OPEN, JSON.stringify(false));
   };
 
   // Handle cancel button - Clear data
   const handleCancel = () => {
     setIsModalOpen(false);
-    sessionStorage.setItem(STORAGE_KEYS.IS_MODAL_OPEN, JSON.stringify(false));
+    setSessionItem(STORAGE_KEYS.IS_MODAL_OPEN, JSON.stringify(false));
     resetForm();
   };
 
@@ -359,7 +380,7 @@ export default function SecretaryUploadReport() {
           setIsUploading(false);
           toast.success('Personal daily report submitted successfully!');
           setIsModalOpen(false);
-          sessionStorage.setItem(STORAGE_KEYS.IS_MODAL_OPEN, JSON.stringify(false));
+          setSessionItem(STORAGE_KEYS.IS_MODAL_OPEN, JSON.stringify(false));
           resetForm();
           return 0;
         }
@@ -458,7 +479,7 @@ export default function SecretaryUploadReport() {
               <div className="flex flex-col sm:flex-row gap-2">
                 <button
                   onClick={() => {
-                    const savedEntries = sessionStorage.getItem(STORAGE_KEYS.REPORT_ENTRIES);
+                    const savedEntries = getSessionItem(STORAGE_KEYS.REPORT_ENTRIES);
                     if (savedEntries) {
                       setIsModalOpen(true);
                     } else {
@@ -487,7 +508,7 @@ export default function SecretaryUploadReport() {
         </Card>
 
         {/* Draft Alert */}
-        {sessionStorage.getItem(STORAGE_KEYS.REPORT_ENTRIES) && (
+        {isClient && getSessionItem(STORAGE_KEYS.REPORT_ENTRIES) && (
           <Card className="border-amber-200 bg-amber-50/30 overflow-hidden">
             <div className="p-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -502,7 +523,7 @@ export default function SecretaryUploadReport() {
               <button
                 onClick={() => {
                   resetForm();
-                  sessionStorage.removeItem(STORAGE_KEYS.REPORT_ENTRIES);
+                  removeSessionItem(STORAGE_KEYS.REPORT_ENTRIES);
                   toast.success('Draft cleared');
                 }}
                 className="px-4 py-2 rounded-xl font-semibold text-sm border bg-white hover:bg-amber-50 active:scale-[0.99] transition"
@@ -788,7 +809,7 @@ export default function SecretaryUploadReport() {
                       <Pill tone="default">{SECRETARY_DEPARTMENT}</Pill>
                       <span className="text-sm text-gray-500">• {SECRETARY_NAME}</span>
                     </div>
-                    {sessionStorage.getItem(STORAGE_KEYS.REPORT_ENTRIES) && (
+                    {isClient && getSessionItem(STORAGE_KEYS.REPORT_ENTRIES) && (
                       <div className="mt-2 inline-flex items-center px-3 py-1.5 bg-amber-50 text-amber-800 rounded-xl text-xs ring-1 ring-amber-200">
                         ⚡ Draft saved - continue where you left off
                       </div>
