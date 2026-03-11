@@ -1,15 +1,16 @@
 "use client";
 
-// pages/dashboards/MD/MDApprovalBulk.jsx
+// pages/dashboards/HOD/HODApprovalBulk.tsx
 import { useState, useCallback, useEffect } from 'react';
 import { toast } from "@/lib/toast";
 import Link from "next/link";
 import Layout from "@/components/Layout";
-import { MDMenuItems } from "@/utils/menus";
+import { HODMenuItems } from "@/utils/menus";
 import { fetchWithAuth } from "@/lib/api";
 import { useSSE } from "@/hooks/useSSE";
-const Card = ({ className = "", children, ...props }: any) => (
-  <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`} {...props}>{children}</div>
+
+const Card = ({ className = "", children }: any) => (
+  <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
 );
 
 const SectionTitle = ({ title, subtitle, action = null }: any) => (
@@ -24,7 +25,7 @@ const SectionTitle = ({ title, subtitle, action = null }: any) => (
   </div>
 );
 
-const Pill = ({ children, tone = "default" }) => {
+const Pill = ({ children, tone = "default" }: any) => {
   const styles =
     tone === "danger" ? "bg-red-50 text-red-700 ring-red-100" :
     tone === "success" ? "bg-emerald-50 text-emerald-700 ring-emerald-100" :
@@ -38,7 +39,7 @@ const Pill = ({ children, tone = "default" }) => {
   );
 };
 
-export default function MDApprovalBulk() {
+export default function HODApprovalBulk() {
   const [approvalsData, setApprovalsData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
@@ -51,7 +52,7 @@ export default function MDApprovalBulk() {
       if (res.ok) {
         const tasks = await res.json();
         const mapped = tasks.map((t: any) => ({
-          id: `APP-${String(t.id).padStart(3, '0')}`,
+          id: `APR-${String(t.id).padStart(3, '0')}`,
           dbId: t.id,
           title: t.title,
           type: t.type === "JOB" ? "TASK_COMPLETION" : "DOCUMENT",
@@ -136,7 +137,7 @@ export default function MDApprovalBulk() {
     }
   };
 
-  const getPriorityTone = (priority) => {
+  const getPriorityTone = (priority: string) => {
     switch(priority) {
       case 'CRITICAL': return 'danger';
       case 'HIGH': return 'warn';
@@ -145,7 +146,7 @@ export default function MDApprovalBulk() {
     }
   };
 
-  const getTypeIcon = (type) => {
+  const getTypeIcon = (type: string) => {
     switch(type) {
       case 'TASK_COMPLETION': return '✅';
       case 'DOCUMENT': return '📄';
@@ -155,9 +156,8 @@ export default function MDApprovalBulk() {
   };
 
   return (
-    <Layout menuItems={MDMenuItems} userRole="MD">
+    <Layout menuItems={HODMenuItems} userRole="HOD">
       <div className="space-y-6">
-        {/* Header */}
         <Card className="overflow-hidden">
           <div
             className="p-6 md:p-8"
@@ -173,13 +173,13 @@ export default function MDApprovalBulk() {
                   <Pill tone="info">{selectedItems.length} Selected</Pill>
                 </div>
                 <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight" style={{ color: 'var(--primary-blue)' }}>
-                  Bulk Approval Actions
+                  Departmental Bulk Approvals
                 </h1>
                 <p className="text-gray-600 mt-2 max-w-2xl">
-                  Select multiple approvals to process them together
+                  Select multiple departmental requests to process them together
                 </p>
               </div>
-              <Link href="/md-dashboard/approvals">
+              <Link href="/hod-dashboard/approvals">
                 <button 
                   className="w-full sm:w-auto px-5 py-3 rounded-2xl font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
                   style={{ borderColor: 'var(--secondary-blue)', color: 'var(--primary-blue)' }}
@@ -191,7 +191,6 @@ export default function MDApprovalBulk() {
           </div>
         </Card>
 
-        {/* Bulk Actions Panel */}
         {selectedItems.length > 0 && (
           <Card className="p-6 border-2" style={{ borderColor: 'var(--primary-blue)' }}>
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -230,7 +229,6 @@ export default function MDApprovalBulk() {
           </Card>
         )}
 
-        {/* Approvals List */}
         <Card className="overflow-hidden">
           <div className="p-6 border-b border-gray-200/70">
             <SectionTitle 
@@ -249,46 +247,36 @@ export default function MDApprovalBulk() {
           </div>
 
           <div className="divide-y divide-gray-200/70">
-            {pendingApprovals.map((item) => (
-              <div key={item.id} className="p-4 hover:bg-gray-50/70 transition">
-                <div className="flex items-start gap-4">
-                  <input
-                    type="checkbox"
-                    className="mt-1 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    checked={selectedItems.includes(item.dbId)}
-                    onChange={() => toggleSelectItem(item.dbId)}
-                  />
-                  <div className="flex-1">
-                    <div className="flex flex-wrap items-center gap-2 mb-2">
-                      <span className="font-extrabold text-sm" style={{ color: 'var(--primary-blue)' }}>
-                        {item.id}
-                      </span>
-                      <Pill tone={getPriorityTone(item.priority)}>{item.priority}</Pill>
-                      <Pill tone="info">{getTypeIcon(item.type)} {item.type.replace('_', ' ')}</Pill>
-                      <Pill>{item.department}</Pill>
+            {loading ? (
+              <div className="p-10 text-center text-gray-500">Loading approvals...</div>
+            ) : pendingApprovals.length === 0 ? (
+              <div className="p-10 text-center text-gray-500">No pending approvals found</div>
+            ) : (
+              pendingApprovals.map((item: any) => (
+                <div key={item.dbId} className="p-4 hover:bg-gray-50/70 transition">
+                  <div className="flex items-start gap-4">
+                    <input
+                      type="checkbox"
+                      className="mt-1 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      checked={selectedItems.includes(item.dbId)}
+                      onChange={() => toggleSelectItem(item.dbId)}
+                    />
+                    <div className="flex-1">
+                      <div className="flex flex-wrap items-center gap-2 mb-2">
+                        <span className="font-extrabold text-sm" style={{ color: 'var(--primary-blue)' }}>
+                          {item.id}
+                        </span>
+                        <Pill tone={getPriorityTone(item.priority)}>{item.priority}</Pill>
+                        <Pill tone="info">{getTypeIcon(item.type)} {item.type.replace('_', ' ')}</Pill>
+                        <Pill>{item.department}</Pill>
+                      </div>
+                      <h4 className="font-extrabold text-gray-900">{item.title}</h4>
+                      <p className="text-xs text-gray-500 mt-1">Due: {item.dueDate}</p>
                     </div>
-                    <h4 className="font-extrabold text-gray-900">{item.title}</h4>
-                    <p className="text-xs text-gray-500 mt-1">Due: {item.dueDate}</p>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </Card>
-
-        {/* Instructions */}
-        <Card className="p-6 bg-blue-50/30">
-          <div className="flex items-start gap-4">
-            <div className="w-10 h-10 rounded-2xl bg-blue-100 flex items-center justify-center text-blue-600 text-xl">
-              ℹ️
-            </div>
-            <div>
-              <h3 className="font-extrabold text-blue-800">About Bulk Actions</h3>
-              <p className="text-sm text-blue-600 mt-1">
-                Select multiple approvals to approve or reject them simultaneously. 
-                Any comment you add will be applied to all selected items.
-              </p>
-            </div>
+              ))
+            )}
           </div>
         </Card>
       </div>

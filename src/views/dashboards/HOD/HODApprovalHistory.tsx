@@ -1,15 +1,18 @@
 "use client";
 
-// pages/dashboards/HOD/HODApprovalHistory.jsx
-import { useState } from 'react';
+// pages/dashboards/HOD/HODApprovalHistory.tsx
+import { useState, useCallback, useEffect } from 'react';
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import { HODMenuItems } from "@/utils/menus";
-const Card = ({ className = "", children }) => (
-  <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
+import { fetchWithAuth } from "@/lib/api";
+import { useSSE } from "@/hooks/useSSE";
+
+const Card = ({ className = "", children, ...props }: any) => (
+  <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`} {...props}>{children}</div>
 );
 
-const SectionTitle = ({ title, subtitle, action }) => (
+const SectionTitle = ({ title, subtitle, action = null }: any) => (
   <div className="flex items-start justify-between gap-3">
     <div>
       <h2 className="text-lg md:text-xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
@@ -21,7 +24,7 @@ const SectionTitle = ({ title, subtitle, action }) => (
   </div>
 );
 
-const Pill = ({ children, tone = "default" }) => {
+const Pill = ({ children, tone = "default" }: any) => {
   const styles =
     tone === "danger" ? "bg-red-50 text-red-700 ring-red-100" :
     tone === "success" ? "bg-emerald-50 text-emerald-700 ring-emerald-100" :
@@ -36,111 +39,49 @@ const Pill = ({ children, tone = "default" }) => {
 };
 
 export default function HODApprovalHistory() {
+  const [historyData, setHistoryData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
   const [filterDecision, setFilterDecision] = useState('all');
 
+  const fetchHistory = useCallback(async () => {
+    try {
+      const res = await fetchWithAuth("/api/tasks?limit=500");
+      if (res.ok) {
+        const tasks = await res.json();
+        const mapped = tasks
+          .filter((t: any) => t.status !== "PENDING")
+          .map((t: any) => ({
+            id: `APR-${String(t.id).padStart(3, '0')}`,
+            title: t.title,
+            type: t.type === "JOB" ? "TASK_COMPLETION" : "DOCUMENT",
+            submittedBy: t.createdBy?.name || t.createdBy?.email || "System",
+            department: t.department || "—",
+            status: t.status === "COMPLETED" ? "APPROVED" : "REJECTED",
+            decisionDate: t.completedAt?.split("T")[0] || t.updatedAt?.split("T")[0] || "",
+            decisionBy: "Department Head",
+            comment: t.comment || "-",
+            documents: 0,
+          }));
+        setHistoryData(mapped);
+      }
+    } catch (e) {
+      console.error("Failed to fetch history:", e);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-  const historyData = [
-    {
-      id: 'APR-005',
-      title: 'Leave Request - Team Lead',
-      type: 'OTHER',
-      submittedBy: 'Michael Brown',
-      department: 'Technical',
-      status: 'APPROVED',
-      decisionDate: '2024-12-12',
-      decisionBy: 'HOD - Technical',
-      comment: 'Approved. Ensure handover plan is documented.',
-      documents: 0,
-    },
-    {
-      id: 'APR-006',
-      title: 'Expense Report Approval',
-      type: 'REPORT',
-      submittedBy: 'Sarah Taylor',
-      department: 'Workshop',
-      status: 'REJECTED',
-      decisionDate: '2024-12-11',
-      decisionBy: 'HOD - Workshop',
-      comment: 'Missing receipts for several items. Please resubmit with complete documentation.',
-      documents: 5,
-    },
-    {
-      id: 'APR-008',
-      title: 'Weekly Operations Report',
-      type: 'REPORT',
-      submittedBy: 'James Miller',
-      department: 'Workshop',
-      status: 'APPROVED',
-      decisionDate: '2024-12-09',
-      decisionBy: 'HOD - Workshop',
-      comment: 'Good work. Keep it up.',
-      documents: 2,
-    },
-    {
-      id: 'APR-009',
-      title: 'Safety Training Request',
-      type: 'DOCUMENT',
-      submittedBy: 'Emma Wilson',
-      department: 'Technical',
-      status: 'APPROVED',
-      decisionDate: '2024-12-08',
-      decisionBy: 'HOD - Technical',
-      comment: 'Approved. Coordinate with HR for scheduling.',
-      documents: 3,
-    },
-    {
-      id: 'APR-010',
-      title: 'Tool Purchase Request',
-      type: 'DOCUMENT',
-      submittedBy: 'David Chen',
-      department: 'Workshop',
-      status: 'REJECTED',
-      decisionDate: '2024-12-07',
-      decisionBy: 'HOD - Workshop',
-      comment: 'Budget constraints. Will reconsider next quarter.',
-      documents: 2,
-    },
-    {
-      id: 'APR-011',
-      title: 'Monthly Safety Report',
-      type: 'REPORT',
-      submittedBy: 'Maria Garcia',
-      department: 'HSE',
-      status: 'APPROVED',
-      decisionDate: '2024-12-06',
-      decisionBy: 'HOD - HSE',
-      comment: 'All safety metrics look good. Approved.',
-      documents: 1,
-    },
-    {
-      id: 'APR-012',
-      title: 'Overtime Request',
-      type: 'OTHER',
-      submittedBy: 'Alex Johnson',
-      department: 'Technical',
-      status: 'APPROVED',
-      decisionDate: '2024-12-05',
-      decisionBy: 'HOD - Technical',
-      comment: 'Approved for project deadline.',
-      documents: 0,
-    },
-    {
-      id: 'APR-013',
-      title: 'Equipment Calibration Report',
-      type: 'REPORT',
-      submittedBy: 'Robert Lee',
-      department: 'Technical',
-      status: 'REJECTED',
-      decisionDate: '2024-12-04',
-      decisionBy: 'HOD - Technical',
-      comment: 'Missing calibration certificates. Please resubmit.',
-      documents: 3,
-    },
-  ];
+  useEffect(() => {
+    fetchHistory();
+  }, [fetchHistory]);
 
-  const filteredHistory = historyData.filter(item => {
+  useSSE("/api/tasks/events", (ev) => {
+    if (ev.type?.startsWith("task:")) fetchHistory();
+  });
+
+  const filteredHistory = historyData.filter((item: any) => {
     const matchesSearch = searchTerm === '' || 
       item.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -152,7 +93,7 @@ export default function HODApprovalHistory() {
     return matchesSearch && matchesType && matchesDecision;
   });
 
-  const getTypeIcon = (type) => {
+  const getTypeIcon = (type: string) => {
     switch(type) {
       case 'TASK_COMPLETION': return '✅';
       case 'DOCUMENT': return '📄';
@@ -164,7 +105,6 @@ export default function HODApprovalHistory() {
   return (
     <Layout menuItems={HODMenuItems} userRole="HOD">
       <div className="space-y-6">
-        {/* Header */}
         <Card className="overflow-hidden">
           <div
             className="p-6 md:p-8"
@@ -198,44 +138,35 @@ export default function HODApprovalHistory() {
           </div>
         </Card>
 
-        {/* Filters */}
         <Card className="p-6">
           <SectionTitle title="Filters" subtitle="Search and filter approval history" />
-
           <div className="mt-5 grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="md:col-span-2">
               <label className="block text-sm font-semibold text-gray-700 mb-1">Search</label>
-              <div className="relative">
-                <input
-                  type="text"
-                  className="w-full pl-10 pr-3 py-2.5 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100"
-                  placeholder="Search by ID, title, requester..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🔎</span>
-              </div>
+              <input
+                type="text"
+                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white"
+                placeholder="Search by ID, title, requester..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
             </div>
-
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1">Type</label>
               <select
-                className="w-full px-3 py-2.5 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100"
+                className="w-full px-3 py-2.5 rounded-xl border border-gray-200 bg-white"
                 value={filterType}
                 onChange={(e) => setFilterType(e.target.value)}
               >
                 <option value="all">All Types</option>
                 <option value="TASK_COMPLETION">Task Completion</option>
                 <option value="DOCUMENT">Document</option>
-                <option value="REPORT">Report</option>
-                <option value="OTHER">Other</option>
               </select>
             </div>
-
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1">Decision</label>
               <select
-                className="w-full px-3 py-2.5 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100"
+                className="w-full px-3 py-2.5 rounded-xl border border-gray-200 bg-white"
                 value={filterDecision}
                 onChange={(e) => setFilterDecision(e.target.value)}
               >
@@ -247,7 +178,6 @@ export default function HODApprovalHistory() {
           </div>
         </Card>
 
-        {/* History Table */}
         <Card className="overflow-hidden">
           <div className="overflow-x-auto">
             <table className="min-w-full">
@@ -255,127 +185,27 @@ export default function HODApprovalHistory() {
                 <tr className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
                   <th className="px-5 py-3 text-left">ID</th>
                   <th className="px-5 py-3 text-left">Title</th>
-                  <th className="px-5 py-3 text-left">Type</th>
-                  <th className="px-5 py-3 text-left">Requester</th>
-                  <th className="px-5 py-3 text-left">Department</th>
                   <th className="px-5 py-3 text-left">Decision</th>
                   <th className="px-5 py-3 text-left">Date</th>
                   <th className="px-5 py-3 text-left">Comment</th>
-                  <th className="px-5 py-3 text-left">Docs</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200/70 text-[13px]">
-                {filteredHistory.map((item) => (
+                {loading ? (
+                  <tr><td colSpan={5} className="px-5 py-10 text-center">Loading...</td></tr>
+                ) : filteredHistory.map((item: any) => (
                   <tr key={item.id} className="hover:bg-gray-50/70 transition">
-                    <td className="px-5 py-3 whitespace-nowrap">
-                      <span className="font-extrabold" style={{ color: 'var(--primary-blue)' }}>
-                        {item.id}
-                      </span>
-                    </td>
-                    <td className="px-5 py-3">
-                      <div className="font-semibold">{item.title}</div>
-                    </td>
-                    <td className="px-5 py-3 whitespace-nowrap">
-                      <div className="flex items-center gap-2">
-                        <span>{getTypeIcon(item.type)}</span>
-                        <Pill>{item.type.replace('_', ' ')}</Pill>
-                      </div>
-                    </td>
-                    <td className="px-5 py-3 whitespace-nowrap">
-                      <div className="text-sm">{item.submittedBy}</div>
-                    </td>
-                    <td className="px-5 py-3 whitespace-nowrap">
-                      <Pill>{item.department}</Pill>
-                    </td>
-                    <td className="px-5 py-3 whitespace-nowrap">
-                      <Pill tone={item.status === 'APPROVED' ? 'success' : 'danger'}>{item.status}</Pill>
-                    </td>
-                    <td className="px-5 py-3 whitespace-nowrap">
-                      <div className="text-sm">{item.decisionDate}</div>
-                      <div className="text-xs text-gray-500">by {item.decisionBy}</div>
-                    </td>
-                    <td className="px-5 py-3">
-                      <div className="text-sm text-gray-600 max-w-xs truncate" title={item.comment}>
-                        {item.comment}
-                      </div>
-                    </td>
-                    <td className="px-5 py-3 whitespace-nowrap">
-                      <Pill tone="info">{item.documents}</Pill>
-                    </td>
+                    <td className="px-5 py-3 whitespace-nowrap font-extrabold text-blue-900">{item.id}</td>
+                    <td className="px-5 py-3 font-semibold">{item.title}</td>
+                    <td className="px-5 py-3"><Pill tone={item.status === 'APPROVED' ? 'success' : 'danger'}>{item.status}</Pill></td>
+                    <td className="px-5 py-3 text-xs">{item.decisionDate}<br/><span className="text-gray-400">by {item.decisionBy}</span></td>
+                    <td className="px-5 py-3 text-gray-600 truncate max-w-xs">{item.comment}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-
-          {filteredHistory.length === 0 && (
-            <div className="p-10 text-center">
-              <div className="text-4xl mb-3">📋</div>
-              <div className="font-extrabold" style={{ color: 'var(--primary-blue)' }}>
-                No history records found
-              </div>
-              <div className="text-sm text-gray-500 mt-1">Try adjusting your filters</div>
-            </div>
-          )}
-
-          {/* Pagination */}
-          <div className="px-6 py-4 border-t border-gray-200/70 bg-white">
-            <div className="flex items-center justify-between">
-              <div className="text-sm text-gray-600">
-                Showing {filteredHistory.length} of {historyData.length} records
-              </div>
-              <div className="flex gap-2">
-                <button className="px-3 py-1.5 rounded-xl border text-sm hover:bg-gray-50">Previous</button>
-                <button className="px-3 py-1.5 rounded-xl text-white text-sm" style={{ backgroundColor: 'var(--primary-blue)' }}>1</button>
-                <button className="px-3 py-1.5 rounded-xl border text-sm hover:bg-gray-50">2</button>
-                <button className="px-3 py-1.5 rounded-xl border text-sm hover:bg-gray-50">Next</button>
-              </div>
-            </div>
-          </div>
         </Card>
-
-        {/* Statistics Summary */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-600 text-sm">Total Approved</p>
-                <p className="text-3xl font-extrabold mt-2" style={{ color: '#10B981' }}>
-                  {historyData.filter(i => i.status === 'APPROVED').length}
-                </p>
-              </div>
-              <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
-                <span className="text-green-800 text-lg">✅</span>
-              </div>
-            </div>
-          </Card>
-          <Card className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-600 text-sm">Total Rejected</p>
-                <p className="text-3xl font-extrabold mt-2" style={{ color: 'var(--accent-red)' }}>
-                  {historyData.filter(i => i.status === 'REJECTED').length}
-                </p>
-              </div>
-              <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
-                <span className="text-red-800 text-lg">❌</span>
-              </div>
-            </div>
-          </Card>
-          <Card className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-600 text-sm">Approval Rate</p>
-                <p className="text-3xl font-extrabold mt-2" style={{ color: 'var(--primary-blue)' }}>
-                  {Math.round((historyData.filter(i => i.status === 'APPROVED').length / historyData.length) * 100)}%
-                </p>
-              </div>
-              <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
-                <span className="text-blue-800 text-lg">📊</span>
-              </div>
-            </div>
-          </Card>
-        </div>
       </div>
     </Layout>
   );

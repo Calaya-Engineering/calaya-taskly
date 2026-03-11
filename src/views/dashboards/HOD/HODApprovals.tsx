@@ -1,7 +1,7 @@
 "use client";
 
 // pages/dashboards/HOD/HODApprovals.jsx
-import { useEffect, useMemo, useState, useCallback } from "react";
+import { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import { toast } from "@/lib/toast";
 import Link from "next/link";
 import Layout from "@/components/Layout";
@@ -9,8 +9,9 @@ import { HODMenuItems } from "@/utils/menus";
 import { getIconByKey } from "@/lib/icons";
 import { fetchWithAuth } from "@/lib/api";
 import { useSSE } from "@/hooks/useSSE";
+
 /* ---------- UI helpers ---------- */
-const Card = ({ className = "", children, ...props }) => (
+const Card = ({ className = "", children, ...props }: any) => (
   <div
     className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}
     {...props}
@@ -19,7 +20,7 @@ const Card = ({ className = "", children, ...props }) => (
   </div>
 );
 
-const SectionTitle = ({ title, subtitle, action }) => (
+const SectionTitle = ({ title, subtitle, action = null }: any) => (
   <div className="flex items-start justify-between gap-3">
     <div>
       <h2 className="text-lg md:text-xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
@@ -31,7 +32,7 @@ const SectionTitle = ({ title, subtitle, action }) => (
   </div>
 );
 
-const Pill = ({ children, tone = "default" }) => {
+const Pill = ({ children, tone = "default" }: any) => {
   const styles =
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
@@ -50,16 +51,16 @@ const Pill = ({ children, tone = "default" }) => {
 };
 
 export default function HODApprovals() {
-  const [approvalsData, setApprovalsData] = useState([]);
+  const [approvalsData, setApprovalsData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [approvalType, setApprovalType] = useState("All");
   const [priorityFilter, setPriorityFilter] = useState("All");
   const [statusFilter, setStatusFilter] = useState("PENDING");
-  const [selectedApproval, setSelectedApproval] = useState(null);
+  const [selectedApproval, setSelectedApproval] = useState<any>(null);
   const [comment, setComment] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeDocTab, setActiveDocTab] = useState("details");
-  const [reviewedDocs, setReviewedDocs] = useState({});
+  const [reviewedDocs, setReviewedDocs] = useState<any>({});
 
   const fetchApprovals = useCallback(async () => {
     try {
@@ -67,7 +68,7 @@ export default function HODApprovals() {
       if (res.ok) {
         const tasks = await res.json();
         // Map tasks to the approval shape the UI expects
-        const mapped = tasks.map((t) => ({
+        const mapped = tasks.map((t: any) => ({
           id: `TSK-${t.id}`,
           dbId: t.id,
           title: t.title,
@@ -81,7 +82,7 @@ export default function HODApprovals() {
           description: t.description || "",
           reference: t.type === "JOB" ? `JOB-${t.id}` : `TSK-${t.id}`,
           attachments: 0,
-          daysPending: t.dueDate ? Math.max(0, Math.ceil((Date.now() - new Date(t.createdAt)) / 86400000)) : 0,
+          daysPending: t.createdAt ? Math.max(0, Math.ceil((Date.now() - new Date(t.createdAt).getTime()) / 86400000)) : 0,
           documents: [],
           approvedDate: t.completedAt?.split("T")[0] || null,
           rejectedDate: null,
@@ -104,18 +105,20 @@ export default function HODApprovals() {
     if (ev.type?.startsWith("task:")) fetchApprovals();
   });
 
-  const approvalHistory = useMemo(() => approvalsData.filter((a) => a.status === "COMPLETED" || a.status === "APPROVED" || a.status === "REJECTED"), [approvalsData]);
+  const approvals = approvalsData as any[];
+  const approvalHistory = useMemo(() => approvals.filter((a) => a.status === "COMPLETED" || a.status === "APPROVED" || a.status === "REJECTED"), [approvals]);
 
-  const filteredApprovals = useMemo(() => approvalsData.filter((approval) => {
+  const filteredApprovals = useMemo(() => approvals.filter((approval) => {
     if (approvalType !== "All" && approval.type !== approvalType) return false;
     if (priorityFilter !== "All" && approval.priority !== priorityFilter) return false;
     if (statusFilter !== "All" && approval.status !== statusFilter) return false;
     return true;
-  }), [approvalsData, approvalType, priorityFilter, statusFilter]);
+  }), [approvals, approvalType, priorityFilter, statusFilter]);
 
-  const getPriorityTone = (priority) => {
+  const getPriorityTone = (priority: string) => {
     switch (priority) {
       case "URGENT":
+      case "CRITICAL":
         return "danger";
       case "HIGH":
         return "warn";
@@ -128,12 +131,14 @@ export default function HODApprovals() {
     }
   };
 
-  const getStatusTone = (status) => {
+  const getStatusTone = (status: string) => {
     switch (status) {
       case "PENDING":
         return "warn";
+      case "COMPLETED":
       case "APPROVED":
         return "success";
+      case "ON_HOLD":
       case "REJECTED":
         return "danger";
       default:
@@ -141,117 +146,78 @@ export default function HODApprovals() {
     }
   };
 
-  const getTypeIcon = (type) => {
+  const getTypeIcon = (type: string) => {
     switch (type) {
       case "TASK_COMPLETION":
         return "check";
       case "DOCUMENT":
         return "document";
       case "REPORT":
-        return "chart";
+        return "summary";
       default:
-        return "task";
+        return "other";
     }
   };
 
-  const getFileIcon = (type) => {
-    if (!type) return "attachment";
-    const t = String(type).toLowerCase();
-    if (t.includes("pdf")) return "file-pdf";
-    if (t.includes("doc")) return "file-doc";
-    if (t.includes("xls") || t.includes("csv")) return "file-xls";
-    if (t.includes("ppt")) return "file-ppt";
-    if (t.includes("zip") || t.includes("rar")) return "file-zip";
-    return "attachment";
-  };
-
-  const openModal = (approval) => {
+  const openModal = (approval: any) => {
     setSelectedApproval(approval);
     setComment("");
-    setActiveDocTab("details");
-    setReviewedDocs({});
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedApproval(null);
-    setComment("");
-    setActiveDocTab("details");
-    setReviewedDocs({});
   };
-
-  // ESC to close
-  useEffect(() => {
-    const onKeyDown = (e) => {
-      if (e.key === "Escape") closeModal();
-    };
-    if (isModalOpen) window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [isModalOpen]);
-
-  // Lock scroll while modal open
-  useEffect(() => {
-    if (!isModalOpen) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = prev;
-    };
-  }, [isModalOpen]);
 
   const handleApprove = async () => {
     if (!selectedApproval) return;
+    const sel = selectedApproval as any;
     try {
-      const res = await fetchWithAuth(`/api/tasks/${selectedApproval.dbId}`, {
+      const res = await fetchWithAuth(`/api/tasks/${sel.dbId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: "COMPLETED" }),
       });
       if (res.ok) {
-        toast.success(`Task ${selectedApproval.id} approved`);
+        toast.success(`Task ${sel.id} approved`);
         fetchApprovals();
       } else {
         toast.error("Failed to approve task");
       }
     } catch {
-      toast.error("Failed to approve task");
+      toast.error("An error occurred");
     }
     closeModal();
   };
 
   const handleReject = async () => {
     if (!selectedApproval) return;
+    const sel = selectedApproval as any;
     const reason = comment.trim() || "No reason provided";
     try {
-      const res = await fetchWithAuth(`/api/tasks/${selectedApproval.dbId}`, {
+      const res = await fetchWithAuth(`/api/tasks/${sel.dbId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: "ON_HOLD", comment: reason }),
       });
       if (res.ok) {
-        toast.warning(`Task ${selectedApproval.id} placed on hold: ${reason}`);
+        toast.warning(`Task ${sel.id} placed on hold: ${reason}`);
         fetchApprovals();
       } else {
         toast.error("Failed to reject task");
       }
     } catch {
-      toast.error("Failed to reject task");
+      toast.error("An error occurred");
     }
     closeModal();
   };
 
-  const handleDownloadDocument = (doc) => toast.info(`Downloading ${doc.name}`);
-  const handleViewDocument = (doc) => toast.info(`Opening ${doc.name} for preview`);
-
-  const fmtDate = (iso) =>
-    iso ? new Date(iso).toLocaleDateString("en-GB", { year: "numeric", month: "short", day: "numeric" }) : "Not set";
-
-  const pendingCount = useMemo(() => approvalsData.filter((a) => a.status === "PENDING").length, [approvalsData]);
-  const urgentPendingCount = useMemo(() => approvalsData.filter((a) => a.priority === "URGENT" && a.status === "PENDING").length, [approvalsData]);
+  const pendingCount = useMemo(() => approvals.filter((a) => a.status === "PENDING").length, [approvals]);
+  const urgentPendingCount = useMemo(() => approvals.filter((a) => (a.priority === "URGENT" || a.priority === "CRITICAL") && a.status === "PENDING").length, [approvals]);
 
   const reviewedCount = selectedApproval?.documents
-    ? selectedApproval.documents.filter((d) => reviewedDocs[d.name]).length
+    ? selectedApproval.documents.filter((d: any) => reviewedDocs[d.name]).length
     : 0;
 
   if (loading) return (
@@ -265,7 +231,6 @@ export default function HODApprovals() {
   return (
     <Layout menuItems={HODMenuItems} userRole="HOD">
       <div className="space-y-6">
-        {/* Header with Gradient */}
         <Card className="overflow-hidden">
           <div
             className="p-6 md:p-8"
@@ -298,55 +263,11 @@ export default function HODApprovals() {
               </div>
             </div>
           </div>
-
-          {/* Stats Row */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-3 p-4 md:p-5 bg-white border-t border-gray-200/70">
-            {[
-              { label: "Total Pending", value: pendingCount, tone: "warn" },
-              { label: "Urgent", value: urgentPendingCount, tone: "danger" },
-              { label: "Approval Rate", value: "85%", tone: "success" },
-              { label: "Avg Response", value: "1.5 days", tone: "info" },
-            ].map((s) => (
-              <div key={s.label} className="rounded-2xl border border-gray-200/70 p-4">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm text-gray-600">{s.label}</p>
-                  <Pill tone={s.tone}>Live</Pill>
-                </div>
-                <p className="text-2xl font-extrabold mt-2" style={{ color: "var(--primary-blue)" }}>
-                  {s.value}
-                </p>
-              </div>
-            ))}
-          </div>
         </Card>
 
-        {/* Urgent Approvals Alert */}
-        {urgentPendingCount > 0 && (
-          <Card className="overflow-hidden border-red-200/70" style={{ borderColor: "rgba(237, 50, 55, 0.3)" }}>
-            <div className="p-4 md:p-5 bg-red-50">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  {getIconByKey("alert", "w-6 h-6")}
-                  <div>
-                    <p className="font-extrabold text-red-800">Urgent Approvals Require Your Attention!</p>
-                    <p className="text-sm text-red-600">{urgentPendingCount} urgent approval(s) pending your decision</p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => setPriorityFilter("URGENT")}
-                  className="px-4 py-2 rounded-xl text-sm font-semibold text-white active:scale-[0.99] transition"
-                  style={{ backgroundColor: "var(--accent-red)" }}
-                >
-                  View Urgent
-                </button>
-              </div>
-            </div>
-          </Card>
-        )}
-
-        {/* Filters & Quick Actions */}
+        {/* Filters */}
         <Card className="p-6">
-          <SectionTitle title="Filters" subtitle="Refine approvals by type, priority, and status" />
+          <SectionTitle title="Quick Filters" subtitle="Manage your approval queue" />
           <div className="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1">Approval Type</label>
@@ -362,7 +283,6 @@ export default function HODApprovals() {
                 <option value="OTHER">Other</option>
               </select>
             </div>
-
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1">Priority</label>
               <select
@@ -377,7 +297,6 @@ export default function HODApprovals() {
                 <option value="LOW">Low</option>
               </select>
             </div>
-
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1">Status</label>
               <select
@@ -387,81 +306,38 @@ export default function HODApprovals() {
               >
                 <option value="All">All Status</option>
                 <option value="PENDING">Pending</option>
-                <option value="APPROVED">Approved</option>
-                <option value="REJECTED">Rejected</option>
+                <option value="COMPLETED">Approved</option>
+                <option value="ON_HOLD">On Hold</option>
               </select>
             </div>
-          </div>
-
-          <div className="mt-4 flex flex-wrap gap-2">
-            <button
-              onClick={() => {
-                setApprovalType("All");
-                setPriorityFilter("All");
-                setStatusFilter("PENDING");
-              }}
-              className="px-3.5 py-2 rounded-2xl text-sm font-semibold border bg-amber-50 text-amber-800 hover:bg-amber-100 transition"
-            >
-              ⏳ All Pending
-            </button>
-            <button
-              onClick={() => {
-                setPriorityFilter("URGENT");
-                setStatusFilter("PENDING");
-              }}
-              className="px-3.5 py-2 rounded-2xl text-sm font-semibold border bg-red-50 text-red-700 hover:bg-red-100 transition"
-            >
-              {getIconByKey("alert", "w-4 h-4 inline-block mr-1 align-middle")} Urgent Only
-            </button>
-            <button
-              onClick={() => {
-                setApprovalType("TASK_COMPLETION");
-                setStatusFilter("PENDING");
-              }}
-              className="px-3.5 py-2 rounded-2xl text-sm font-semibold border bg-blue-50 text-blue-700 hover:bg-blue-100 transition"
-            >
-              {getIconByKey("check", "w-4 h-4 inline-block mr-1 align-middle")} Task Approvals
-            </button>
-            <button
-              onClick={() => {
-                setApprovalType("All");
-                setPriorityFilter("All");
-                setStatusFilter("All");
-              }}
-              className="px-3.5 py-2 rounded-2xl text-sm font-semibold border bg-white hover:bg-gray-50 transition"
-            >
-              {getIconByKey("refresh", "w-4 h-4 inline-block mr-1 align-middle")} Clear All
-            </button>
           </div>
         </Card>
 
         {/* Approvals List */}
         <div className="space-y-4">
           <SectionTitle
-            title="Pending Approvals"
+            title="Approvals Queue"
             subtitle="Requests awaiting your decision"
-            action={<span className="text-sm text-gray-500">{filteredApprovals.filter((a) => a.status === "PENDING").length} pending</span>}
+            action={<span className="text-sm text-gray-500">{filteredApprovals.length} results found</span>}
           />
 
-          {filteredApprovals.filter((a) => a.status === "PENDING").length === 0 ? (
+          {filteredApprovals.length === 0 ? (
             <Card className="p-10 text-center">
               <div className="flex justify-center">{getIconByKey("check", "w-16 h-16 text-green-600")}</div>
               <div className="mt-3 font-extrabold" style={{ color: "var(--primary-blue)" }}>
-                No pending approvals
+                No approvals match filters
               </div>
-              <div className="text-sm text-gray-500 mt-1">Great job! You're all caught up with approvals</div>
+              <div className="text-sm text-gray-500 mt-1">Try adjusting your filters to see more results</div>
             </Card>
           ) : (
-            filteredApprovals
-              .filter((a) => a.status === "PENDING")
-              .map((approval) => (
+            filteredApprovals.map((approval: any) => (
                 <Card
                   key={approval.id}
                   className="p-6 hover:-translate-y-0.5 transition-all cursor-pointer"
                   role="button"
                   tabIndex={0}
                   onClick={() => openModal(approval)}
-                  onKeyDown={(e) => {
+                  onKeyDown={(e: any) => {
                     if (e.key === "Enter" || e.key === " ") openModal(approval);
                   }}
                 >
@@ -474,7 +350,7 @@ export default function HODApprovals() {
                         <Pill tone="info">
                           {getIconByKey(getTypeIcon(approval.type), "w-4 h-4 inline-block mr-1 align-middle")} {approval.type.replace("_", " ")}
                         </Pill>
-                        {approval.daysPending > 3 && <Pill tone="danger">{getIconByKey("warning", "w-4 h-4 inline-block mr-1 align-middle")} {approval.daysPending} days pending</Pill>}
+                        {approval.daysPending > 3 && <Pill tone="danger">⚠️ {approval.daysPending} days pending</Pill>}
                       </div>
 
                       <h3 className="text-lg font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
@@ -482,7 +358,7 @@ export default function HODApprovals() {
                       </h3>
                       <p className="text-sm text-gray-600 mt-2">{approval.description}</p>
 
-                      <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
+                      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div className="rounded-xl border border-gray-200/70 p-3">
                           <div className="flex items-center text-sm">
                             <span className="text-gray-500 w-20">Submitted:</span>
@@ -492,33 +368,9 @@ export default function HODApprovals() {
                         <div className="rounded-xl border border-gray-200/70 p-3">
                           <div className="flex items-center text-sm">
                             <span className="text-gray-500 w-20">Reference:</span>
-                            <code className="font-mono bg-gray-100 px-2 py-0.5 rounded text-xs">
-                              {approval.reference}
-                            </code>
+                            <code className="font-mono bg-gray-100 px-2 py-0.5 rounded text-xs">{approval.reference}</code>
                           </div>
                         </div>
-                        <div className="rounded-xl border border-gray-200/70 p-3">
-                          <div className="flex items-center text-sm">
-                            <span className="text-gray-500 w-20">Due Date:</span>
-                            <span className={`font-semibold ${new Date(approval.dueDate) < new Date() ? "text-red-600" : ""}`}>
-                              {fmtDate(approval.dueDate)}
-                              {new Date(approval.dueDate) < new Date() && " (OVERDUE)"}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex xl:flex-col items-center gap-2 xl:w-32">
-                      <div
-                        className="w-12 h-12 rounded-2xl flex items-center justify-center "
-                        style={{ backgroundColor: "rgba(109, 198, 223, 0.18)" }}
-                      >
-                        {getIconByKey(getTypeIcon(approval.type), "w-8 h-8")}
-                      </div>
-                      <div className="flex xl:flex-col items-center gap-1">
-                        <span className="text-xs font-semibold text-gray-700">{approval.attachments} file(s)</span>
-                        <span className="text-xs text-gray-500">Click to review →</span>
                       </div>
                     </div>
                   </div>
@@ -527,450 +379,100 @@ export default function HODApprovals() {
           )}
         </div>
 
-        {/* Approval History Table */}
+        {/* Recent History Shortcut */}
         {approvalHistory.length > 0 && (
           <Card className="overflow-hidden">
-            <div className="p-6 border-b border-gray-200/70">
-              <SectionTitle title="Recent Approval History" subtitle="Your recent decisions" />
+            <div className="p-5 border-b border-gray-200/70 bg-gray-50/50">
+              <SectionTitle title="Recent History" subtitle="Last few decisions made in your department" />
             </div>
-
-            <div className="hidden lg:block overflow-x-auto">
-              <table className="min-w-full">
-                <thead className="bg-gray-50 border-b border-gray-200/70">
-                  <tr className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
-                    <th className="px-5 py-3 text-left">ID</th>
-                    <th className="px-5 py-3 text-left">Type</th>
-                    <th className="px-5 py-3 text-left">Title</th>
-                    <th className="px-5 py-3 text-left">Requester</th>
-                    <th className="px-5 py-3 text-left">Department</th>
-                    <th className="px-5 py-3 text-left">Decision</th>
-                    <th className="px-5 py-3 text-left">Date</th>
-                    <th className="px-5 py-3 text-left">Comment</th>
-                  </tr>
-                </thead>
-
-                <tbody className="divide-y divide-gray-200/70 text-[13px]">
-                  {approvalHistory.slice(0, 5).map((item) => (
-                    <tr key={item.id} className="hover:bg-gray-50/70 transition">
-                      <td className="px-5 py-3 whitespace-nowrap">
-                        <span className="font-extrabold" style={{ color: "var(--primary-blue)" }}>
-                          {item.id}
-                        </span>
-                      </td>
-                      <td className="px-5 py-3 whitespace-nowrap">
-                        <div className="flex items-center gap-2">
-                          {getIconByKey(getTypeIcon(item.type), "w-5 h-5")}
-                          <Pill>{item.type.replace("_", " ")}</Pill>
-                        </div>
-                      </td>
-                      <td className="px-5 py-3">
-                        <div className="font-semibold">{item.title}</div>
-                      </td>
-                      <td className="px-5 py-3 whitespace-nowrap">
-                        <div className="text-sm">{item.submittedBy}</div>
-                      </td>
-                      <td className="px-5 py-3 whitespace-nowrap">
-                        <Pill>{item.department}</Pill>
-                      </td>
-                      <td className="px-5 py-3 whitespace-nowrap">
-                        <Pill tone={item.status === "APPROVED" ? "success" : "danger"}>{item.status}</Pill>
-                      </td>
-                      <td className="px-5 py-3 whitespace-nowrap">
-                        <div className="text-sm">{item.approvedDate || item.rejectedDate}</div>
-                      </td>
-                      <td className="px-5 py-3">
-                        <div className="text-sm text-gray-600 max-w-xs truncate">{item.approvalComment || item.rejectionReason || "-"}</div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            <div className="lg:hidden p-4 space-y-3">
-              {approvalHistory.slice(0, 3).map((item) => (
-                <div key={item.id} className="rounded-2xl border border-gray-200/70 p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-extrabold" style={{ color: "var(--primary-blue)" }}>
-                      {item.id}
-                    </span>
-                    <Pill tone={item.status === "APPROVED" ? "success" : "danger"}>{item.status}</Pill>
+            <div className="divide-y divide-gray-200/70">
+              {approvalHistory.slice(0, 3).map((item: any) => (
+                <div key={item.id} className="p-5 flex items-center justify-between gap-4">
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <code className="text-xs font-mono text-gray-400">{item.id}</code>
+                      <Pill tone={item.status === "COMPLETED" || item.status === "APPROVED" ? "success" : "danger"}>{item.status}</Pill>
+                    </div>
+                    <p className="font-semibold">{item.title}</p>
+                    <p className="text-xs text-gray-500 mt-1">By {item.submittedBy} • {item.department}</p>
                   </div>
-                  <p className="font-semibold">{item.title}</p>
-                  <p className="text-sm text-gray-600 mt-1">
-                    By {item.submittedBy} • {item.department}
-                  </p>
-                  <p className="text-xs text-gray-500 mt-2">{item.approvalComment || item.rejectionReason}</p>
+                  <Link href="/hod-dashboard/approvals/history">
+                    <button className="text-xs font-bold hover:underline" style={{ color: "var(--primary-blue)" }}>Details</button>
+                  </Link>
                 </div>
               ))}
             </div>
-
-            <div className="px-6 py-4 border-t border-gray-200/70 bg-white">
-              <Link href="/hod-dashboard/approvals/history" className="text-sm font-semibold" style={{ color: "var(--primary-blue)" }}>
+            <div className="p-4 text-center border-t border-gray-200/70">
+              <Link href="/hod-dashboard/approvals/history" className="text-sm font-semibold hover:underline" style={{ color: "var(--primary-blue)" }}>
                 View Full History →
               </Link>
             </div>
           </Card>
         )}
-
-        {/* Approval Workflow */}
-        <Card className="p-6">
-          <SectionTitle title="Department Approval Workflow" subtitle="Standard approval process for department requests" />
-          <div className="mt-5 grid grid-cols-1 md:grid-cols-4 gap-4">
-            {[
-              { step: 1, title: "Team Submission", desc: "Team member submits request", icon: "upload" },
-              { step: 2, title: "Document Review", desc: "HOD reviews attached documents", icon: "search" },
-              { step: 3, title: "Decision", desc: "Approve, reject, or request changes", icon: "edit" },
-              { step: 4, title: "Notification", desc: "Team notified of decision", icon: "bell" },
-            ].map((step) => (
-              <div key={step.step} className="rounded-2xl border border-gray-200/70 p-4 hover:bg-gray-50 transition">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl flex items-center justify-center text-white font-bold" style={{ backgroundColor: "var(--secondary-blue)" }}>
-                    {step.step}
-                  </div>
-                  <div>
-                    <div className="font-extrabold" style={{ color: "var(--primary-blue)" }}>
-                      {step.title}
-                    </div>
-                    <div className="text-xs text-gray-500 mt-1">{step.desc}</div>
-                  </div>
-                  <span className="ml-auto">{getIconByKey(step.icon, "w-8 h-8")}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </Card>
       </div>
 
-      {/* ---------- FIXED MODAL ---------- */}
+      {/* ---------- MODAL ---------- */}
       {isModalOpen && selectedApproval && (
-        <div className="fixed inset-0 z-[9999]">
-          {/* Backdrop */}
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-gray-900/60" onClick={closeModal} />
-
-          {/* Modal container */}
-          <div className="relative z-10 min-h-full flex items-end sm:items-center justify-center p-4">
-            <div className="w-full sm:max-w-6xl" onClick={(e) => e.stopPropagation()}>
-              <Card className="overflow-hidden">
-                {/* Modal Header */}
-                <div className="px-6 pt-6 pb-4 border-b border-gray-200/70">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="text-2xl font-extrabold" style={{ color: "var(--primary-blue)" }}>
-                        Review Approval Request
-                      </h3>
-                      <div className="flex items-center gap-2 mt-2">
-                        <code className="font-mono bg-gray-100 px-3 py-1 rounded text-sm">{selectedApproval.id}</code>
-                        <Pill tone={getPriorityTone(selectedApproval.priority)}>{selectedApproval.priority}</Pill>
-                        <Pill tone={getStatusTone(selectedApproval.status)}>{selectedApproval.status}</Pill>
-                      </div>
-                    </div>
-                    <button
-                      onClick={closeModal}
-                      className="text-gray-400 hover:text-gray-500 focus:outline-none w-10 h-10 rounded-xl hover:bg-gray-100 flex items-center justify-center transition"
-                      aria-label="Close"
-                    >
-                      <span className="text-2xl">&times;</span>
-                    </button>
-                  </div>
-
-                  {/* Modal Tabs */}
-                  <div className="flex gap-4 mt-4">
-                    {[
-                      { id: "details", label: "Request Details" },
-                      { id: "documents", label: `Documents (${selectedApproval.attachments})` },
-                      { id: "review", label: "Review & Decision" },
-                    ].map((tab) => (
-                      <button
-                        key={tab.id}
-                        onClick={() => setActiveDocTab(tab.id)}
-                        className={`pb-2 px-1 font-semibold transition border-b-2 ${activeDocTab === tab.id ? "text-gray-900" : "text-gray-500 hover:text-gray-700"
-                          }`}
-                        style={{ borderBottomColor: activeDocTab === tab.id ? "var(--primary-blue)" : "transparent" }}
-                      >
-                        {tab.label}
-                      </button>
-                    ))}
-                  </div>
+          <Card className="relative z-10 w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+            <div className="p-6 border-b border-gray-200/70 flex justify-between items-start">
+              <div>
+                <h3 className="text-2xl font-extrabold" style={{ color: "var(--primary-blue)" }}>Review Approval Request</h3>
+                <div className="flex items-center gap-2 mt-2">
+                  <code className="font-mono bg-gray-100 px-3 py-1 rounded text-sm">{(selectedApproval as any).id}</code>
+                  <Pill tone={getPriorityTone((selectedApproval as any).priority)}>{(selectedApproval as any).priority}</Pill>
                 </div>
-
-                {/* Modal Body */}
-                <div className="p-6 max-h-[70vh] overflow-y-auto">
-                  {/* Tab: Request Details */}
-                  {activeDocTab === "details" && (
-                    <div className="space-y-6">
-                      <div className="rounded-2xl border border-gray-200/70 p-5">
-                        <h4 className="text-lg font-extrabold mb-3" style={{ color: "var(--primary-blue)" }}>
-                          {selectedApproval.title}
-                        </h4>
-                        <p className="text-gray-600 text-sm mb-4">{selectedApproval.description}</p>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="space-y-3">
-                            <div className="flex items-start">
-                              <span className="w-24 text-sm text-gray-500">Submitted By:</span>
-                              <div>
-                                <p className="font-semibold">{selectedApproval.submittedBy}</p>
-                                <p className="text-xs text-gray-500">{selectedApproval.department}</p>
-                              </div>
-                            </div>
-                            <div className="flex items-center text-sm">
-                              <span className="w-24 text-gray-500">Reference:</span>
-                              <code className="font-mono bg-gray-100 px-2 py-1 rounded text-xs">
-                                {selectedApproval.reference}
-                              </code>
-                            </div>
-                          </div>
-                          <div className="space-y-3">
-                            <div className="flex items-center text-sm">
-                              <span className="w-24 text-gray-500">Submitted:</span>
-                              <span className="font-semibold">{fmtDate(selectedApproval.submittedDate)}</span>
-                            </div>
-                            <div className="flex items-center text-sm">
-                              <span className="w-24 text-gray-500">Due Date:</span>
-                              <span className={`font-semibold ${new Date(selectedApproval.dueDate) < new Date() ? "text-red-600" : ""}`}>
-                                {fmtDate(selectedApproval.dueDate)}
-                                {new Date(selectedApproval.dueDate) < new Date() && " (OVERDUE)"}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Documents Summary */}
-                      {selectedApproval.attachments > 0 && (
-                        <div className="rounded-2xl border border-gray-200/70 p-5">
-                          <h4 className="text-sm font-extrabold mb-3" style={{ color: "var(--primary-blue)" }}>
-                            Attached Documents ({selectedApproval.attachments})
-                          </h4>
-                          <div className="space-y-2">
-                            {selectedApproval.documents?.slice(0, 3).map((doc, idx) => (
-                              <div key={idx} className="flex items-center justify-between p-2 hover:bg-gray-50 rounded-xl">
-                                <div className="flex items-center gap-3">
-                                  {getIconByKey(getFileIcon(doc.type), "w-6 h-6")}
-                                  <div>
-                                    <p className="text-sm font-semibold">{doc.name}</p>
-                                    <p className="text-xs text-gray-500">
-                                      {doc.size} • Uploaded by {doc.uploadedBy}
-                                    </p>
-                                  </div>
-                                </div>
-                                <button
-                                  onClick={() => setActiveDocTab("documents")}
-                                  className="text-sm font-semibold px-3 py-1.5 rounded-xl hover:bg-gray-100 transition"
-                                  style={{ color: "var(--primary-blue)" }}
-                                >
-                                  View →
-                                </button>
-                              </div>
-                            ))}
-                            {selectedApproval.attachments > 3 && (
-                              <p className="text-xs text-gray-500 mt-2 text-center">
-                                +{selectedApproval.attachments - 3} more documents
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {/* Tab: Documents */}
-                  {activeDocTab === "documents" && (
-                    <div className="space-y-4">
-                      {selectedApproval.documents && selectedApproval.documents.length > 0 ? (
-                        <div className="grid grid-cols-1 gap-3">
-                          {selectedApproval.documents.map((doc, idx) => (
-                            <div key={idx} className="rounded-2xl border border-gray-200/70 p-4 transition">
-                              <div className="flex items-start justify-between">
-                                <div className="flex items-start gap-4">
-                                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl" style={{ backgroundColor: "rgba(109, 198, 223, 0.1)" }}>
-                                    {getIconByKey(getFileIcon(doc.type), "w-6 h-6")}
-                                  </div>
-                                  <div>
-                                    <h5 className="font-extrabold text-gray-900">{doc.name}</h5>
-                                    <div className="flex flex-wrap items-center gap-2 mt-1">
-                                      <span className="text-xs text-gray-500">{doc.size}</span>
-                                      <span className="text-xs text-gray-500">•</span>
-                                      <span className="text-xs text-gray-500">Uploaded by {doc.uploadedBy}</span>
-                                      <span className="text-xs text-gray-500">•</span>
-                                      <span className="text-xs text-gray-500">{doc.date}</span>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="flex gap-2">
-                                  <button
-                                    onClick={() => handleViewDocument(doc)}
-                                    className="px-4 py-2 rounded-xl text-sm font-semibold border hover:bg-gray-50 transition"
-                                    style={{ borderColor: "rgba(44, 75, 155, 0.25)", color: "var(--primary-blue)" }}
-                                  >
-                                    Preview
-                                  </button>
-                                  <button
-                                    onClick={() => handleDownloadDocument(doc)}
-                                    className="px-4 py-2 rounded-xl text-sm font-semibold text-white active:scale-[0.99] transition"
-                                    style={{ backgroundColor: "var(--secondary-blue)" }}
-                                  >
-                                    Download
-                                  </button>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="rounded-2xl border border-gray-200/70 p-8 text-center">
-                          {getIconByKey("document", "w-16 h-16 mx-auto text-gray-400")}
-                          <p className="mt-3 text-gray-600">No documents attached to this request</p>
-                        </div>
-                      )}
-
-                      <div className="rounded-2xl bg-blue-50 border border-blue-100 p-4">
-                        <div className="flex items-start gap-3">
-                          {getIconByKey("info", "w-5 h-5 text-blue-600 shrink-0")}
-                          <div>
-                            <p className="text-sm font-semibold text-blue-800">Document Review Guidelines</p>
-                            <p className="text-xs text-blue-600 mt-1">
-                              Review all attached documents carefully before making your decision.
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Tab: Review & Decision */}
-                  {activeDocTab === "review" && (
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                      {/* Left */}
-                      <div className="space-y-4">
-                        {selectedApproval.attachments > 0 && (
-                          <div className="rounded-2xl border border-gray-200/70 p-5">
-                            <h4 className="text-sm font-extrabold mb-3" style={{ color: "var(--primary-blue)" }}>
-                              Documents to Review
-                            </h4>
-
-                            <div className="space-y-2">
-                              {selectedApproval.documents?.map((doc, idx) => (
-                                <label key={idx} className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-xl cursor-pointer">
-                                  <input
-                                    type="checkbox"
-                                    checked={!!reviewedDocs[doc.name]}
-                                    onChange={(e) =>
-                                      setReviewedDocs((prev) => ({
-                                        ...prev,
-                                        [doc.name]: e.target.checked,
-                                      }))
-                                    }
-                                    className="rounded border-gray-300"
-                                  />
-                                  {getIconByKey(getFileIcon(doc.type), "w-5 h-5")}
-                                  <span className="text-sm flex-1">{doc.name}</span>
-                                  <span className="text-xs text-gray-500">{doc.size}</span>
-                                </label>
-                              ))}
-                            </div>
-
-                            <p className="text-xs text-gray-500 mt-3">✓ Check off documents as you review them</p>
-                          </div>
-                        )}
-
-                        <div className="rounded-2xl border border-gray-200/70 p-5">
-                          <h4 className="text-sm font-extrabold mb-3" style={{ color: "var(--primary-blue)" }}>
-                            Review Summary
-                          </h4>
-                          <div className="space-y-2 text-sm">
-                            <div className="flex justify-between">
-                              <span className="text-gray-600">Total Documents:</span>
-                              <span className="font-semibold">{selectedApproval.attachments}</span>
-                            </div>
-                            {selectedApproval.attachments > 0 && (
-                              <>
-                                <div className="flex justify-between">
-                                  <span className="text-gray-600">Reviewed:</span>
-                                  <span className="font-semibold text-green-600">{reviewedCount}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span className="text-gray-600">Pending Review:</span>
-                                  <span className="font-semibold text-amber-600">{selectedApproval.attachments - reviewedCount}</span>
-                                </div>
-                              </>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Right */}
-                      <div className="space-y-4">
-                        <div className="rounded-2xl border border-gray-200/70 p-5">
-                          <h4 className="text-sm font-extrabold mb-3" style={{ color: "var(--primary-blue)" }}>
-                            Your Decision
-                          </h4>
-
-                          <div className="space-y-4">
-                            <div>
-                              <label className="block text-sm font-semibold text-gray-700 mb-2">Add Comment</label>
-                              <textarea
-                                rows={4}
-                                className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-100"
-                                placeholder="Add your approval comment, feedback, or rejection reason..."
-                                value={comment}
-                                onChange={(e) => setComment(e.target.value)}
-                              />
-                              <p className="text-xs text-gray-500 mt-2">Your comment will be visible to the requester</p>
-                            </div>
-
-                            <div className="space-y-3 pt-4">
-                              <button
-                                onClick={handleApprove}
-                                className="w-full px-5 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition"
-                                style={{ backgroundColor: "#10B981" }}
-                              >
-                                ✓ Approve Request
-                              </button>
-                              <button
-                                onClick={handleReject}
-                                className="w-full px-5 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition"
-                                style={{ backgroundColor: "var(--accent-red)" }}
-                              >
-                                ✗ Reject Request
-                              </button>
-                              {selectedApproval.attachments > 0 && (
-                                <button
-                                  onClick={() => setActiveDocTab("documents")}
-                                  className="w-full px-5 py-3 rounded-2xl font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
-                                  style={{ borderColor: "rgba(44, 75, 155, 0.25)", color: "var(--primary-blue)" }}
-                                >
-                                  ← Back to Documents
-                                </button>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Modal Footer */}
-                <div className="px-6 py-4 border-t border-gray-200/70 bg-gray-50">
-                  <div className="flex justify-between items-center">
-                    <div className="text-sm text-gray-600">
-                      <span className="font-semibold">Request ID:</span> {selectedApproval.id} •
-                      <span className="font-semibold ml-2">Type:</span> {selectedApproval.type.replace("_", " ")}
-                    </div>
-                    <button
-                      onClick={closeModal}
-                      className="px-4 py-2 rounded-xl text-sm font-semibold border bg-white hover:bg-gray-50 transition"
-                      style={{ borderColor: "rgba(44, 75, 155, 0.25)", color: "var(--primary-blue)" }}
-                    >
-                      Close
-                    </button>
-                  </div>
-                </div>
-              </Card>
+              </div>
+              <button onClick={closeModal} className="text-gray-400 hover:text-gray-900 text-2xl">&times;</button>
             </div>
-          </div>
+
+            <div className="flex-1 overflow-y-auto p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                   <h4 className="text-sm font-bold uppercase text-gray-500 mb-3 tracking-wider">Information</h4>
+                   <div className="space-y-4">
+                      <div>
+                        <p className="text-xs text-gray-400 uppercase font-bold">Title</p>
+                        <p className="font-bold text-lg">{(selectedApproval as any).title}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-400 uppercase font-bold">Requester</p>
+                        <p className="font-semibold">{(selectedApproval as any).submittedBy}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-400 uppercase font-bold">Description</p>
+                        <p className="text-sm text-gray-600">{(selectedApproval as any).description}</p>
+                      </div>
+                   </div>
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold uppercase text-gray-500 mb-3 tracking-wider">Decision</h4>
+                  <textarea
+                    rows={4}
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-100 mb-4"
+                    placeholder="Add your comments or reasons for decision..."
+                  />
+                  <div className="flex gap-3">
+                    <button 
+                      onClick={handleApprove}
+                      className="flex-1 bg-green-500 text-white font-bold py-3 rounded-xl hover:bg-green-600 transition"
+                    >
+                      ✓ Approve
+                    </button>
+                    <button 
+                      onClick={handleReject}
+                      className="flex-1 bg-red-500 text-white font-bold py-3 rounded-xl hover:bg-red-600 transition"
+                    >
+                      ✗ Reject
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Card>
         </div>
       )}
     </Layout>

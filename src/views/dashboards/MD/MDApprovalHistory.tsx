@@ -1,15 +1,17 @@
 "use client";
 
 // pages/dashboards/MD/MDApprovalHistory.jsx
-import { useState } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import { MDMenuItems } from "@/utils/menus";
-const Card = ({ className = "", children }) => (
-  <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
+import { fetchWithAuth } from "@/lib/api";
+import { useSSE } from "@/hooks/useSSE";
+const Card = ({ className = "", children, ...props }: any) => (
+  <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`} {...props}>{children}</div>
 );
 
-const SectionTitle = ({ title, subtitle, action }) => (
+const SectionTitle = ({ title, subtitle, action = null }: any) => (
   <div className="flex items-start justify-between gap-3">
     <div>
       <h2 className="text-lg md:text-xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
@@ -36,73 +38,48 @@ const Pill = ({ children, tone = "default" }) => {
 };
 
 export default function MDApprovalHistory() {
+  const [historyData, setHistoryData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
   const [filterDecision, setFilterDecision] = useState('all');
 
-  // Sample history data - in real app, this would come from API
-  const historyData = [
-    {
-      id: 'APP-007',
-      title: 'Workshop Maintenance Report',
-      type: 'REPORT',
-      submittedBy: 'Robert Chen',
-      department: 'Workshop',
-      status: 'APPROVED',
-      decisionDate: '2024-12-14',
-      decisionBy: 'Managing Director',
-      comment: 'All maintenance tasks completed satisfactorily. Approved.',
-      documents: 2,
-    },
-    {
-      id: 'APP-008',
-      title: 'HR Policy Update - Remote Work',
-      type: 'DOCUMENT',
-      submittedBy: 'Patricia Davis',
-      department: 'HR',
-      status: 'REJECTED',
-      decisionDate: '2024-12-13',
-      decisionBy: 'Managing Director',
-      comment: 'Policy needs legal review and compliance team input before approval',
-      documents: 1,
-    },
-    {
-      id: 'APP-010',
-      title: 'Q4 Safety Report',
-      type: 'REPORT',
-      submittedBy: 'Sarah Smith',
-      department: 'HSE',
-      status: 'APPROVED',
-      decisionDate: '2024-12-12',
-      decisionBy: 'Managing Director',
-      comment: 'Good work on safety metrics. Approved.',
-      documents: 3,
-    },
-    {
-      id: 'APP-011',
-      title: 'Equipment Purchase Request',
-      type: 'DOCUMENT',
-      submittedBy: 'Mike Johnson',
-      department: 'Technical',
-      status: 'APPROVED',
-      decisionDate: '2024-12-11',
-      decisionBy: 'Managing Director',
-      comment: 'Approved within budget limits.',
-      documents: 4,
-    },
-    {
-      id: 'APP-012',
-      title: 'Training Budget Proposal',
-      type: 'DOCUMENT',
-      submittedBy: 'Maria Garcia',
-      department: 'Finance',
-      status: 'REJECTED',
-      decisionDate: '2024-12-10',
-      decisionBy: 'Managing Director',
-      comment: 'Need to revise based on Q1 projections.',
-      documents: 2,
-    },
-  ];
+  const fetchHistory = useCallback(async () => {
+    try {
+      const res = await fetchWithAuth("/api/tasks?limit=500");
+      if (res.ok) {
+        const tasks = await res.json();
+        // Map tasks to history format
+        const mapped = tasks
+          .filter((t: any) => t.status !== "PENDING")
+          .map((t: any) => ({
+            id: `APP-${String(t.id).padStart(3, '0')}`,
+            title: t.title,
+            type: t.type === "JOB" ? "TASK_COMPLETION" : "DOCUMENT",
+            submittedBy: t.createdBy?.name || t.createdBy?.email || "System",
+            department: t.department || "—",
+            status: t.status === "COMPLETED" ? "APPROVED" : "REJECTED",
+            decisionDate: t.completedAt?.split("T")[0] || t.updatedAt?.split("T")[0] || "",
+            decisionBy: "Managing Director",
+            comment: t.comment || "-",
+            documents: 0,
+          }));
+        setHistoryData(mapped);
+      }
+    } catch (e) {
+      console.error("Failed to fetch history:", e);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchHistory();
+  }, [fetchHistory]);
+
+  useSSE("/api/tasks/events", (ev) => {
+    if (ev.type?.startsWith("task:")) fetchHistory();
+  });
 
   const filteredHistory = historyData.filter(item => {
     const matchesSearch = searchTerm === '' || 
@@ -228,7 +205,14 @@ export default function MDApprovalHistory() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200/70 text-[13px]">
-                {filteredHistory.map((item) => (
+                {loading ? (
+                  <tr>
+                    <td colSpan={9} className="px-5 py-10 text-center text-gray-500">
+                      Loading history...
+                    </td>
+                  </tr>
+                ) : (
+                  filteredHistory.map((item) => (
                   <tr key={item.id} className="hover:bg-gray-50/70 transition">
                     <td className="px-5 py-3 whitespace-nowrap">
                       <span className="font-extrabold" style={{ color: 'var(--primary-blue)' }}>
@@ -266,7 +250,8 @@ export default function MDApprovalHistory() {
                       <Pill tone="info">{item.documents}</Pill>
                     </td>
                   </tr>
-                ))}
+                  ))
+                )}
               </tbody>
             </table>
           </div>
