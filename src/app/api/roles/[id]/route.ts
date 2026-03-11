@@ -29,14 +29,18 @@ export async function PATCH(
 
   try {
     const body = await req.json();
-    const { name } = body as { name?: string };
-    if (!name || typeof name !== "string" || !name.trim()) {
-      return NextResponse.json({ error: "Name is required" }, { status: 400 });
+    const { name, dashboardRoute } = body as { name?: string; dashboardRoute?: string };
+    if ((!name || typeof name !== "string" || !name.trim()) && dashboardRoute === undefined) {
+      return NextResponse.json({ error: "Name or dashboardRoute is required" }, { status: 400 });
     }
+
+    const data: any = {};
+    if (name) data.name = name.trim();
+    if (dashboardRoute !== undefined) data.dashboardRoute = dashboardRoute.trim();
 
     const role = await prisma.role.update({
       where: { id: roleId },
-      data: { name: name.trim() },
+      data,
     });
 
     emitRealtimeEvent({

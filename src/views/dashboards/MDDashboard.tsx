@@ -3,17 +3,19 @@
 // pages/dashboards/MDDashboard.jsx
 import { useState, useEffect, useCallback, useMemo } from "react";
 import Link from "next/link";
+import useSWR from 'swr';
 import Layout from "../../components/Layout";
 import { MDMenuItems } from "@/utils/menus";
 import { PlusIcon, FileUploadIconComponent, MegaphoneIcon, CalendarIcon, ChartIcon } from "@/lib/icons";
 import { fetchWithAuth } from "@/lib/api";
 
+const fetcher = (url: string) => fetchWithAuth(url).then(res => res.json());
 
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
 );
 
-const SectionTitle = ({ title, subtitle, action }) => (
+const SectionTitle = ({ title, subtitle, action }: { title: string; subtitle?: string; action?: React.ReactNode }) => (
   <div className="flex items-start justify-between gap-3">
     <div>
       <h2 className="text-lg md:text-xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
@@ -44,23 +46,9 @@ const Pill = ({ children, tone = "default" }) => {
 const priorityTone = (p) => (p === "URGENT" ? "danger" : p === "IMPORTANT" ? "warn" : "default");
 
 export default function MDDashboard() {
-  const [tasksData, setTasksData] = useState([]);
-
-  const fetchTasks = useCallback(async () => {
-    try {
-      const res = await fetchWithAuth("/api/tasks?limit=1000");
-      if (res.ok) {
-        const data = await res.json();
-        setTasksData(data);
-      }
-    } catch (e) {
-      console.error("Failed to fetch tasks:", e);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchTasks();
-  }, [fetchTasks]);
+  const { data: tasksData = [], mutate: fetchTasks } = useSWR('/api/tasks?limit=1000', fetcher, {
+    revalidateOnFocus: false,
+  });
 
   useEffect(() => {
     let cancelled = false;
@@ -101,19 +89,20 @@ export default function MDDashboard() {
   }, [fetchTasks]);
 
   const summary = useMemo(() => {
-    const totalTasks = tasksData.length;
+    const totalItems = tasksData.length;
+    const taskCount = tasksData.filter((t) => t.type === "TASK").length;
     const activeJobs = tasksData.filter((t) => t.type === "JOB" && t.status !== "COMPLETED").length;
     const overdueTasks = tasksData.filter((t) => t.dueDate && new Date(t.dueDate).getTime() < Date.now() && t.status !== "COMPLETED").length;
     const completedTasks = tasksData.filter((t) => t.status === "COMPLETED").length;
-    const completionRate = totalTasks ? Math.round((completedTasks / totalTasks) * 100) : 0;
+    const completionRate = totalItems ? Math.round((completedTasks / totalItems) * 100) : 0;
 
-    return { totalTasks, activeJobs, overdueTasks, completionRate };
+    return { totalItems, taskCount, activeJobs, overdueTasks, completionRate };
   }, [tasksData]);
 
   const stats = [
-    { title: "Total Tasks", value: summary.totalTasks.toString(), change: "Live", color: "var(--primary-blue)", link: "/md-dashboard/tasks", bar: "100%" },
-    { title: "Active Jobs", value: summary.activeJobs.toString(), change: "Live", color: "var(--secondary-blue)", link: "/md-dashboard/jobs", bar: summary.totalTasks ? `${Math.round((summary.activeJobs / summary.totalTasks) * 100)}%` : "0%" },
-    { title: "Overdue Tasks", value: summary.overdueTasks.toString(), change: "Live", color: "var(--accent-red)", link: "/md-dashboard/escalations", bar: summary.totalTasks ? `${Math.round((summary.overdueTasks / summary.totalTasks) * 100)}%` : "0%" },
+    { title: "Tasks", value: summary.taskCount.toString(), change: "Live", color: "var(--primary-blue)", link: "/md-dashboard/tasks", bar: "100%" },
+    { title: "Active Jobs", value: summary.activeJobs.toString(), change: "Live", color: "var(--secondary-blue)", link: "/md-dashboard/jobs", bar: summary.totalItems ? `${Math.round((summary.activeJobs / summary.totalItems) * 100)}%` : "0%" },
+    { title: "Overdue Tasks", value: summary.overdueTasks.toString(), change: "Live", color: "var(--accent-red)", link: "/md-dashboard/escalations", bar: summary.totalItems ? `${Math.round((summary.overdueTasks / summary.totalItems) * 100)}%` : "0%" },
     { title: "Completion Rate", value: `${summary.completionRate}%`, change: "Live", color: "#10B981", link: "/md-dashboard/tasks", bar: `${summary.completionRate}%` },
   ];
 
@@ -124,9 +113,9 @@ export default function MDDashboard() {
     { title: "Post Announcement", desc: "Update the company", icon: <MegaphoneIcon />, link: "/md-dashboard/create-announcement" },
   ];
 
-  const deptPerf = [];
+  const deptPerf: { dept: string; link: string; pct: number }[] = [];
 
-  const activity = [];
+  const activity: { user: string; action: string; time: string; link: string }[] = [];
 
   const tenders = [
     { id: "TEN-001", title: "Pipeline Equipment Supply", deadline: "2024-12-20", department: "Procurement", status: "OPEN" },

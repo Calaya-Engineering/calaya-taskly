@@ -1,10 +1,10 @@
 {
-  "[project]/Desktop/calaya-taskly/src/views/dashboards/MDDashboard.jsx [app-client] (ecmascript, next/dynamic entry)": {
-    "id": "[project]/Desktop/calaya-taskly/src/views/dashboards/MDDashboard.jsx [app-client] (ecmascript, next/dynamic entry)",
+  "[project]/src/views/dashboards/MDDashboard.tsx [app-client] (ecmascript, next/dynamic entry)": {
+    "id": "[project]/src/views/dashboards/MDDashboard.tsx [app-client] (ecmascript, next/dynamic entry)",
     "files": [
-      "static/chunks/Desktop_calaya-taskly_src_4e993a5f._.js",
-      "static/chunks/a96cc_72c1d040._.js",
-      "static/chunks/Desktop_calaya-taskly_src_views_dashboards_MDDashboard_jsx_341cd358._.js"
+      "static/chunks/src_80a2f341._.js",
+      "static/chunks/node_modules_2e4c332d._.js",
+      "static/chunks/src_views_dashboards_MDDashboard_tsx_d9b86125._.js"
     ]
   }
 }

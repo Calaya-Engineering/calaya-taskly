@@ -1,1 +1,10 @@
-{}
+{
+  "[project]/src/views/dashboards/MD/MDCreateTask.tsx [app-client] (ecmascript, next/dynamic entry)": {
+    "id": "[project]/src/views/dashboards/MD/MDCreateTask.tsx [app-client] (ecmascript, next/dynamic entry)",
+    "files": [
+      "static/chunks/src_13cc89d5._.js",
+      "static/chunks/node_modules_0e52b38c._.js",
+      "static/chunks/src_views_dashboards_MD_MDCreateTask_tsx_bd804981._.js"
+    ]
+  }
+}

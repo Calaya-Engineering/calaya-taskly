@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
   try {
     const roles = await prisma.role.findMany({
       orderBy: { name: "asc" },
-      select: { id: true, name: true },
+      select: { id: true, name: true, dashboardRoute: true },
     });
     return NextResponse.json(roles, {
       headers: { "Cache-Control": "no-store, max-age=0" },
@@ -49,13 +49,16 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const { name } = body as { name?: string };
+    const { name, dashboardRoute } = body as { name?: string; dashboardRoute?: string };
     if (!name || typeof name !== "string" || !name.trim()) {
       return NextResponse.json({ error: "Name is required" }, { status: 400 });
     }
 
     const role = await prisma.role.create({
-      data: { name: name.trim() },
+      data: { 
+        name: name.trim(),
+        ...(dashboardRoute && { dashboardRoute: dashboardRoute.trim() })
+      },
     });
 
     emitRealtimeEvent({

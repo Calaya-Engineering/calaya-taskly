@@ -22,9 +22,6 @@ export function getRouteForRole(role: string): string {
     MD: "/md-dashboard",
     HOD: "/hod-dashboard",
     Staff: "/staff-dashboard",
-    Personnel: "/staff-dashboard",
-    "Corp Member": "/staff-dashboard",
-    Secretary: "/secretary-dashboard",
   };
   return map[role] ?? "/staff-dashboard";
 }
@@ -40,9 +37,6 @@ export const DEMO_CREDENTIALS: DemoCredential[] = [
   { email: "izuchukwuonuoha6@gmail.com", password: "admin123", role: "MD", route: "/md-dashboard" },
   { email: "izuchukwuonuoha6+HOD@gmail.com", password: "admin123", role: "HOD", route: "/hod-dashboard" },
   { email: "staff@calaya.com", password: "demo123", role: "Staff", route: "/staff-dashboard" },
-  { email: "personnel@calaya.com", password: "demo123", role: "Personnel", route: "/staff-dashboard" },
-  { email: "corp@calaya.com", password: "demo123", role: "Corp Member", route: "/staff-dashboard" },
-  { email: "secretary@calaya.com", password: "demo123", role: "Secretary", route: "/secretary-dashboard" },
 ];
 
 

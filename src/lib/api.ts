@@ -24,7 +24,9 @@ export async function fetchWithAuth(
     headers.set("Authorization", `Bearer ${token}`);
   }
 
-  const isEventStream = headers.get("Accept") === "text/event-stream";
+  const isEventStream =
+    headers.get("Accept") === "text/event-stream" ||
+    input.toString().endsWith("/events");
   const method = (init?.method || "GET").toUpperCase();
   // Reads fail fast; writes get a longer budget to avoid false timeouts on cold DB connections.
   const defaultTimeoutMs = isEventStream ? 0 : method === "GET" ? 15000 : 45000;

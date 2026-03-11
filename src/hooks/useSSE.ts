@@ -32,8 +32,8 @@ export function useSSE(endpoint, onEvent, enabled = true) {
 
         let cancelled = false;
         let delay = INITIAL_DELAY;
-        let timeoutId = null;
-        let currentReader = null;
+        let timeoutId: ReturnType<typeof setTimeout> | null = null;
+        let currentReader: ReadableStreamDefaultReader<Uint8Array> | null = null;
 
         async function connect() {
             if (cancelled) return;
@@ -42,9 +42,16 @@ export function useSSE(endpoint, onEvent, enabled = true) {
                     headers: { Accept: "text/event-stream" },
                     timeoutMs: 0,
                 });
-                if (!res.ok || !res.body) throw new Error(`SSE ${res.status}`);
 
-                delay = INITIAL_DELAY; // reset back-off on successful connect
+                if (!res.ok || !res.body || res.status >= 400) {
+                    if (res.status === 401 || res.status === 404) {
+                        // Don't retry if auth fails or endpoint doesn't exist
+                        return;
+                    }
+                    throw new Error(`SSE error ${res.status}`);
+                }
+
+                delay = INITIAL_DELAY; // reset back-off on successful stream start
                 const reader = res.body.getReader();
                 currentReader = reader;
                 const decoder = new TextDecoder();
@@ -66,13 +73,15 @@ export function useSSE(endpoint, onEvent, enabled = true) {
                         }
                     }
                 }
-            } catch {
-                /* connection error — schedule reconnect */
+            } catch (err) {
+                // Ignore DOMException (normally related to aborting)
+                if (err instanceof DOMException && err.name === 'AbortError') return;
             } finally {
                 currentReader = null;
                 if (!cancelled) {
+                    // Back off aggressively on broken connections or 404 boundaries during dev
                     timeoutId = setTimeout(() => {
-                        delay = Math.min(delay * 2, MAX_DELAY);
+                        delay = Math.min(delay * 1.5 + 1000, MAX_DELAY);
                         connect();
                     }, delay);
                 }

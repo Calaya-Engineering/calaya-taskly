@@ -42,7 +42,7 @@ export const HODMenuItems = [
 
 export const MDMenuItems = [
   { label: "Dashboard", path: "/md-dashboard", icon: <DashboardIcon />, group: "Overview" },
-  { label: "Tasks (All)", path: "/md-dashboard/tasks", icon: <TaskIcon />, group: "Tasks" },
+  { label: "All Tasks", path: "/md-dashboard/tasks", icon: <TaskIcon />, group: "Tasks" },
   { label: "Active Jobs", path: "/md-dashboard/jobs", icon: <TaskIcon />, group: "Tasks" },
   { label: "Documents", path: "/md-dashboard/documents", icon: <DocumentIcon />, group: "Documents & Reports" },
   { label: "Daily Reports", path: "/md-dashboard/reports", icon: <ReportIcon />, group: "Documents & Reports" },

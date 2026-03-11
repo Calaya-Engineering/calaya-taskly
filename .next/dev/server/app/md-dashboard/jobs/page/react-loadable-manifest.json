@@ -1,1 +1,10 @@
-{}
+{
+  "[project]/src/views/dashboards/MD/MDActiveJobs.tsx [app-client] (ecmascript, next/dynamic entry)": {
+    "id": "[project]/src/views/dashboards/MD/MDActiveJobs.tsx [app-client] (ecmascript, next/dynamic entry)",
+    "files": [
+      "static/chunks/src_0d841b46._.js",
+      "static/chunks/node_modules_0e52b38c._.js",
+      "static/chunks/src_views_dashboards_MD_MDActiveJobs_tsx_60e8ba82._.js"
+    ]
+  }
+}

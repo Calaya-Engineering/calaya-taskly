@@ -15,7 +15,7 @@ export default function Layout({ children, menuItems, userRole }) {
   const router = useRouter();
   const { getBadge } = useBadges();
   const { isAuthenticated, loading, logout } = useAuth();
-  const shouldPrefetchSidebarLinks = userRole === "Staff";
+  const shouldPrefetchSidebarLinks = false; // Disabled to massively speed up dev mode rendering
 
   const handleLogoutClick = () => setShowLogoutModal(true);
 
@@ -65,7 +65,7 @@ export default function Layout({ children, menuItems, userRole }) {
         "--primary-blue": "#2C4B9B",
         "--secondary-blue": "#6DC6DF",
         "--accent-red": "#ED3237",
-      }}
+      } as React.CSSProperties}
     >
       {/* Top Bar */}
       <header className="fixed top-0 left-0 right-0 z-50">

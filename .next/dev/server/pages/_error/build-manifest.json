@@ -6,17 +6,17 @@
   "rootMainFiles": [],
   "pages": {
     "/_error": [
-      "static/chunks/a96cc_next_dist_compiled_0cd3e738._.js",
-      "static/chunks/a96cc_next_dist_shared_lib_a34daabd._.js",
-      "static/chunks/a96cc_next_dist_client_2a77e80c._.js",
-      "static/chunks/a96cc_next_dist_ce5dddfc._.js",
-      "static/chunks/a96cc_next_error_c161ac42.js",
-      "static/chunks/[next]_entry_page-loader_ts_7e5eecc2._.js",
-      "static/chunks/a96cc_react-dom_291f6080._.js",
-      "static/chunks/a96cc_d1efaad2._.js",
-      "static/chunks/[root-of-the-server]__7474f50f._.js",
-      "static/chunks/Desktop_calaya-taskly_pages__error_2da965e7._.js",
-      "static/chunks/turbopack-Desktop_calaya-taskly_pages__error_5bbe69b6._.js"
+      "static/chunks/node_modules_next_dist_compiled_8ca6b690._.js",
+      "static/chunks/node_modules_next_dist_shared_lib_9a2a7093._.js",
+      "static/chunks/node_modules_next_dist_client_5a8a528e._.js",
+      "static/chunks/node_modules_next_dist_a183fb77._.js",
+      "static/chunks/node_modules_next_error_1cfbb379.js",
+      "static/chunks/[next]_entry_page-loader_ts_43b523b5._.js",
+      "static/chunks/node_modules_react-dom_4411d9bd._.js",
+      "static/chunks/node_modules_7f09fef0._.js",
+      "static/chunks/[root-of-the-server]__092393de._.js",
+      "static/chunks/pages__error_2da965e7._.js",
+      "static/chunks/turbopack-pages__error_af01c4e3._.js"
     ]
   },
   "ampFirstPages": []

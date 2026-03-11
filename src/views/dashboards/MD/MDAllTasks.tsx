@@ -64,8 +64,21 @@ const taskAssigneeLabel = (task) => {
 const taskCreatedByLabel = (task) =>
   task.createdBy?.role || task.createdBy?.name || "—";
 
+interface Task {
+  id: number;
+  title: string;
+  department: string;
+  status: string;
+  priority: string;
+  type: string;
+  dueDate?: string;
+  createdAt: string;
+  createdBy?: { name?: string; email?: string; role?: string };
+  assignments?: { user?: { name?: string; email?: string } }[];
+}
+
 export default function MDAllTasks() {
-  const [tasksData, setTasksData] = useState([]);
+  const [tasksData, setTasksData] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
     department: "all",
@@ -77,7 +90,7 @@ export default function MDAllTasks() {
 
   const fetchTasks = useCallback(async () => {
     try {
-      const res = await fetchWithAuth("/api/tasks?limit=100");
+      const res = await fetchWithAuth("/api/tasks?type=TASK&limit=100");
       if (res.ok) {
         const data = await res.json();
         setTasksData(data);
@@ -185,7 +198,7 @@ export default function MDAllTasks() {
                 </div>
 
                 <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
-                  All Tasks & Jobs
+                  All Tasks
                 </h1>
                 <p className="text-gray-600 mt-2 max-w-2xl">
                   View, filter and monitor tasks across every department with priority, status and due dates.

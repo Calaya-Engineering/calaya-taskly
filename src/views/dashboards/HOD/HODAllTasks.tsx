@@ -15,7 +15,7 @@ const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
 );
 
-const SectionTitle = ({ title, subtitle, action }) => (
+const SectionTitle = ({ title, subtitle, action = null }) => (
   <div className="flex items-start justify-between gap-3">
     <div>
       <h2 className="text-lg md:text-xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
@@ -65,8 +65,21 @@ const taskAssigneeLabel = (task) => {
 const taskCreatedByLabel = (task) =>
   task.createdBy?.role || task.createdBy?.name || "—";
 
+interface Task {
+  id: number;
+  title: string;
+  department: string;
+  status: string;
+  priority: string;
+  type: string;
+  dueDate?: string;
+  createdAt: string;
+  createdBy?: { name?: string; email?: string; role?: string };
+  assignments?: { user?: { name?: string; email?: string } }[];
+}
+
 export default function HODAllTasks() {
-  const [tasksData, setTasksData] = useState([]);
+  const [tasksData, setTasksData] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
     department: "all",
