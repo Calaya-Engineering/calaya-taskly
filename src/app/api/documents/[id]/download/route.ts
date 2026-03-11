@@ -53,26 +53,52 @@ export async function GET(
             return NextResponse.json({ error: "No file URL associated with this document" }, { status: 400 });
         }
 
+        let finalUrl = doc.fileUrl;
+        if (!finalUrl.startsWith("http")) {
+            // If it's just a public ID or relative path, this might be the issue
+            console.warn(`[WARN] Document fileUrl is not absolute: ${finalUrl}`);
+            // Attempt rescue if it looks like a Cloudinary path
+            if (finalUrl.startsWith("/")) {
+                 // You might want to use an env var for CLOUDINARY_BASE_URL
+                 // For now, let's just log it and try to fetch it if it's absolute-path-like
+            }
+        }
+
         // Fetch the file from Cloudinary (or original storage)
-        const cloudinaryResponse = await fetch(doc.fileUrl);
+        console.log(`[DEBUG] Attempting fetch from: ${finalUrl}`);
+        let cloudinaryResponse: Response;
+        try {
+            cloudinaryResponse = await fetch(finalUrl);
+        } catch (fetchErr: any) {
+            console.error("ERROR: fetch(doc.fileUrl) threw:", fetchErr);
+            return NextResponse.json({
+                error: "Failed to reach document storage",
+                details: fetchErr?.message || String(fetchErr)
+            }, { status: 502 });
+        }
 
         if (!cloudinaryResponse.ok || !cloudinaryResponse.body) {
             const errorText = cloudinaryResponse.statusText || "Unknown error";
             const cldError = cloudinaryResponse.headers.get("x-cld-error");
-            console.error(`Failed to fetch file from source (Status ${cloudinaryResponse.status}):`, errorText, cldError ? `Cloudinary Error: ${cldError}` : "");
+            console.error(`Failed to fetch file (Status ${cloudinaryResponse.status}):`, errorText, cldError ? `Cloudinary Error: ${cldError}` : "");
 
             return NextResponse.json({
-                error: "Failed to retrieve the file from storage",
+                error: "Document storage returned an error",
                 details: cldError || errorText,
                 status: cloudinaryResponse.status
             }, { status: 502 });
         }
 
-        // Increment download count ONLY on successful fetch
-        await prisma.document.update({
-            where: { id: docId },
-            data: { downloads: { increment: 1 } },
-        });
+        // Increment download count
+        try {
+            await prisma.document.update({
+                where: { id: docId },
+                data: { downloads: { increment: 1 } },
+            });
+        } catch (dbErr) {
+            console.warn("WARNING: Failed to increment download count:", dbErr);
+            // We continue anyway, the file fetch was successful
+        }
 
         emitRealtimeEvent({
             type: "document:downloaded",
@@ -98,17 +124,28 @@ export async function GET(
         const filename = `${sanitizedTitle}.${extension}`;
 
         // Stream the response back to the user
-        // We use a regular Response object for streaming from common platforms
-        return new Response(cloudinaryResponse.body as any, {
-            headers: {
-                "Content-Type": cloudinaryResponse.headers.get("Content-Type") || "application/octet-stream",
-                "Content-Disposition": `attachment; filename="${filename}"`,
-                "Cache-Control": "no-cache",
-            },
-        });
+        try {
+            return new Response(cloudinaryResponse.body as any, {
+                headers: {
+                    "Content-Type": cloudinaryResponse.headers.get("Content-Type") || "application/octet-stream",
+                    "Content-Disposition": `attachment; filename="${filename}"`,
+                    "Cache-Control": "no-cache",
+                },
+            });
+        } catch (streamErr: any) {
+            console.error("ERROR: new Response(body) threw:", streamErr);
+            return NextResponse.json({
+                error: "Failed to initiate download stream",
+                details: streamErr?.message || String(streamErr)
+            }, { status: 500 });
+        }
 
-    } catch (error) {
-        console.error("Error in document download proxy:", error);
-        return NextResponse.json({ error: "An error occurred during download" }, { status: 500 });
+    } catch (error: any) {
+        console.error("CRITICAL: Error in document download proxy:", error);
+        return NextResponse.json({ 
+            error: "An error occurred during download",
+            details: error?.message || String(error),
+            stack: process.env.NODE_ENV === "development" ? error?.stack : undefined
+        }, { status: 500 });
     }
 }

@@ -1,7 +1,7 @@
 "use client";
 
 // pages/dashboards/MD/HODAllTasks.jsx
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, ReactNode } from "react";
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import { HODMenuItems } from "@/utils/menus";
@@ -11,11 +11,20 @@ import { fetchWithAuth } from "@/lib/api";
 import { useSSE } from "@/hooks/useSSE";
 
 /* ---------- UI helpers ---------- */
-const Card = ({ className = "", children }) => (
+interface CardProps {
+  className?: string;
+  children: ReactNode;
+}
+const Card = ({ className = "", children }: CardProps) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
 );
 
-const SectionTitle = ({ title, subtitle, action = null }) => (
+interface SectionTitleProps {
+  title: string;
+  subtitle?: string;
+  action?: ReactNode;
+}
+const SectionTitle = ({ title, subtitle, action = null }: SectionTitleProps) => (
   <div className="flex items-start justify-between gap-3">
     <div>
       <h2 className="text-lg md:text-xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
@@ -27,7 +36,11 @@ const SectionTitle = ({ title, subtitle, action = null }) => (
   </div>
 );
 
-const Pill = ({ children, tone = "default" }) => {
+interface PillProps {
+  children: ReactNode;
+  tone?: string;
+}
+const Pill = ({ children, tone = "default" }: PillProps) => {
   const styles =
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
