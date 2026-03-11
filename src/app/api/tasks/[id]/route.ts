@@ -165,6 +165,37 @@ export async function PATCH(
       message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) updated task: ${task.title}`
     });
 
+    // Put all meetings/events in the announcement table as well
+    if (task.type === "MEETING" || task.type === "EVENT") {
+      try {
+        const announcementDate = task.startDate || task.createdAt;
+        const announcementTitle = `${task.type === "MEETING" ? "📅 Meeting" : "🗓️ Event"}: ${task.title}`;
+
+        const existing = await prisma.announcement.findFirst({
+          where: {
+            title: announcementTitle,
+            date: announcementDate,
+          }
+        });
+
+        if (!existing) {
+          await prisma.announcement.create({
+            data: {
+              title: announcementTitle,
+              description: task.description || `A new ${task.type.toLowerCase()} has been scheduled.`,
+              department: task.department,
+              priority: task.priority === "CRITICAL" || task.priority === "HIGH" ? "HIGH" : "NORMAL",
+              scopeType: task.department ? "DEPARTMENT" : "ALL_COMPANY",
+              date: announcementDate,
+              createdBy: task.createdBy?.name || task.createdBy?.role || auth.email,
+            }
+          });
+        }
+      } catch (err) {
+        console.error("Failed to sync meeting/event update to announcement:", err);
+      }
+    }
+
     return NextResponse.json(task);
   } catch (error) {
     console.error("Error updating task:", error);

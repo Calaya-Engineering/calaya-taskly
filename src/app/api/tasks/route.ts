@@ -201,6 +201,25 @@ export async function POST(req: NextRequest) {
       message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) created a new task: ${task.title}`
     });
 
+    // Put all meetings/events in the announcement table as well
+    if (task.type === "MEETING" || task.type === "EVENT") {
+      try {
+        await prisma.announcement.create({
+          data: {
+            title: `${task.type === "MEETING" ? "📅 Meeting" : "🗓️ Event"}: ${task.title}`,
+            description: task.description || `A new ${task.type.toLowerCase()} has been scheduled.`,
+            department: task.department,
+            priority: task.priority === "CRITICAL" || task.priority === "HIGH" ? "HIGH" : "NORMAL",
+            scopeType: task.department ? "DEPARTMENT" : "ALL_COMPANY",
+            date: task.startDate || task.createdAt,
+            createdBy: task.createdBy?.name || task.createdBy?.role || auth.email,
+          }
+        });
+      } catch (err) {
+        console.error("Failed to sync meeting/event to announcement:", err);
+      }
+    }
+
     return NextResponse.json(task);
   } catch (error) {
     console.error("Error creating task:", error);
