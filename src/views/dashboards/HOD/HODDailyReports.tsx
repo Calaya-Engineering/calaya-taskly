@@ -127,9 +127,34 @@ const getStatusTone = (status) => {
     case 'APPROVED': return 'success';
     case 'PENDING': return 'warn';
     case 'REJECTED': return 'danger';
+    case 'REVIEW_URGENTLY': return 'danger';
     default: return 'default';
   }
 };
+
+const getStatusLabel = (status: string) => {
+  if (status === 'REVIEW_URGENTLY') return '🚨 Review Urgently';
+  return status;
+};
+
+/* Normalize entry keys: handles both camelCase and UPPERCASE from legacy data */
+const normalizeEntry = (e: any): ReportEntry => ({
+  taskName:   e.taskName   ?? e.TASKNAME   ?? e.task_name   ?? '',
+  objective:  e.objective  ?? e.OBJECTIVE  ?? '',
+  target:     e.target     ?? e.TARGET     ?? '',
+  nextDayTask: e.nextDayTask ?? e.NEXTDAYTASK ?? e.next_day_task ?? '',
+});
+
+const fileIcon = (name = '') => {
+  const n = name.toLowerCase();
+  if (n.endsWith('.pdf')) return '📕';
+  if (n.endsWith('.doc') || n.endsWith('.docx')) return '📘';
+  if (n.endsWith('.xls') || n.endsWith('.xlsx') || n.endsWith('.csv')) return '📗';
+  if (n.endsWith('.png') || n.endsWith('.jpg') || n.endsWith('.jpeg')) return '🖼️';
+  return '📎';
+};
+
+const bytesToMB = (bytes: number) => (bytes / 1024 / 1024).toFixed(2);
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);
@@ -167,6 +192,12 @@ export default function HODDailyReports() {
   const [tableScrollTop, setTableScrollTop] = useState(0);
   const tableViewportRef = useRef<HTMLDivElement>(null);
   const lastRefreshAtRef = useRef(0);
+
+  /* ── New state for modal extras ── */
+  const [urgentReview, setUrgentReview] = useState(false);
+  const [attachDocs, setAttachDocs] = useState(false);
+  const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
+  const [attachmentUrl, setAttachmentUrl] = useState<string | null>(null);
 
   // Report entries with dynamic rows
   const [reportEntries, setReportEntries] = useState([
@@ -338,10 +369,12 @@ export default function HODDailyReports() {
       target: '',
       nextDayTask: ''
     }];
-
     setReportEntries(defaultEntries);
     setSelectedDepartments(['Technical']);
-
+    setUrgentReview(false);
+    setAttachDocs(false);
+    setAttachedFiles([]);
+    setAttachmentUrl(null);
     removeSessionItem(STORAGE_KEYS.REPORT_ENTRIES);
     removeSessionItem(STORAGE_KEYS.SELECTED_DEPARTMENTS);
   };
@@ -363,7 +396,9 @@ export default function HODDailyReports() {
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmitReport = async () => {
-    const validEntries = reportEntries.filter(entry => entry.taskName.trim() !== '');
+    const validEntries = reportEntries
+      .filter(entry => entry.taskName.trim() !== '')
+      .map(e => ({ taskName: e.taskName, objective: e.objective, target: e.target, nextDayTask: e.nextDayTask }));
     if (validEntries.length === 0) {
       toast.warning('Please add at least one task entry');
       return;
@@ -372,16 +407,33 @@ export default function HODDailyReports() {
     setSubmitting(true);
 
     try {
-      // Submit one report per selected department
+      // 1. Upload attachment if provided
+      let uploadedUrl: string | null = null;
+      if (attachDocs && attachedFiles.length > 0) {
+        toast.info('Uploading supporting document...');
+        const fd = new FormData();
+        fd.append('file', attachedFiles[0]);
+        const upRes = await fetchWithAuth('/api/upload/cloudinary', { method: 'POST', body: fd });
+        if (upRes.ok) {
+          const { url } = await upRes.json();
+          uploadedUrl = url;
+        } else {
+          toast.warning('Attachment upload failed — submitting without it.');
+        }
+      }
+
+      // 2. Submit one report per selected department
       const results = await Promise.all(
         selectedDepartments.map(dept =>
-          fetchWithAuth("/api/daily-reports", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
+          fetchWithAuth('/api/daily-reports', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               department: dept,
               date: new Date().toISOString().split('T')[0],
               entries: validEntries,
+              urgentReview,
+              attachmentUrl: uploadedUrl,
             }),
           })
         )
@@ -393,12 +445,12 @@ export default function HODDailyReports() {
         setIsModalOpen(false);
         setSessionItem(STORAGE_KEYS.IS_MODAL_OPEN, JSON.stringify(false));
         resetForm();
-        getReports(); // Refresh the list
+        getReports();
       } else {
         toast.error('One or more reports failed to submit. Please try again.');
       }
     } catch (err) {
-      console.error("Failed to submit report:", err);
+      console.error('Failed to submit report:', err);
       toast.error('Failed to submit report. Please check your connection.');
     } finally {
       setSubmitting(false);
@@ -636,10 +688,10 @@ export default function HODDailyReports() {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center gap-2">
                           <div
-                            className="w-8 h-8 rounded-2xl flex items-center justify-center text-white font-bold "
+                            className="w-8 h-8 rounded-2xl flex items-center justify-center text-white font-bold"
                             style={{ backgroundColor: "var(--secondary-blue)" }}
                           >
-                            {report.submittedBy.charAt(0)}
+                            {(report.submittedBy || '?').charAt(0).toUpperCase()}
                           </div>
                           <div>
                             <div className="text-[13px] font-semibold text-gray-900">{report.submittedBy}</div>
@@ -648,22 +700,38 @@ export default function HODDailyReports() {
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="font-semibold text-gray-900">{report.entries.length} tasks</div>
-                        <div className="text-xs text-gray-500 mt-1">
-                          {report.entries.slice(0, 2).map((e, i) => (
-                            <div key={i} className="truncate max-w-xs">• {e.taskName}</div>
-                          ))}
-                          {report.entries.length > 2 && (
-                            <div className="text-gray-400">+{report.entries.length - 2} more</div>
-                          )}
-                        </div>
+                        {/* Normalize entries from both camelCase and UPPERCASE API responses */}
+                        {(() => {
+                          const normalized = (report.entries || []).map(normalizeEntry).filter(e => e.taskName);
+                          return (
+                            <div>
+                              <div className="font-semibold text-gray-900">{normalized.length} task{normalized.length !== 1 ? 's' : ''}</div>
+                              <div className="text-xs text-gray-500 mt-1">
+                                {normalized.slice(0, 2).map((e, i) => (
+                                  <div key={i} className="truncate max-w-xs">• {e.taskName}</div>
+                                ))}
+                                {normalized.length > 2 && <div className="text-gray-400">+{normalized.length - 2} more</div>}
+                              </div>
+                            </div>
+                          );
+                        })()}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <Pill tone={getStatusTone(report.status)}>{report.status}</Pill>
+                        <Pill tone={getStatusTone(report.status)}>{getStatusLabel(report.status)}</Pill>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-[13px] font-semibold text-gray-900">{report.fileSize}</div>
-                        <div className="text-[11px] text-gray-500">{report.fileType}</div>
+                        {report.fileUrl && !report.fileUrl.startsWith('[') ? (
+                          <a
+                            href={report.fileUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[13px] font-semibold text-blue-600 underline hover:text-blue-800"
+                          >
+                            {fileIcon(report.fileUrl)} View file
+                          </a>
+                        ) : (
+                          <span className="text-[12px] text-gray-400">—</span>
+                        )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right">
                         <div className="flex items-center justify-end gap-2">
@@ -1071,15 +1139,136 @@ export default function HODDailyReports() {
 
                 {/* Additional Options */}
                 <Card className="p-6 mb-6 bg-gray-50">
-                  <div className="flex flex-wrap items-center gap-6">
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-blue-600" />
-                      <span className="text-sm text-gray-700">Attach supporting documents</span>
+                  <p className="text-sm font-extrabold mb-4" style={{ color: 'var(--primary-blue)' }}>Additional Options</p>
+
+                  <div className="space-y-4">
+                    {/* Urgent Review Toggle */}
+                    <label className="flex items-start gap-3 cursor-pointer group">
+                      <div className="relative mt-0.5">
+                        <input
+                          type="checkbox"
+                          checked={urgentReview}
+                          onChange={e => setUrgentReview(e.target.checked)}
+                          className="sr-only"
+                        />
+                        <div
+                          className={`w-5 h-5 rounded border-2 flex items-center justify-center transition ${urgentReview ? 'border-transparent' : 'border-gray-300 bg-white'}`}
+                          style={{ backgroundColor: urgentReview ? 'var(--accent-red)' : undefined }}
+                        >
+                          {urgentReview && <span className="text-white text-xs font-bold">✓</span>}
+                        </div>
+                      </div>
+                      <div>
+                        <span className={`text-sm font-semibold transition ${urgentReview ? 'text-red-700' : 'text-gray-700'}`}>
+                          🚨 Request urgent review
+                        </span>
+                        <p className="text-xs text-gray-500 mt-0.5">
+                          Marks this report as needing urgent attention — a red badge will appear on the submitted report.
+                        </p>
+                      </div>
                     </label>
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-blue-600" />
-                      <span className="text-sm text-gray-700">Request urgent review</span>
+
+                    {/* Attach Supporting Documents Toggle */}
+                    <label className="flex items-start gap-3 cursor-pointer group">
+                      <div className="relative mt-0.5">
+                        <input
+                          type="checkbox"
+                          checked={attachDocs}
+                          onChange={e => setAttachDocs(e.target.checked)}
+                          className="sr-only"
+                        />
+                        <div
+                          className={`w-5 h-5 rounded border-2 flex items-center justify-center transition ${attachDocs ? 'border-transparent' : 'border-gray-300 bg-white'}`}
+                          style={{ backgroundColor: attachDocs ? 'var(--secondary-blue)' : undefined }}
+                        >
+                          {attachDocs && <span className="text-white text-xs font-bold">✓</span>}
+                        </div>
+                      </div>
+                      <div>
+                        <span className={`text-sm font-semibold transition ${attachDocs ? 'text-blue-700' : 'text-gray-700'}`}>
+                          📎 Attach supporting documents
+                        </span>
+                        <p className="text-xs text-gray-500 mt-0.5">
+                          Upload a file to accompany this report (PDF, DOCX, XLSX, images).
+                        </p>
+                      </div>
                     </label>
+
+                    {/* File Upload Area — shown only when attachDocs is checked */}
+                    {attachDocs && (
+                      <div className="ml-8 mt-2">
+                        {attachedFiles.length === 0 ? (
+                          <div className="border-2 border-dashed border-gray-200 rounded-2xl p-6 text-center hover:border-blue-200 transition">
+                            <input
+                              type="file"
+                              id="report-attachment"
+                              className="hidden"
+                              accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.png,.jpg,.jpeg,.webp"
+                              onChange={e => {
+                                const f = Array.from(e.target.files || []);
+                                if (f.length) setAttachedFiles(f.slice(0, 1)); // single file
+                              }}
+                            />
+                            <label htmlFor="report-attachment" className="cursor-pointer">
+                              <div
+                                className="w-12 h-12 mx-auto mb-3 rounded-2xl flex items-center justify-center"
+                                style={{ backgroundColor: 'rgba(109, 198, 223, 0.14)' }}
+                              >
+                                <span className="text-2xl">📤</span>
+                              </div>
+                              <p className="text-sm text-gray-700 font-semibold mb-1">Click to upload or drag and drop</p>
+                              <p className="text-xs text-gray-500">PDF, DOCX, XLSX, PNG, JPG — max 50MB</p>
+                            </label>
+                          </div>
+                        ) : (
+                          <div className="space-y-2">
+                            {attachedFiles.map((file, idx) => (
+                              <div
+                                key={idx}
+                                className="flex items-center justify-between gap-3 p-3 rounded-2xl border border-gray-200/70 bg-white"
+                              >
+                                <div className="flex items-center gap-3 min-w-0">
+                                  <div
+                                    className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+                                    style={{ backgroundColor: 'rgba(44, 75, 155, 0.08)' }}
+                                  >
+                                    <span className="text-base">{fileIcon(file.name)}</span>
+                                  </div>
+                                  <div className="min-w-0">
+                                    <div className="text-sm font-semibold text-gray-900 truncate max-w-xs">{file.name}</div>
+                                    <div className="text-xs text-gray-500">{bytesToMB(file.size)} MB</div>
+                                  </div>
+                                </div>
+                                <button
+                                  type="button"
+                                  onClick={() => setAttachedFiles([])}
+                                  className="px-3 py-1.5 rounded-xl text-xs font-semibold border bg-white hover:bg-red-50 transition"
+                                  style={{ borderColor: 'rgba(239,68,68,0.25)', color: '#DC2626' }}
+                                >
+                                  Remove
+                                </button>
+                              </div>
+                            ))}
+                            <label
+                              htmlFor="report-attachment"
+                              className="block text-xs text-blue-600 cursor-pointer hover:underline mt-1"
+                            >
+                              Replace file
+                            </label>
+                            <input
+                              type="file"
+                              id="report-attachment"
+                              className="hidden"
+                              accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.png,.jpg,.jpeg,.webp"
+                              onChange={e => {
+                                const f = Array.from(e.target.files || []);
+                                if (f.length) setAttachedFiles(f.slice(0, 1));
+                              }}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </Card>
 
@@ -1098,11 +1287,15 @@ export default function HODDailyReports() {
                     onClick={handleSubmitReport}
                     disabled={submitting}
                     className={btnSolid}
-                    style={{ backgroundColor: "var(--accent-red)", opacity: submitting ? 0.7 : 1 }}
+                    style={{
+                      backgroundColor: urgentReview ? '#b91c1c' : 'var(--accent-red)',
+                      opacity: submitting ? 0.7 : 1,
+                      boxShadow: urgentReview ? '0 0 0 3px rgba(185,28,28,0.25)' : undefined,
+                    }}
                   >
                     {submitting
-                      ? "Submitting..."
-                      : `Submit Report${selectedDepartments.length > 1 ? `s (${selectedDepartments.length})` : ''}`
+                      ? 'Submitting...'
+                      : `${urgentReview ? '🚨 ' : ''}Submit Report${selectedDepartments.length > 1 ? `s (${selectedDepartments.length})` : ''}`
                     }
                   </button>
                 </div>
