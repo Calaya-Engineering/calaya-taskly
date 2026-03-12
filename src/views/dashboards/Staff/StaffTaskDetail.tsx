@@ -8,11 +8,11 @@ import Layout from "@/components/Layout";
 import { StaffMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
 /* ---------- UI helpers ---------- */
-const Card = ({ className = "", children }) => (
+const Card = ({ className = "", children }: { className?: string; children: React.ReactNode }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
 );
 
-const SectionTitle = ({ title, subtitle, action }) => (
+const SectionTitle = ({ title, subtitle, action }: { title: string; subtitle?: React.ReactNode; action?: React.ReactNode }) => (
   <div className="flex items-start justify-between gap-3">
     <div>
       <h2 className="text-lg md:text-xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
@@ -24,7 +24,7 @@ const SectionTitle = ({ title, subtitle, action }) => (
   </div>
 );
 
-const Pill = ({ children, tone = "default" }) => {
+const Pill = ({ children, tone = "default" }: { children: React.ReactNode; tone?: string }) => {
   const styles =
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
@@ -73,6 +73,58 @@ const getStatusTone = (status) => {
   }
 };
 
+/* ---------- Status Changing Modal ---------- */
+const StatusChangingModal = ({ status }: { status: string }) => {
+  const label = status.replace(/_/g, " ");
+  const labelFormatted = label.charAt(0).toUpperCase() + label.slice(1).toLowerCase();
+  return (
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 9999,
+        backgroundColor: "rgba(0, 0, 0, 0.45)",
+        backdropFilter: "blur(4px)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <div
+        style={{
+          background: "#fff",
+          borderRadius: "20px",
+          padding: "40px 48px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "20px",
+          boxShadow: "0 24px 64px rgba(0,0,0,0.18)",
+          minWidth: "280px",
+        }}
+      >
+        {/* Spinner */}
+        <div
+          style={{
+            width: "52px",
+            height: "52px",
+            borderRadius: "50%",
+            border: "4px solid rgba(44, 75, 155, 0.15)",
+            borderTopColor: "var(--primary-blue)",
+            animation: "staff-task-spin 0.75s linear infinite",
+          }}
+        />
+        <style>{`@keyframes staff-task-spin { to { transform: rotate(360deg); } }`}</style>
+        <p style={{ fontWeight: 700, fontSize: "16px", color: "var(--primary-blue)", margin: 0, textAlign: "center" }}>
+          Changing task to{" "}
+          <span style={{ color: "var(--secondary-blue)" }}>{labelFormatted}</span>
+        </p>
+        <p style={{ fontSize: "13px", color: "#6b7280", margin: 0 }}>Please wait…</p>
+      </div>
+    </div>
+  );
+};
+
 export default function StaffTaskDetail() {
   const params = useParams() || {};
   const taskId = params.taskId;
@@ -82,6 +134,7 @@ export default function StaffTaskDetail() {
   const [newProgress, setNewProgress] = useState(60);
   const [isUpdating, setIsUpdating] = useState(false);
   const [isInternal, setIsInternal] = useState(false);
+  const [statusChangingTo, setStatusChangingTo] = useState<string | null>(null);
 
   // Mock task data - in real app, this would come from API
   const task = {
@@ -149,10 +202,12 @@ export default function StaffTaskDetail() {
   ];
 
   const handleUpdateStatus = (newStatus) => {
+    setStatusChangingTo(newStatus);
     setIsUpdating(true);
     setTimeout(() => {
       toast.success(`Task status updated to ${newStatus}`);
       setIsUpdating(false);
+      setStatusChangingTo(null);
     }, 1000);
   };
 
@@ -206,6 +261,7 @@ export default function StaffTaskDetail() {
 
   return (
     <Layout menuItems={StaffMenuItems} userRole="Staff">
+      {statusChangingTo && <StatusChangingModal status={statusChangingTo} />}
       <div className="space-y-6">
         {/* Hero Section */}
         <Card className="overflow-hidden">
@@ -433,7 +489,7 @@ export default function StaffTaskDetail() {
                         value={newComment}
                         onChange={(e) => setNewComment(e.target.value)}
                         placeholder="Add your comment here..."
-                        rows="4"
+                        rows={4}
                         className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-100"
                       />
                       <div className="flex items-center justify-between">

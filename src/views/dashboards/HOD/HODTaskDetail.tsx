@@ -9,11 +9,28 @@ import { HODMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
 import { fetchWithAuth } from "@/lib/api";
 /* ---------- UI helpers ---------- */
-const Card = ({ className = "", children }) => (
+interface TaskData {
+  id: string;
+  title: string;
+  description?: string;
+  status: string;
+  priority: string;
+  type?: string;
+  department?: string;
+  visibility?: string;
+  estimatedHours?: number;
+  startDate?: string;
+  dueDate?: string;
+  createdAt?: string;
+  assignments?: { user?: { name?: string; email?: string } }[];
+  createdBy?: { role?: string; name?: string };
+}
+
+const Card = ({ className = "", children }: { className?: string; children: React.ReactNode }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
 );
 
-const SectionTitle = ({ title, subtitle, action }) => (
+const SectionTitle = ({ title, subtitle, action }: { title: string; subtitle?: React.ReactNode; action?: React.ReactNode }) => (
   <div className="flex items-start justify-between gap-3">
     <div>
       <h2 className="text-lg md:text-xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
@@ -46,20 +63,73 @@ const Pill = ({ children, tone = "default" }) => {
 const taskCreatedByLabel = (task) =>
   task?.createdBy?.role || task?.createdBy?.name || "—";
 
-const taskAssigneeLabel = (task) => {
-  const a = task?.assignments;
-  if (!a?.length) return "Unassigned";
-  if (a.length === 1) return a[0].user?.name || a[0].user?.email || "—";
-  return `${a.length} assignees`;
+const taskAssigneeLabel = (task) =>
+  task?.assignments?.length === 0
+    ? "Unassigned"
+    : task?.assignments?.length === 1
+    ? task.assignments[0].user?.name || task.assignments[0].user?.email || "—"
+    : `${task?.assignments?.length} assignees`;
+
+/* ---------- Status Changing Modal ---------- */
+const StatusChangingModal = ({ status }: { status: string }) => {
+  const label = status.replace(/_/g, " ");
+  const labelFormatted = label.charAt(0).toUpperCase() + label.slice(1).toLowerCase();
+  return (
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 9999,
+        backgroundColor: "rgba(0, 0, 0, 0.45)",
+        backdropFilter: "blur(4px)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <div
+        style={{
+          background: "#fff",
+          borderRadius: "20px",
+          padding: "40px 48px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "20px",
+          boxShadow: "0 24px 64px rgba(0,0,0,0.18)",
+          minWidth: "280px",
+        }}
+      >
+        {/* Spinner */}
+        <div
+          style={{
+            width: "52px",
+            height: "52px",
+            borderRadius: "50%",
+            border: "4px solid rgba(44, 75, 155, 0.15)",
+            borderTopColor: "var(--primary-blue)",
+            animation: "hod-task-spin 0.75s linear infinite",
+          }}
+        />
+        <style>{`@keyframes hod-task-spin { to { transform: rotate(360deg); } }`}</style>
+        <p style={{ fontWeight: 700, fontSize: "16px", color: "var(--primary-blue)", margin: 0, textAlign: "center" }}>
+          Changing task to{" "}
+          <span style={{ color: "var(--secondary-blue)" }}>{labelFormatted}</span>
+        </p>
+        <p style={{ fontSize: "13px", color: "#6b7280", margin: 0 }}>Please wait…</p>
+      </div>
+    </div>
+  );
 };
 
 export default function HODTaskDetail() {
   const params = useParams() || {};
   const taskId = params.taskId;
   const router = useRouter();
-  const [taskData, setTaskData] = useState(null);
+  const [taskData, setTaskData] = useState<TaskData | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("overview");
+  const [statusChangingTo, setStatusChangingTo] = useState<string | null>(null);
 
   const fetchTask = useCallback(async () => {
     if (!taskId) return;
@@ -84,6 +154,7 @@ export default function HODTaskDetail() {
 
   const handleStatusChange = async (newStatus) => {
     if (!taskData) return;
+    setStatusChangingTo(newStatus);
     try {
       const res = await fetchWithAuth(`/api/tasks/${taskId}`, {
         method: "PATCH",
@@ -91,7 +162,7 @@ export default function HODTaskDetail() {
         body: JSON.stringify({ status: newStatus }),
       });
       if (res.ok) {
-        setTaskData((p) => ({ ...p, status: newStatus }));
+        setTaskData((p) => p ? ({ ...p, status: newStatus }) : p);
         toast.success(`Task status changed to ${newStatus}`);
       } else {
         const err = await res.json().catch(() => ({}));
@@ -99,6 +170,8 @@ export default function HODTaskDetail() {
       }
     } catch {
       toast.error("Failed to update status");
+    } finally {
+      setStatusChangingTo(null);
     }
   };
 
@@ -164,6 +237,7 @@ export default function HODTaskDetail() {
 
   return (
     <Layout menuItems={HODMenuItems} userRole="HOD">
+      {statusChangingTo && <StatusChangingModal status={statusChangingTo} />}
       <div className="space-y-6">
         {/* Hero Header */}
         <Card className="overflow-hidden">
@@ -417,7 +491,7 @@ export default function HODTaskDetail() {
 }
 
 // Helper component for info rows
-const InfoRow = ({ label, value }) => (
+const InfoRow = ({ label, value }: { label: string; value: React.ReactNode }) => (
   <div>
     <label className="block text-sm font-medium text-gray-500 mb-1">{label}</label>
     <p className="font-extrabold text-gray-900">{value}</p>

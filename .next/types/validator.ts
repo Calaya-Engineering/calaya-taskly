@@ -110,6 +110,15 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
+// Validate ../../src/app/hod-dashboard/approvals/bulk/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/hod-dashboard/approvals/bulk">> = Specific
+  const handler = {} as typeof import("../../src/app/hod-dashboard/approvals/bulk/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../src/app/hod-dashboard/approvals/history/page.tsx
 {
   type __IsExpected<Specific extends AppPageConfig<"/hod-dashboard/approvals/history">> = Specific

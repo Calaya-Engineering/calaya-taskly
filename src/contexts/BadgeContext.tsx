@@ -41,8 +41,13 @@ function markPathSeen(path) {
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify(map));
 }
 
-// ─── Context ──────────────────────────────────────────────────────
-const BadgeContext = createContext(undefined);
+type BadgeContextType = {
+    badges: Record<string, number>;
+    getBadge: (path: string) => string | null;
+    clearBadge: (path: string) => void;
+};
+
+const BadgeContext = createContext<BadgeContextType | undefined>(undefined);
 
 /**
  * Detects the current dashboard prefix from the pathname,
@@ -293,7 +298,7 @@ export function BadgeProvider({ children }) {
 
     // ── Exposed API ───────────────────────────────────────────────
     const getBadge = useCallback(
-        (path) => {
+        (path: string) => {
             const count = badges[path];
             if (!count || count <= 0) return null;
             return count > 99 ? "99+" : String(count);
@@ -301,7 +306,7 @@ export function BadgeProvider({ children }) {
         [badges]
     );
 
-    const clearBadge = useCallback((path) => {
+    const clearBadge = useCallback((path: string) => {
         markPathSeen(path);
         setBadges((prev) => {
             if (!prev[path]) return prev;

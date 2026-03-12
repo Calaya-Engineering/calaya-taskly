@@ -1,5 +1,6 @@
 import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { BadgeProvider } from "@/contexts/BadgeContext";
 import { Toaster } from "sonner";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://calayaengineering.com";
@@ -56,12 +57,14 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body>
         <AuthProvider>
-          {children}
+          <BadgeProvider>
+            {children}
+          </BadgeProvider>
         </AuthProvider>
         <Toaster richColors position="top-right" closeButton />
       </body>

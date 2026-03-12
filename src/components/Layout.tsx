@@ -1,5 +1,5 @@
 "use client";
-// components/Layout.jsx
+// components/Layout.tsx
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,7 +8,22 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useBadges } from "@/contexts/BadgeContext";
 import { MenuIcon, CloseMenuIcon } from "@/lib/icons";
 
-export default function Layout({ children, menuItems, userRole }) {
+interface MenuItem {
+  path?: string;
+  icon?: string | React.ReactNode;
+  label: string;
+  group?: string;
+}
+
+export default function Layout({
+  children,
+  menuItems = [],
+  userRole = "User",
+}: {
+  children: React.ReactNode;
+  menuItems?: MenuItem[];
+  userRole?: string;
+}) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const pathname = usePathname();
@@ -47,7 +62,7 @@ export default function Layout({ children, menuItems, userRole }) {
     }
   }, [loading, isAuthenticated, router]);
 
-  const isActive = (path) => pathname === path;
+  const isActive = (path?: string) => pathname === path;
 
   const quickStats = useMemo(
     () => [
@@ -143,8 +158,8 @@ export default function Layout({ children, menuItems, userRole }) {
           <div className="px-3 py-4 overflow-y-auto scrollbar-hide">
             {(() => {
               // Group items by group property; ungrouped go under "Menu"
-              const groups = {};
-              (menuItems || []).forEach((item, index) => {
+              const groups: Record<string, (MenuItem & { _idx: number })[]> = {};
+              menuItems.forEach((item, index) => {
                 const key = item.group ?? "General";
                 if (!groups[key]) groups[key] = [];
                 groups[key].push({ ...item, _idx: index });
@@ -205,7 +220,7 @@ export default function Layout({ children, menuItems, userRole }) {
                               </span>
                               <span className="truncate">{item.label}</span>
                               {(() => {
-                                const liveBadge = getBadge(path);
+                                const liveBadge = typeof getBadge === "function" ? getBadge(path) : null;
                                 if (!liveBadge) return null;
                                 return (
                                   <span
@@ -242,7 +257,7 @@ export default function Layout({ children, menuItems, userRole }) {
                               </span>
                               <span className="truncate">{item.label}</span>
                               {(() => {
-                                const liveBadge = getBadge(path);
+                                const liveBadge = typeof getBadge === "function" ? getBadge(path) : null;
                                 if (!liveBadge) return null;
                                 return (
                                   <span
