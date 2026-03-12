@@ -19,14 +19,49 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { fetchWithAuth } from "@/lib/api";
 import { useSSE } from "@/hooks/useSSE";
 
+/* ─── Types ─────────────────────────────────────────────────────── */
+interface TaskItem {
+  id: string;
+  title: string;
+  status: string;
+  type?: string;
+  department?: string;
+  priority?: string;
+  dueDate?: string;
+  escalated?: boolean;
+  assignments?: { userId?: string }[];
+}
+
+interface TenderItem {
+  id: string;
+  title: string;
+  status: string;
+  department?: string;
+  closingDate?: string;
+}
+
+interface NotificationItem {
+  id: string;
+  message: string;
+  read?: boolean;
+  createdAt?: string;
+  actor?: { name?: string };
+}
+
+interface MeData {
+  id?: string;
+  name?: string;
+  department?: string;
+}
+
 /* ─── UI helpers ─────────────────────────────────────────────────── */
-const Card = ({ className = "", children }) => (
+const Card = ({ className = "", children }: { className?: string; children: React.ReactNode }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>
     {children}
   </div>
 );
 
-const SectionTitle = ({ title, subtitle, action }) => (
+const SectionTitle = ({ title, subtitle, action }: { title: string; subtitle?: React.ReactNode; action?: React.ReactNode }) => (
   <div className="flex items-start justify-between gap-3">
     <div>
       <h2
@@ -94,11 +129,12 @@ const SkeletonBar = () => (
 
 /* ─── Main Component ─────────────────────────────────────────────── */
 export default function HODDashboard() {
-  const [me, setMe] = useState(null);
-  const [tasks, setTasks] = useState([]);
-  const [tenders, setTenders] = useState([]);
-  const [notifications, setNotifications] = useState([]);
+  const [me, setMe] = useState<MeData | null>(null);
+  const [tasks, setTasks] = useState<TaskItem[]>([]);
+  const [tenders, setTenders] = useState<TenderItem[]>([]);
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
   /* ── Fetch all dashboard data ── */
   const fetchAll = useCallback(async () => {
@@ -119,6 +155,7 @@ export default function HODDashboard() {
       setTasks(tasksData);
       setTenders(tendersData);
       setNotifications(notifsData);
+      setLastUpdated(new Date());
     } catch (e) {
       console.error("HOD dashboard fetch error:", e);
     } finally {
@@ -130,9 +167,17 @@ export default function HODDashboard() {
     fetchAll();
   }, [fetchAll]);
 
-  /* ── SSE: refresh on any task or announcement event ── */
+  /* ── Auto-refresh every 30 seconds as SSE fallback ── */
+  useEffect(() => {
+    const interval = setInterval(() => fetchAll(), 30_000);
+    return () => clearInterval(interval);
+  }, [fetchAll]);
+
+  /* ── SSE: refresh on any task, tender, or announcement event ── */
   useSSE("/api/tasks/events", (ev) => {
-    if (ev.type?.startsWith("task:")) fetchAll();
+    if (ev.type && (ev.type.startsWith("task:") || ev.type.startsWith("tender:") || ev.type.startsWith("announcement:"))) {
+      fetchAll();
+    }
   });
 
   /* ── Derived analytics ── */
@@ -271,12 +316,12 @@ export default function HODDashboard() {
   );
 
   /* ── Quick actions ── */
-  const actions = [
+  const actions = useMemo(() => [
     { title: "Assign Task", desc: "Assign work to team members", icon: <PlusIcon />, link: "/hod-dashboard/create-task" },
     { title: "Upload Document", desc: "Add files to workspace", icon: <FileUploadIconComponent />, link: "/hod-dashboard/create-document" },
     { title: "Schedule Meeting", desc: "Create events quickly", icon: <CalendarIcon />, link: "/hod-dashboard/create-event" },
     { title: "Post Announcement", desc: "Update your department", icon: <MegaphoneIcon />, link: "/hod-dashboard/create-announcement" },
-  ];
+  ], []);
 
   /* ── Department breakdown ── */
   const deptBreakdown = useMemo(() => {
@@ -353,7 +398,26 @@ export default function HODDashboard() {
         </Card>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
+        <div className="space-y-3">
+          <div className="flex items-center justify-between px-1">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-semibold text-gray-700">Live Stats</span>
+              <span className="flex items-center gap-1.5">
+                <span
+                  className="w-2 h-2 rounded-full bg-emerald-500"
+                  style={{ animation: "hod-pulse 2s ease-in-out infinite" }}
+                />
+                <style>{`@keyframes hod-pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.45;transform:scale(0.85)} }`}</style>
+                <span className="text-xs text-emerald-600 font-semibold">Real-time</span>
+              </span>
+            </div>
+            {lastUpdated && (
+              <span className="text-xs text-gray-400">
+                Updated {lastUpdated.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}
+              </span>
+            )}
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
           {stats.map((stat) => (
             <Link key={stat.title} href={stat.link} className="group">
               <Card className="p-5 shadow-none hover:-translate-y-0.5 transition-all">
@@ -388,6 +452,7 @@ export default function HODDashboard() {
               </Card>
             </Link>
           ))}
+          </div>
         </div>
 
         {/* Quick Actions */}
