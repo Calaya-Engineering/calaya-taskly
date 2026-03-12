@@ -8,11 +8,34 @@ import { HODMenuItems } from "@/utils/menus";
 import { fetchWithAuth } from "@/lib/api";
 import { toast } from "@/lib/toast";
 import { useSSE } from "@/hooks/useSSE";
-const Card = ({ className = "", children }) => (
+/* ---------- Types ---------- */
+interface ReportEntry {
+  id?: number;
+  taskName: string;
+  objective?: string;
+  target?: string;
+  nextDayTask?: string;
+}
+
+interface DailyReport {
+  id: string;
+  dbId?: number;
+  date: string;
+  department: string;
+  submittedBy: string;
+  submittedAt: string;
+  entries: ReportEntry[];
+  fileSize?: string;
+  fileType?: string;
+  status: string;
+  fileUrl?: string | null;
+}
+
+const Card = ({ className = "", children }: { className?: string; children: React.ReactNode }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
 );
 
-const SectionTitle = ({ title, subtitle, action }) => (
+const SectionTitle = ({ title, subtitle, action }: { title: string; subtitle?: React.ReactNode; action?: React.ReactNode }) => (
   <div className="flex items-start justify-between gap-3">
     <div>
       <h2 className="text-lg md:text-xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
@@ -24,7 +47,7 @@ const SectionTitle = ({ title, subtitle, action }) => (
   </div>
 );
 
-const Pill = ({ children, tone = "default" }) => {
+const Pill = ({ children, tone = "default" }: { children: React.ReactNode; tone?: string }) => {
   const styles =
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
@@ -54,7 +77,7 @@ const inputBase =
 const textareaBase =
   "w-full px-4 py-3 rounded-2xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100";
 
-const FieldLabel = ({ children, required }) => (
+const FieldLabel = ({ children, required }: { children: React.ReactNode; required?: boolean }) => (
   <label className="block text-sm font-extrabold text-gray-700 mb-2">
     {children} {required ? <span className="text-red-500">*</span> : null}
   </label>
@@ -133,7 +156,7 @@ const formatDateTime = (dateTime) => {
 
 export default function HODDailyReports() {
   const [isClient, setIsClient] = useState(false);
-  const [dailyReports, setDailyReports] = useState([]);
+  const [dailyReports, setDailyReports] = useState<DailyReport[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState('');
   const [departmentFilter, setDepartmentFilter] = useState('All');
@@ -142,7 +165,7 @@ export default function HODDailyReports() {
   const [selectedDepartments, setSelectedDepartments] = useState(['Technical']);
   const [currentPage, setCurrentPage] = useState(1);
   const [tableScrollTop, setTableScrollTop] = useState(0);
-  const tableViewportRef = useRef(null);
+  const tableViewportRef = useRef<HTMLDivElement>(null);
   const lastRefreshAtRef = useRef(0);
 
   // Report entries with dynamic rows
@@ -159,23 +182,10 @@ export default function HODDailyReports() {
   const getReports = useCallback(async () => {
     try {
       const departments = encodeURIComponent(MANAGED_DEPARTMENTS.join(','));
-      const resp = await fetchWithAuth(`/api/documents?type=Report&departments=${departments}&limit=500`);
+      const resp = await fetchWithAuth(`/api/daily-reports?departments=${departments}&limit=500`);
       if (resp.ok) {
         const data = await resp.json();
-        const mapped = data.map(d => ({
-          id: d.id,
-          dbId: d.dbId,
-          date: d.date ? d.date.split('T')[0] : '',
-          department: d.department,
-          submittedBy: d.uploadedBy,
-          submittedAt: d.date,
-          entries: [], // Documents don't have nested entries in this schema
-          fileSize: d.size || '—',
-          fileType: d.fileUrl ? d.fileUrl.split('.').pop().toUpperCase() : 'PDF',
-          status: 'APPROVED',
-          fileUrl: d.fileUrl
-        }));
-        setDailyReports(mapped);
+        setDailyReports(Array.isArray(data) ? data : []);
       }
     } catch (err) {
       console.error("Failed to fetch reports:", err);
@@ -994,8 +1004,7 @@ export default function HODDailyReports() {
                                 onInput={handleTextareaResize}
                                 placeholder="e.g., Pipeline Inspection"
                                 className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-100 text-sm resize-none overflow-hidden"
-                                rows="1"
-                                style={{ minHeight: '38px' }}
+                                rows={1}
                               />
                             </td>
                             <td className="px-4 py-3">
@@ -1008,8 +1017,7 @@ export default function HODDailyReports() {
                                 onInput={handleTextareaResize}
                                 placeholder="What needs to be achieved"
                                 className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-100 text-sm resize-none overflow-hidden"
-                                rows="1"
-                                style={{ minHeight: '38px' }}
+                                rows={1}
                               />
                             </td>
                             <td className="px-4 py-3">
@@ -1022,8 +1030,7 @@ export default function HODDailyReports() {
                                 onInput={handleTextareaResize}
                                 placeholder="Specific target/metric"
                                 className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-100 text-sm resize-none overflow-hidden"
-                                rows="1"
-                                style={{ minHeight: '38px' }}
+                                rows={1}
                               />
                             </td>
                             <td className="px-4 py-3">
@@ -1036,8 +1043,7 @@ export default function HODDailyReports() {
                                 onInput={handleTextareaResize}
                                 placeholder="Tasks for tomorrow"
                                 className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-100 text-sm resize-none overflow-hidden"
-                                rows="1"
-                                style={{ minHeight: '38px' }}
+                                rows={1}
                               />
                             </td>
                             <td className="px-4 py-3 text-center align-top">
