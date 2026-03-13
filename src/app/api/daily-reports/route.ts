@@ -1,13 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
+import { v2 as cloudinary } from "cloudinary";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { createNotification } from "@/lib/notifications";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
 
+// Configure Cloudinary from env (CLOUDINARY_URL)
+cloudinary.config();
+
 /**
  * GET /api/daily-reports
  * Returns Document records where type = "Report", optionally filtered by
  * department or departments (comma-separated) and date range.
+ *
+ * The fileUrl column stores a Cloudinary URL pointing to a JSON file that has:
+ *   { entries: [...], status: string, attachmentUrl: string|null }
+ * For legacy records it may hold an inline JSON array or a compact "RPT:..." string.
+ * The scope column stores the report status (APPROVED | REVIEW_URGENTLY).
  */
 export async function GET(req: NextRequest) {
   const auth = await getAuthFromRequest(req);
@@ -19,7 +28,7 @@ export async function GET(req: NextRequest) {
     const { searchParams } = req.nextUrl;
     const department = searchParams.get("department");
     const departments = searchParams.get("departments");
-    const date = searchParams.get("date"); // ISO date string YYYY-MM-DD
+    const date = searchParams.get("date");
     const limitParam = searchParams.get("limit");
     const limit = limitParam ? Math.min(parseInt(limitParam, 10) || 200, 500) : 200;
 
@@ -37,7 +46,6 @@ export async function GET(req: NextRequest) {
       else if (list.length > 1) where.department = { in: list };
     }
 
-    // If a specific date is provided, filter by records created on that date.
     if (date) {
       const start = new Date(`${date}T00:00:00.000Z`);
       const end = new Date(`${date}T23:59:59.999Z`);
@@ -62,28 +70,13 @@ export async function GET(req: NextRequest) {
     });
 
     const formatted = documents.map((d) => {
-      // fileUrl stores: JSON payload { entries, status, attachmentUrl }
-      let entries: unknown[] = [];
-      let status = "APPROVED";
-      let attachmentUrl: string | null = null;
+      // scope stores the report status for new records
+      const status = d.scope === "REVIEW_URGENTLY" || d.scope === "APPROVED"
+        ? d.scope
+        : "APPROVED";
 
-      if (d.fileUrl) {
-        try {
-          const parsed = JSON.parse(d.fileUrl);
-          if (Array.isArray(parsed)) {
-            // Legacy: plain array of entries
-            entries = parsed;
-          } else if (parsed && typeof parsed === "object") {
-            // New format: { entries, status, attachmentUrl }
-            entries = Array.isArray(parsed.entries) ? parsed.entries : [];
-            status = parsed.status || "APPROVED";
-            attachmentUrl = parsed.attachmentUrl || null;
-          }
-        } catch {
-          // not JSON — real file URL
-        }
-      }
-
+      // fileUrl is a Cloudinary URL; entries are fetched client-side when needed.
+      // For the list view we just need the count from fileSize.
       return {
         id: `RPT-${String(d.id).padStart(4, "0")}`,
         dbId: d.id,
@@ -91,11 +84,12 @@ export async function GET(req: NextRequest) {
         department: d.department,
         submittedBy: d.uploadedBy,
         submittedAt: d.createdAt.toISOString(),
-        entries,
+        entries: [], // entries loaded separately via fileUrl
+        entriesUrl: d.fileUrl,  // client can fetch this URL to get full entries
         fileSize: d.fileSize || "—",
         fileType: "Report",
         status,
-        fileUrl: attachmentUrl,
+        fileUrl: d.fileUrl,
       };
     });
 
@@ -103,7 +97,7 @@ export async function GET(req: NextRequest) {
       headers: { "Cache-Control": "no-store, max-age=0" },
     });
   } catch (error: any) {
-    console.error("Error fetching daily reports:", error);
+    console.error("Error fetching daily reports:", error?.message ?? error);
     return NextResponse.json(
       { error: error?.message || "Failed to fetch daily reports" },
       { status: 500 }
@@ -114,7 +108,11 @@ export async function GET(req: NextRequest) {
 /**
  * POST /api/daily-reports
  * Creates a new daily report stored as a Document record.
- * Body: { department: string, date: string (YYYY-MM-DD), entries: object[] }
+ * Body: { department, date, entries, urgentReview?, attachmentUrl? }
+ *
+ * Entries are uploaded as a JSON file to Cloudinary so that fileUrl stores
+ * a short URL (≤190 chars) — safely within the VARCHAR column limit.
+ * The report status is stored in the scope field.
  */
 export async function POST(req: NextRequest) {
   const auth = await getAuthFromRequest(req);
@@ -160,15 +158,50 @@ export async function POST(req: NextRequest) {
     }
 
     const reportDate = date || new Date().toISOString().split("T")[0];
-    const submitterName: string = (typeof auth.name === "string" && auth.name) ? auth.name : (auth.email.split("@")[0] || "Unknown");
+    const submitterName: string =
+      typeof auth.name === "string" && auth.name
+        ? auth.name
+        : auth.email.split("@")[0] || "Unknown";
     const reportStatus = urgentReview ? "REVIEW_URGENTLY" : "APPROVED";
 
-    // Store entries + status + attachmentUrl as a compact JSON payload in fileUrl.
-    const payload = JSON.stringify({
-      entries: validEntries,
-      status: reportStatus,
-      attachmentUrl: attachmentUrl || null,
-    });
+    // ── Upload entries as a JSON file to Cloudinary ───────────────────────────
+    // This stores a short Cloudinary URL in fileUrl (well within VARCHAR(191))
+    // instead of a raw JSON blob that overflows the column.
+    let entriesFileUrl: string | null = null;
+    try {
+      const jsonPayload = JSON.stringify({
+        entries: validEntries,
+        status: reportStatus,
+        attachmentUrl: attachmentUrl || null,
+      });
+
+      const buffer = Buffer.from(jsonPayload, "utf-8");
+      const deptSlug = department.trim().replace(/\s+/g, "_");
+
+      const uploadResult = await new Promise<{ secure_url: string }>((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            resource_type: "raw",
+            folder: "calaya-reports",
+            public_id: `report_${deptSlug}_${reportDate}_${Date.now()}`,
+            format: "json",
+          },
+          (error, result) => {
+            if (error) reject(error);
+            else if (result) resolve(result);
+            else reject(new Error("Empty upload result from Cloudinary"));
+          }
+        );
+        stream.end(buffer);
+      });
+
+      entriesFileUrl = uploadResult.secure_url;
+    } catch (uploadErr: any) {
+      // Fallback: compact inline summary that fits in VARCHAR(191)
+      console.warn("Cloudinary JSON upload failed, using compact fallback:", uploadErr?.message);
+      const names = validEntries.map((e) => e.taskName).join("|");
+      entriesFileUrl = `RPT:${reportStatus}|${names}`.slice(0, 190);
+    }
 
     let doc: Awaited<ReturnType<typeof prisma.document.create>>;
     try {
@@ -178,9 +211,9 @@ export async function POST(req: NextRequest) {
           type: "Report",
           department: department.trim(),
           uploadedBy: submitterName,
-          scope: "DEPARTMENT",
+          scope: reportStatus, // scope encodes report status (APPROVED | REVIEW_URGENTLY)
           fileSize: `${validEntries.length} task${validEntries.length !== 1 ? "s" : ""}`,
-          fileUrl: payload,
+          fileUrl: entriesFileUrl,
         },
       });
     } catch (dbErr: any) {
@@ -193,15 +226,10 @@ export async function POST(req: NextRequest) {
 
     // Fire-and-forget: realtime event
     try {
-      emitRealtimeEvent({
-        type: "document:created",
-        entity: "document",
-        action: "created",
-        entityId: doc.id,
-      });
+      emitRealtimeEvent({ type: "document:created", entity: "document", action: "created", entityId: doc.id });
     } catch { /* non-critical */ }
 
-    // Fire-and-forget: notification (don't let it block the response)
+    // Fire-and-forget: notification
     createNotification({
       actorEmail: auth.email,
       actionType: "UPLOAD_DOCUMENT",

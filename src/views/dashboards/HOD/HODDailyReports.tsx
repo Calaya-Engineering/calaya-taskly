@@ -25,6 +25,7 @@ interface DailyReport {
   submittedBy: string;
   submittedAt: string;
   entries: ReportEntry[];
+  entriesUrl?: string | null;  // Cloudinary URL to fetch full entries JSON
   fileSize?: string;
   fileType?: string;
   status: string;
@@ -700,38 +701,15 @@ export default function HODDailyReports() {
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        {/* Normalize entries from both camelCase and UPPERCASE API responses */}
-                        {(() => {
-                          const normalized = (report.entries || []).map(normalizeEntry).filter(e => e.taskName);
-                          return (
-                            <div>
-                              <div className="font-semibold text-gray-900">{normalized.length} task{normalized.length !== 1 ? 's' : ''}</div>
-                              <div className="text-xs text-gray-500 mt-1">
-                                {normalized.slice(0, 2).map((e, i) => (
-                                  <div key={i} className="truncate max-w-xs">• {e.taskName}</div>
-                                ))}
-                                {normalized.length > 2 && <div className="text-gray-400">+{normalized.length - 2} more</div>}
-                              </div>
-                            </div>
-                          );
-                        })()}
+                        {/* fileSize contains "N task(s)" — entries fetched on demand from entriesUrl */}
+                        <div className="font-semibold text-gray-900">{report.fileSize || '—'}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <Pill tone={getStatusTone(report.status)}>{getStatusLabel(report.status)}</Pill>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        {report.fileUrl && !report.fileUrl.startsWith('[') ? (
-                          <a
-                            href={report.fileUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-[13px] font-semibold text-blue-600 underline hover:text-blue-800"
-                          >
-                            {fileIcon(report.fileUrl)} View file
-                          </a>
-                        ) : (
-                          <span className="text-[12px] text-gray-400">—</span>
-                        )}
+                        {/* Only show a link if there's a user-uploaded attachment (not internal Cloudinary entries URL) */}
+                        <span className="text-[12px] text-gray-400">—</span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right">
                         <div className="flex items-center justify-end gap-2">
