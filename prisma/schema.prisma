@@ -95,7 +95,7 @@ model Document {
   uploadedBy String
   scope      String
   fileSize   String?
-  fileUrl    String?
+  fileUrl    String?  @db.Text
   downloads  Int      @default(0)
   tenderId   Int?
   createdAt  DateTime @default(now())
