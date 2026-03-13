@@ -123,7 +123,13 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const body = await req.json().catch(() => ({}));
+    let body: Record<string, unknown> = {};
+    try {
+      body = await req.json();
+    } catch {
+      return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+    }
+
     const { department, date, entries, urgentReview, attachmentUrl } = body as {
       department?: string;
       date?: string;
@@ -140,39 +146,62 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "At least one task entry is required" }, { status: 400 });
     }
 
-    const validEntries = entries.filter((e) => e.taskName?.trim());
+    const validEntries = entries
+      .filter((e) => e?.taskName?.trim())
+      .map((e) => ({
+        taskName: String(e.taskName).trim(),
+        objective: e.objective ? String(e.objective).trim() : "",
+        target: e.target ? String(e.target).trim() : "",
+        nextDayTask: e.nextDayTask ? String(e.nextDayTask).trim() : "",
+      }));
+
     if (validEntries.length === 0) {
       return NextResponse.json({ error: "At least one task entry with a name is required" }, { status: 400 });
     }
 
     const reportDate = date || new Date().toISOString().split("T")[0];
-    const submitterName: string = (auth.name || auth.email.split("@")[0] || "Unknown") as string;
-    const status = urgentReview ? "REVIEW_URGENTLY" : "APPROVED";
+    const submitterName: string = (typeof auth.name === "string" && auth.name) ? auth.name : (auth.email.split("@")[0] || "Unknown");
+    const reportStatus = urgentReview ? "REVIEW_URGENTLY" : "APPROVED";
 
-    // Store entries + status + attachmentUrl as structured JSON in fileUrl.
-    const payload = JSON.stringify({ entries: validEntries, status, attachmentUrl: attachmentUrl || null });
-
-    const doc = await prisma.document.create({
-      data: {
-        title: `Daily Report — ${department} — ${reportDate}`,
-        type: "Report",
-        department: department.trim(),
-        uploadedBy: submitterName,
-        scope: "DEPARTMENT",
-        fileSize: `${validEntries.length} task${validEntries.length !== 1 ? "s" : ""}`,
-        fileUrl: payload,
-      },
+    // Store entries + status + attachmentUrl as a compact JSON payload in fileUrl.
+    const payload = JSON.stringify({
+      entries: validEntries,
+      status: reportStatus,
+      attachmentUrl: attachmentUrl || null,
     });
 
-    // Fire realtime event so dashboards update instantly
-    emitRealtimeEvent({
-      type: "document:created",
-      entity: "document",
-      action: "created",
-      entityId: doc.id,
-    });
+    let doc: Awaited<ReturnType<typeof prisma.document.create>>;
+    try {
+      doc = await prisma.document.create({
+        data: {
+          title: `Daily Report — ${department.trim()} — ${reportDate}`,
+          type: "Report",
+          department: department.trim(),
+          uploadedBy: submitterName,
+          scope: "DEPARTMENT",
+          fileSize: `${validEntries.length} task${validEntries.length !== 1 ? "s" : ""}`,
+          fileUrl: payload,
+        },
+      });
+    } catch (dbErr: any) {
+      console.error("DB error creating daily report:", dbErr?.message ?? dbErr);
+      return NextResponse.json(
+        { error: "Database error: " + (dbErr?.message || "Failed to create report") },
+        { status: 500 }
+      );
+    }
 
-    // Notification message highlights urgent reports
+    // Fire-and-forget: realtime event
+    try {
+      emitRealtimeEvent({
+        type: "document:created",
+        entity: "document",
+        action: "created",
+        entityId: doc.id,
+      });
+    } catch { /* non-critical */ }
+
+    // Fire-and-forget: notification (don't let it block the response)
     createNotification({
       actorEmail: auth.email,
       actionType: "UPLOAD_DOCUMENT",
@@ -180,7 +209,7 @@ export async function POST(req: NextRequest) {
       message: urgentReview
         ? `🚨 URGENT: ${submitterName} (${auth.role}) submitted a daily report for ${department} on ${reportDate} — requires urgent review`
         : `${submitterName} (${auth.role}) submitted a daily report for ${department} on ${reportDate}`,
-    });
+    }).catch((e) => console.error("Notification error (non-fatal):", e));
 
     return NextResponse.json(
       {
@@ -192,13 +221,13 @@ export async function POST(req: NextRequest) {
         submittedAt: doc.createdAt.toISOString(),
         entries: validEntries,
         fileSize: doc.fileSize,
-        status,
+        status: reportStatus,
         fileUrl: attachmentUrl || null,
       },
       { status: 201 }
     );
   } catch (error: any) {
-    console.error("Error creating daily report:", error);
+    console.error("Unexpected error in POST /api/daily-reports:", error?.message ?? error);
     return NextResponse.json(
       { error: error?.message || "Failed to create daily report" },
       { status: 500 }
