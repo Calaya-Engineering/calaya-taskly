@@ -19,6 +19,12 @@ export function saveOtp(email: string, otp: string, user: AuthUserInfo, ttlMs = 
   store.set(email.toLowerCase(), { otp, expiresAt, user });
 }
 
+export function hasOtp(email: string): boolean {
+  const record = store.get(email.toLowerCase());
+  if (!record) return false;
+  return record.expiresAt >= Date.now();
+}
+
 export function consumeOtp(email: string, otp: string): AuthUserInfo | null {
   const key = email.toLowerCase();
   const record = store.get(key);

@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { useBadges } from "@/contexts/BadgeContext";
 import { MenuIcon, CloseMenuIcon } from "@/lib/icons";
+import { getRouteForRole } from "@/lib/auth-config";
 
 interface MenuItem {
   path?: string;
@@ -32,7 +33,7 @@ export default function Layout({
   const pathname = usePathname();
   const router = useRouter();
   const { getBadge } = useBadges();
-  const { isAuthenticated, loading, logout } = useAuth();
+  const { user, isAuthenticated, loading, logout } = useAuth();
 
   useEffect(() => {
     setSidebarOpen(false);
@@ -50,10 +51,16 @@ export default function Layout({
   }, []);
 
   useEffect(() => {
-    if (!loading && !isAuthenticated) {
-      router.replace("/login");
+    if (!loading) {
+      if (!isAuthenticated) {
+        router.replace("/login");
+      } else if (user && userRole && user.role !== userRole) {
+        // Prevent accidental access to wrong dashboard segments
+        const correctRoute = getRouteForRole(user.role);
+        router.replace(correctRoute);
+      }
     }
-  }, [loading, isAuthenticated, router]);
+  }, [loading, isAuthenticated, user, userRole, router]);
 
   const isActive = (path?: string) => pathname === path;
 

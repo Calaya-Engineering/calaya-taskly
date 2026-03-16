@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { consumeOtp } from "../otp-store";
+import { consumeOtp, hasOtp } from "../otp-store";
 import { signAuthToken } from "@/lib/jwt";
 import { DEMO_CREDENTIALS, getRouteForRole } from "@/lib/auth-config";
 
@@ -28,6 +28,8 @@ export async function POST(req: NextRequest) {
     }
 
     if (!user) {
+      const emailExists = hasOtp(emailKey);
+      console.warn(`OTP verification failed for ${emailKey}. OTP: ${otp.trim()}. Store record present: ${emailExists ? 'yes' : 'no'}`);
       return NextResponse.json({ error: "Invalid or expired OTP." }, { status: 401 });
     }
 

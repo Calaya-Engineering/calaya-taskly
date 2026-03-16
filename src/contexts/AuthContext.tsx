@@ -63,7 +63,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = () => {
     if (typeof window !== "undefined") {
+      // Clear all auth-related storage
       window.sessionStorage.removeItem(AUTH_TOKEN_KEY);
+      window.localStorage.removeItem(AUTH_TOKEN_KEY);
+      
+      // Attempt to clear session/auth cookies by expiration
+      document.cookie = "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      document.cookie = "session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     }
     setUser(null);
     router.push("/login");
@@ -71,6 +77,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const clearSession = () => {
     if (typeof window !== "undefined") {
+      // ONLY clear sessionStorage for THIS tab.
+      // This allows other tabs to keep their own independent sessions.
       window.sessionStorage.removeItem(AUTH_TOKEN_KEY);
     }
     setUser(null);

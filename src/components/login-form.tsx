@@ -102,7 +102,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
     setOtp(code);
     setError(null);
 
-    if (code.length !== 6 || !pendingUserEmail) return;
+    if (code.length !== 6 || !pendingUserEmail || isVerifying) return;
 
     setIsVerifying(true);
     try {
