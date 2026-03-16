@@ -1,7 +1,7 @@
 "use client";
 
 // pages/dashboards/Staff/StaffNotifications.jsx
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
@@ -13,7 +13,7 @@ const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
 );
 
-const SectionTitle = ({ title, subtitle, action }) => (
+const SectionTitle = ({ title, subtitle, action = null }: { title: string; subtitle?: string; action?: React.ReactNode }) => (
   <div className="flex items-start justify-between gap-3">
     <div>
       <h2 className="text-lg md:text-xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
@@ -52,14 +52,14 @@ const NOTIFICATIONS_OVERSCAN = 6;
 
 export default function StaffNotifications() {
   const router = useRouter();
-  const [notifications, setNotifications] = useState([]);
+  const [notifications, setNotifications] = useState<any[]>([]);
   const [filter, setFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPriority, setSelectedPriority] = useState("all");
   const [selectedType, setSelectedType] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [scrollTop, setScrollTop] = useState(0);
-  const listViewportRef = useRef(null);
+  const listViewportRef = useRef<HTMLDivElement>(null);
   const lastRealtimeRefetchRef = useRef(0);
 
   const notificationTypes = [
@@ -67,8 +67,27 @@ export default function StaffNotifications() {
     "UPDATE_TASK",
     "VIEW_TASK",
     "ASSIGN_TASK",
+    "UNASSIGN_TASK",
+    "ESCALATE_TASK",
+    "DEESCALATE_TASK",
     "UPLOAD_DOCUMENT",
+    "UPDATE_DOCUMENT",
+    "VIEW_DOCUMENT",
+    "DOWNLOAD_DOCUMENT",
     "CREATE_ANNOUNCEMENT",
+    "UPDATE_ANNOUNCEMENT",
+    "VIEW_ANNOUNCEMENT",
+    "READ_ANNOUNCEMENT",
+    "CREATE_TENDER",
+    "UPDATE_TENDER",
+    "VIEW_TENDER",
+    "DELETE_TENDER",
+    "CREATE_USER",
+    "UPDATE_USER",
+    "DELETE_USER",
+    "CREATE_DEPARTMENT",
+    "UPDATE_DEPARTMENT",
+    "DELETE_DEPARTMENT",
   ];
 
   const fetchNotifications = useCallback(async () => {
@@ -256,7 +275,7 @@ export default function StaffNotifications() {
   const formatTimeAgo = (dateString) => {
     const date = new Date(dateString);
     const now = new Date();
-    const diffMs = now - date;
+    const diffMs = Number(now) - Number(date);
     const diffMins = Math.floor(diffMs / 60000);
     const diffHours = Math.floor(diffMs / 3600000);
     const diffDays = Math.floor(diffMs / 86400000);

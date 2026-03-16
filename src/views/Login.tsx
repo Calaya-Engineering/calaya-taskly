@@ -1,6 +1,6 @@
 "use client";
 // pages/Login.jsx
-import { useState, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useCallback } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -15,7 +15,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [otp, setOtp] = useState("");
-  const [pendingUser, setPendingUser] = useState(null);
+  const [pendingUser, setPendingUser] = useState<any>(null);
   const [rememberMe, setRememberMe] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
@@ -28,7 +28,7 @@ export default function Login() {
     { email: "staff@calaya.com", password: "demo123", role: "Staff", route: "/staff-dashboard" },
     { email: "personnel@calaya.com", password: "demo123", role: "Personnel", route: "/staff-dashboard" },
     { email: "corp@calaya.com", password: "demo123", role: "Corp Member", route: "/staff-dashboard" },
-    { email: "secretary@calaya.com", password: "demo123", role: "Secretary", route: "/secretary-dashboard" },
+    // { email: "secretary@calaya.com", password: "demo123", role: "Secretary", route: "/secretary-dashboard" },
 
   ];
 
@@ -131,7 +131,6 @@ export default function Login() {
                     style={{
                       borderColor: "#6DC6DF",
                       backgroundColor: "#f8fafc",
-                      focusRingColor: "#2C4B9B",
                     }}
                     required
                   />
@@ -166,7 +165,6 @@ export default function Login() {
                     style={{
                       borderColor: "#6DC6DF",
                       backgroundColor: "#f8fafc",
-                      focusRingColor: "#2C4B9B",
                     }}
                     required
                   />

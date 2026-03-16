@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
+import { createNotification } from "@/lib/notifications";
 
 function requireAdmin(auth: { role: string } | null) {
   if (!auth || auth.role !== "Admin") {
@@ -60,6 +61,13 @@ export async function POST(req: NextRequest) {
       entity: "department",
       action: "created",
       entityId: dept.id,
+    });
+
+    createNotification({
+      actorEmail: auth?.email || "Admin",
+      actionType: 'CREATE_DEPARTMENT',
+      targetId: dept.id,
+      message: `${auth?.name || auth?.email?.split('@')[0] || 'Admin'} created a new department: ${dept.name}`
     });
 
     return NextResponse.json(dept);

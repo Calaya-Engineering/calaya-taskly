@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
+import { createNotification } from "@/lib/notifications";
 
 function requireAdmin(auth: { role: string } | null) {
   if (!auth || auth.role !== "Admin") {
@@ -25,6 +26,12 @@ export async function GET(req: NextRequest) {
       orderBy: { name: "asc" },
       select: { id: true, name: true, dashboardRoute: true },
     });
+    createNotification({
+      actorEmail: auth.email,
+      actionType: 'VIEW_ROLES',
+      message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) viewed the roles list.`
+    });
+
     return NextResponse.json(roles, {
       headers: { "Cache-Control": "no-store, max-age=0" },
     });
@@ -66,6 +73,13 @@ export async function POST(req: NextRequest) {
       entity: "role",
       action: "created",
       entityId: role.id,
+    });
+
+    createNotification({
+      actorEmail: auth?.email || "Admin",
+      actionType: 'CREATE_ROLE',
+      targetId: role.id,
+      message: `${auth?.name || auth?.email?.split('@')[0] || 'Admin'} created a new role: ${role.name}`
     });
 
     return NextResponse.json(role);

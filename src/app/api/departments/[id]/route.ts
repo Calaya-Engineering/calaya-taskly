@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
+import { createNotification } from "@/lib/notifications";
 
 function requireAdmin(auth: { role: string } | null) {
   if (!auth || auth.role !== "Admin") {
@@ -46,6 +47,13 @@ export async function PATCH(
       entityId: dept.id,
     });
 
+    createNotification({
+      actorEmail: auth?.email || "Admin",
+      actionType: 'UPDATE_DEPARTMENT',
+      targetId: dept.id,
+      message: `${auth?.name || auth?.email?.split('@')[0] || 'Admin'} updated department: ${dept.name}`
+    });
+
     return NextResponse.json(dept);
   } catch (error: unknown) {
     const prismaErr = error as { code?: string };
@@ -87,6 +95,13 @@ export async function DELETE(
       entity: "department",
       action: "deleted",
       entityId: deptId,
+    });
+
+    createNotification({
+      actorEmail: auth?.email || "Admin",
+      actionType: 'DELETE_DEPARTMENT',
+      targetId: deptId,
+      message: `${auth?.name || auth?.email?.split('@')[0] || 'Admin'} deleted department ID: ${deptId}`
     });
 
     return NextResponse.json({ success: true });

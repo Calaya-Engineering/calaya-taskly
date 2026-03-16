@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
+import { createNotification } from "@/lib/notifications";
 
 function parseDocId(id: string): number | null {
   const num = parseInt(id, 10);
@@ -36,6 +37,13 @@ export async function GET(
     if (!doc) {
       return NextResponse.json({ error: "Document not found" }, { status: 404 });
     }
+
+    createNotification({
+      actorEmail: auth.email,
+      actionType: 'VIEW_DOCUMENT',
+      targetId: doc.id,
+      message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) viewed document: ${doc.title}`,
+    });
 
     return NextResponse.json({
       id: `DOC-${String(doc.id).padStart(3, "0")}`,
@@ -91,6 +99,13 @@ export async function PATCH(
         entityId: doc.id,
       });
 
+      createNotification({
+        actorEmail: auth.email,
+        actionType: 'DOWNLOAD_DOCUMENT',
+        targetId: doc.id,
+        message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) downloaded document: ${doc.title}`,
+      });
+
       return NextResponse.json({
         id: `DOC-${String(doc.id).padStart(3, "0")}`,
         downloads: doc.downloads,
@@ -125,6 +140,13 @@ export async function PATCH(
       entity: "document",
       action: "updated",
       entityId: doc.id,
+    });
+
+    createNotification({
+      actorEmail: auth.email,
+      actionType: 'UPDATE_DOCUMENT',
+      targetId: doc.id,
+      message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) updated document: ${doc.title}`,
     });
 
     return NextResponse.json({

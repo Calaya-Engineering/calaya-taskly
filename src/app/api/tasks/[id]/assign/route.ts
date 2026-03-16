@@ -110,6 +110,12 @@ export async function DELETE(
 
     if (deleted.count > 0) {
       emitTaskEvent({ type: "task:unassigned", taskId, userId });
+      createNotification({
+        actorEmail: auth.email,
+        actionType: 'UNASSIGN_TASK',
+        targetId: taskId,
+        message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) unassigned a user from a task.`
+      });
     }
 
     return NextResponse.json({

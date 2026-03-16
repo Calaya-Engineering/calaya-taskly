@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
+import { createNotification } from "@/lib/notifications";
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     const auth = await getAuthFromRequest(req);
@@ -31,12 +32,21 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
             },
         });
 
+        const announcement = await prisma.announcement.findUnique({ where: { id }, select: { title: true } });
+
         emitRealtimeEvent({
             type: "announcement:read",
             entity: "announcement",
             action: "read",
             entityId: id,
             payload: { userId: user.id },
+        });
+
+        createNotification({
+            actorEmail: auth.email,
+            actionType: 'READ_ANNOUNCEMENT',
+            targetId: id,
+            message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) read announcement: "${announcement?.title || 'Unknown'}"`
         });
 
         return NextResponse.json({ success: true });

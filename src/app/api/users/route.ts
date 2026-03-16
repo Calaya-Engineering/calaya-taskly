@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { hashPassword } from "@/lib/password";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
+import { createNotification } from "@/lib/notifications";
 
 function requireAdmin(auth: { role: string } | null) {
   if (!auth || auth.role !== "Admin") {
@@ -57,6 +58,12 @@ export async function GET(req: NextRequest) {
         department: true,
       },
       orderBy: [{ role: "asc" }, { email: "asc" }],
+    });
+
+    createNotification({
+      actorEmail: auth.email,
+      actionType: 'VIEW_USERS',
+      message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) viewed the users list.`
     });
 
     return NextResponse.json(users);
@@ -140,6 +147,13 @@ export async function POST(req: NextRequest) {
       entity: "user",
       action: "created",
       entityId: user.id,
+    });
+
+    createNotification({
+      actorEmail: auth.email,
+      actionType: 'CREATE_USER',
+      targetId: user.id,
+      message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) created a new user: ${user.name || user.email}`
     });
 
     return NextResponse.json(user);

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
+import { createNotification } from "@/lib/notifications";
 
 /**
  * GET /api/tenders/[id] - Get tender details
@@ -64,6 +65,13 @@ export async function GET(
             ],
         };
 
+        createNotification({
+            actorEmail: auth.email,
+            actionType: 'VIEW_TENDER',
+            targetId: tender.id,
+            message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) viewed tender: ${tender.title}`
+        });
+
         return NextResponse.json(formatted);
     } catch (error: any) {
         console.error("Error fetching tender detail:", error);
@@ -104,6 +112,13 @@ export async function PATCH(
             entityId: tender.id,
         });
 
+        createNotification({
+            actorEmail: auth.email,
+            actionType: 'UPDATE_TENDER',
+            targetId: tender.id,
+            message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) updated tender: ${tender.title}`
+        });
+
         return NextResponse.json(tender);
     } catch (error: any) {
         console.error("Error updating tender:", error);
@@ -139,6 +154,13 @@ export async function DELETE(
             entity: "tender",
             action: "deleted",
             entityId: parseInt(id),
+        });
+
+        createNotification({
+            actorEmail: auth.email,
+            actionType: 'DELETE_TENDER',
+            targetId: parseInt(id),
+            message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) deleted a tender.`
         });
 
         return NextResponse.json({ success: true });

@@ -70,6 +70,7 @@ export const StaffMenuItems = [
   { label: "Profile", path: "/staff-dashboard/profile", icon: <UserIcon />, group: "Account" },
 ];
 
+/*
 export const SecretaryMenuItems = [
   { label: "Dashboard", path: "/secretary-dashboard", icon: <DashboardIcon />, group: "Overview" },
   { label: "Upload Daily Report", path: "/secretary-dashboard/upload-report", icon: <ReportIcon />, group: "Documents & Reports" },
@@ -82,3 +83,4 @@ export const SecretaryMenuItems = [
   { label: "Notifications", path: "/secretary-dashboard/notifications", icon: <BellIcon />, group: "Account" },
   { label: "Profile", path: "/secretary-dashboard/profile", icon: <UserIcon />, group: "Account" },
 ];
+*/

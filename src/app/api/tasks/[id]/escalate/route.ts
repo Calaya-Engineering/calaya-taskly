@@ -120,6 +120,13 @@ export async function DELETE(
 
         emitTaskEvent({ type: "task:updated", taskId });
 
+        createNotification({
+            actorEmail: auth.email,
+            actionType: 'DEESCALATE_TASK',
+            targetId: taskId,
+            message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) de-escalated task: "${updated.title}"`
+        });
+
         return NextResponse.json(updated);
     } catch {
         return NextResponse.json({ error: "Failed to de-escalate task" }, { status: 500 });

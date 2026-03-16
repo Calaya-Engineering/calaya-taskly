@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { hashPassword } from "@/lib/password";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
+import { createNotification } from "@/lib/notifications";
 
 function requireAdmin(auth: { role: string } | null) {
   if (!auth || auth.role !== "Admin") {
@@ -59,6 +60,14 @@ export async function GET(
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
+
+    createNotification({
+      actorEmail: auth.email,
+      actionType: 'VIEW_USER',
+      targetId: user.id,
+      message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) viewed profile of user: ${user.name || user.email}`
+    });
+
     return NextResponse.json(user);
   } catch (error) {
     console.error("Error fetching user:", error);
@@ -137,6 +146,13 @@ export async function PATCH(
       entityId: user.id,
     });
 
+    createNotification({
+      actorEmail: auth.email,
+      actionType: 'UPDATE_USER',
+      targetId: user.id,
+      message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) updated details for user: ${user.name || user.email}`
+    });
+
     return NextResponse.json(user);
   } catch (error: unknown) {
     const prismaErr = error as { code?: string };
@@ -186,6 +202,13 @@ export async function DELETE(
       entity: "user",
       action: "deleted",
       entityId: userId,
+    });
+
+    createNotification({
+      actorEmail: auth.email,
+      actionType: 'DELETE_USER',
+      targetId: userId,
+      message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) deleted user ID: ${userId}`
     });
 
     return NextResponse.json({ success: true });

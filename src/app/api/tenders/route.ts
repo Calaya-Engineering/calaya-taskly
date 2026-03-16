@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
+import { createNotification } from "@/lib/notifications";
 
 /**
  * GET /api/tenders - List tenders (Authenticated)
@@ -87,7 +88,10 @@ export async function GET(req: NextRequest) {
  */
 export async function POST(req: NextRequest) {
     try {
-        const auth = { role: "MD", email: "md@calayaengineering.com" };
+        const auth = await getAuthFromRequest(req);
+        if (!auth || auth.role !== "MD") {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
 
         const body = await req.json();
         const {
@@ -123,6 +127,12 @@ export async function POST(req: NextRequest) {
             entityId: tender.id,
         });
 
+        createNotification({
+            actorEmail: auth.email,
+            actionType: 'CREATE_TENDER',
+            targetId: tender.id,
+            message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) created a new tender: ${tender.title}`
+        });
 
         return NextResponse.json(tender);
     } catch (error: any) {

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { emitAnnouncementEvent } from "@/lib/announcement-events";
+import { createNotification } from "@/lib/notifications";
 
 /**
  * GET /api/announcements/[id] - Get details of an announcement
@@ -19,6 +20,13 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     try {
         const announcement = await prisma.announcement.findUnique({ where: { id } });
         if (!announcement) return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+        createNotification({
+            actorEmail: auth.email,
+            actionType: 'VIEW_ANNOUNCEMENT',
+            targetId: announcement.id,
+            message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) viewed announcement: ${announcement.title}`
+        });
 
         return NextResponse.json(announcement);
     } catch (error) {
@@ -67,6 +75,13 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 
         emitAnnouncementEvent({ type: "announcement:updated", announcementId: announcement.id });
 
+        createNotification({
+            actorEmail: auth.email,
+            actionType: 'UPDATE_ANNOUNCEMENT',
+            targetId: announcement.id,
+            message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) updated announcement: ${announcement.title}`
+        });
+
         return NextResponse.json(announcement);
     } catch (error) {
         console.error("Error updating announcement:", error);
@@ -94,6 +109,13 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
         await prisma.announcement.delete({ where: { id } });
 
         emitAnnouncementEvent({ type: "announcement:deleted", announcementId: id });
+
+        createNotification({
+            actorEmail: auth.email,
+            actionType: 'DELETE_ANNOUNCEMENT',
+            targetId: id,
+            message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) deleted an announcement.`
+        });
 
         return NextResponse.json({ success: true, message: "Announcement deleted" });
     } catch (error) {
