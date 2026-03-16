@@ -6,6 +6,7 @@ import Layout from "@/components/Layout";
 import { MDMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
 import { fetchWithAuth } from "@/lib/api";
+import { useSSE } from "@/hooks/useSSE";
 
 /* ---------- Shared UI helpers (dashboard style) ---------- */
 const Card = ({ className = "", children }) => (
@@ -43,7 +44,7 @@ const btnSolid = `${btnBase} text-white`;
 export default function MDAnnouncements() {
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
-  const [announcementsData, setAnnouncementsData] = useState([]);
+  const [announcementsData, setAnnouncementsData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchAnnouncements = useCallback(async () => {
@@ -65,12 +66,23 @@ export default function MDAnnouncements() {
     fetchAnnouncements();
   }, [fetchAnnouncements]);
 
+  // Real-time: re-fetch when announcements change
+  useSSE("/api/announcements/events", (ev) => {
+    if (ev.type?.startsWith("announcement:")) fetchAnnouncements();
+  });
 
-  const unreadCount = useMemo(() => announcementsData.filter((a) => !a.read).length, [announcementsData]);
+
+  const activeAnnouncements = useMemo(() => {
+    const now = new Date();
+    return announcementsData.filter((a) => !a.expiresAt || new Date(a.expiresAt) >= now);
+  }, [announcementsData]);
+
+  const unreadCount = useMemo(() => activeAnnouncements.filter((a) => !a.read).length, [activeAnnouncements]);
   const urgentUnreadCount = useMemo(
-    () => announcementsData.filter((a) => a.priority === "URGENT" && !a.read).length,
-    [announcementsData]
+    () => activeAnnouncements.filter((a) => a.priority === "URGENT" && !a.read).length,
+    [activeAnnouncements]
   );
+  const urgentCount = useMemo(() => activeAnnouncements.filter((a) => a.priority === "URGENT").length, [activeAnnouncements]);
 
   const filteredAnnouncements = useMemo(() => {
     return announcementsData.filter((ann) => {
@@ -412,7 +424,7 @@ export default function MDAnnouncements() {
           {[
             { label: "Total", value: announcementsData.length, icon: "📢", tone: "default" },
             { label: "Unread", value: unreadCount, icon: "📌", tone: "success" },
-            { label: "Urgent", value: announcementsData.filter((a) => a.priority === "URGENT").length, icon: "🚨", tone: "danger" },
+            { label: "Urgent", value: urgentCount, icon: "🚨", tone: "danger" },
             {
               label: "Avg. Reads",
               value: announcementsData.length > 0 ? Math.round(announcementsData.reduce((s, a) => s + (a.readsCount || 0), 0) / announcementsData.length) : 0,

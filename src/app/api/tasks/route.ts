@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { emitTaskEvent } from "@/lib/task-events";
+import { emitAnnouncementEvent } from "@/lib/announcement-events";
 import { createNotification } from "@/lib/notifications";
 
 /**
@@ -204,7 +205,7 @@ export async function POST(req: NextRequest) {
     // Put all meetings/events in the announcement table as well
     if (task.type === "MEETING" || task.type === "EVENT") {
       try {
-        await prisma.announcement.create({
+        const announcement = await prisma.announcement.create({
           data: {
             title: `${task.type === "MEETING" ? "📅 Meeting" : "🗓️ Event"}: ${task.title}`,
             description: task.description || `A new ${task.type.toLowerCase()} has been scheduled.`,
@@ -215,6 +216,7 @@ export async function POST(req: NextRequest) {
             createdBy: task.createdBy?.name || task.createdBy?.role || auth.email,
           }
         });
+        emitAnnouncementEvent({ type: "announcement:created", announcementId: announcement.id });
       } catch (err) {
         console.error("Failed to sync meeting/event to announcement:", err);
       }

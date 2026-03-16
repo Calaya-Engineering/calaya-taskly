@@ -8,6 +8,7 @@ import Layout from "../../components/Layout";
 import { MDMenuItems } from "@/utils/menus";
 import { PlusIcon, FileUploadIconComponent, MegaphoneIcon, CalendarIcon, ChartIcon } from "@/lib/icons";
 import { fetchWithAuth } from "@/lib/api";
+import { useSSE } from "@/hooks/useSSE";
 
 const fetcher = (url: string) => fetchWithAuth(url).then(res => res.json());
 
@@ -88,6 +89,14 @@ export default function MDDashboard() {
     };
   }, [fetchTasks]);
 
+  const { data: rawAnnouncements = [], mutate: fetchAnnouncements } = useSWR('/api/announcements?limit=5', fetcher, {
+    revalidateOnFocus: false,
+  });
+
+  useSSE("/api/announcements/events", (ev) => {
+    if (ev.type?.startsWith("announcement:")) fetchAnnouncements();
+  });
+
   const summary = useMemo(() => {
     const totalItems = tasksData.length;
     const taskCount = tasksData.filter((t) => t.type === "TASK").length;
@@ -95,15 +104,16 @@ export default function MDDashboard() {
     const overdueTasks = tasksData.filter((t) => t.dueDate && new Date(t.dueDate).getTime() < Date.now() && t.status !== "COMPLETED").length;
     const completedTasks = tasksData.filter((t) => t.status === "COMPLETED").length;
     const completionRate = totalItems ? Math.round((completedTasks / totalItems) * 100) : 0;
+    const upcomingEvents = tasksData.filter((t) => (t.type === "EVENT" || t.type === "MEETING") && t.startDate && new Date(t.startDate).getTime() >= Date.now()).length;
 
-    return { totalItems, taskCount, activeJobs, overdueTasks, completionRate };
+    return { totalItems, taskCount, activeJobs, overdueTasks, completionRate, upcomingEvents };
   }, [tasksData]);
 
   const stats = [
     { title: "Tasks", value: summary.taskCount.toString(), change: "Live", color: "var(--primary-blue)", link: "/md-dashboard/tasks", bar: "100%" },
     { title: "Active Jobs", value: summary.activeJobs.toString(), change: "Live", color: "var(--secondary-blue)", link: "/md-dashboard/jobs", bar: summary.totalItems ? `${Math.round((summary.activeJobs / summary.totalItems) * 100)}%` : "0%" },
     { title: "Overdue Tasks", value: summary.overdueTasks.toString(), change: "Live", color: "var(--accent-red)", link: "/md-dashboard/escalations", bar: summary.totalItems ? `${Math.round((summary.overdueTasks / summary.totalItems) * 100)}%` : "0%" },
-    { title: "Completion Rate", value: `${summary.completionRate}%`, change: "Live", color: "#10B981", link: "/md-dashboard/tasks", bar: `${summary.completionRate}%` },
+    { title: "Upcoming Events", value: summary.upcomingEvents.toString(), change: "Live", color: "#10B981", link: "/md-dashboard/events", bar: summary.totalItems ? `${Math.round((summary.upcomingEvents / summary.totalItems) * 100)}%` : "0%" },
   ];
 
   const actions = [
@@ -123,11 +133,15 @@ export default function MDDashboard() {
     { id: "TEN-003", title: "IT Infrastructure Upgrade", deadline: "2024-12-25", department: "Technical", status: "OPEN" },
   ];
 
-  const announcements = [
-    { id: "ANN-001", title: "Year-End Holiday Schedule", author: "HR Department", time: "2 hours ago", priority: "IMPORTANT" },
-    { id: "ANN-002", title: "Safety Protocol Updates", author: "HSE Department", time: "1 day ago", priority: "URGENT" },
-    { id: "ANN-003", title: "Monthly Performance Review", author: "Managing Director", time: "2 days ago", priority: "NORMAL" },
-  ];
+  const announcements = useMemo(() => {
+    return (Array.isArray(rawAnnouncements) ? rawAnnouncements : []).map(a => ({
+      id: a.id,
+      title: a.title,
+      author: a.createdBy || "System",
+      time: new Date(a.date || a.createdAt).toLocaleDateString(),
+      priority: a.priority || "NORMAL"
+    }));
+  }, [rawAnnouncements]);
 
   return (
     <Layout menuItems={MDMenuItems} userRole="MD">
@@ -401,19 +415,23 @@ export default function MDDashboard() {
             />
 
             <div className="mt-5 space-y-2">
-              {announcements.map((a) => (
-                <Link key={a.id} href={`/md-dashboard/announcement/${a.id}`} className="block">
-                  <div className="p-4 rounded-2xl border border-gray-200/70 hover:bg-gray-50 transition">
-                    <div className="flex items-start justify-between gap-4">
-                      <p className="font-semibold">{a.title}</p>
-                      <Pill tone={priorityTone(a.priority)}>{a.priority}</Pill>
+              {announcements.length > 0 ? (
+                announcements.map((a) => (
+                  <Link key={a.id} href={`/md-dashboard/announcement/${a.id}`} className="block">
+                    <div className="p-4 rounded-2xl border border-gray-200/70 hover:bg-gray-50 transition">
+                      <div className="flex items-start justify-between gap-4">
+                        <p className="font-semibold">{a.title}</p>
+                        <Pill tone={priorityTone(a.priority)}>{a.priority}</Pill>
+                      </div>
+                      <p className="text-sm text-gray-500 mt-2">
+                        By {a.author} • {a.time}
+                      </p>
                     </div>
-                    <p className="text-sm text-gray-500 mt-2">
-                      By {a.author} • {a.time}
-                    </p>
-                  </div>
-                </Link>
-              ))}
+                  </Link>
+                ))
+              ) : (
+                <div className="text-center py-8 text-gray-500">No announcements yet.</div>
+              )}
             </div>
           </Card>
         </div>

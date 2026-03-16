@@ -129,23 +129,26 @@ model TaskAssignment {
 }
 
 model Announcement {
-  id          Int                @id @default(autoincrement())
-  title       String
-  description String             @db.Text
-  date        DateTime           @default(now())
-  department  String?
-  targetRole  String?
-  priority    String             @default("NORMAL")
-  scopeType   String             @default("ALL_COMPANY")
-  expiresAt   DateTime?
-  createdBy   String
-  createdAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt
-  reads       AnnouncementRead[]
+  id            Int                @id @default(autoincrement())
+  title         String
+  description   String             @db.Text
+  date          DateTime           @default(now())
+  department    String?
+  targetRole    String?
+  priority      String             @default("NORMAL")
+  scopeType     String             @default("ALL_COMPANY")
+  expiresAt     DateTime?
+  createdBy     String
+  createdByRole String?            @default("STAFF")
+  createdById   Int?
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  reads         AnnouncementRead[]
 
   @@index([date])
   @@index([department])
   @@index([createdAt])
+  @@index([createdById])
 }
 
 model AnnouncementRead {

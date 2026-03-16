@@ -129,6 +129,8 @@ export async function POST(req: NextRequest) {
                 department: Array.isArray(selectedDepartments) && selectedDepartments.length > 0 ? selectedDepartments.join(",") : null,
                 expiresAt: expiresAt ? new Date(expiresAt) : null,
                 createdBy,
+                createdByRole: creator.role,
+                createdById: creator.id,
             },
         });
 
@@ -146,7 +148,7 @@ export async function POST(req: NextRequest) {
                 priority: "HIGH",
                 visibility: "PUBLIC",
                 createdById: creator.id,
-                department: announcement.department,
+                department: announcement.department || "All Company",
             },
         });
 

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { emitTaskEvent } from "@/lib/task-events";
+import { emitAnnouncementEvent } from "@/lib/announcement-events";
 import { createNotification } from "@/lib/notifications";
 
 const taskInclude = {
@@ -179,7 +180,7 @@ export async function PATCH(
         });
 
         if (!existing) {
-          await prisma.announcement.create({
+          const announcement = await prisma.announcement.create({
             data: {
               title: announcementTitle,
               description: task.description || `A new ${task.type.toLowerCase()} has been scheduled.`,
@@ -190,6 +191,20 @@ export async function PATCH(
               createdBy: task.createdBy?.name || task.createdBy?.role || auth.email,
             }
           });
+          emitAnnouncementEvent({ type: "announcement:created", announcementId: announcement.id });
+        } else {
+          const announcement = await prisma.announcement.update({
+            where: { id: existing.id },
+            data: {
+              title: announcementTitle,
+              description: task.description || `A new ${task.type.toLowerCase()} has been scheduled.`,
+              department: task.department,
+              priority: task.priority === "CRITICAL" || task.priority === "HIGH" ? "HIGH" : "NORMAL",
+              scopeType: task.department ? "DEPARTMENT" : "ALL_COMPANY",
+              date: announcementDate,
+            }
+          });
+          emitAnnouncementEvent({ type: "announcement:updated", announcementId: announcement.id });
         }
       } catch (err) {
         console.error("Failed to sync meeting/event update to announcement:", err);

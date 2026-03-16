@@ -9,11 +9,11 @@ import { fetchWithAuth, getAuthToken } from "@/lib/api";
 import { toast } from "@/lib/toast";
 
 /* ---------- UI helpers ---------- */
-const Card = ({ className = "", children }) => (
-  <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
+const Card = ({ className = "", children, onClick }: { className?: string; children: React.ReactNode; onClick?: () => void }) => (
+  <div onClick={onClick} className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
 );
 
-const SectionTitle = ({ title, subtitle, action }) => (
+const SectionTitle = ({ title, subtitle, action }: { title: string; subtitle?: string; action?: React.ReactNode }) => (
   <div className="flex items-start justify-between gap-3">
     <div>
       <h2 className="text-lg md:text-xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
@@ -75,8 +75,8 @@ const fmtDateTime = (iso) => {
     : "--";
 };
 
-const getDuration = (start, end) => {
-  const diff = new Date(end) - new Date(start);
+const getDuration = (start: string | Date, end: string | Date) => {
+  const diff = new Date(end).getTime() - new Date(start).getTime();
   const hours = diff / (1000 * 60 * 60);
   return Math.round(hours * 10) / 10 || 0;
 };
@@ -90,9 +90,30 @@ const typeEmoji = (t) =>
 const priorityTone = (p) =>
   p === "URGENT" || p === "HIGH" ? "danger" : p === "NORMAL" ? "info" : "default";
 
+interface EventItem {
+  id: string;
+  dbId: number;
+  kind: string;
+  title: string;
+  description: string;
+  type: string;
+  location: string;
+  meetingLink: string;
+  startAt: string;
+  endAt: string;
+  createdBy: string;
+  department: string;
+  attendees: number;
+  rsvpStatus: string;
+  priority: string;
+  createdByRole?: string;
+  expiresAt?: string;
+}
+
+
 export default function StaffEvents() {
   const router = useRouter();
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState<EventItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState("upcoming"); // upcoming | today | past | all
   const [typeFilter, setTypeFilter] = useState("all"); // all | MEETING | TRAINING | EVENT | ANNOUNCEMENT
@@ -123,6 +144,8 @@ export default function StaffEvents() {
           attendees: a.readsCount || 0,
           rsvpStatus: "INVITED",
           priority: a.priority || "NORMAL",
+          createdByRole: a.createdByRole || (a.createdBy === "MD" ? "MD" : "STAFF"),
+          expiresAt: a.expiresAt,
         }));
         setEvents(mapped);
       }
@@ -204,13 +227,22 @@ export default function StaffEvents() {
       .sort((a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime());
   }, [events, now, todayISO]);
 
+  const isExpired = (e) => e.expiresAt && new Date(e.expiresAt) < now;
+  const activeEvents = events.filter(e => !isExpired(e));
+
   const stats = useMemo(() => ({
-    upcoming: upcomingEvents.length,
-    today: todaysEvents.length,
-    total: events.length,
-    meetings: events.filter((e) => e.type === "MEETING").length,
-    announcements: events.filter((e) => e.type === "ANNOUNCEMENT").length,
-  }), [events, upcomingEvents, todaysEvents]);
+    upcoming: activeEvents.filter((e) => {
+      const d = safeDate(e.startAt);
+      return d ? toISODate(d) >= todayISO : false;
+    }).length,
+    today: activeEvents.filter((e) => {
+      const d = safeDate(e.startAt);
+      return d ? toISODate(d) === todayISO : false;
+    }).length,
+    total: activeEvents.length,
+    meetings: activeEvents.filter((e) => e.type === "MEETING").length,
+    announcements: activeEvents.filter((e) => e.type === "ANNOUNCEMENT").length,
+  }), [activeEvents, todayISO]);
 
   const handleJoin = (event) => {
     if (event.meetingLink) {
@@ -429,6 +461,7 @@ export default function StaffEvents() {
                   ? `${todaysEvents.length} item(s) scheduled for today`
                   : "Events & announcements in the next 7 days"
               }
+              action={null}
             />
 
             <div className="mt-5 space-y-3">

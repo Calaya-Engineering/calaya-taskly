@@ -200,10 +200,10 @@ export async function POST(req: NextRequest) {
       // Fallback: compact inline summary that fits in VARCHAR(191)
       console.warn("Cloudinary JSON upload failed, using compact fallback:", uploadErr?.message);
       const names = validEntries.map((e) => e.taskName).join("|");
-      entriesFileUrl = `RPT:${reportStatus}|${names}`.slice(0, 190);
+      entriesFileUrl = `RPT:${reportStatus}|${names}`.slice(0, 100);
     }
 
-    let doc: Awaited<ReturnType<typeof prisma.document.create>>;
+    let doc: any;
     try {
       doc = await prisma.document.create({
         data: {
@@ -218,10 +218,22 @@ export async function POST(req: NextRequest) {
       });
     } catch (dbErr: any) {
       console.error("DB error creating daily report:", dbErr?.message ?? dbErr);
-      return NextResponse.json(
-        { error: "Database error: " + (dbErr?.message || "Failed to create report") },
-        { status: 500 }
-      );
+      if (dbErr?.message?.includes("too long")) {
+         // Second fallback attempt with minimal URL
+         doc = await prisma.document.create({
+          data: {
+            title: `Daily Report — ${department.trim()} — ${reportDate}`,
+            type: "Report",
+            department: department.trim(),
+            uploadedBy: submitterName,
+            scope: reportStatus,
+            fileSize: `${validEntries.length} task${validEntries.length !== 1 ? "s" : ""}`,
+            fileUrl: "SHORT_FALLBACK",
+          },
+        });
+      } else {
+        throw dbErr;
+      }
     }
 
     // Fire-and-forget: realtime event
@@ -250,7 +262,8 @@ export async function POST(req: NextRequest) {
         entries: validEntries,
         fileSize: doc.fileSize,
         status: reportStatus,
-        fileUrl: attachmentUrl || null,
+        fileUrl: doc.fileUrl,
+        attachmentUrl: attachmentUrl || null,
       },
       { status: 201 }
     );

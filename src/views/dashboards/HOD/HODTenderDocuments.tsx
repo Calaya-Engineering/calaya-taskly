@@ -1,21 +1,71 @@
 "use client";
 
 // pages/dashboards/HOD/HODTenderDocuments.jsx
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { HODMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
-import { fetchWithAuth } from "@/lib/api";
+import { fetchWithAuth, getAuthToken } from "@/lib/api";
 const MANAGED_DEPARTMENTS = ["Technical", "Workshop", "HSE"];
 
 const STORAGE_KEYS = {
   COMMENT_DRAFT: "hodTenderComment_draft",
 };
 
+interface Comment {
+  id: number;
+  tenderId: string;
+  documentId: number;
+  user: string;
+  role: string;
+  comment: string;
+  date: string;
+}
+
+interface Document {
+  id: number;
+  tenderId: string;
+  title: string;
+  fileName: string;
+  uploadedBy: string;
+  uploadedByRole: string;
+  uploadedDate: string;
+  fileSize: string;
+  fileType: string;
+  category: string;
+  downloads: number;
+  status: string;
+  department: string;
+  comments: Comment[];
+  type?: string;
+}
+
+interface Tender {
+  id: string;
+  dbId: number;
+  title: string;
+  referenceNo: string;
+  description: string;
+  issuedDate: string;
+  closingDate: string;
+  department: string;
+  category: string;
+  documents: Document[];
+  submissions: number;
+  status: string;
+  createdBy: string;
+  createdAt: string;
+}
+
+interface Department {
+  id: number;
+  name: string;
+}
+
 /* ---------- UI helpers ---------- */
-const Card = ({ className = "", children }) => (
+const Card = ({ className = "", children }: { className?: string; children: React.ReactNode }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
 );
 
@@ -39,7 +89,7 @@ const Pill = ({ children, tone = "default" }) => {
   );
 };
 
-const SectionTitle = ({ title, subtitle, action }) => (
+const SectionTitle = ({ title, subtitle, action }: { title: string; subtitle?: string; action?: React.ReactNode }) => (
   <div className="flex items-start justify-between gap-3">
     <div>
       <h2 className="text-lg md:text-xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
@@ -63,7 +113,7 @@ export default function HODTenderDocuments() {
   const params = useParams() || {};
   const tenderId = params.tenderId;
   const router = useRouter();
-  const [selectedTender, setSelectedTender] = useState(null);
+  const [selectedTender, setSelectedTender] = useState<Tender | null>(null);
   const [comment, setComment] = useState("");
   const [activeTab, setActiveTab] = useState("documents");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -75,44 +125,77 @@ export default function HODTenderDocuments() {
   const [uploadFormData, setUploadFormData] = useState({
     title: "",
     category: "Tender Document",
-    file: null,
+    file: null as File | null,
     description: "",
+    fileType: "",
+    fileSize: "",
   });
 
-  const [tenders, setTenders] = useState([]);
+  const [tenders, setTenders] = useState<Tender[]>([]);
+  const [departmentsList, setDepartmentsList] = useState<Department[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function getTenders() {
-      try {
-        const res = await fetchWithAuth("/api/tenders");
-        if (res.ok) {
-          const data = await res.json();
-          setTenders(data);
-          if (tenderId) {
-            const found = data.find(t => t.id === tenderId);
-            if (found) setSelectedTender(found);
-          }
+  const fetchTenders = useCallback(async () => {
+    try {
+      const res = await fetchWithAuth("/api/tenders");
+      if (res.ok) {
+        const data = await res.json();
+        setTenders(data);
+        if (tenderId) {
+          const found = data.find(t => t.id === tenderId);
+          if (found) setSelectedTender(found);
         }
-      } catch (err) {
-        console.error("Failed to fetch tenders:", err);
-      } finally {
-        setLoading(false);
       }
+    } catch (err) {
+      console.error("Failed to fetch tenders:", err);
+    } finally {
+      setLoading(false);
     }
-    getTenders();
   }, [tenderId]);
+
+  const fetchDepartments = useCallback(async () => {
+    try {
+      const res = await fetchWithAuth("/api/departments");
+      if (res.ok) {
+        const data = await res.json();
+        setDepartmentsList(data);
+      }
+    } catch (err) {
+      console.error("Failed to fetch departments:", err);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchTenders();
+    fetchDepartments();
+
+    const token = getAuthToken();
+    if (!token) return;
+
+    const source = new EventSource(`/api/realtime/events?token=${token}`);
+    source.onmessage = (e) => {
+      try {
+        const data = JSON.parse(e.data);
+        if (data.type?.startsWith("tender:")) fetchTenders();
+        if (data.type?.startsWith("department:")) fetchDepartments();
+      } catch (err) {
+        console.error("SSE parse error:", err);
+      }
+    };
+
+    return () => source.close();
+  }, [fetchTenders, fetchDepartments]);
 
   const tenderDocuments = useMemo(() => {
     return selectedTender?.documents || [];
   }, [selectedTender]);
 
-  const updateTenderDocuments = (newDocs) => {
+  const updateTenderDocuments = (newDocs: Document[]) => {
     setSelectedTender(prev => prev ? { ...prev, documents: newDocs } : null);
     setTenders(prev => prev.map(t => t.id === selectedTender?.id ? { ...t, documents: newDocs } : t));
   };
 
-  const [allComments, setAllComments] = useState([]);
+  const [allComments, setAllComments] = useState<Comment[]>([]);
 
   useEffect(() => {
     const saved = sessionStorage.getItem(STORAGE_KEYS.COMMENT_DRAFT);
@@ -125,7 +208,7 @@ export default function HODTenderDocuments() {
   }, [comment]);
 
 
-  const departments = useMemo(() => ["all", ...Array.from(new Set(tenders.map((t) => t.department)))], []);
+  const departments = useMemo(() => ["all", ...Array.from(new Set([...departmentsList.map(d => d.name), ...tenders.map((t) => t.department)]))], [departmentsList, tenders]);
 
   const filteredTenders = useMemo(() => {
     return tenders.filter((tender) => {
@@ -147,12 +230,12 @@ export default function HODTenderDocuments() {
     return (selectedTender?.documents || []).filter((doc) => doc.category === "Bid Submission" || (doc.type === "SUBMISSION"));
   }, [selectedTender]);
 
-  const handleSelectTender = (tender) => {
+  const handleSelectTender = (tender: Tender) => {
     setSelectedTender(tender);
     setActiveTab("documents");
   };
 
-  const handleDownload = (doc) => {
+  const handleDownload = (doc: Document) => {
     toast.info(`Downloading: ${doc.fileName}\nSize: ${doc.fileSize}\nCategory: ${doc.category}`);
   };
 
@@ -169,12 +252,13 @@ export default function HODTenderDocuments() {
     }
   };
 
-  const handleAddComment = (documentId) => {
+  const handleAddComment = (documentId: number) => {
+    if (!selectedTender) return;
     if (!comment.trim()) return toast.warning("Please enter a comment");
 
-    const hodName = `HOD - ${selectedTender?.department || "Department"}`;
+    const hodName = `HOD - ${selectedTender.department || "Department"}`;
     const now = new Date();
-    const newComment = {
+    const newComment: Comment = {
       id: allComments.length + 1,
       tenderId: selectedTender.id,
       documentId,
@@ -218,6 +302,8 @@ export default function HODTenderDocuments() {
       category: "Tender Document",
       file: null,
       description: "",
+      fileType: "",
+      fileSize: "",
     });
   };
 
@@ -233,12 +319,12 @@ export default function HODTenderDocuments() {
       setUploadProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
-          const newDocument = {
-            id: tenderDocuments.length + 1,
-            tenderId: selectedTender.id,
+          const newDocument: Document = {
+            id: Number(tenderDocuments.length + 1),
+            tenderId: String(selectedTender?.id || ""),
             title: uploadFormData.title,
-            fileName: uploadFormData.file.name,
-            uploadedBy: `HOD - ${selectedTender.department}`,
+            fileName: uploadFormData.file?.name || "unknown",
+            uploadedBy: `HOD - ${selectedTender?.department}`,
             uploadedByRole: "HOD",
             uploadedDate: new Date().toISOString().split("T")[0],
             fileSize: uploadFormData.fileSize,
@@ -246,7 +332,7 @@ export default function HODTenderDocuments() {
             category: uploadFormData.category,
             downloads: 0,
             status: "active",
-            department: selectedTender.department,
+            department: selectedTender?.department || "",
             comments: [],
           };
           const newDocs = [...tenderDocuments, newDocument];
@@ -352,7 +438,7 @@ export default function HODTenderDocuments() {
           {/* LEFT: TENDER LIST */}
           <div className="lg:col-span-1">
             <Card className="p-6 sticky top-6">
-              <SectionTitle title="All Tenders" subtitle={`${tenders.length} total`} />
+              <SectionTitle title="All Tenders" subtitle={`${tenders.length} total`} action={null} />
 
               <div className="mt-5 space-y-3">
                 <div className="relative">
@@ -523,7 +609,7 @@ export default function HODTenderDocuments() {
                 <Card className="p-6">
                   {activeTab === "documents" ? (
                     <div className="space-y-4">
-                      <SectionTitle title="Tender Documents" subtitle="Internal tender files (excluding vendor bids)" />
+                      <SectionTitle title="Tender Documents" subtitle="Internal tender files (excluding vendor bids)" action={null} />
 
                       <div className="mt-5 space-y-4">
                         {documentsForSelectedTender.filter((d) => d.category !== "Bid Submission").length ? (
@@ -648,7 +734,7 @@ export default function HODTenderDocuments() {
                     </div>
                   ) : (
                     <div className="space-y-4">
-                      <SectionTitle title="Bid Submissions" subtitle="Vendor bids submitted for this tender" />
+                      <SectionTitle title="Bid Submissions" subtitle="Vendor bids submitted for this tender" action={null} />
 
                       <div className="mt-5 space-y-4">
                         {submissionsForSelectedTender.length ? (
@@ -765,7 +851,7 @@ export default function HODTenderDocuments() {
 
                 {/* Recent Activity */}
                 <Card className="p-6">
-                  <SectionTitle title="Recent Activity" subtitle="Latest comments on this tender" />
+                  <SectionTitle title="Event Statistics" subtitle="Quick insights and averages" action={null} />
 
                   <div className="mt-5 space-y-3">
                     {allComments
@@ -877,7 +963,7 @@ export default function HODTenderDocuments() {
                       name="description"
                       value={uploadFormData.description}
                       onChange={(e) => setUploadFormData({ ...uploadFormData, description: e.target.value })}
-                      rows="3"
+                      rows={3}
                       className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-100"
                       placeholder="Brief description of the document..."
                     />

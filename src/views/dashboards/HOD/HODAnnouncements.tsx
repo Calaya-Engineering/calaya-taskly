@@ -9,6 +9,28 @@ import { toast } from "@/lib/toast";
 import { fetchWithAuth } from "@/lib/api";
 import { useSSE } from "@/hooks/useSSE";
 
+interface AnnouncementItem {
+  id: number;
+  title: string;
+  message: string;
+  description: string;
+  date: string;
+  department?: string;
+  targetRole?: string;
+  priority: string;
+  scope: string;
+  scopeType: string;
+  expiresAt?: string;
+  createdBy: string;
+  createdAt: string;
+  createdDate: string;
+  read: boolean;
+  readsCount?: number;
+  comments?: number;
+  documents?: number;
+  departments?: string[];
+}
+
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -55,7 +77,7 @@ const btnSolid = `${btnBase} text-white`;
 export default function HODAnnouncements() {
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
-  const [announcementsData, setAnnouncementsData] = useState([]);
+  const [announcementsData, setAnnouncementsData] = useState<AnnouncementItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchAnnouncements = useCallback(async () => {
@@ -82,16 +104,28 @@ export default function HODAnnouncements() {
     if (ev.type?.startsWith("announcement:")) fetchAnnouncements();
   });
 
-  const unreadCount = useMemo(() => announcementsData.filter((a) => !a.read).length, [announcementsData]);
-  const urgentCount = useMemo(() => announcementsData.filter((a) => a.priority === 'URGENT' && !a.read).length, [announcementsData]);
+  const activeAnnouncements = useMemo(() => {
+    const now = new Date();
+    return announcementsData.filter((a) => !a.expiresAt || new Date(a.expiresAt) >= now);
+  }, [announcementsData]);
+
+  const unreadCount = useMemo(() => activeAnnouncements.filter((a) => !a.read).length, [activeAnnouncements]);
+  const urgentCount = useMemo(() => activeAnnouncements.filter((a) => a.priority === 'URGENT' && !a.read).length, [activeAnnouncements]);
 
   const filteredAnnouncements = useMemo(() => {
     return announcementsData.filter((ann) => {
+      const isMD = ann.createdBy === 'MD' || ann.createdBy === 'Managing Director' || (ann.createdBy || "").toLowerCase().includes('director');
+      
       if (filter === 'unread' && ann.read) return false;
       if (filter === 'urgent' && ann.priority !== 'URGENT') return false;
       if (filter === 'important' && ann.priority !== 'IMPORTANT' && ann.priority !== 'HIGH') return false;
-      if (filter === 'technical' && ann.departments && !ann.departments.includes('Technical')) return false;
-      if (filter === 'workshop' && ann.departments && !ann.departments.includes('Workshop')) return false;
+      
+      // MD announcements should bypass department filters
+      if (!isMD) {
+        if (filter === 'technical' && ann.departments && !ann.departments.includes('Technical')) return false;
+        if (filter === 'workshop' && ann.departments && !ann.departments.includes('Workshop')) return false;
+      }
+      
       if (filter === 'hods' && ann.scope !== 'HODs Only' && ann.scope !== 'HODS_ONLY') return false;
 
       if (search) {
@@ -419,7 +453,7 @@ export default function HODAnnouncements() {
           {[
             { label: 'Total', value: announcementsData.length, icon: '📢', tone: 'default' },
             { label: 'Unread', value: unreadCount, icon: '📌', tone: 'success' },
-            { label: 'Urgent', value: announcementsData.filter((a) => a.priority === 'URGENT').length, icon: '🚨', tone: 'danger' },
+            { label: 'Urgent', value: urgentCount, icon: '🚨', tone: 'danger' },
             {
               label: 'Avg. Reads',
               value: announcementsData.length > 0 ? Math.round(announcementsData.reduce((s, a) => s + (a.readsCount || 0), 0) / announcementsData.length) : 0,

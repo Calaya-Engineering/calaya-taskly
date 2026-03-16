@@ -71,9 +71,30 @@ const rsvpTone = (s) => (s === "ACCEPTED" ? "success" : s === "TENTATIVE" ? "war
 
 const typeEmoji = (t) => (t === "MEETING" ? "👥" : t === "TRAINING" ? "🎓" : t === "EVENT" ? "🎉" : t === "ANNOUNCEMENT" ? "📣" : "📅");
 
+interface EventItem {
+  id: string;
+  dbId: number;
+  kind: string;
+  title: string;
+  description: string;
+  type: string;
+  location: string;
+  meetingLink: string;
+  startAt: string;
+  endAt: string;
+  createdBy: string;
+  department: string;
+  attendees: number;
+  rsvpStatus: string;
+  priority: string;
+  createdByRole?: string;
+  expiresAt?: string;
+  scope?: string;
+}
+
 export default function HODEvents() {
   const router = useRouter();
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState<EventItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState('upcoming'); // upcoming | past
   const [selectedType, setSelectedType] = useState('all');
@@ -106,6 +127,8 @@ export default function HODEvents() {
           attendees: a.readsCount || 0,
           rsvpStatus: "INVITED",
           priority: a.priority || "NORMAL",
+          createdByRole: a.createdByRole || (a.createdBy === "MD" ? "MD" : "STAFF"),
+          expiresAt: a.expiresAt,
         }));
         setEvents(mapped);
       }
@@ -148,7 +171,10 @@ export default function HODEvents() {
         const eventISO = toISODate(eventDate);
         const matchesView = viewMode === 'upcoming' ? eventISO >= nowISO : eventISO < nowISO;
         const matchesType = selectedType === 'all' || event.type === selectedType;
-        const matchesDept = departmentFilter === 'all' || event.department === departmentFilter;
+        const isMDEvent = event.createdByRole === 'MD';
+        const isAllCompany = event.department === 'All Company' || (event.kind === 'announcement' && !event.department);
+
+        const matchesDept = departmentFilter === 'all' || event.department === departmentFilter || isMDEvent || isAllCompany;
 
         return matchesView && matchesType && matchesDept;
       })
@@ -164,10 +190,13 @@ export default function HODEvents() {
   }, [filteredEvents, selectedDate]);
 
   const overview = useMemo(() => {
-    const total = events.length;
-    const upcoming = events.filter((e) => { const d = safeDate(e.startAt); return d ? toISODate(d) >= nowISO : false; }).length;
-    const meetings = events.filter((e) => e.type === 'MEETING').length;
-    const attendees = events.reduce((sum, e) => sum + (e.attendees || 0), 0);
+    const isExpired = (e) => e.expiresAt && new Date(e.expiresAt) < now;
+    const activeEvents = events.filter(e => !isExpired(e));
+
+    const total = activeEvents.length;
+    const upcoming = activeEvents.filter((e) => { const d = safeDate(e.startAt); return d ? toISODate(d) >= nowISO : false; }).length;
+    const meetings = activeEvents.filter((e) => e.type === 'MEETING').length;
+    const attendees = activeEvents.reduce((sum, e) => sum + (e.attendees || 0), 0);
     return { total, upcoming, meetings, attendees };
   }, [events, nowISO]);
 
@@ -625,7 +654,7 @@ export default function HODEvents() {
 
         {/* Event Statistics */}
         <Card className="p-6">
-          <SectionTitle title="Event Statistics" subtitle="Quick insights and averages" />
+          <SectionTitle title="Event Statistics" subtitle="Quick insights and averages" action={null} />
           <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
               { label: "Total Events", value: events.length, color: "var(--primary-blue)", icon: "📅" },

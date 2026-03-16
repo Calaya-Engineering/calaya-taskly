@@ -1,15 +1,15 @@
 "use client";
 
 // pages/dashboards/Staff/StaffTenderDocuments.jsx
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { StaffMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
-import { fetchWithAuth } from "@/lib/api";
+import { fetchWithAuth, getAuthToken } from "@/lib/api";
 /* ---------- UI helpers ---------- */
-const Card = ({ className = "", children }) => (
+const Card = ({ className = "", children }: { className?: string; children: React.ReactNode }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
 );
 
@@ -33,7 +33,7 @@ const Pill = ({ children, tone = "default" }) => {
   );
 };
 
-const SectionTitle = ({ title, subtitle, action }) => (
+const SectionTitle = ({ title, subtitle, action }: { title: string; subtitle?: string; action?: React.ReactNode }) => (
   <div className="flex items-start justify-between gap-3">
     <div>
       <h2 className="text-lg md:text-xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
@@ -61,6 +61,51 @@ const STAFF_DEPARTMENT = 'Technical';
 const STORAGE_KEYS = {
   COMMENT_DRAFT: 'staffTenderComment_draft',
 };
+
+interface Comment {
+  id: number;
+  tenderId: string;
+  documentId: number;
+  user: string;
+  role: string;
+  comment: string;
+  date: string;
+}
+
+interface Document {
+  id: number;
+  tenderId: string;
+  title: string;
+  fileName: string;
+  uploadedBy: string;
+  uploadedByRole: string;
+  uploadedDate: string;
+  fileSize: string;
+  fileType: string;
+  category: string;
+  downloads: number;
+  status: string;
+  department: string;
+  comments: Comment[];
+  type?: string;
+}
+
+interface Tender {
+  id: string;
+  dbId: number;
+  title: string;
+  referenceNo: string;
+  description: string;
+  issuedDate: string;
+  closingDate: string;
+  department: string;
+  category: string;
+  documents: Document[];
+  submissions: number;
+  status: string;
+  createdBy: string;
+  createdAt: string;
+}
 
 const getStatusTone = (status) => {
   if (status === "OPEN") return "success";
@@ -116,48 +161,69 @@ export default function StaffTenderDocuments() {
   const params = useParams() || {};
   const tenderId = params.tenderId;
   const router = useRouter();
-  const [selectedTender, setSelectedTender] = useState(null);
+  const [selectedTender, setSelectedTender] = useState<Tender | null>(null);
   const [comment, setComment] = useState("");
   const [activeTab, setActiveTab] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadFormData, setUploadFormData] = useState({
+    title: '',
+    category: 'Staff Document',
+    file: null as File | null,
+    description: '',
+    fileType: '',
+    fileSize: ''
+  });
 
-  const [tenders, setTenders] = useState([]);
+  const [tenders, setTenders] = useState<Tender[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function getTenders() {
-      try {
-        const res = await fetchWithAuth("/api/tenders");
-        if (res.ok) {
-          const data = await res.json();
-          setTenders(data);
-          if (tenderId) {
-            const found = data.find((t) => t.id === tenderId);
-            if (found) setSelectedTender(found);
-          }
+  const fetchTenders = useCallback(async () => {
+    try {
+      const res = await fetchWithAuth("/api/tenders");
+      if (res.ok) {
+        const data = await res.json();
+        setTenders(data);
+        if (tenderId) {
+          const found = data.find((t: Tender) => t.id === tenderId);
+          if (found) setSelectedTender(found);
         }
-      } catch (err) {
-        console.error("Failed to fetch tenders:", err);
-      } finally {
-        setLoading(false);
       }
+    } catch (err) {
+      console.error("Failed to fetch tenders:", err);
+    } finally {
+      setLoading(false);
     }
-    getTenders();
   }, [tenderId]);
+
+  useEffect(() => {
+    fetchTenders();
+
+    const token = getAuthToken();
+    if (!token) return;
+
+    const source = new EventSource(`/api/realtime/events?token=${token}`);
+    source.onmessage = (e) => {
+      try {
+        const data = JSON.parse(e.data);
+        if (data.type?.startsWith("tender:")) fetchTenders();
+      } catch { /* ignored */ }
+    };
+    return () => source.close();
+  }, [fetchTenders]);
 
   const tenderDocuments = useMemo(() => {
     return selectedTender?.documents || [];
   }, [selectedTender]);
 
-  const updateTenderDocuments = (newDocs) => {
+  const updateTenderDocuments = (newDocs: Document[]) => {
     setSelectedTender(prev => prev ? { ...prev, documents: newDocs } : null);
     setTenders(prev => prev.map(t => t.id === selectedTender?.id ? { ...t, documents: newDocs } : t));
   };
 
-  const [allComments, setAllComments] = useState([]);
+  const [allComments, setAllComments] = useState<Comment[]>([]);
 
   // Load saved comment draft from sessionStorage
   useEffect(() => {
@@ -194,11 +260,11 @@ export default function StaffTenderDocuments() {
     return (selectedTender?.documents || []).filter((doc) => doc.uploadedByRole === "Staff");
   }, [selectedTender]);
 
-  const handleSelectTender = (tender) => {
+  const handleSelectTender = (tender: Tender) => {
     setSelectedTender(tender);
   };
 
-  const handleDownload = (doc) => {
+  const handleDownload = (doc: Document) => {
     toast.info(`Downloading: ${doc.fileName}\nSize: ${doc.fileSize}\nCategory: ${doc.category}`);
   };
 
@@ -220,7 +286,7 @@ export default function StaffTenderDocuments() {
 
     const newComment = {
       id: allComments.length + 1,
-      tenderId: selectedTender.id,
+      tenderId: String(selectedTender?.id || ""),
       documentId,
       user: STAFF_NAME,
       role: 'Staff',
@@ -265,7 +331,9 @@ export default function StaffTenderDocuments() {
       title: '',
       category: 'Staff Document',
       file: null,
-      description: ''
+      description: '',
+      fileType: '',
+      fileSize: ''
     });
   };
 
@@ -281,20 +349,20 @@ export default function StaffTenderDocuments() {
       setUploadProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
-          const newDocument = {
+          const newDocument: Document = {
             id: tenderDocuments.length + 1,
-            tenderId: selectedTender.id,
+            tenderId: String(selectedTender?.id || ""),
             title: uploadFormData.title,
-            fileName: uploadFormData.file.name,
+            fileName: uploadFormData.file?.name || "unknown",
             uploadedBy: STAFF_NAME,
             uploadedByRole: 'Staff',
             uploadedDate: new Date().toISOString().split('T')[0],
             fileSize: uploadFormData.fileSize,
-            fileType: uploadFormData.fileType,
+            fileType: uploadFormData.fileType || "PDF",
             category: uploadFormData.category,
             downloads: 0,
             status: 'active',
-            department: selectedTender.department,
+            department: selectedTender?.department || "",
             comments: [],
           };
           const newDocs = [...tenderDocuments, newDocument];
@@ -356,7 +424,7 @@ export default function StaffTenderDocuments() {
           {/* LEFT: TENDER LIST */}
           <div className="lg:col-span-1">
             <Card className="p-6 sticky top-6">
-              <SectionTitle title="Available Tenders" subtitle={`${tenders.length} total`} />
+              <SectionTitle title="Available Tenders" subtitle={`${tenders.length} total`} action={null} />
 
               <div className="mt-5 space-y-3">
                 <div className="relative">
@@ -698,7 +766,7 @@ export default function StaffTenderDocuments() {
                       name="description"
                       value={uploadFormData.description}
                       onChange={handleUploadInputChange}
-                      rows="3"
+                      rows={3}
                       className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-100"
                       placeholder="Brief description of the document..."
                     />

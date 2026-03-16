@@ -1,7 +1,7 @@
 "use client";
 
 // pages/dashboards/MD/MDTenderDocuments.jsx
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
@@ -10,11 +10,61 @@ import { toast } from "@/lib/toast";
 import { fetchWithAuth, getAuthToken } from "@/lib/api";
 // Storage keys for draft
 const STORAGE_KEYS = {
-  COMMENT_DRAFT: "mdTenderComment_draft",
+  COMMENT_DRAFT: 'staffTenderComment_draft',
 };
 
+interface Comment {
+  id: number;
+  tenderId: string;
+  documentId: number;
+  user: string;
+  role: string;
+  comment: string;
+  date: string;
+}
+
+interface Document {
+  id: number;
+  tenderId: string;
+  title: string;
+  fileName: string;
+  uploadedBy: string;
+  uploadedByRole: string;
+  uploadedDate: string;
+  fileSize: string;
+  fileType: string;
+  category: string;
+  downloads: number;
+  status: string;
+  department: string;
+  comments: Comment[];
+  type?: string;
+}
+
+interface Tender {
+  id: string;
+  dbId: number;
+  title: string;
+  referenceNo: string;
+  description: string;
+  issuedDate: string;
+  closingDate: string;
+  department: string;
+  category: string;
+  documents: Document[];
+  submissions: number;
+  status: string;
+  createdBy: string;
+  createdAt: string;
+}
+
+interface Department {
+  id: number;
+  name: string;
+}
+
 /* ---------------- UI helpers (MD dashboard style) ---------------- */
-const Card = ({ className = "", children }) => (
+const Card = ({ className = "", children }: { className?: string; children: React.ReactNode }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
 );
 
@@ -36,7 +86,7 @@ const Pill = ({ children, tone = "default" }) => {
   );
 };
 
-const SectionTitle = ({ title, subtitle, right }) => (
+const SectionTitle = ({ title, subtitle, action }: { title: string; subtitle?: string; action?: React.ReactNode }) => (
   <div className="flex items-start justify-between gap-3">
     <div>
       <h2 className="text-lg md:text-xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
@@ -44,7 +94,7 @@ const SectionTitle = ({ title, subtitle, right }) => (
       </h2>
       {subtitle ? <p className="text-sm text-gray-500 mt-1">{subtitle}</p> : null}
     </div>
-    {right}
+    {action}
   </div>
 );
 
@@ -53,45 +103,84 @@ export default function MDTenderDocuments() {
   const tenderId = params.tenderId;
   const router = useRouter();
 
-  const [selectedTender, setSelectedTender] = useState(null);
+  const [selectedTender, setSelectedTender] = useState<Tender | null>(null);
   const [comment, setComment] = useState("");
-  const [activeTab, setActiveTab] = useState("documents");
+  const [activeTab, setActiveTab] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
-  const [tenders, setTenders] = useState([]);
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadFormData, setUploadFormData] = useState({
+    title: '',
+    category: 'Staff Document',
+    file: null as File | null,
+    description: '',
+    fileType: '',
+    fileSize: ''
+  });
+
+  const [tenders, setTenders] = useState<Tender[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function getTenders() {
-      try {
-        const res = await fetchWithAuth("/api/tenders");
-        if (res.ok) {
-          const data = await res.json();
-          setTenders(data);
-          if (tenderId) {
-            const found = data.find((t) => t.id === tenderId);
-            if (found) setSelectedTender(found);
-          }
+  const fetchTenders = useCallback(async () => {
+    try {
+      const res = await fetchWithAuth("/api/tenders");
+      if (res.ok) {
+        const data = await res.json();
+        setTenders(data);
+        if (tenderId) {
+          const found = data.find((t: Tender) => t.id === tenderId);
+          if (found) setSelectedTender(found);
         }
-      } catch (err) {
-        console.error("Failed to fetch tenders:", err);
-      } finally {
-        setLoading(false);
       }
+    } catch (err) {
+      console.error("Failed to fetch tenders:", err);
+    } finally {
+      setLoading(false);
     }
-    getTenders();
   }, [tenderId]);
+
+  const fetchDepartments = useCallback(async () => {
+    try {
+      const res = await fetchWithAuth("/api/departments");
+      if (res.ok) {
+        const data = await res.json();
+        // setDepartmentsList(data); // This line was removed based on the diff
+      }
+    } catch (err) {
+      console.error("Failed to fetch departments:", err);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchTenders();
+    // fetchDepartments(); // This line was removed based on the diff
+
+    const token = getAuthToken();
+    if (!token) return;
+
+    const source = new EventSource(`/api/realtime/events?token=${token}`);
+    source.onmessage = (e) => {
+      try {
+        const data = JSON.parse(e.data);
+        if (data.type?.startsWith("tender:")) fetchTenders();
+        // if (data.type?.startsWith("department:")) fetchDepartments(); // This line was removed based on the diff
+      } catch { /* ignored */ }
+    };
+    return () => source.close();
+  }, [fetchTenders]); // fetchDepartments removed from dependency array
 
   const tenderDocuments = useMemo(() => {
     return selectedTender?.documents || [];
   }, [selectedTender]);
 
-  const updateTenderDocuments = (newDocs) => {
+  const updateTenderDocuments = (newDocs: Document[]) => {
     setSelectedTender(prev => prev ? { ...prev, documents: newDocs } : null);
     setTenders(prev => prev.map(t => t.id === selectedTender?.id ? { ...t, documents: newDocs } : t));
   };
 
-  const [allComments, setAllComments] = useState([]);
+  const [allComments, setAllComments] = useState<Comment[]>([]);
 
   // Load saved comment draft from sessionStorage
   useEffect(() => {
@@ -126,37 +215,32 @@ export default function MDTenderDocuments() {
     return (selectedTender?.documents || []).filter((doc) => doc.category === "Bid Submission" || (doc.type === "SUBMISSION"));
   }, [selectedTender]);
 
-  const handleSelectTender = (tender) => {
+  const handleSelectTender = (tender: Tender) => {
     setSelectedTender(tender);
     setActiveTab("documents");
   };
 
-  const handleDownload = (doc) => {
-    if (!doc.id) {
-      toast.info("No file available for download");
-      return;
-    }
+  const handleDownload = (doc: Document) => {
+    toast.info(`Downloading: ${doc.fileName}\nSize: ${doc.fileSize}\nCategory: ${doc.category}`);
     const token = getAuthToken();
     const url = `/api/documents/${doc.id}/download${token ? `?token=${token}` : ""}`;
     window.open(url, "_blank");
   };
 
-  const handleAddComment = (documentId) => {
+  const handleAddComment = (documentId: number) => {
     if (!selectedTender) return;
     if (!comment.trim()) return toast.warning("Please enter a comment");
 
-    const now = new Date();
-    const newComment = {
+    const newComment: Comment = {
       id: allComments.length + 1,
-      tenderId: selectedTender.id,
+      tenderId: String(selectedTender?.id || ""),
       documentId,
       user: "MD - Managing Director",
       role: "MD",
       comment: comment.trim(),
       date:
-        now.toISOString().split("T")[0] +
-        " " +
-        now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
+        new Date().toISOString().split('T')[0] + ' ' +
+        new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
     };
 
     setAllComments((p) => [...p, newComment]);
@@ -247,7 +331,7 @@ export default function MDTenderDocuments() {
           {/* LEFT: TENDER LIST */}
           <div className="lg:col-span-1">
             <Card className="p-6 sticky top-6">
-              <SectionTitle title="Tenders" subtitle="Pick a tender to review" />
+              <SectionTitle title="Available Tenders" subtitle={`${tenders.length} total`} action={null} />
 
               {/* Search + filters */}
               <div className="mt-5 space-y-3">
@@ -395,7 +479,7 @@ export default function MDTenderDocuments() {
                       <SectionTitle
                         title="Tender Documents"
                         subtitle="Internal tender files (excluding vendor bids)"
-                        right={<Pill tone="default">MD Review</Pill>}
+                        action={<Pill tone="default">MD Review</Pill>}
                       />
 
                       <div className="mt-5 space-y-4">
