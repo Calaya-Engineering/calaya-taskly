@@ -340,8 +340,7 @@ export default function HODDashboard() {
 
   /* ─────────────────────────────────────────────────────────── */
   return (
-    <Layout menuItems={HODMenuItems} userRole="HOD">
-      <div className="space-y-6">
+    <div className="space-y-6">
         {/* Hero */}
         <Card className="overflow-hidden">
           <div
@@ -771,6 +770,5 @@ export default function HODDashboard() {
           </Card>
         </div>
       </div>
-    </Layout>
-  );
+    );
 }
