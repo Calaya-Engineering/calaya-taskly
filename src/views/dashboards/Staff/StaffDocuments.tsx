@@ -1,13 +1,14 @@
 "use client";
 
 // pages/dashboards/Staff/StaffDocuments.jsx
-import { useMemo, useState } from "react";
+import { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { StaffMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
-import { getAuthToken } from "@/lib/api";
+import { fetchWithAuth, getAuthToken } from "@/lib/api";
+import { useSSE } from "@/hooks/useSSE";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -33,7 +34,7 @@ const Pill = ({ children, tone = "default" }) => {
   );
 };
 
-const SectionTitle = ({ title, subtitle, action }) => (
+const SectionTitle = ({ title, subtitle, action }: { title: string; subtitle?: string; action?: React.ReactNode }) => (
   <div className="flex items-start justify-between gap-3">
     <div>
       <h2 className="text-lg md:text-xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
@@ -49,92 +50,6 @@ const btnBase = "px-5 py-3 rounded-2xl font-semibold active:scale-[0.99] transit
 const btnOutline = `${btnBase} border bg-white hover:bg-gray-50`;
 const btnSolid = `${btnBase} text-white`;
 
-const documentsData = [
-  {
-    id: 'DOC-001',
-    title: 'Safety Protocol v2.1',
-    description: 'Updated safety protocols for all departments',
-    type: 'Protocol',
-    department: 'HSE',
-    uploadedBy: 'HOD - Ms. Rodriguez',
-    uploadedDate: '2024-12-05',
-    fileType: 'PDF',
-    fileSize: '2.4 MB',
-    access: 'Public',
-    downloads: 45,
-    tasks: ['TASK-2024-00123']
-  },
-  {
-    id: 'DOC-002',
-    title: 'Equipment Checklist',
-    description: 'Daily equipment checklist for workshop',
-    type: 'Checklist',
-    department: 'Workshop',
-    uploadedBy: 'HOD - Mr. Johnson',
-    uploadedDate: '2024-12-04',
-    fileType: 'Excel',
-    fileSize: '1.2 MB',
-    access: 'Department',
-    downloads: 28,
-    tasks: ['TASK-2024-00124']
-  },
-  {
-    id: 'DOC-003',
-    title: 'Training Manual 2024',
-    description: 'Complete training manual for new hires',
-    type: 'Manual',
-    department: 'HR',
-    uploadedBy: 'HR Department',
-    uploadedDate: '2024-12-01',
-    fileType: 'PDF',
-    fileSize: '5.8 MB',
-    access: 'Public',
-    downloads: 67,
-    tasks: ['TASK-2024-00126']
-  },
-  {
-    id: 'DOC-004',
-    title: 'Workshop Schedule Q4',
-    description: 'Quarterly schedule for workshop activities',
-    type: 'Schedule',
-    department: 'Workshop',
-    uploadedBy: 'HOD - Mr. Johnson',
-    uploadedDate: '2024-11-28',
-    fileType: 'PDF',
-    fileSize: '1.5 MB',
-    access: 'Department',
-    downloads: 22,
-    tasks: []
-  },
-  {
-    id: 'DOC-005',
-    title: 'Client Meeting Template',
-    description: 'Standard template for client meeting notes',
-    type: 'Template',
-    department: 'Technical',
-    uploadedBy: 'MD - Mr. Williams',
-    uploadedDate: '2024-11-25',
-    fileType: 'Word',
-    fileSize: '0.8 MB',
-    access: 'Public',
-    downloads: 38,
-    tasks: ['TASK-2024-00125']
-  },
-  {
-    id: 'DOC-006',
-    title: 'Inventory Management Guide',
-    description: 'Guide for inventory management procedures',
-    type: 'Guide',
-    department: 'Logistics',
-    uploadedBy: 'HOD - Mr. Brown',
-    uploadedDate: '2024-11-20',
-    fileType: 'PDF',
-    fileSize: '3.2 MB',
-    access: 'All Departments',
-    downloads: 31,
-    tasks: []
-  },
-];
 
 const accessTone = (access) => {
   switch (access) {
@@ -175,31 +90,68 @@ export default function StaffDocuments() {
   const [filter, setFilter] = useState('all');
   const [search, setSearch] = useState('');
 
+  const [documentsData, setDocumentsData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const lastRefetchRef = useRef(0);
+
+  const fetchDocuments = useCallback(async () => {
+    try {
+      setLoading(true);
+      const meRes = await fetchWithAuth("/api/me");
+      const me = meRes.ok ? await meRes.json() : null;
+      
+      const deptFilter = me?.department ? encodeURIComponent(`${me.department},All Company,Staff`) : "All Company,Staff";
+      const res = await fetchWithAuth(`/api/documents?departments=${deptFilter}&limit=100`);
+      if (res.ok) {
+        const data = await res.json();
+        setDocumentsData(Array.isArray(data) ? data : []);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchDocuments();
+  }, [fetchDocuments]);
+
+  useSSE("/api/realtime/events", (ev) => {
+    if (!ev?.type || ev.type === "ping") return;
+    if (ev.type.startsWith("document:")) {
+      const now = Date.now();
+      if (now - lastRefetchRef.current < 1500) return;
+      lastRefetchRef.current = now;
+      fetchDocuments();
+    }
+  });
+
   const filteredDocuments = useMemo(() => {
     const query = search.trim().toLowerCase();
     return documentsData.filter((doc) => {
       if (filter === 'all') return true;
-      if (filter === 'public') return doc.access === 'Public';
-      if (filter === 'department') return doc.access === 'Department';
+      if (filter === 'public') return doc.access === 'PUBLIC';
+      if (filter === 'department') return doc.access === 'DEPARTMENT';
       if (filter === 'technical') return doc.department === 'Technical';
       if (filter === 'workshop') return doc.department === 'Workshop';
       return true;
     }).filter(doc => {
       if (!query) return true;
-      return doc.title.toLowerCase().includes(query) ||
-        doc.description.toLowerCase().includes(query) ||
-        doc.type.toLowerCase().includes(query) ||
-        doc.department.toLowerCase().includes(query);
+      return (doc.title || "").toLowerCase().includes(query) ||
+        (doc.description || "").toLowerCase().includes(query) ||
+        (doc.type || "").toLowerCase().includes(query) ||
+        (doc.department || "").toLowerCase().includes(query);
     });
-  }, [filter, search]);
+  }, [filter, search, documentsData]);
 
   const stats = useMemo(() => {
     const total = documentsData.length;
-    const publicCount = documentsData.filter(d => d.access === 'Public').length;
-    const departmentCount = documentsData.filter(d => d.access === 'Department' || d.access === 'All Departments').length;
-    const totalDownloads = documentsData.reduce((sum, d) => sum + d.downloads, 0);
+    const publicCount = documentsData.filter(d => d.access === 'PUBLIC').length;
+    const departmentCount = documentsData.filter(d => d.access === 'DEPARTMENT' || d.access === 'ALL_DEPARTMENTS').length;
+    const totalDownloads = documentsData.reduce((sum, d) => sum + (d.downloads || 0), 0);
     return { total, publicCount, departmentCount, totalDownloads };
-  }, []);
+  }, [documentsData]);
 
   const handleDownload = (doc, e) => {
     e.preventDefault();

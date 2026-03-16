@@ -17,8 +17,22 @@ export async function GET(req: NextRequest) {
     const limit = Math.min(parseInt(searchParams.get("limit") ?? "50", 10) || 50, 100);
 
     try {
-        const where: Record<string, unknown> = {};
-        if (department) where.department = department;
+        const where: Record<string, any> = {};
+        if (department && department !== "all") {
+            where.OR = [
+                { department: { contains: department } },
+                { scopeType: "ALL_COMPANY" }
+            ];
+        } else {
+            const departments = searchParams.get("departments");
+            if (departments) {
+                const list = departments.split(",").map(d => d.trim()).filter(Boolean);
+                where.OR = [
+                    ...list.map(d => ({ department: { contains: d } })),
+                    { scopeType: "ALL_COMPANY" }
+                ];
+            }
+        }
         if (targetRole) where.targetRole = targetRole;
 
         const authUser = await prisma.user.findUnique({

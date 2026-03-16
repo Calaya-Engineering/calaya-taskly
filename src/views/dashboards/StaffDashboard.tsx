@@ -17,11 +17,13 @@ import {
   ActivityIcon,
 } from "@/lib/icons";
 
-const Card = ({ className = "", children }) => (
-  <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
+import DashboardSkeleton from "@/components/DashboardSkeleton";
+
+const Card = ({ className = "", children }: { className?: string; children: React.ReactNode }) => (
+  <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none overflow-hidden ${className}`}>{children}</div>
 );
 
-const SectionTitle = ({ title, subtitle, action }) => (
+const SectionTitle = ({ title, subtitle, action }: { title: string; subtitle?: string; action?: React.ReactNode }) => (
   <div className="flex items-start justify-between gap-3">
     <div>
       <h2 className="text-lg md:text-xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
@@ -33,7 +35,7 @@ const SectionTitle = ({ title, subtitle, action }) => (
   </div>
 );
 
-const Pill = ({ children, tone = "default" }) => {
+const Pill = ({ children, tone = "default" }: { children: React.ReactNode; tone?: string }) => {
   const styles =
     tone === "danger"
       ? "bg-red-50 text-red-700 ring-red-100"
@@ -107,12 +109,12 @@ export default function StaffDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const [me, setMe] = useState(null);
-  const [tasks, setTasks] = useState([]);
-  const [documents, setDocuments] = useState([]);
-  const [tenders, setTenders] = useState([]);
-  const [announcements, setAnnouncements] = useState([]);
-  const [notifications, setNotifications] = useState([]);
+  const [me, setMe] = useState<any>(null);
+  const [tasks, setTasks] = useState<any[]>([]);
+  const [documents, setDocuments] = useState<any[]>([]);
+  const [tenders, setTenders] = useState<any[]>([]);
+  const [announcements, setAnnouncements] = useState<any[]>([]);
+  const [notifications, setNotifications] = useState<any[]>([]);
 
   const refreshLockRef = useRef(0);
 
@@ -131,15 +133,19 @@ export default function StaffDashboard() {
 
       setMe(meData);
 
-      const docQuery = meData.department
-        ? `/api/documents?departments=${encodeURIComponent(`${meData.department},All Company`)}&limit=10`
-        : "/api/documents?limit=10";
+      const deptFilter = meData.department
+        ? encodeURIComponent(`${meData.department},All Company,Staff`)
+        : "All Company,Staff";
+
+      const docQuery = `/api/documents?departments=${deptFilter}&limit=10`;
+      const announcementQuery = `/api/announcements?departments=${deptFilter}&limit=10`;
+      const tenderQuery = `/api/tenders?status=OPEN&departments=${deptFilter}&limit=10`;
 
       const [tasksRes, docsRes, tendersRes, announcementsRes, notificationsRes] = await Promise.allSettled([
         fetchWithAuth("/api/tasks/my-tasks?limit=100").then((r) => (r.ok ? r.json() : [])),
         fetchWithAuth(docQuery).then((r) => (r.ok ? r.json() : [])),
-        fetchWithAuth("/api/tenders?status=OPEN&limit=10").then((r) => (r.ok ? r.json() : [])),
-        fetchWithAuth("/api/announcements?limit=10").then((r) => (r.ok ? r.json() : [])),
+        fetchWithAuth(tenderQuery).then((r) => (r.ok ? r.json() : [])),
+        fetchWithAuth(announcementQuery).then((r) => (r.ok ? r.json() : [])),
         fetchWithAuth("/api/notifications?limit=30").then((r) => (r.ok ? r.json() : [])),
       ]);
 
@@ -327,12 +333,10 @@ export default function StaffDashboard() {
 
   const unreadNotifications = useMemo(() => notifications.filter((n) => !n.read).length, [notifications]);
 
-  if (loading) {
+  if (loading && !me) {
     return (
       <Layout menuItems={StaffMenuItems} userRole="Staff">
-        <div className="flex min-h-[60vh] items-center justify-center">
-          <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-[#2C4B9B]" />
-        </div>
+        <DashboardSkeleton />
       </Layout>
     );
   }

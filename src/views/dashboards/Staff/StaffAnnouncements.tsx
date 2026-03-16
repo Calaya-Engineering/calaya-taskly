@@ -1,11 +1,15 @@
 "use client";
 
 // pages/dashboards/Staff/StaffAnnouncements.jsx
-import { useMemo, useState, useEffect, useCallback } from "react";
+import { useMemo, useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import { StaffMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
+import { fetchWithAuth } from "@/lib/api";
+import { useSSE } from "@/hooks/useSSE";
+import DashboardSkeleton from "@/components/DashboardSkeleton";
+
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -39,8 +43,6 @@ const btnBase = "px-5 py-3 rounded-2xl font-semibold active:scale-[0.99] transit
 const btnOutline = `${btnBase} border bg-white hover:bg-gray-50`;
 const btnSolid = `${btnBase} text-white`;
 
-import { fetchWithAuth } from "@/lib/api";
-
 const priorityTone = (priority) => {
   switch (priority) {
     case "URGENT": return "danger";
@@ -70,16 +72,22 @@ const isExpired = (expiresAt) => new Date(expiresAt) < new Date();
 export default function StaffAnnouncements() {
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
-  const [announcementsData, setAnnouncementsData] = useState([]); // Changed to useState
+  const [announcementsData, setAnnouncementsData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const lastRefetchRef = useRef(0);
 
-  const fetchAnnouncements = useCallback(async () => { // Changed to useCallback
+  const fetchAnnouncements = useCallback(async () => {
     try {
       setIsLoading(true);
-      const res = await fetchWithAuth("/api/announcements");
+      // First fetch user info to get department
+      const meRes = await fetchWithAuth("/api/me");
+      const me = meRes.ok ? await meRes.json() : null;
+      
+      const deptFilter = me?.department ? encodeURIComponent(`${me.department},All Company,Staff`) : "All Company,Staff";
+      const res = await fetchWithAuth(`/api/announcements?departments=${deptFilter}&limit=100`);
       if (res.ok) {
         const data = await res.json();
-        setAnnouncementsData(data);
+        setAnnouncementsData(Array.isArray(data) ? data : []);
       }
     } catch (err) {
       console.error(err);
@@ -88,9 +96,27 @@ export default function StaffAnnouncements() {
     }
   }, []);
 
-  useEffect(() => { // Changed to useEffect
+  useEffect(() => {
     fetchAnnouncements();
   }, [fetchAnnouncements]);
+
+  useSSE("/api/realtime/events", (ev) => {
+    if (!ev?.type || ev.type === "ping") return;
+    if (ev.type.startsWith("announcement:")) {
+      const now = Date.now();
+      if (now - lastRefetchRef.current < 1500) return;
+      lastRefetchRef.current = now;
+      fetchAnnouncements();
+    }
+  });
+
+  if (isLoading && announcementsData.length === 0) {
+    return (
+      <Layout menuItems={StaffMenuItems} userRole="Staff">
+        <DashboardSkeleton />
+      </Layout>
+    );
+  }
 
   const unreadCount = useMemo(() => announcementsData.filter((a) => !a.read).length, [announcementsData]);
   const importantCount = useMemo(() => announcementsData.filter((a) => (a.priority === "URGENT" || a.priority === "IMPORTANT") && !a.read).length, [announcementsData]);

@@ -1,13 +1,14 @@
 "use client";
 
 // pages/dashboards/Staff/StaffTenders.jsx
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { StaffMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
 import { fetchWithAuth } from "@/lib/api";
+import { useSSE } from "@/hooks/useSSE";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -33,7 +34,7 @@ const Pill = ({ children, tone = "default" }) => {
   );
 };
 
-const SectionTitle = ({ title, subtitle, action }) => (
+const SectionTitle = ({ title, subtitle, action }: { title: string; subtitle?: string; action?: React.ReactNode }) => (
   <div className="flex items-start justify-between gap-3">
     <div>
       <h2 className="text-lg md:text-xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
@@ -81,30 +82,47 @@ export default function StaffTenders() {
   const router = useRouter();
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
-  const [tendersData, setTendersData] = useState([]);
+  const [tendersData, setTendersData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const lastRefetchRef = useRef(0);
+
+  const fetchTenders = useCallback(async () => {
+    try {
+      setLoading(true);
+      const meRes = await fetchWithAuth("/api/me");
+      const me = meRes.ok ? await meRes.json() : null;
+      
+      const deptFilter = me?.department ? encodeURIComponent(`${me.department},All Company,Staff`) : "All Company,Staff";
+      const res = await fetchWithAuth(`/api/tenders?departments=${deptFilter}&limit=100`);
+      if (res.ok) {
+        const data = await res.json();
+        setTendersData(Array.isArray(data) ? data : []);
+      }
+    } catch (err) {
+      console.error("Failed to fetch tenders:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    async function getTenders() {
-      try {
-        const res = await fetchWithAuth("/api/tenders");
-        if (res.ok) {
-          const data = await res.json();
-          setTendersData(data);
-        }
-      } catch (err) {
-        console.error("Failed to fetch tenders:", err);
-      } finally {
-        setLoading(false);
-      }
+    fetchTenders();
+  }, [fetchTenders]);
+
+  useSSE("/api/realtime/events", (ev) => {
+    if (!ev?.type || ev.type === "ping") return;
+    if (ev.type.startsWith("tender:")) {
+      const now = Date.now();
+      if (now - lastRefetchRef.current < 1500) return;
+      lastRefetchRef.current = now;
+      fetchTenders();
     }
-    getTenders();
-  }, []);
+  });
 
   const getDaysRemaining = (closingDate) => {
     const now = new Date();
     const deadline = new Date(closingDate);
-    const diffTime = deadline - now;
+    const diffTime = deadline.getTime() - now.getTime();
     return Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
   };
 

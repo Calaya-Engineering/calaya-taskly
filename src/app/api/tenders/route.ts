@@ -24,7 +24,16 @@ export async function GET(req: NextRequest) {
 
         const where: any = {};
         if (status && status !== "all") where.status = status;
-        if (department && department !== "all") where.department = department;
+        if (department && department !== "all") {
+            where.department = department;
+        } else {
+            const departments = searchParams.get("departments");
+            if (departments) {
+                const list = departments.split(",").map(d => d.trim()).filter(Boolean);
+                if (list.length === 1) where.department = list[0];
+                else if (list.length > 1) where.department = { in: list };
+            }
+        }
         if (search) {
             where.OR = [
                 { title: { contains: search } },

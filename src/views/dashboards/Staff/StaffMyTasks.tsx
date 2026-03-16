@@ -1,12 +1,15 @@
 "use client";
 
 // pages/dashboards/Staff/StaffMyTasks.jsx
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { StaffMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
+import { fetchWithAuth } from "@/lib/api";
+import { useSSE } from "@/hooks/useSSE";
+
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -42,104 +45,6 @@ const Pill = ({ children, tone = "default" }) => {
   );
 };
 
-const tasksData = [
-  {
-    id: 'TASK-2024-00123',
-    title: 'Safety Inspection Report',
-    description: 'Complete safety inspection for workshop equipment',
-    department: 'Technical',
-    assignedBy: 'HOD - Mr. Johnson',
-    assignedDate: '2024-12-01',
-    dueDate: '2024-12-10',
-    priority: 'HIGH',
-    status: 'IN_PROGRESS',
-    progress: 60,
-    estimatedHours: 8,
-    actualHours: 5,
-    attachments: 3,
-    comments: 5
-  },
-  {
-    id: 'TASK-2024-00124',
-    title: 'Equipment Maintenance Log',
-    description: 'Update maintenance logs for all workshop machinery',
-    department: 'Workshop',
-    assignedBy: 'HOD - Mr. Johnson',
-    assignedDate: '2024-12-05',
-    dueDate: '2024-12-11',
-    priority: 'MEDIUM',
-    status: 'PENDING',
-    progress: 0,
-    estimatedHours: 4,
-    actualHours: 0,
-    attachments: 1,
-    comments: 2
-  },
-  {
-    id: 'TASK-2024-00125',
-    title: 'Client Meeting Notes',
-    description: 'Prepare and submit meeting notes for client review',
-    department: 'Technical',
-    assignedBy: 'MD - Mr. Williams',
-    assignedDate: '2024-12-06',
-    dueDate: '2024-12-15',
-    priority: 'LOW',
-    status: 'IN_PROGRESS',
-    progress: 30,
-    estimatedHours: 6,
-    actualHours: 2,
-    attachments: 0,
-    comments: 3
-  },
-  {
-    id: 'TASK-2024-00126',
-    title: 'Training Completion',
-    description: 'Complete safety training and submit certificate',
-    department: 'HSE',
-    assignedBy: 'HOD - Ms. Rodriguez',
-    assignedDate: '2024-11-28',
-    dueDate: '2024-12-08',
-    priority: 'HIGH',
-    status: 'OVERDUE',
-    progress: 100,
-    estimatedHours: 10,
-    actualHours: 12,
-    attachments: 2,
-    comments: 4
-  },
-  {
-    id: 'TASK-2024-00127',
-    title: 'Inventory Check',
-    description: 'Weekly inventory check for workshop supplies',
-    department: 'Workshop',
-    assignedBy: 'HOD - Mr. Johnson',
-    assignedDate: '2024-12-09',
-    dueDate: '2024-12-12',
-    priority: 'MEDIUM',
-    status: 'PENDING',
-    progress: 0,
-    estimatedHours: 3,
-    actualHours: 0,
-    attachments: 0,
-    comments: 0
-  },
-  {
-    id: 'TASK-2024-00128',
-    title: 'Monthly Report Submission',
-    description: 'Submit monthly activity report for November',
-    department: 'Technical',
-    assignedBy: 'HOD - Mr. Johnson',
-    assignedDate: '2024-12-03',
-    dueDate: '2024-12-10',
-    priority: 'HIGH',
-    status: 'COMPLETED',
-    progress: 100,
-    estimatedHours: 5,
-    actualHours: 6,
-    attachments: 4,
-    comments: 6
-  },
-];
 
 const getStatusTone = (status) => {
   switch (status) {
@@ -186,10 +91,52 @@ const fmtDate = (iso) =>
     })
     : "Not set";
 
+import DashboardSkeleton from "@/components/DashboardSkeleton";
+
 export default function StaffMyTasks() {
   const router = useRouter();
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [tasksData, setTasksData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const lastRefetchRef = useRef(0);
+
+  const fetchTasks = useCallback(async () => {
+    try {
+      setLoading(true);
+      const res = await fetchWithAuth("/api/tasks/my-tasks?limit=100");
+      if (!res.ok) throw new Error("Failed to fetch tasks");
+      const data = await res.json();
+      setTasksData(Array.isArray(data) ? data : []);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to load tasks");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchTasks();
+  }, [fetchTasks]);
+
+  useSSE("/api/realtime/events", (ev) => {
+    if (!ev?.type || ev.type === "ping") return;
+    if (ev.type.startsWith("task:")) {
+      const now = Date.now();
+      if (now - lastRefetchRef.current < 1500) return;
+      lastRefetchRef.current = now;
+      fetchTasks();
+    }
+  });
+
+  if (loading && tasksData.length === 0) {
+    return (
+      <Layout menuItems={StaffMenuItems} userRole="Staff">
+        <DashboardSkeleton />
+      </Layout>
+    );
+  }
 
   const filteredTasks = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
@@ -203,32 +150,46 @@ export default function StaffMyTasks() {
       const matchesSearch =
         !query ||
         task.title.toLowerCase().includes(query) ||
-        task.description.toLowerCase().includes(query) ||
-        task.id.toLowerCase().includes(query) ||
-        task.department.toLowerCase().includes(query);
+        (task.description || "").toLowerCase().includes(query) ||
+        String(task.id).toLowerCase().includes(query) ||
+        (task.department || "").toLowerCase().includes(query);
 
       return matchesFilter && matchesSearch;
     });
-  }, [filter, searchTerm]);
+  }, [filter, searchTerm, tasksData]);
 
   const stats = useMemo(() => {
     const total = tasksData.length;
     const completed = tasksData.filter(t => t.status === 'COMPLETED').length;
     const inProgress = tasksData.filter(t => t.status === 'IN_PROGRESS').length;
     const overdue = tasksData.filter(t => t.status === 'OVERDUE').length;
-    const totalHours = tasksData.reduce((sum, t) => sum + t.actualHours, 0);
+    const totalHours = tasksData.reduce((sum, t) => sum + (t.actualHours || 0), 0);
     const completionRate = total ? Math.round((completed / total) * 100) : 0;
 
     return { total, completed, inProgress, overdue, totalHours, completionRate };
-  }, []);
+  }, [tasksData]);
 
   const clearFilters = () => {
     setFilter('all');
     setSearchTerm('');
   };
 
-  const updateTaskStatus = (taskId, newStatus) => {
-    toast.success(`Task ${taskId} status updated to ${newStatus}`);
+  const updateTaskStatus = async (taskId, newStatus) => {
+    try {
+      const res = await fetchWithAuth(`/api/tasks/${taskId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      if (res.ok) {
+        toast.success(`Task status updated to ${newStatus}`);
+        fetchTasks();
+      } else {
+        toast.error("Failed to update status");
+      }
+    } catch (e) {
+      toast.error("Failed to update status");
+    }
   };
 
   return (
@@ -299,7 +260,7 @@ export default function StaffMyTasks() {
                   <div
                     className="h-full rounded-full"
                     style={{
-                      width: `${s.label === "Hours Logged" ? Math.min(100, (stats.totalHours / 50) * 100) : (s.value / stats.total) * 100}%`,
+                      width: `${s.label === "Hours Logged" ? Math.min(100, (Number(stats.totalHours) / 50) * 100) : (Number(s.value) / Math.max(1, stats.total)) * 100}%`,
                       backgroundColor: s.color,
                     }}
                   />
