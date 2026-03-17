@@ -80,6 +80,7 @@ export default function HODCreateTask() {
   const [departments, setDepartments] = useState([]);
   const [staffUsers, setStaffUsers] = useState([]);
   const [assignmentLoading, setAssignmentLoading] = useState(true);
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   useEffect(() => {
     async function loadDepartmentsAndStaff() {
@@ -220,7 +221,7 @@ export default function HODCreateTask() {
     setFormData(prev => ({ ...prev, attachments: prev.attachments.filter((_, i) => i !== index) }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (formData.selectedDepartments.length === 0) {
@@ -233,16 +234,39 @@ export default function HODCreateTask() {
       return;
     }
 
-    console.log('Creating task:', { 
-      ...formData, 
-      type: taskType,
-      taskId,
-      assigneeCount: formData.selectedAssignees.length,
-      departments: formData.selectedDepartments
-    });
-    
-    toast.success(`Task created successfully and assigned to ${formData.selectedAssignees.length} team member(s)!`);
-    router.push('/hod-dashboard/tasks');
+    const assigneeIds = Array.from(new Set(formData.selectedAssignees.map((assignee) => assignee.id)));
+
+    setSubmitLoading(true);
+    try {
+      const res = await fetchWithAuth("/api/tasks", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: formData.title,
+          description: formData.description || undefined,
+          department: formData.selectedDepartments[0] || null,
+          priority: formData.priority,
+          type: taskType,
+          startDate: formData.startDate || null,
+          dueDate: formData.dueDate || null,
+          estimatedHours: formData.estimatedHours ? parseInt(formData.estimatedHours, 10) : null,
+          visibility: formData.visibility,
+          assigneeIds,
+        }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || "Failed to create task");
+      }
+
+      toast.success(`Task created successfully and assigned to ${assigneeIds.length} team member(s)!`);
+      router.push('/hod-dashboard/tasks');
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to create task");
+    } finally {
+      setSubmitLoading(false);
+    }
   };
 
   return (
@@ -905,10 +929,15 @@ export default function HODCreateTask() {
 
                         <button
                           type="submit"
+                          disabled={submitLoading}
                           className="flex-1 px-5 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition"
-                          style={{ backgroundColor: "var(--accent-red)" }}
+                          style={{
+                            backgroundColor: "var(--accent-red)",
+                            opacity: submitLoading ? 0.7 : 1,
+                            cursor: submitLoading ? "not-allowed" : "pointer",
+                          }}
                         >
-                          Assign Task to {assignedCount} Member(s)
+                          {submitLoading ? "Assigning..." : `Assign Task to ${assignedCount} Member(s)`}
                         </button>
                       </div>
 
