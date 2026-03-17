@@ -1,20 +1,5 @@
 {
-  "/api/announcements/events/route": "app/api/announcements/events/route.js",
-  "/api/announcements/route": "app/api/announcements/route.js",
-  "/api/auth/send-otp/route": "app/api/auth/send-otp/route.js",
-  "/api/auth/verify-otp/route": "app/api/auth/verify-otp/route.js",
-  "/api/departments/route": "app/api/departments/route.js",
-  "/api/documents/route": "app/api/documents/route.js",
-  "/api/notifications/route": "app/api/notifications/route.js",
-  "/api/tasks/events/route": "app/api/tasks/events/route.js",
-  "/api/tasks/route": "app/api/tasks/route.js",
-  "/api/tenders/route": "app/api/tenders/route.js",
-  "/api/users/route": "app/api/users/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
   "/login/page": "app/login/page.js",
-  "/md-dashboard/create-task/page": "app/md-dashboard/create-task/page.js",
-  "/md-dashboard/documents/page": "app/md-dashboard/documents/page.js",
-  "/md-dashboard/jobs/page": "app/md-dashboard/jobs/page.js",
-  "/md-dashboard/page": "app/md-dashboard/page.js",
-  "/md-dashboard/tasks/page": "app/md-dashboard/tasks/page.js",
   "/page": "app/page.js"
 }
