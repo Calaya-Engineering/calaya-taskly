@@ -85,6 +85,8 @@ const getFileIcon = (fileType) => {
 const fmtDate = (iso) =>
   iso ? new Date(iso).toLocaleDateString('en-US', { year: "numeric", month: "short", day: "numeric" }) : "Not set";
 
+import DashboardSkeleton from "@/components/DashboardSkeleton";
+
 export default function StaffDocuments() {
   const router = useRouter();
   const [filter, setFilter] = useState('all');
@@ -126,6 +128,10 @@ export default function StaffDocuments() {
       fetchDocuments();
     }
   });
+
+  if (loading && documentsData.length === 0) {
+    return <DashboardSkeleton />;
+  }
 
   const filteredDocuments = useMemo(() => {
     const query = search.trim().toLowerCase();

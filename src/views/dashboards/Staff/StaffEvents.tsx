@@ -5,8 +5,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { StaffMenuItems } from "@/utils/menus";
-import { fetchWithAuth, getAuthToken } from "@/lib/api";
+import { fetchWithAuth } from "@/lib/api";
 import { toast } from "@/lib/toast";
+import { useSSE } from "@/hooks/useSSE";
+import DashboardSkeleton from "@/components/DashboardSkeleton";
 
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children, onClick }: { className?: string; children: React.ReactNode; onClick?: () => void }) => (
@@ -159,21 +161,18 @@ export default function StaffEvents() {
 
   useEffect(() => {
     fetchAllData();
-
-    const token = getAuthToken();
-    if (!token) return;
-
-    // SSE for announcement changes — re-fetch whenever a new announcement is created/updated
-    const annSource = new EventSource(`/api/announcements/events?token=${token}`);
-    annSource.onmessage = (e) => {
-      try {
-        const data = JSON.parse(e.data);
-        if (data.type === "announcement:created" || data.type === "announcement:updated") fetchAllData();
-      } catch { /* ignore */ }
-    };
-
-    return () => annSource.close();
   }, [fetchAllData]);
+
+  useSSE("/api/realtime/events", (ev) => {
+    if (!ev?.type || ev.type === "ping") return;
+    if (ev.type.startsWith("announcement:")) {
+      fetchAllData();
+    }
+  });
+
+  if (loading && events.length === 0) {
+    return <DashboardSkeleton />;
+  }
 
   /* ---------- Derived data ---------- */
   const filteredEvents = useMemo(() => {

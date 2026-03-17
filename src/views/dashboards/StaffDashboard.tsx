@@ -334,11 +334,7 @@ export default function StaffDashboard() {
   const unreadNotifications = useMemo(() => notifications.filter((n) => !n.read).length, [notifications]);
 
   if (loading && !me) {
-    return (
-      <Layout menuItems={StaffMenuItems} userRole="Staff">
-        <DashboardSkeleton />
-      </Layout>
-    );
+    return <DashboardSkeleton />;
   }
 
   return (

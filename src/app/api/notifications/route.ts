@@ -23,9 +23,17 @@ export async function GET(req: NextRequest) {
         const compact = req.nextUrl.searchParams.get("compact") === "true";
         const limit = Math.min(parseInt(req.nextUrl.searchParams.get("limit") || "50", 10) || 50, 100);
 
-        const where: any = { recipientId: user.id };
+        const where: any = {
+            OR: [
+                { recipientId: user.id },
+                { actorId: user.id }
+            ]
+        };
         if (unreadOnly) {
             where.read = false;
+            // Note: Actions performed by the user are usually "read" by them by default in their own view?
+            // Or maybe unreadOnly should only apply to recipientId matches?
+            // For now, let's keep it simple: if unreadOnly is true, they only see unread notifications.
         }
 
         const notifications = compact
@@ -122,5 +130,40 @@ export async function PATCH(req: NextRequest) {
             { error: "Failed to update notifications" },
             { status: 500 }
         );
+    }
+}
+export async function DELETE(req: NextRequest) {
+    const auth = await getAuthFromRequest(req);
+    if (!auth) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    try {
+        const user = await prisma.user.findUnique({
+            where: { email: auth.email },
+            select: { id: true },
+        });
+
+        if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
+
+        const { searchParams } = new URL(req.url);
+        const id = searchParams.get("id");
+
+        if (!id) return NextResponse.json({ error: "ID required" }, { status: 400 });
+
+        const notification = await prisma.notification.findUnique({
+            where: { id: Number(id) }
+        });
+
+        if (!notification || notification.recipientId !== user.id) {
+            return NextResponse.json({ error: "Not found or forbidden" }, { status: 403 });
+        }
+
+        await prisma.notification.delete({
+            where: { id: Number(id) }
+        });
+
+        return NextResponse.json({ success: true, message: "Notification deleted" });
+    } catch (error) {
+        console.error("Error deleting notification:", error);
+        return NextResponse.json({ error: "Failed to delete notification" }, { status: 500 });
     }
 }

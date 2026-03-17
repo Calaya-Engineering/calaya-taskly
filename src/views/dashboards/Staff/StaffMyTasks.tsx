@@ -131,11 +131,7 @@ export default function StaffMyTasks() {
   });
 
   if (loading && tasksData.length === 0) {
-    return (
-      <Layout menuItems={StaffMenuItems} userRole="Staff">
-        <DashboardSkeleton />
-      </Layout>
-    );
+    return <DashboardSkeleton />;
   }
 
   const filteredTasks = useMemo(() => {

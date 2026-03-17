@@ -111,11 +111,7 @@ export default function StaffAnnouncements() {
   });
 
   if (isLoading && announcementsData.length === 0) {
-    return (
-      <Layout menuItems={StaffMenuItems} userRole="Staff">
-        <DashboardSkeleton />
-      </Layout>
-    );
+    return <DashboardSkeleton />;
   }
 
   const unreadCount = useMemo(() => announcementsData.filter((a) => !a.read).length, [announcementsData]);

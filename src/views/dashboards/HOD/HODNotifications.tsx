@@ -1,12 +1,14 @@
 "use client";
 
 // pages/dashboards/HOD/HODNotifications.jsx
-import React, { useState, useMemo, useEffect, useCallback } from "react";
+import React, { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import { fetchWithAuth } from "@/lib/api";
 import { HODMenuItems } from "@/utils/menus";
 import { useSSE } from "@/hooks/useSSE";
+import DashboardSkeleton from "@/components/DashboardSkeleton";
+import { toast } from "@/lib/toast";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -43,11 +45,14 @@ const Pill = ({ children, tone = "default" }) => {
 };
 
 export default function HODNotifications() {
+  const [me, setMe] = useState<any>(null);
   const [notifications, setNotifications] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPriority, setSelectedPriority] = useState("all");
   const [selectedType, setSelectedType] = useState("all");
+  const lastRealtimeRefetchRef = useRef(0);
 
   const notificationTypes = [
     "CREATE_TASK",
@@ -79,9 +84,16 @@ export default function HODNotifications() {
 
   const fetchNotifications = useCallback(async () => {
     try {
-      const res = await fetchWithAuth("/api/notifications");
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to fetch");
+      setLoading(true);
+      const [meRes, res] = await Promise.all([
+        fetchWithAuth("/api/me"),
+        fetchWithAuth("/api/notifications?limit=100")
+      ]);
+      
+      const meData = meRes.ok ? await meRes.json() : null;
+      const data = res.ok ? await res.json() : [];
+      
+      setMe(meData);
 
       const mapped = data.map(n => ({
         id: n.id,
@@ -94,7 +106,7 @@ export default function HODNotifications() {
         link: "#",
         priority: "NORMAL",
         sender: {
-          name: n.actor?.name || n.actorRole || "System",
+          name: n.actor?.id === meData?.id ? "You" : (n.actor?.name || n.actorRole || "System"),
           avatar: "👤",
           department: n.actor?.department || "General",
         }
@@ -102,22 +114,30 @@ export default function HODNotifications() {
       setNotifications(mapped);
     } catch (error) {
       console.error("Failed to fetch notifications:", error);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
   useEffect(() => { fetchNotifications(); }, [fetchNotifications]);
 
-  // Real-time: re-fetch only for events that generate notifications
-  useSSE("/api/tasks/events", (ev) => {
-    if (["task:created", "task:assigned", "task:escalated"].includes(ev.type)) {
+  useSSE("/api/realtime/events", (ev) => {
+    if (!ev?.type || ev.type === "ping") return;
+    if (
+      ev.type.startsWith("notification:") ||
+      ev.type.startsWith("task:") ||
+      ev.type.startsWith("announcement:")
+    ) {
+      const now = Date.now();
+      if (now - lastRealtimeRefetchRef.current < 1500) return;
+      lastRealtimeRefetchRef.current = now;
       fetchNotifications();
     }
   });
-  useSSE("/api/announcements/events", (ev) => {
-    if (ev.type?.startsWith("announcement:")) {
-      fetchNotifications();
-    }
-  });
+
+  if (loading && notifications.length === 0) {
+    return <DashboardSkeleton />;
+  }
 
   const filteredNotifications = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
@@ -163,9 +183,18 @@ export default function HODNotifications() {
     }
   };
 
-  const deleteNotification = (id) => {
+  const deleteNotification = async (id) => {
     if (window.confirm("Delete this notification?")) {
+      const original = [...notifications];
       setNotifications(notifications.filter((notif) => notif.id !== id));
+      try {
+        const res = await fetchWithAuth(`/api/notifications?id=${id}`, { method: "DELETE" });
+        if (!res.ok) throw new Error("Failed to delete");
+      } catch (e) {
+        console.error(e);
+        setNotifications(original);
+        toast.error("Failed to delete notification");
+      }
     }
   };
 

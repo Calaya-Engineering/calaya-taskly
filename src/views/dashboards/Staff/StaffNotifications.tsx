@@ -8,6 +8,8 @@ import Layout from "@/components/Layout";
 import { fetchWithAuth } from "@/lib/api";
 import { useSSE } from "@/hooks/useSSE";
 import { StaffMenuItems } from "@/utils/menus";
+import DashboardSkeleton from "@/components/DashboardSkeleton";
+import { toast } from "@/lib/toast";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -53,6 +55,7 @@ const NOTIFICATIONS_OVERSCAN = 6;
 export default function StaffNotifications() {
   const router = useRouter();
   const [notifications, setNotifications] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPriority, setSelectedPriority] = useState("all");
@@ -92,6 +95,7 @@ export default function StaffNotifications() {
 
   const fetchNotifications = useCallback(async () => {
     try {
+      setLoading(true);
       const res = await fetchWithAuth("/api/notifications?limit=100");
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to fetch");
@@ -115,6 +119,8 @@ export default function StaffNotifications() {
       setNotifications(mapped);
     } catch (error) {
       console.error("Failed to fetch notifications:", error);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -137,6 +143,10 @@ export default function StaffNotifications() {
     lastRealtimeRefetchRef.current = now;
     fetchNotifications();
   });
+
+  if (loading && notifications.length === 0) {
+    return <DashboardSkeleton />;
+  }
 
   const filteredNotifications = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
@@ -205,9 +215,18 @@ export default function StaffNotifications() {
     }
   };
 
-  const deleteNotification = (id) => {
+  const deleteNotification = async (id) => {
     if (window.confirm("Delete this notification?")) {
+      const original = [...notifications];
       setNotifications((prev) => prev.filter((notif) => notif.id !== id));
+      try {
+        const res = await fetchWithAuth(`/api/notifications?id=${id}`, { method: "DELETE" });
+        if (!res.ok) throw new Error("Failed to delete");
+      } catch (e) {
+        console.error(e);
+        setNotifications(original);
+        toast.error("Failed to delete notification");
+      }
     }
   };
 

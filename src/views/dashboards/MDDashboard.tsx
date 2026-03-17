@@ -1,9 +1,8 @@
 "use client";
 
 // pages/dashboards/MDDashboard.jsx
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import Link from "next/link";
-import useSWR from 'swr';
 import Layout from "../../components/Layout";
 import { MDMenuItems } from "@/utils/menus";
 import { PlusIcon, FileUploadIconComponent, MegaphoneIcon, CalendarIcon, ChartIcon } from "@/lib/icons";
@@ -11,6 +10,8 @@ import { fetchWithAuth } from "@/lib/api";
 import { useSSE } from "@/hooks/useSSE";
 
 const fetcher = (url: string) => fetchWithAuth(url).then(res => res.json());
+
+import DashboardSkeleton from "@/components/DashboardSkeleton";
 
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -47,54 +48,44 @@ const Pill = ({ children, tone = "default" }) => {
 const priorityTone = (p) => (p === "URGENT" ? "danger" : p === "IMPORTANT" ? "warn" : "default");
 
 export default function MDDashboard() {
-  const { data: tasksData = [], mutate: fetchTasks } = useSWR('/api/tasks?limit=1000', fetcher, {
-    revalidateOnFocus: false,
-  });
+  const [tasksData, setTasksData] = useState<any[]>([]);
+  const [rawAnnouncements, setRawAnnouncements] = useState<any[]>([]);
+  const [tendersData, setTendersData] = useState<any[]>([]);
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const lastRefetchRef = useRef(0);
+
+  const fetchData = useCallback(async () => {
+    try {
+      setLoading(true);
+      const [tRes, aRes, tenRes, nRes] = await Promise.all([
+        fetchWithAuth("/api/tasks?limit=1000"),
+        fetchWithAuth("/api/announcements?limit=5"),
+        fetchWithAuth("/api/tenders?limit=5"),
+        fetchWithAuth("/api/notifications?limit=5")
+      ]);
+
+      if (tRes.ok) setTasksData(await tRes.json());
+      if (aRes.ok) setRawAnnouncements(await aRes.json());
+      if (tenRes.ok) setTendersData(await tenRes.json());
+      if (nRes.ok) setNotifications(await nRes.json());
+    } catch (err) {
+      console.error("Failed to fetch MD dashboard data:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    let cancelled = false;
-    async function connectSSE() {
-      try {
-        const res = await fetchWithAuth("/api/tasks/events");
-        if (!res.ok || cancelled) return;
-        const reader = res.body?.getReader();
-        if (!reader) return;
-        const decoder = new TextDecoder();
-        let buffer = "";
+    fetchData();
+  }, [fetchData]);
 
-        while (!cancelled) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          buffer += decoder.decode(value, { stream: true });
-          const parts = buffer.split("\n\n");
-          buffer = parts.pop() || "";
-          for (const part of parts) {
-            const m = part.match(/^data: (.+)$/m);
-            if (m) {
-              try {
-                const ev = JSON.parse(m[1]);
-                if (ev.type?.startsWith("task:")) fetchTasks();
-              } catch { }
-            }
-          }
-        }
-        reader.releaseLock();
-      } catch (err) {
-        console.error("SSE connection error:", err);
-      }
-    }
-    connectSSE();
-    return () => {
-      cancelled = true;
-    };
-  }, [fetchTasks]);
-
-  const { data: rawAnnouncements = [], mutate: fetchAnnouncements } = useSWR('/api/announcements?limit=5', fetcher, {
-    revalidateOnFocus: false,
-  });
-
-  useSSE("/api/announcements/events", (ev) => {
-    if (ev.type?.startsWith("announcement:")) fetchAnnouncements();
+  useSSE("/api/realtime/events", (ev) => {
+    if (!ev?.type || ev.type === "ping") return;
+    const now = Date.now();
+    if (now - lastRefetchRef.current < 1500) return;
+    lastRefetchRef.current = now;
+    fetchData();
   });
 
   const summary = useMemo(() => {
@@ -123,15 +114,37 @@ export default function MDDashboard() {
     { title: "Post Announcement", desc: "Update the company", icon: <MegaphoneIcon />, link: "/md-dashboard/create-announcement" },
   ];
 
-  const deptPerf: { dept: string; link: string; pct: number }[] = [];
+  const deptPerf = useMemo(() => {
+    const depts = Array.from(new Set(tasksData.map(t => t.department).filter(Boolean)));
+    return depts.map(dept => {
+      const deptTasks = tasksData.filter(t => t.department === dept);
+      const completed = deptTasks.filter(t => t.status === "COMPLETED").length;
+      return {
+        dept: dept as string,
+        link: `/md-dashboard/tasks?department=${dept}`,
+        pct: deptTasks.length ? Math.round((completed / deptTasks.length) * 100) : 0
+      };
+    }).sort((a, b) => b.pct - a.pct).slice(0, 5);
+  }, [tasksData]);
 
-  const activity: { user: string; action: string; time: string; link: string }[] = [];
+  const activity = useMemo(() => {
+    return notifications.map(n => ({
+      user: n.actor?.name || n.actorRole || "System",
+      action: n.message,
+      time: new Date(n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      link: "/md-dashboard/notifications"
+    }));
+  }, [notifications]);
 
-  const tenders = [
-    { id: "TEN-001", title: "Pipeline Equipment Supply", deadline: "2024-12-20", department: "Procurement", status: "OPEN" },
-    { id: "TEN-002", title: "Safety Training Services", deadline: "2024-12-22", department: "HSE", status: "OPEN" },
-    { id: "TEN-003", title: "IT Infrastructure Upgrade", deadline: "2024-12-25", department: "Technical", status: "OPEN" },
-  ];
+  const tenders = useMemo(() => {
+    return tendersData.map(t => ({
+      id: t.id,
+      title: t.title,
+      deadline: t.closingDate ? new Date(t.closingDate).toLocaleDateString() : "No deadline",
+      department: t.department || "General",
+      status: t.status
+    }));
+  }, [tendersData]);
 
   const announcements = useMemo(() => {
     return (Array.isArray(rawAnnouncements) ? rawAnnouncements : []).map(a => ({
@@ -142,6 +155,10 @@ export default function MDDashboard() {
       priority: a.priority || "NORMAL"
     }));
   }, [rawAnnouncements]);
+
+  if (loading && tasksData.length === 0) {
+    return <DashboardSkeleton />;
+  }
 
   return (
     <Layout menuItems={MDMenuItems} userRole="MD">

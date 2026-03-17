@@ -78,6 +78,8 @@ const clamp = (s = "", max = 150) => (s.length > max ? s.slice(0, max).trim() + 
 const fmtDate = (iso) =>
   iso ? new Date(iso).toLocaleDateString('en-US', { year: "numeric", month: "short", day: "numeric" }) : "Not set";
 
+import DashboardSkeleton from "@/components/DashboardSkeleton";
+
 export default function StaffTenders() {
   const router = useRouter();
   const [filter, setFilter] = useState("all");
@@ -108,6 +110,10 @@ export default function StaffTenders() {
   useEffect(() => {
     fetchTenders();
   }, [fetchTenders]);
+
+  if (loading && tendersData.length === 0) {
+    return <DashboardSkeleton />;
+  }
 
   useSSE("/api/realtime/events", (ev) => {
     if (!ev?.type || ev.type === "ping") return;
