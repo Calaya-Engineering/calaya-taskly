@@ -480,8 +480,32 @@ export default function StaffDailyReports() {
     }
   }, [isModalOpen, reportEntries]);
 
-  const handleDownload = (report) => {
-    toast.info(`Downloading ${report.title} (${report.fileSize})`);
+  const getReportUrl = (report: DailyReportItem) => report.entriesUrl || report.fileUrl || null;
+
+  const handlePreview = (report: DailyReportItem) => {
+    const url = getReportUrl(report);
+    if (!url) {
+      toast.info("No report file available to preview");
+      return;
+    }
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
+  const handleDownload = (report: DailyReportItem) => {
+    const url = getReportUrl(report);
+    if (!url) {
+      toast.info("No report file available to download");
+      return;
+    }
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.download = `${report.title || report.id}.json`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
   };
 
   const clearFilters = () => {
@@ -718,6 +742,7 @@ export default function StaffDailyReports() {
                           Download
                         </button>
                         <button
+                          onClick={() => handlePreview(report)}
                           className="px-3 py-1.5 rounded-xl text-[11px] font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
                           style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}
                         >
