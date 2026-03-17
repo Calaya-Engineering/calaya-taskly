@@ -16,7 +16,7 @@ cloudinary.config();
  * The fileUrl column stores a Cloudinary URL pointing to a JSON file that has:
  *   { entries: [...], status: string, attachmentUrl: string|null }
  * For legacy records it may hold an inline JSON array or a compact "RPT:..." string.
- * The scope column stores the report status (APPROVED | REVIEW_URGENTLY).
+ * The scope column stores the report status (PENDING | APPROVED | REVIEW_URGENTLY).
  */
 export async function GET(req: NextRequest) {
   const auth = await getAuthFromRequest(req);
@@ -71,7 +71,7 @@ export async function GET(req: NextRequest) {
 
     const formatted = documents.map((d) => {
       // scope stores the report status for new records
-      const status = d.scope === "REVIEW_URGENTLY" || d.scope === "APPROVED"
+      const status = d.scope === "REVIEW_URGENTLY" || d.scope === "APPROVED" || d.scope === "PENDING"
         ? d.scope
         : "APPROVED";
 
@@ -80,6 +80,7 @@ export async function GET(req: NextRequest) {
       return {
         id: `RPT-${String(d.id).padStart(4, "0")}`,
         dbId: d.id,
+        title: d.title,
         date: d.createdAt.toISOString().split("T")[0],
         department: d.department,
         submittedBy: d.uploadedBy,
@@ -108,7 +109,7 @@ export async function GET(req: NextRequest) {
 /**
  * POST /api/daily-reports
  * Creates a new daily report stored as a Document record.
- * Body: { department, date, entries, urgentReview?, attachmentUrl? }
+ * Body: { department, date, entries, urgentReview?, attachmentUrl?, attachmentName?, title? }
  *
  * Entries are uploaded as a JSON file to Cloudinary so that fileUrl stores
  * a short URL (≤190 chars) — safely within the VARCHAR column limit.
@@ -128,11 +129,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
     }
 
-    const { department, date, entries, urgentReview, attachmentUrl } = body as {
+    const { department, date, entries, urgentReview, title, attachmentUrl, attachmentName } = body as {
       department?: string;
       date?: string;
       urgentReview?: boolean;
+      title?: string;
       attachmentUrl?: string | null;
+      attachmentName?: string | null;
       entries?: { taskName: string; objective?: string; target?: string; nextDayTask?: string }[];
     };
 
@@ -162,7 +165,16 @@ export async function POST(req: NextRequest) {
       typeof auth.name === "string" && auth.name
         ? auth.name
         : auth.email.split("@")[0] || "Unknown";
-    const reportStatus = urgentReview ? "REVIEW_URGENTLY" : "APPROVED";
+    const reportStatus =
+      auth.role === "STAFF"
+        ? "PENDING"
+        : urgentReview
+          ? "REVIEW_URGENTLY"
+          : "APPROVED";
+    const reportTitle =
+      typeof title === "string" && title.trim()
+        ? title.trim()
+        : `Daily Report — ${department.trim()} — ${reportDate}`;
 
     // ── Upload entries as a JSON file to Cloudinary ───────────────────────────
     // This stores a short Cloudinary URL in fileUrl (well within VARCHAR(191))
@@ -173,6 +185,7 @@ export async function POST(req: NextRequest) {
         entries: validEntries,
         status: reportStatus,
         attachmentUrl: attachmentUrl || null,
+        attachmentName: attachmentName ? String(attachmentName).trim() : null,
       });
 
       const buffer = Buffer.from(jsonPayload, "utf-8");
@@ -207,11 +220,11 @@ export async function POST(req: NextRequest) {
     try {
       doc = await prisma.document.create({
         data: {
-          title: `Daily Report — ${department.trim()} — ${reportDate}`,
+          title: reportTitle,
           type: "Report",
           department: department.trim(),
           uploadedBy: submitterName,
-          scope: reportStatus, // scope encodes report status (APPROVED | REVIEW_URGENTLY)
+          scope: reportStatus, // scope encodes report status (PENDING | APPROVED | REVIEW_URGENTLY)
           fileSize: `${validEntries.length} task${validEntries.length !== 1 ? "s" : ""}`,
           fileUrl: entriesFileUrl,
         },
@@ -219,10 +232,10 @@ export async function POST(req: NextRequest) {
     } catch (dbErr: any) {
       console.error("DB error creating daily report:", dbErr?.message ?? dbErr);
       if (dbErr?.message?.includes("too long")) {
-         // Second fallback attempt with minimal URL
-         doc = await prisma.document.create({
+        // Second fallback attempt with minimal URL
+        doc = await prisma.document.create({
           data: {
-            title: `Daily Report — ${department.trim()} — ${reportDate}`,
+            title: reportTitle,
             type: "Report",
             department: department.trim(),
             uploadedBy: submitterName,
@@ -255,6 +268,7 @@ export async function POST(req: NextRequest) {
       {
         id: `RPT-${String(doc.id).padStart(4, "0")}`,
         dbId: doc.id,
+        title: doc.title,
         date: reportDate,
         department: doc.department,
         submittedBy: doc.uploadedBy,
@@ -264,6 +278,7 @@ export async function POST(req: NextRequest) {
         status: reportStatus,
         fileUrl: doc.fileUrl,
         attachmentUrl: attachmentUrl || null,
+        attachmentName: attachmentName ? String(attachmentName).trim() : null,
       },
       { status: 201 }
     );

@@ -1,9 +1,8 @@
 "use client";
 
 // pages/dashboards/Staff/StaffSubmitReport.jsx
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, type ReactNode } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { StaffMenuItems } from "@/utils/menus";
 import { fetchWithAuth } from "@/lib/api";
@@ -13,7 +12,15 @@ const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
 );
 
-const SectionTitle = ({ title, subtitle, action }) => (
+const SectionTitle = ({
+  title,
+  subtitle = null,
+  action = null,
+}: {
+  title: string;
+  subtitle?: ReactNode;
+  action?: ReactNode;
+}) => (
   <div className="flex items-start justify-between gap-3">
     <div>
       <h2 className="text-lg md:text-xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
@@ -43,41 +50,50 @@ const Pill = ({ children, tone = "default" }) => {
   );
 };
 
-const submittedReportsData = [
-  {
-    id: 'REP-2024-001',
-    title: 'Safety Inspection Report - December',
-    taskId: 'TASK-2024-00123',
-    submittedDate: '2024-12-05T14:30:00',
-    status: 'SUBMITTED',
-    file: 'safety_inspection_dec.pdf',
-    fileSize: '2.4 MB',
-  },
-  {
-    id: 'REP-2024-002',
-    title: 'Monthly Activity Report - November',
-    taskId: 'TASK-2024-00128',
-    submittedDate: '2024-12-01T10:15:00',
-    status: 'APPROVED',
-    file: 'monthly_activity_nov.docx',
-    fileSize: '1.8 MB',
-  },
-  {
-    id: 'REP-2024-003',
-    title: 'Equipment Maintenance Log',
-    taskId: 'TASK-2024-00124',
-    submittedDate: '2024-11-28T16:45:00',
-    status: 'UNDER_REVIEW',
-    file: 'equipment_log.xlsx',
-    fileSize: '3.2 MB',
-  }
-];
+const DEFAULT_STAFF_PROFILE = {
+  name: "Staff Member",
+  department: "Unassigned",
+};
 
+type SubmittedReport = {
+  id: string;
+  title: string;
+  taskId: string;
+  submittedDate: string;
+  status: string;
+  file: string;
+  fileSize: string;
+  fileUrl: string | null;
+};
 
+type SubmittedReportFallback = {
+  taskId?: string;
+  fileName?: string;
+  fileSize?: string;
+  fileUrl?: string | null;
+};
+
+type TaskSummary = {
+  id: number | string;
+  title: string;
+  dueDate?: string | null;
+};
+
+const normalizeSubmittedReport = (report: any, fallback: SubmittedReportFallback = {}): SubmittedReport => ({
+  id: String(report?.id ?? ""),
+  title: String(report?.title ?? "Untitled Report"),
+  taskId: String(fallback.taskId ?? report?.taskId ?? "N/A"),
+  submittedDate: String(report?.submittedAt ?? report?.date ?? new Date().toISOString()),
+  status: String(report?.status ?? "PENDING"),
+  file: String(fallback.fileName ?? report?.attachmentName ?? report?.title ?? "Report attachment"),
+  fileSize: String(fallback.fileSize ?? report?.fileSize ?? "—"),
+  fileUrl: fallback.fileUrl ?? report?.attachmentUrl ?? report?.fileUrl ?? report?.entriesUrl ?? null,
+});
 
 const getStatusTone = (status) => {
   switch (status) {
     case 'APPROVED': return 'success';
+    case 'PENDING': return 'warn';
     case 'UNDER_REVIEW': return 'warn';
     case 'SUBMITTED': return 'info';
     default: return 'default';
@@ -87,6 +103,7 @@ const getStatusTone = (status) => {
 const getStatusLabel = (status) => {
   switch (status) {
     case 'APPROVED': return 'Approved';
+    case 'PENDING': return 'Pending Review';
     case 'UNDER_REVIEW': return 'Under Review';
     case 'SUBMITTED': return 'Submitted';
     default: return status;
@@ -120,38 +137,73 @@ const fmtDateTime = (iso) =>
   }) : "Not set";
 
 export default function StaffSubmitReport() {
-  const router = useRouter();
   const [reportType, setReportType] = useState('task');
   const [selectedTask, setSelectedTask] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submittedReports, setSubmittedReports] = useState(submittedReportsData);
-  const [tasks, setTasks] = useState([]);
+  const [submittedReports, setSubmittedReports] = useState<SubmittedReport[]>([]);
+  const [tasks, setTasks] = useState<TaskSummary[]>([]);
+  const [staffProfile, setStaffProfile] = useState(DEFAULT_STAFF_PROFILE);
   const [loading, setLoading] = useState(true);
 
+  const staffName = staffProfile.name || DEFAULT_STAFF_PROFILE.name;
+  const staffDepartment = staffProfile.department || DEFAULT_STAFF_PROFILE.department;
+
   useEffect(() => {
-    async function loadTasks() {
+    async function loadPageData() {
+      setLoading(true);
       try {
-        const res = await fetchWithAuth("/api/tasks/my-tasks");
-        if (res.ok) {
-          const data = await res.json();
-          setTasks(data);
+        const [meRes, tasksRes] = await Promise.all([
+          fetchWithAuth("/api/me"),
+          fetchWithAuth("/api/tasks/my-tasks"),
+        ]);
+
+        let nextProfile = DEFAULT_STAFF_PROFILE;
+        if (meRes.ok) {
+          const me = await meRes.json();
+          nextProfile = {
+            name: String(me?.name ?? me?.email?.split("@")[0] ?? DEFAULT_STAFF_PROFILE.name),
+            department: String(me?.department ?? DEFAULT_STAFF_PROFILE.department),
+          };
+          setStaffProfile(nextProfile);
+        }
+
+        if (tasksRes.ok) {
+          const data = await tasksRes.json();
+          setTasks(Array.isArray(data) ? data : []);
+        }
+
+        if (nextProfile.department && nextProfile.department !== DEFAULT_STAFF_PROFILE.department) {
+          const reportsRes = await fetchWithAuth(
+            `/api/daily-reports?department=${encodeURIComponent(nextProfile.department)}&limit=200`
+          );
+          if (reportsRes.ok) {
+            const data = await reportsRes.json();
+            const ownReports = Array.isArray(data)
+              ? data
+                  .filter((report) => String(report?.submittedBy ?? "") === nextProfile.name)
+                  .map((report) => normalizeSubmittedReport(report))
+              : [];
+            setSubmittedReports(ownReports);
+          }
         }
       } catch (err) {
-        console.error("Failed to load tasks:", err);
+        console.error("Failed to load report page data:", err);
+        toast.error("Failed to load reports");
       } finally {
         setLoading(false);
       }
     }
-    loadTasks();
+
+    loadPageData();
   }, []);
 
   const stats = useMemo(() => {
     const total = submittedReports.length;
     const approved = submittedReports.filter(r => r.status === 'APPROVED').length;
-    const underReview = submittedReports.filter(r => r.status === 'UNDER_REVIEW').length;
+    const underReview = submittedReports.filter(r => r.status === 'UNDER_REVIEW' || r.status === 'PENDING').length;
     const thisMonth = submittedReports.filter(r => {
       const reportDate = new Date(r.submittedDate);
       const now = new Date();
@@ -165,52 +217,106 @@ export default function StaffSubmitReport() {
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
-      if (selectedFile.size > 100 * 1024 * 1024) {
-        toast.error('File size exceeds 100MB limit');
+      if (selectedFile.size > 50 * 1024 * 1024) {
+        toast.error('File size exceeds 50MB limit');
         return;
       }
       setFile(selectedFile);
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title.trim()) {
       toast.warning('Please enter a report title');
+      return;
+    }
+    if (reportType === 'task' && !selectedTask) {
+      toast.warning('Please select the related task');
       return;
     }
     if (!file) {
       toast.warning('Please select a file to upload');
       return;
     }
+    if (!staffDepartment || staffDepartment === DEFAULT_STAFF_PROFILE.department) {
+      toast.error('Your account has no department assigned. Contact admin.');
+      return;
+    }
+    if (isSubmitting) return;
 
     setIsSubmitting(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      const newReport = {
-        id: `REP-2024-00${submittedReports.length + 1}`,
-        title,
-        taskId: selectedTask || 'N/A',
-        submittedDate: new Date().toISOString(),
-        status: 'SUBMITTED',
-        file: file.name,
-        fileSize: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
-      };
+    try {
+      const taskDetails = tasks.find((task) => String(task.id) === String(selectedTask));
 
-      setSubmittedReports([newReport, ...submittedReports]);
+      const uploadFormData = new FormData();
+      uploadFormData.append("file", file);
+
+      const uploadRes = await fetchWithAuth("/api/upload/cloudinary", {
+        method: "POST",
+        body: uploadFormData,
+      });
+      const uploadData = await uploadRes.json().catch(() => null);
+      if (!uploadRes.ok || !uploadData?.url) {
+        toast.error(uploadData?.error || "Failed to upload attachment");
+        return;
+      }
+
+      const reportRes = await fetchWithAuth("/api/daily-reports", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: title.trim(),
+          department: staffDepartment,
+          date: new Date().toISOString().split("T")[0],
+          attachmentUrl: uploadData.url,
+          attachmentName: file.name,
+          entries: [
+            {
+              taskName: reportType === "task" ? taskDetails?.title || title.trim() : title.trim(),
+              objective: description.trim() || (reportType === "task" ? "Task report submission" : "General report submission"),
+              target: reportType === "task" ? `Task ID: ${taskDetails?.id ?? selectedTask}` : "General report",
+              nextDayTask: "",
+            },
+          ],
+        }),
+      });
+      const reportData = await reportRes.json().catch(() => null);
+      if (!reportRes.ok) {
+        toast.error(reportData?.error || "Failed to save report");
+        return;
+      }
+
+      setSubmittedReports((prev) => [
+        normalizeSubmittedReport(reportData, {
+          taskId: reportType === "task" ? selectedTask || "N/A" : "N/A",
+          fileName: file.name,
+          fileSize: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
+          fileUrl: uploadData.url,
+        }),
+        ...prev,
+      ]);
       setTitle('');
       setDescription('');
       setFile(null);
       setSelectedTask('');
       setReportType('task');
-      setIsSubmitting(false);
       toast.success('Report submitted successfully!');
-    }, 1500);
+    } catch (err) {
+      console.error("Failed to submit report:", err);
+      toast.error("Failed to submit report");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleDownload = (report) => {
-    toast.info(`Downloading ${report.file}`);
+    if (!report.fileUrl) {
+      toast.info(`No attachment available for ${report.file}`);
+      return;
+    }
+    window.open(report.fileUrl, "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -238,6 +344,9 @@ export default function StaffSubmitReport() {
                 </h1>
                 <p className="text-gray-600 mt-2 max-w-2xl">
                   Upload reports for tasks or general submissions in any format
+                </p>
+                <p className="text-sm text-gray-500 mt-3">
+                  Department: <span className="font-semibold text-gray-800">{staffDepartment}</span> • {staffName}
                 </p>
               </div>
 
@@ -334,7 +443,7 @@ export default function StaffSubmitReport() {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Enter report description or notes..."
-                  rows="4"
+                  rows={4}
                   className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-100 resize-none"
                 />
               </div>
@@ -363,7 +472,7 @@ export default function StaffSubmitReport() {
                       {file ? file.name : 'Click to upload file'}
                     </p>
                     <p className="text-sm text-gray-500">
-                      PDF, DOC, XLS, PPT, JPG, PNG (Max 100MB)
+                      PDF, DOC, XLS, PPT, JPG, PNG (Max 50MB)
                     </p>
                   </label>
                 </div>
@@ -414,6 +523,11 @@ export default function StaffSubmitReport() {
             />
 
             <div className="mt-6 space-y-4 max-h-[500px] overflow-y-auto pr-2">
+              {submittedReports.length === 0 && (
+                <div className="rounded-2xl border border-dashed border-gray-200 p-6 text-center text-sm text-gray-500">
+                  No saved reports yet. Your submitted reports will appear here after they are stored.
+                </div>
+              )}
               {submittedReports.map((report) => (
                 <div
                   key={report.id}
@@ -472,7 +586,7 @@ export default function StaffSubmitReport() {
                   </p>
                   <ul className="text-xs text-gray-600 mt-2 space-y-1.5">
                     <li>• Submit reports in any format (PDF, DOC, XLS, etc.)</li>
-                    <li>• Maximum file size: 100MB</li>
+                    <li>• Maximum file size: 50MB</li>
                     <li>• Include clear titles for easy identification</li>
                     <li>• Task reports are linked to specific tasks</li>
                     <li>• All reports are reviewed by your HOD</li>

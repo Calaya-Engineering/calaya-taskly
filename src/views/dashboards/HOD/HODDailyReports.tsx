@@ -85,7 +85,7 @@ const FieldLabel = ({ children, required }: { children: React.ReactNode; require
 );
 
 // HOD managed departments
-const MANAGED_DEPARTMENTS = ['Technical', 'Workshop', 'HSE'];
+const DEFAULT_MANAGED_DEPARTMENTS = ['Technical', 'Workshop', 'HSE'];
 
 // Storage keys
 const STORAGE_KEYS = {
@@ -188,7 +188,8 @@ export default function HODDailyReports() {
   const [departmentFilter, setDepartmentFilter] = useState('All');
   const [viewMode, setViewMode] = useState('list');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedDepartments, setSelectedDepartments] = useState(['Technical']);
+  const [managedDepartments, setManagedDepartments] = useState<string[]>(DEFAULT_MANAGED_DEPARTMENTS);
+  const [selectedDepartments, setSelectedDepartments] = useState<string[]>([DEFAULT_MANAGED_DEPARTMENTS[0]]);
   const [currentPage, setCurrentPage] = useState(1);
   const [tableScrollTop, setTableScrollTop] = useState(0);
   const tableViewportRef = useRef<HTMLDivElement>(null);
@@ -211,9 +212,36 @@ export default function HODDailyReports() {
     }
   ]);
 
+  useEffect(() => {
+    async function loadManagedDepartments() {
+      try {
+        const res = await fetchWithAuth("/api/me");
+        if (!res.ok) return;
+        const me = await res.json();
+        const dept = String(me?.department ?? "").trim();
+        if (!dept) return;
+        setManagedDepartments([dept]);
+        setSelectedDepartments((prev) => {
+          const next = prev.filter((item) => item === dept);
+          return next.length > 0 ? next : [dept];
+        });
+      } catch (err) {
+        console.error("Failed to load HOD department:", err);
+      }
+    }
+
+    loadManagedDepartments();
+  }, []);
+
   const getReports = useCallback(async () => {
+    if (managedDepartments.length === 0) {
+      setDailyReports([]);
+      setLoading(false);
+      return;
+    }
+
     try {
-      const departments = encodeURIComponent(MANAGED_DEPARTMENTS.join(','));
+      const departments = encodeURIComponent(managedDepartments.join(','));
       const resp = await fetchWithAuth(`/api/daily-reports?departments=${departments}&limit=500`);
       if (resp.ok) {
         const data = await resp.json();
@@ -224,12 +252,12 @@ export default function HODDailyReports() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [managedDepartments]);
 
   useEffect(() => { getReports(); }, [getReports]);
 
   // Real-time: re-fetch when documents or tasks change
-  useSSE("/api/tasks/events", (ev) => {
+  useSSE("/api/realtime/events", (ev) => {
     if (ev.type?.startsWith("task:") || ev.type?.startsWith("document:")) {
       const now = Date.now();
       if (now - lastRefreshAtRef.current < 1500) return;
@@ -271,9 +299,21 @@ export default function HODDailyReports() {
     }
   }, [reportEntries, selectedDepartments, isModalOpen]);
 
+  useEffect(() => {
+    setSelectedDepartments((prev) => {
+      const next = prev.filter((dept) => managedDepartments.includes(dept));
+      return next.length > 0 ? next : [managedDepartments[0] ?? DEFAULT_MANAGED_DEPARTMENTS[0]];
+    });
+
+    setDepartmentFilter((prev) => {
+      if (prev === 'All') return prev;
+      return managedDepartments.includes(prev) ? prev : 'All';
+    });
+  }, [managedDepartments]);
+
   // Filter reports based on HOD managed departments
   const filteredReports = dailyReports.filter(report => {
-    if (!MANAGED_DEPARTMENTS.includes(report.department)) return false;
+    if (!managedDepartments.includes(report.department)) return false;
     if (selectedDate && report.date !== selectedDate) return false;
     if (departmentFilter !== 'All' && report.department !== departmentFilter) return false;
     return true;
@@ -358,7 +398,7 @@ export default function HODDailyReports() {
 
   // Select all departments
   const selectAllDepartments = () => {
-    setSelectedDepartments([...MANAGED_DEPARTMENTS]);
+    setSelectedDepartments([...managedDepartments]);
   };
 
   // Reset form and clear storage
@@ -371,7 +411,7 @@ export default function HODDailyReports() {
       nextDayTask: ''
     }];
     setReportEntries(defaultEntries);
-    setSelectedDepartments(['Technical']);
+    setSelectedDepartments([managedDepartments[0] ?? DEFAULT_MANAGED_DEPARTMENTS[0]]);
     setUrgentReview(false);
     setAttachDocs(false);
     setAttachedFiles([]);
@@ -517,7 +557,7 @@ export default function HODDailyReports() {
 
                 <div className="mt-4 flex flex-wrap items-center gap-2">
                   <span className="text-sm text-gray-600">Managing:</span>
-                  {MANAGED_DEPARTMENTS.map(dept => (
+                  {managedDepartments.map(dept => (
                     <Pill key={dept} tone={getDepartmentTone(dept)}>{dept}</Pill>
                   ))}
                 </div>
@@ -586,7 +626,7 @@ export default function HODDailyReports() {
                 className={inputBase}
               >
                 <option value="All">All Departments</option>
-                {MANAGED_DEPARTMENTS.map(dept => (
+                {managedDepartments.map(dept => (
                   <option key={dept} value={dept}>{dept}</option>
                 ))}
               </select>
@@ -854,7 +894,7 @@ export default function HODDailyReports() {
 
         {/* Department Summary */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {MANAGED_DEPARTMENTS.map(dept => {
+          {managedDepartments.map(dept => {
             const deptReports = filteredReports.filter(r => r.department === dept);
             const pendingCount = deptReports.filter(r => r.status === 'PENDING').length;
             const approvedCount = deptReports.filter(r => r.status === 'APPROVED').length;
@@ -960,7 +1000,7 @@ export default function HODDailyReports() {
                     </button>
                   </div>
                   <div className="flex flex-wrap gap-3">
-                    {MANAGED_DEPARTMENTS.map(dept => (
+                    {managedDepartments.map(dept => (
                       <button
                         key={dept}
                         type="button"

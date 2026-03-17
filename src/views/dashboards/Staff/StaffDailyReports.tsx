@@ -1,9 +1,8 @@
 "use client";
 
 // pages/dashboards/Staff/StaffDailyReports.jsx
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { StaffMenuItems } from "@/utils/menus";
 import { fetchWithAuth } from "@/lib/api";
@@ -13,7 +12,15 @@ const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
 );
 
-const SectionTitle = ({ title, subtitle, action }) => (
+const SectionTitle = ({
+  title,
+  subtitle = null,
+  action = null,
+}: {
+  title: string;
+  subtitle?: ReactNode;
+  action?: ReactNode;
+}) => (
   <div className="flex items-start justify-between gap-3">
     <div>
       <h2 className="text-lg md:text-xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
@@ -45,9 +52,40 @@ const Pill = ({ children, tone = "default" }) => {
   );
 };
 
-// Staff's assigned department
-const STAFF_DEPARTMENT = 'Technical';
-const STAFF_NAME = 'John Doe';
+const DEFAULT_STAFF_PROFILE = {
+  name: "Staff Member",
+  department: "Unassigned",
+};
+
+type DailyReportItem = {
+  id: string;
+  dbId?: number;
+  title: string;
+  date: string;
+  department: string;
+  submittedBy: string;
+  submittedAt: string;
+  entries: Array<{
+    taskName?: string;
+    objective?: string;
+    target?: string;
+    nextDayTask?: string;
+  }>;
+  entriesUrl?: string | null;
+  fileSize: string;
+  fileType: string;
+  status: string;
+  downloads: number;
+  fileUrl?: string | null;
+};
+
+type ReportEntryRow = {
+  id: number;
+  taskName: string;
+  objective: string;
+  target: string;
+  nextDayTask: string;
+};
 
 // Storage keys
 const STORAGE_KEYS = {
@@ -75,6 +113,23 @@ const REPORTS_VIEWPORT_HEIGHT = 560;
 const REPORTS_ROW_HEIGHT = 76;
 const REPORTS_OVERSCAN = 8;
 const safeLower = (value) => String(value ?? "").toLowerCase();
+
+const normalizeDailyReport = (report: any): DailyReportItem => ({
+  id: String(report?.id ?? ""),
+  dbId: report?.dbId,
+  title: String(report?.title ?? `${report?.department ?? "Department"} Daily Report`),
+  date: String(report?.date ?? ""),
+  department: String(report?.department ?? "—"),
+  submittedBy: String(report?.submittedBy ?? "Unknown"),
+  submittedAt: String(report?.submittedAt ?? report?.date ?? ""),
+  entries: Array.isArray(report?.entries) ? report.entries : [],
+  entriesUrl: report?.entriesUrl ?? report?.fileUrl ?? null,
+  fileSize: String(report?.fileSize ?? "—"),
+  fileType: String(report?.fileType ?? "Report"),
+  status: String(report?.status ?? "PENDING"),
+  downloads: Number(report?.downloads ?? 0),
+  fileUrl: report?.fileUrl ?? null,
+});
 
 
 const getStatusTone = (status) => {
@@ -121,71 +176,63 @@ const fmtDateTime = (iso) =>
   }) : "Not set";
 
 export default function StaffDailyReports() {
-  const router = useRouter();
   const [isClient, setIsClient] = useState(false);
-  const [dailyReports, setDailyReports] = useState([]);
+  const [dailyReports, setDailyReports] = useState<DailyReportItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [dateFilter, setDateFilter] = useState('all');
   const [departmentFilter, setDepartmentFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [departments, setDepartments] = useState([]);
-  const [loadingDepts, setLoadingDepts] = useState(true);
+  const [departments, setDepartments] = useState<string[]>([]);
+  const [staffProfile, setStaffProfile] = useState(DEFAULT_STAFF_PROFILE);
+  const [submitting, setSubmitting] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [tableScrollTop, setTableScrollTop] = useState(0);
-  const tableViewportRef = useRef(null);
+  const tableViewportRef = useRef<HTMLDivElement | null>(null);
+
+  const staffDepartment = staffProfile.department || DEFAULT_STAFF_PROFILE.department;
+  const staffName = staffProfile.name || DEFAULT_STAFF_PROFILE.name;
 
   useEffect(() => {
-    async function loadDepts() {
+    async function loadPageData() {
+      setLoading(true);
       try {
-        const res = await fetchWithAuth("/api/departments");
-        if (res.ok) {
-          const data = await res.json();
-          setDepartments(['All Company', ...data.map(d => d.name)]);
-        }
-      } catch (err) {
-        console.error("Failed to load departments:", err);
-      } finally {
-        setLoadingDepts(false);
-      }
-    }
-    loadDepts();
-  }, []);
+        const [deptRes, meRes, reportsRes] = await Promise.all([
+          fetchWithAuth("/api/departments"),
+          fetchWithAuth("/api/me"),
+          fetchWithAuth("/api/daily-reports?limit=300"),
+        ]);
 
-  useEffect(() => {
-    async function getReports() {
-      try {
-        const resp = await fetchWithAuth("/api/documents?type=Report&limit=300");
-        if (resp.ok) {
-          const data = await resp.json();
-          const mapped = data.map(d => ({
-            id: d.id,
-            dbId: d.dbId,
-            title: d.title,
-            date: d.date ? d.date.split('T')[0] : '',
-            department: d.department,
-            submittedBy: d.uploadedBy,
-            submittedAt: d.date,
-            entries: [],
-            fileSize: d.size || '—',
-            fileType: d.fileUrl ? d.fileUrl.split('.').pop().toUpperCase() : 'PDF',
-            status: 'APPROVED',
-            downloads: d.downloads || 0,
-            fileUrl: d.fileUrl
-          }));
-          setDailyReports(mapped);
+        if (deptRes.ok) {
+          const data = await deptRes.json();
+          setDepartments(["All Company", ...data.map((d) => d.name)]);
+        }
+
+        if (meRes.ok) {
+          const me = await meRes.json();
+          setStaffProfile({
+            name: String(me?.name ?? me?.email?.split("@")[0] ?? DEFAULT_STAFF_PROFILE.name),
+            department: String(me?.department ?? DEFAULT_STAFF_PROFILE.department),
+          });
+        }
+
+        if (reportsRes.ok) {
+          const data = await reportsRes.json();
+          setDailyReports(Array.isArray(data) ? data.map(normalizeDailyReport) : []);
         }
       } catch (err) {
-        console.error("Failed to fetch reports:", err);
+        console.error("Failed to load daily reports page data:", err);
+        toast.error("Failed to load daily reports");
       } finally {
         setLoading(false);
       }
     }
-    getReports();
+
+    loadPageData();
   }, []);
 
   // Report entries with dynamic rows
-  const [reportEntries, setReportEntries] = useState([
+  const [reportEntries, setReportEntries] = useState<ReportEntryRow[]>([
     {
       id: 1,
       taskName: '',
@@ -206,7 +253,10 @@ export default function StaffDailyReports() {
     const savedModalState = getSessionItem(STORAGE_KEYS.IS_MODAL_OPEN);
 
     if (savedEntries) {
-      setReportEntries(JSON.parse(savedEntries));
+      const parsedEntries = JSON.parse(savedEntries);
+      if (Array.isArray(parsedEntries)) {
+        setReportEntries(parsedEntries);
+      }
     }
 
     if (savedModalState) {
@@ -286,11 +336,11 @@ export default function StaffDailyReports() {
 
   const stats = useMemo(() => {
     const total = dailyReports.length;
-    const yourReports = dailyReports.filter(r => r.submittedBy === STAFF_NAME).length;
-    const pending = dailyReports.filter(r => r.submittedBy === STAFF_NAME && r.status === 'PENDING').length;
-    const approved = dailyReports.filter(r => r.submittedBy === STAFF_NAME && r.status === 'APPROVED').length;
+    const yourReports = dailyReports.filter(r => r.submittedBy === staffName).length;
+    const pending = dailyReports.filter(r => r.submittedBy === staffName && r.status === 'PENDING').length;
+    const approved = dailyReports.filter(r => r.submittedBy === staffName && r.status === 'APPROVED').length;
     return { total, yourReports, pending, approved };
-  }, [dailyReports]);
+  }, [dailyReports, staffName]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -356,34 +406,59 @@ export default function StaffDailyReports() {
   };
 
   // Handle submit report
-  const handleSubmitReport = () => {
-    // Validate at least one entry has task name
-    const hasValidEntry = reportEntries.some(entry => entry.taskName.trim() !== '');
-    if (!hasValidEntry) {
-      toast.warning('Please add at least one task entry');
+  const handleSubmitReport = async () => {
+    const validEntries = reportEntries
+      .filter((entry) => entry.taskName.trim() !== "")
+      .map((entry) => ({
+        taskName: entry.taskName.trim(),
+        objective: entry.objective.trim(),
+        target: entry.target.trim(),
+        nextDayTask: entry.nextDayTask.trim(),
+      }));
+
+    if (validEntries.length === 0) {
+      toast.warning("Please add at least one task entry");
       return;
     }
 
-    // Create new report
-    const newReport = {
-      id: `DR-${new Date().toISOString().split('T')[0]}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`,
-      date: new Date().toISOString().split('T')[0],
-      title: `${STAFF_DEPARTMENT} Department Daily Report`,
-      department: STAFF_DEPARTMENT,
-      submittedBy: STAFF_NAME,
-      submittedAt: new Date().toISOString(),
-      entries: reportEntries.filter(entry => entry.taskName.trim() !== ''),
-      fileSize: '0.5 MB',
-      fileType: 'PDF',
-      status: 'PENDING',
-      downloads: 0
-    };
+    if (!staffDepartment || staffDepartment === DEFAULT_STAFF_PROFILE.department) {
+      toast.error("Your account has no department assigned. Contact admin.");
+      return;
+    }
 
-    setDailyReports([newReport, ...dailyReports]);
-    setIsModalOpen(false);
-    setSessionItem(STORAGE_KEYS.IS_MODAL_OPEN, JSON.stringify(false));
-    resetForm();
-    toast.success('Daily report submitted successfully!');
+    if (submitting) return;
+    setSubmitting(true);
+
+    try {
+      const resp = await fetchWithAuth("/api/daily-reports", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: `${staffDepartment} Department Daily Report`,
+          department: staffDepartment,
+          date: new Date().toISOString().split("T")[0],
+          entries: validEntries,
+          urgentReview: false,
+        }),
+      });
+
+      const data = await resp.json().catch(() => null);
+      if (!resp.ok) {
+        toast.error(data?.error || "Failed to submit daily report");
+        return;
+      }
+
+      setDailyReports((prev) => [normalizeDailyReport(data), ...prev]);
+      setIsModalOpen(false);
+      setSessionItem(STORAGE_KEYS.IS_MODAL_OPEN, JSON.stringify(false));
+      resetForm();
+      toast.success("Daily report submitted successfully");
+    } catch (err) {
+      console.error("Failed to submit daily report:", err);
+      toast.error("Failed to submit daily report");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   // Auto-resize textarea
@@ -454,7 +529,7 @@ export default function StaffDailyReports() {
                 </p>
                 <div className="mt-3 flex items-center gap-2">
                   <span className="text-sm text-gray-500">Your Department:</span>
-                  <Pill tone={getDepartmentTone(STAFF_DEPARTMENT)}>{STAFF_DEPARTMENT}</Pill>
+                  <Pill tone={getDepartmentTone(staffDepartment)}>{staffDepartment}</Pill>
                 </div>
               </div>
 
@@ -547,7 +622,7 @@ export default function StaffDailyReports() {
           {/* Quick Filter Chips */}
           <div className="mt-4 flex flex-wrap gap-2">
             <button
-              onClick={() => setDepartmentFilter(STAFF_DEPARTMENT)}
+              onClick={() => setDepartmentFilter(staffDepartment)}
               className="px-3.5 py-2 rounded-2xl text-sm font-semibold border bg-blue-50 text-blue-700 hover:bg-blue-100 transition"
             >
               📋 My Department Only
@@ -718,7 +793,7 @@ export default function StaffDailyReports() {
               const date = new Date(2024, 11, i - 2);
               const dateStr = date.toISOString().split('T')[0];
               const hasReport = dailyReports.some(r => r.date === dateStr);
-              const isStaffReport = dailyReports.some(r => r.date === dateStr && r.submittedBy === STAFF_NAME);
+              const isStaffReport = dailyReports.some(r => r.date === dateStr && r.submittedBy === staffName);
 
               return (
                 <div
@@ -834,8 +909,8 @@ export default function StaffDailyReports() {
                         Report your completed tasks and plan for tomorrow
                       </p>
                       <div className="mt-3 flex items-center gap-2">
-                        <Pill tone={getDepartmentTone(STAFF_DEPARTMENT)}>{STAFF_DEPARTMENT} Department</Pill>
-                        <span className="text-sm text-gray-500">• {STAFF_NAME}</span>
+                        <Pill tone={getDepartmentTone(staffDepartment)}>{staffDepartment} Department</Pill>
+                        <span className="text-sm text-gray-500">• {staffName}</span>
                       </div>
                       {isClient && getSessionItem(STORAGE_KEYS.REPORT_ENTRIES) && (
                         <div className="mt-2 inline-flex items-center px-3 py-1.5 bg-amber-50 text-amber-800 rounded-xl text-xs ring-1 ring-amber-200">
@@ -871,7 +946,7 @@ export default function StaffDailyReports() {
                         </label>
                         <input
                           type="text"
-                          value={STAFF_DEPARTMENT}
+                          value={staffDepartment}
                           readOnly
                           className="w-full px-4 py-3 border border-gray-200 rounded-2xl bg-gray-100 text-gray-700"
                         />
@@ -921,7 +996,7 @@ export default function StaffDailyReports() {
                                   onInput={handleTextareaResize}
                                   placeholder="e.g., Pipeline Inspection"
                                   className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-100 text-sm resize-none overflow-hidden"
-                                  rows="1"
+                                  rows={1}
                                   style={{ minHeight: '38px' }}
                                 />
                               </td>
@@ -935,7 +1010,7 @@ export default function StaffDailyReports() {
                                   onInput={handleTextareaResize}
                                   placeholder="What needs to be achieved"
                                   className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-100 text-sm resize-none overflow-hidden"
-                                  rows="1"
+                                  rows={1}
                                   style={{ minHeight: '38px' }}
                                 />
                               </td>
@@ -949,7 +1024,7 @@ export default function StaffDailyReports() {
                                   onInput={handleTextareaResize}
                                   placeholder="Specific target/metric"
                                   className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-100 text-sm resize-none overflow-hidden"
-                                  rows="1"
+                                  rows={1}
                                   style={{ minHeight: '38px' }}
                                 />
                               </td>
@@ -963,7 +1038,7 @@ export default function StaffDailyReports() {
                                   onInput={handleTextareaResize}
                                   placeholder="Tasks for tomorrow"
                                   className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-100 text-sm resize-none overflow-hidden"
-                                  rows="1"
+                                  rows={1}
                                   style={{ minHeight: '38px' }}
                                 />
                               </td>
@@ -1017,10 +1092,11 @@ export default function StaffDailyReports() {
                     <button
                       type="button"
                       onClick={handleSubmitReport}
-                      className="px-6 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition"
+                      disabled={submitting}
+                      className={`px-6 py-3 rounded-2xl font-semibold text-white transition ${submitting ? 'opacity-70 cursor-not-allowed' : 'active:scale-[0.99]'}`}
                       style={{ backgroundColor: "var(--accent-red)" }}
                     >
-                      Submit Daily Report
+                      {submitting ? "Submitting..." : "Submit Daily Report"}
                     </button>
                   </div>
                 </div>
