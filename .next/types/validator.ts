@@ -731,6 +731,24 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
+// Validate ../../src/app/secretary-dashboard/settings/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/secretary-dashboard/settings">> = Specific
+  const handler = {} as typeof import("../../src/app/secretary-dashboard/settings/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../src/app/secretary-dashboard/submissions/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/secretary-dashboard/submissions">> = Specific
+  const handler = {} as typeof import("../../src/app/secretary-dashboard/submissions/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../src/app/secretary-dashboard/task-reports/page.tsx
 {
   type __IsExpected<Specific extends AppPageConfig<"/secretary-dashboard/task-reports">> = Specific
@@ -852,6 +870,24 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
 {
   type __IsExpected<Specific extends AppPageConfig<"/staff-dashboard/profile">> = Specific
   const handler = {} as typeof import("../../src/app/staff-dashboard/profile/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../src/app/staff-dashboard/requests/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/staff-dashboard/requests">> = Specific
+  const handler = {} as typeof import("../../src/app/staff-dashboard/requests/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../src/app/staff-dashboard/settings/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/staff-dashboard/settings">> = Specific
+  const handler = {} as typeof import("../../src/app/staff-dashboard/settings/page.js")
   type __Check = __IsExpected<typeof handler>
   // @ts-ignore
   type __Unused = __Check
