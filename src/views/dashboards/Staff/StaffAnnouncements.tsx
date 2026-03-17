@@ -63,11 +63,18 @@ const scopeTone = (scope) => {
 };
 
 const formatDate = (dateString) => {
+  if (!dateString) return "Not set";
   const date = new Date(dateString);
+  if (isNaN(date.getTime())) return "Invalid Date";
   return date.toLocaleString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
 };
 
-const isExpired = (expiresAt) => new Date(expiresAt) < new Date();
+const isExpired = (expiresAt) => {
+  if (!expiresAt) return false;
+  const d = new Date(expiresAt);
+  if (isNaN(d.getTime())) return false;
+  return d < new Date();
+};
 
 export default function StaffAnnouncements() {
   const [filter, setFilter] = useState("all");
@@ -111,7 +118,11 @@ export default function StaffAnnouncements() {
   });
 
   if (isLoading && announcementsData.length === 0) {
-    return <DashboardSkeleton />;
+    return (
+      <Layout menuItems={StaffMenuItems} userRole="Staff">
+        <DashboardSkeleton />
+      </Layout>
+    );
   }
 
   const unreadCount = useMemo(() => announcementsData.filter((a) => !a.read).length, [announcementsData]);

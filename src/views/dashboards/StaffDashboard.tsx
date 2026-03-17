@@ -95,7 +95,9 @@ const dueLabel = (iso) => {
   const end = new Date(iso).getTime();
   const today = new Date();
   const startOfToday = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
-  const dueDay = Date.UTC(new Date(iso).getUTCFullYear(), new Date(iso).getUTCMonth(), new Date(iso).getUTCDate());
+  const dObj = new Date(iso);
+  if (isNaN(dObj.getTime())) return "No due date";
+  const dueDay = Date.UTC(dObj.getUTCFullYear(), dObj.getUTCMonth(), dObj.getUTCDate());
   const diffDays = Math.round((dueDay - startOfToday) / 86400000);
 
   if (diffDays === 0) return "Today";
@@ -335,13 +337,12 @@ export default function StaffDashboard() {
 
   const unreadNotifications = useMemo(() => notifications.filter((n) => !n.read).length, [notifications]);
 
-  if (loading && !me) {
+  if (loading && tasks.length === 0) {
     return <DashboardSkeleton />;
   }
 
   return (
-    <Layout menuItems={StaffMenuItems} userRole="Staff">
-      <div className="space-y-6">
+    <div className="space-y-6">
         <Card className="overflow-hidden">
           <div
             className="p-6 md:p-8"
@@ -622,6 +623,5 @@ export default function StaffDashboard() {
           </Card>
         </div>
       </div>
-    </Layout>
   );
 }

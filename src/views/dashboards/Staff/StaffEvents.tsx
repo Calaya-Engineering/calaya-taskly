@@ -171,7 +171,11 @@ export default function StaffEvents() {
   });
 
   if (loading && events.length === 0) {
-    return <DashboardSkeleton />;
+    return (
+      <Layout menuItems={StaffMenuItems} userRole="Staff">
+        <DashboardSkeleton />
+      </Layout>
+    );
   }
 
   /* ---------- Derived data ---------- */

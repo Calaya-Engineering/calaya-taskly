@@ -18,6 +18,7 @@ import {
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { fetchWithAuth } from "@/lib/api";
 import { useSSE } from "@/hooks/useSSE";
+import DashboardSkeleton from "@/components/DashboardSkeleton";
 
 /* ─── Types ─────────────────────────────────────────────────────── */
 interface TaskItem {
@@ -103,17 +104,21 @@ const priorityTone = (p) =>
       ? "warn"
       : "default";
 
-const fmtDate = (iso) =>
-  iso
-    ? new Date(iso).toLocaleDateString('en-US', {
-      month: "short",
-      day: "numeric",
-    })
-    : "—";
+const fmtDate = (iso) => {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return "Invalid Date";
+  return d.toLocaleDateString('en-US', {
+    month: "short",
+    day: "numeric",
+  });
+};
 
 const fmtRelative = (iso) => {
   if (!iso) return "";
-  const diff = Date.now() - new Date(iso).getTime();
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return "";
+  const diff = Date.now() - d.getTime();
   const mins = Math.floor(diff / 60000);
   if (mins < 1) return "just now";
   if (mins < 60) return `${mins} min ago`;
@@ -337,6 +342,10 @@ export default function HODDashboard() {
     const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
     return [{ name: myDept, tasks: total, progress, overdue }];
   }, [tasks, myDept, now]);
+
+  if (loading && tasks.length === 0) {
+    return <DashboardSkeleton />;
+  }
 
   /* ─────────────────────────────────────────────────────────── */
   return (
@@ -770,5 +779,5 @@ export default function HODDashboard() {
           </Card>
         </div>
       </div>
-    );
+  );
 }

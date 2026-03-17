@@ -81,15 +81,31 @@ const getProgressColor = (progress) => {
   return "#10B981";
 };
 
-const fmtDate = (iso) =>
-  iso
-    ? new Date(iso).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      timeZone: "UTC",
-    })
-    : "Not set";
+const fmtDate = (iso) => {
+  if (!iso) return "Not set";
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return "Invalid Date";
+  return d.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    timeZone: "UTC",
+  });
+};
+
+const formatDate = (dateString) => {
+  if (!dateString) return "Not set";
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return "Invalid Date";
+  return date.toLocaleString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+};
+
+const isExpired = (expiresAt) => {
+  if (!expiresAt) return false;
+  const d = new Date(expiresAt);
+  if (isNaN(d.getTime())) return false;
+  return d < new Date();
+};
 
 import DashboardSkeleton from "@/components/DashboardSkeleton";
 
@@ -189,8 +205,7 @@ export default function StaffMyTasks() {
   };
 
   return (
-    <Layout menuItems={StaffMenuItems} userRole="Staff">
-      <div className="space-y-6">
+    <div className="space-y-6">
         {/* Hero Section */}
         <Card className="overflow-hidden">
           <div
@@ -564,6 +579,5 @@ export default function StaffMyTasks() {
 
 
       </div>
-    </Layout>
   );
 }

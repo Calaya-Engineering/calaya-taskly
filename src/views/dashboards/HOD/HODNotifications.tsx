@@ -681,5 +681,5 @@ export default function HODNotifications() {
           </div>
         </div>
       </div>
-    );
-  }
+  );
+}

@@ -92,10 +92,18 @@ export default function MDDashboard() {
     const totalItems = tasksData.length;
     const taskCount = tasksData.filter((t) => t.type === "TASK").length;
     const activeJobs = tasksData.filter((t) => t.type === "JOB" && t.status !== "COMPLETED").length;
-    const overdueTasks = tasksData.filter((t) => t.dueDate && new Date(t.dueDate).getTime() < Date.now() && t.status !== "COMPLETED").length;
+    const overdueTasks = tasksData.filter((t) => {
+      if (!t.dueDate || t.status === "COMPLETED") return false;
+      const d = new Date(t.dueDate);
+      return !isNaN(d.getTime()) && d.getTime() < Date.now();
+    }).length;
     const completedTasks = tasksData.filter((t) => t.status === "COMPLETED").length;
     const completionRate = totalItems ? Math.round((completedTasks / totalItems) * 100) : 0;
-    const upcomingEvents = tasksData.filter((t) => (t.type === "EVENT" || t.type === "MEETING") && t.startDate && new Date(t.startDate).getTime() >= Date.now()).length;
+    const upcomingEvents = tasksData.filter((t) => {
+      if (!t.startDate) return false;
+      const d = new Date(t.startDate);
+      return !isNaN(d.getTime()) && d.getTime() >= Date.now();
+    }).length;
 
     return { totalItems, taskCount, activeJobs, overdueTasks, completionRate, upcomingEvents };
   }, [tasksData]);
@@ -128,32 +136,44 @@ export default function MDDashboard() {
   }, [tasksData]);
 
   const activity = useMemo(() => {
-    return notifications.map(n => ({
-      user: n.actor?.name || n.actorRole || "System",
-      action: n.message,
-      time: new Date(n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      link: "/md-dashboard/notifications"
-    }));
+    return notifications.map(n => {
+      const d = new Date(n.createdAt);
+      const timeStr = isNaN(d.getTime()) ? "--:--" : d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      return {
+        user: n.actor?.name || n.actorRole || "System",
+        action: n.message,
+        time: timeStr,
+        link: "/md-dashboard/notifications"
+      };
+    });
   }, [notifications]);
 
   const tenders = useMemo(() => {
-    return tendersData.map(t => ({
-      id: t.id,
-      title: t.title,
-      deadline: t.closingDate ? new Date(t.closingDate).toLocaleDateString() : "No deadline",
-      department: t.department || "General",
-      status: t.status
-    }));
+    return tendersData.map(t => {
+      const d = t.closingDate ? new Date(t.closingDate) : null;
+      const deadlineStr = d && !isNaN(d.getTime()) ? d.toLocaleDateString() : "No deadline";
+      return {
+        id: t.id,
+        title: t.title,
+        deadline: deadlineStr,
+        department: t.department || "General",
+        status: t.status
+      };
+    });
   }, [tendersData]);
 
   const announcements = useMemo(() => {
-    return (Array.isArray(rawAnnouncements) ? rawAnnouncements : []).map(a => ({
-      id: a.id,
-      title: a.title,
-      author: a.createdBy || "System",
-      time: new Date(a.date || a.createdAt).toLocaleDateString(),
-      priority: a.priority || "NORMAL"
-    }));
+    return (Array.isArray(rawAnnouncements) ? rawAnnouncements : []).map(a => {
+      const d = new Date(a.date || a.createdAt);
+      const timeStr = isNaN(d.getTime()) ? "N/A" : d.toLocaleDateString();
+      return {
+        id: a.id,
+        title: a.title,
+        author: a.createdBy || "System",
+        time: timeStr,
+        priority: a.priority || "NORMAL"
+      };
+    });
   }, [rawAnnouncements]);
 
   if (loading && tasksData.length === 0) {
@@ -161,8 +181,7 @@ export default function MDDashboard() {
   }
 
   return (
-    <Layout menuItems={MDMenuItems} userRole="MD">
-      <div className="space-y-6">
+    <div className="space-y-6">
         {/* Hero */}
         <Card className="overflow-hidden">
           <div
@@ -453,6 +472,5 @@ export default function MDDashboard() {
           </Card>
         </div>
       </div>
-    </Layout>
   );
 }

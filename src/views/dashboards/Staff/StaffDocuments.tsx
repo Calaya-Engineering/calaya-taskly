@@ -82,8 +82,12 @@ const getFileIcon = (fileType) => {
   }
 };
 
-const fmtDate = (iso) =>
-  iso ? new Date(iso).toLocaleDateString('en-US', { year: "numeric", month: "short", day: "numeric" }) : "Not set";
+const fmtDate = (iso) => {
+  if (!iso) return "Not set";
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return "Invalid Date";
+  return d.toLocaleDateString('en-US', { year: "numeric", month: "short", day: "numeric" });
+};
 
 import DashboardSkeleton from "@/components/DashboardSkeleton";
 
@@ -130,7 +134,11 @@ export default function StaffDocuments() {
   });
 
   if (loading && documentsData.length === 0) {
-    return <DashboardSkeleton />;
+    return (
+      <Layout menuItems={StaffMenuItems} userRole="Staff">
+        <DashboardSkeleton />
+      </Layout>
+    );
   }
 
   const filteredDocuments = useMemo(() => {

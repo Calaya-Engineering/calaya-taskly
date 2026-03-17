@@ -75,8 +75,12 @@ const daysLeftTone = (days) => {
 
 const clamp = (s = "", max = 150) => (s.length > max ? s.slice(0, max).trim() + "…" : s);
 
-const fmtDate = (iso) =>
-  iso ? new Date(iso).toLocaleDateString('en-US', { year: "numeric", month: "short", day: "numeric" }) : "Not set";
+const fmtDate = (iso) => {
+  if (!iso) return "Not set";
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return "Invalid Date";
+  return d.toLocaleDateString('en-US', { year: "numeric", month: "short", day: "numeric" });
+};
 
 import DashboardSkeleton from "@/components/DashboardSkeleton";
 
@@ -112,7 +116,11 @@ export default function StaffTenders() {
   }, [fetchTenders]);
 
   if (loading && tendersData.length === 0) {
-    return <DashboardSkeleton />;
+    return (
+      <Layout menuItems={StaffMenuItems} userRole="Staff">
+        <DashboardSkeleton />
+      </Layout>
+    );
   }
 
   useSSE("/api/realtime/events", (ev) => {
@@ -126,8 +134,10 @@ export default function StaffTenders() {
   });
 
   const getDaysRemaining = (closingDate) => {
+    if (!closingDate) return 0;
     const now = new Date();
     const deadline = new Date(closingDate);
+    if (isNaN(deadline.getTime())) return 0;
     const diffTime = deadline.getTime() - now.getTime();
     return Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
   };

@@ -149,7 +149,11 @@ export default function StaffNotifications() {
   });
 
   if (loading && notifications.length === 0) {
-    return <DashboardSkeleton />;
+    return (
+      <Layout menuItems={StaffMenuItems} userRole="Staff">
+        <DashboardSkeleton />
+      </Layout>
+    );
   }
 
   const filteredNotifications = useMemo(() => {
