@@ -72,7 +72,7 @@ const departmentTone = (dept) => {
 };
 
 const getFileIcon = (fileType) => {
-  switch (fileType.toLowerCase()) {
+  switch (String(fileType ?? "").toLowerCase()) {
     case 'pdf': return '📕';
     case 'word': return '📝';
     case 'excel': return '📊';

@@ -74,6 +74,7 @@ const REPORTS_PAGE_SIZE = 30;
 const REPORTS_VIEWPORT_HEIGHT = 560;
 const REPORTS_ROW_HEIGHT = 76;
 const REPORTS_OVERSCAN = 8;
+const safeLower = (value) => String(value ?? "").toLowerCase();
 
 
 const getStatusTone = (status) => {
@@ -248,12 +249,12 @@ export default function StaffDailyReports() {
 
       // Search filtering
       if (query) {
-        const matchesTitle = report.title?.toLowerCase().includes(query);
+        const matchesTitle = safeLower(report.title).includes(query);
         const matchesTask = report.entries?.some(entry =>
-          entry.taskName.toLowerCase().includes(query) ||
-          entry.objective.toLowerCase().includes(query)
+          safeLower(entry.taskName).includes(query) ||
+          safeLower(entry.objective).includes(query)
         );
-        const matchesId = report.id.toLowerCase().includes(query);
+        const matchesId = safeLower(report.id).includes(query);
         if (!matchesTitle && !matchesTask && !matchesId) return false;
       }
 

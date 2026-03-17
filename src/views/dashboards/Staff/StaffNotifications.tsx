@@ -51,6 +51,7 @@ const NOTIFICATIONS_PAGE_SIZE = 30;
 const NOTIFICATIONS_TABLE_VIEWPORT_HEIGHT = 600;
 const NOTIFICATIONS_ROW_HEIGHT = 144;
 const NOTIFICATIONS_OVERSCAN = 6;
+const safeLower = (value) => String(value ?? "").toLowerCase();
 
 export default function StaffNotifications() {
   const router = useRouter();
@@ -156,9 +157,9 @@ export default function StaffNotifications() {
       const matchesType = selectedType === "all" || notification.type === selectedType;
       const matchesSearch =
         !query ||
-        notification.title.toLowerCase().includes(query) ||
-        notification.message.toLowerCase().includes(query) ||
-        notification.sender.name.toLowerCase().includes(query);
+        safeLower(notification.title).includes(query) ||
+        safeLower(notification.message).includes(query) ||
+        safeLower(notification.sender?.name).includes(query);
       return matchesRead && matchesPriority && matchesType && matchesSearch;
     });
   }, [notifications, filter, selectedPriority, selectedType, searchTerm]);

@@ -1,13 +1,14 @@
 "use client";
 
 // pages/dashboards/Staff/StaffTenderDocuments.jsx
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { StaffMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
-import { fetchWithAuth, getAuthToken } from "@/lib/api";
+import { fetchWithAuth } from "@/lib/api";
+import { useSSE } from "@/hooks/useSSE";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }: { className?: string; children: React.ReactNode }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -157,6 +158,8 @@ const fmtDateTime = (iso) =>
     hour12: true
   }) : "Not set";
 
+const safeLower = (value) => String(value ?? "").toLowerCase();
+
 export default function StaffTenderDocuments() {
   const params = useParams() || {};
   const tenderId = params.tenderId;
@@ -179,6 +182,7 @@ export default function StaffTenderDocuments() {
 
   const [tenders, setTenders] = useState<Tender[]>([]);
   const [loading, setLoading] = useState(true);
+  const lastRefetchRef = useRef(0);
 
   const fetchTenders = useCallback(async () => {
     try {
@@ -200,19 +204,15 @@ export default function StaffTenderDocuments() {
 
   useEffect(() => {
     fetchTenders();
-
-    const token = getAuthToken();
-    if (!token) return;
-
-    const source = new EventSource(`/api/realtime/events?token=${token}`);
-    source.onmessage = (e) => {
-      try {
-        const data = JSON.parse(e.data);
-        if (data.type?.startsWith("tender:")) fetchTenders();
-      } catch { /* ignored */ }
-    };
-    return () => source.close();
   }, [fetchTenders]);
+
+  useSSE("/api/realtime/events", (ev) => {
+    if (!ev?.type || ev.type === "ping" || !String(ev.type).startsWith("tender:")) return;
+    const now = Date.now();
+    if (now - lastRefetchRef.current < 1500) return;
+    lastRefetchRef.current = now;
+    fetchTenders();
+  });
 
   const tenderDocuments = useMemo(() => {
     return selectedTender?.documents || [];
@@ -243,9 +243,9 @@ export default function StaffTenderDocuments() {
     return tenders.filter((tender) => {
       if (query) {
         const hit =
-          tender.title.toLowerCase().includes(query) ||
-          tender.referenceNo.toLowerCase().includes(query) ||
-          tender.department.toLowerCase().includes(query);
+          safeLower(tender.title).includes(query) ||
+          safeLower(tender.referenceNo).includes(query) ||
+          safeLower(tender.department).includes(query);
         if (!hit) return false;
       }
       return true;

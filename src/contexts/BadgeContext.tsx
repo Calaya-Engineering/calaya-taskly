@@ -289,10 +289,17 @@ export function BadgeProvider({ children }) {
         [prefix, pathname]
     );
 
-    useSSE("/api/tasks/events", handleTaskEvent, isAuthenticated && !authLoading);
     useSSE(
-        "/api/announcements/events",
-        handleAnnouncementEvent,
+        "/api/realtime/events",
+        (ev) => {
+            if (!ev?.type || ev.type === "ping") return;
+            if (String(ev.type).startsWith("task:")) {
+                handleTaskEvent(ev);
+            }
+            if (String(ev.type).startsWith("announcement:")) {
+                handleAnnouncementEvent(ev);
+            }
+        },
         isAuthenticated && !authLoading
     );
 

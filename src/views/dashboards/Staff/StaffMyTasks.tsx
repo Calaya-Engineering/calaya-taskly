@@ -81,6 +81,8 @@ const getProgressColor = (progress) => {
   return "#10B981";
 };
 
+const safeLower = (value) => String(value ?? "").toLowerCase();
+
 const fmtDate = (iso) => {
   if (!iso) return "Not set";
   const d = new Date(iso);
@@ -157,10 +159,10 @@ export default function StaffMyTasks() {
 
       const matchesSearch =
         !query ||
-        task.title.toLowerCase().includes(query) ||
-        (task.description || "").toLowerCase().includes(query) ||
+        safeLower(task.title).includes(query) ||
+        safeLower(task.description).includes(query) ||
         String(task.id).toLowerCase().includes(query) ||
-        (task.department || "").toLowerCase().includes(query);
+        safeLower(task.department).includes(query);
 
       return matchesFilter && matchesSearch;
     });

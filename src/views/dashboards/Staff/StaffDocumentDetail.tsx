@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { StaffMenuItems } from "@/utils/menus";
-import { fetchWithAuth } from "@/lib/api";
+import { fetchWithAuth, getAuthToken } from "@/lib/api";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -61,7 +61,7 @@ const accessTone = (access) => {
 };
 
 const getFileIcon = (fileType) => {
-  switch (fileType.toLowerCase()) {
+  switch (String(fileType ?? "").toLowerCase()) {
     case 'pdf': return '📕';
     case 'word': return '📝';
     case 'excel': return '📊';

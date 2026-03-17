@@ -113,7 +113,7 @@ const getDuration = (start, end) => {
 };
 
 const getFileIcon = (fileName) => {
-  const ext = fileName.split('.').pop().toLowerCase();
+  const ext = String(fileName ?? "").split('.').pop()?.toLowerCase() || "";
   switch (ext) {
     case 'pdf': return '📕';
     case 'doc':
@@ -904,4 +904,3 @@ export default function StaffEventDetail() {
     </Layout>
   );
 }
-

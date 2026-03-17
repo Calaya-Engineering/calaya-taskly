@@ -74,6 +74,7 @@ const daysLeftTone = (days) => {
 };
 
 const clamp = (s = "", max = 150) => (s.length > max ? s.slice(0, max).trim() + "…" : s);
+const safeLower = (value) => String(value ?? "").toLowerCase();
 
 const fmtDate = (iso) => {
   if (!iso) return "Not set";
@@ -142,10 +143,10 @@ export default function StaffTenders() {
 
       if (query) {
         const hit =
-          tender.title.toLowerCase().includes(query) ||
-          (tender.referenceNo || "").toLowerCase().includes(query) ||
-          tender.department.toLowerCase().includes(query) ||
-          (tender.category || "").toLowerCase().includes(query);
+          safeLower(tender.title).includes(query) ||
+          safeLower(tender.referenceNo).includes(query) ||
+          safeLower(tender.department).includes(query) ||
+          safeLower(tender.category).includes(query);
         if (!hit) return false;
       }
       return true;
