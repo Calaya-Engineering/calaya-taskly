@@ -133,14 +133,6 @@ export default function StaffDocuments() {
     }
   });
 
-  if (loading && documentsData.length === 0) {
-    return (
-      <Layout menuItems={StaffMenuItems} userRole="Staff">
-        <DashboardSkeleton />
-      </Layout>
-    );
-  }
-
   const filteredDocuments = useMemo(() => {
     const query = search.trim().toLowerCase();
     return documentsData.filter((doc) => {
@@ -183,6 +175,14 @@ export default function StaffDocuments() {
     setFilter('all');
     setSearch('');
   };
+
+  if (loading && documentsData.length === 0) {
+    return (
+      <Layout menuItems={StaffMenuItems} userRole="Staff">
+        <DashboardSkeleton />
+      </Layout>
+    );
+  }
 
   return (
     <Layout menuItems={StaffMenuItems} userRole="Staff">

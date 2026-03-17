@@ -146,10 +146,6 @@ export default function StaffMyTasks() {
     }
   });
 
-  if (loading && tasksData.length === 0) {
-    return <DashboardSkeleton />;
-  }
-
   const filteredTasks = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
     return tasksData.filter((task) => {
@@ -203,6 +199,10 @@ export default function StaffMyTasks() {
       toast.error("Failed to update status");
     }
   };
+
+  if (loading && tasksData.length === 0) {
+    return <DashboardSkeleton />;
+  }
 
   return (
     <div className="space-y-6">

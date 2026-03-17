@@ -170,14 +170,6 @@ export default function StaffEvents() {
     }
   });
 
-  if (loading && events.length === 0) {
-    return (
-      <Layout menuItems={StaffMenuItems} userRole="Staff">
-        <DashboardSkeleton />
-      </Layout>
-    );
-  }
-
   /* ---------- Derived data ---------- */
   const filteredEvents = useMemo(() => {
     return events
@@ -259,6 +251,14 @@ export default function StaffEvents() {
     setView("upcoming");
     setTypeFilter("all");
   };
+
+  if (loading && events.length === 0) {
+    return (
+      <Layout menuItems={StaffMenuItems} userRole="Staff">
+        <DashboardSkeleton />
+      </Layout>
+    );
+  }
 
   /* ---------- Render ---------- */
   return (

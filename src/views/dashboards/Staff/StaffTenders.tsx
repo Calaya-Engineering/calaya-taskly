@@ -115,14 +115,6 @@ export default function StaffTenders() {
     fetchTenders();
   }, [fetchTenders]);
 
-  if (loading && tendersData.length === 0) {
-    return (
-      <Layout menuItems={StaffMenuItems} userRole="Staff">
-        <DashboardSkeleton />
-      </Layout>
-    );
-  }
-
   useSSE("/api/realtime/events", (ev) => {
     if (!ev?.type || ev.type === "ping") return;
     if (ev.type.startsWith("tender:")) {
@@ -184,6 +176,14 @@ export default function StaffTenders() {
     setFilter("open");
     setSearch("");
   };
+
+  if (loading && tendersData.length === 0) {
+    return (
+      <Layout menuItems={StaffMenuItems} userRole="Staff">
+        <DashboardSkeleton />
+      </Layout>
+    );
+  }
 
   return (
     <Layout menuItems={StaffMenuItems} userRole="Staff">

@@ -148,14 +148,6 @@ export default function StaffNotifications() {
     fetchNotifications();
   });
 
-  if (loading && notifications.length === 0) {
-    return (
-      <Layout menuItems={StaffMenuItems} userRole="Staff">
-        <DashboardSkeleton />
-      </Layout>
-    );
-  }
-
   const filteredNotifications = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
     return notifications.filter((notification) => {
@@ -298,6 +290,14 @@ export default function StaffNotifications() {
     setSelectedType("all");
     setSearchTerm("");
   };
+
+  if (loading && notifications.length === 0) {
+    return (
+      <Layout menuItems={StaffMenuItems} userRole="Staff">
+        <DashboardSkeleton />
+      </Layout>
+    );
+  }
 
   const formatTimeAgo = (dateString) => {
     const date = new Date(dateString);

@@ -30,6 +30,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
   const [isVerifying, setIsVerifying] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const verificationAttemptRef = useRef<string | null>(null);
 
   const filteredDemos = DEMO_CREDENTIALS.filter(
     (d) =>
@@ -63,6 +64,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
     e.preventDefault();
     setError(null);
     setIsSubmitting(true);
+    verificationAttemptRef.current = null;
     clearSession(); // End any existing session before starting fresh login
 
     try {
@@ -104,6 +106,10 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
 
     if (code.length !== 6 || !pendingUserEmail || isVerifying) return;
 
+    const verificationKey = `${pendingUserEmail.trim().toLowerCase()}:${code}`;
+    if (verificationAttemptRef.current === verificationKey) return;
+
+    verificationAttemptRef.current = verificationKey;
     setIsVerifying(true);
     try {
       const res = await fetch("/api/auth/verify-otp", {
@@ -117,6 +123,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
       const data = await res.json();
 
       if (!res.ok) {
+        verificationAttemptRef.current = null;
         clearSession(); // End any existing session on OTP failure so user can retry cleanly
         setError(data?.error || "Invalid or expired code. Please request a new one.");
         return;
@@ -133,6 +140,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
         router.push("/md-dashboard");
       }
     } catch {
+      verificationAttemptRef.current = null;
       clearSession();
       setError("Something went wrong. Please try again.");
     } finally {
@@ -142,6 +150,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
 
   const handleBackToCredentials = () => {
     clearSession();
+    verificationAttemptRef.current = null;
     setStep("credentials");
     setPendingUserEmail(null);
     setOtp("");

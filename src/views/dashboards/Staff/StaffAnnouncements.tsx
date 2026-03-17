@@ -117,14 +117,6 @@ export default function StaffAnnouncements() {
     }
   });
 
-  if (isLoading && announcementsData.length === 0) {
-    return (
-      <Layout menuItems={StaffMenuItems} userRole="Staff">
-        <DashboardSkeleton />
-      </Layout>
-    );
-  }
-
   const unreadCount = useMemo(() => announcementsData.filter((a) => !a.read).length, [announcementsData]);
   const importantCount = useMemo(() => announcementsData.filter((a) => (a.priority === "URGENT" || a.priority === "IMPORTANT") && !a.read).length, [announcementsData]);
   const urgentCount = useMemo(() => announcementsData.filter((a) => a.priority === "URGENT" && !a.read).length, [announcementsData]);
@@ -161,6 +153,14 @@ export default function StaffAnnouncements() {
       toast.error("Failed to mark as read");
     }
   };
+
+  if (isLoading && announcementsData.length === 0) {
+    return (
+      <Layout menuItems={StaffMenuItems} userRole="Staff">
+        <DashboardSkeleton />
+      </Layout>
+    );
+  }
 
   return (
     <Layout menuItems={StaffMenuItems} userRole="Staff">
