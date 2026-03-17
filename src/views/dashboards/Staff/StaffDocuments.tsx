@@ -89,6 +89,21 @@ const fmtDate = (iso) => {
   return d.toLocaleDateString('en-US', { year: "numeric", month: "short", day: "numeric" });
 };
 
+const normalizeDocument = (doc) => ({
+  ...doc,
+  id: doc?.id ?? "",
+  title: doc?.title ?? "Untitled document",
+  description: doc?.description ?? "",
+  access: doc?.access ?? doc?.scope ?? "Department",
+  department: doc?.department ?? "Unassigned",
+  fileType: doc?.fileType ?? doc?.type ?? "",
+  fileSize: doc?.fileSize ?? doc?.size ?? "Unknown",
+  uploadedBy: doc?.uploadedBy ?? "Unknown",
+  uploadedDate: doc?.uploadedDate ?? doc?.date ?? doc?.createdAt ?? null,
+  downloads: Number(doc?.downloads ?? 0),
+  tasks: Array.isArray(doc?.tasks) ? doc.tasks : [],
+});
+
 import DashboardSkeleton from "@/components/DashboardSkeleton";
 
 export default function StaffDocuments() {
@@ -110,7 +125,7 @@ export default function StaffDocuments() {
       const res = await fetchWithAuth(`/api/documents?departments=${deptFilter}&limit=100`);
       if (res.ok) {
         const data = await res.json();
-        setDocumentsData(Array.isArray(data) ? data : []);
+        setDocumentsData(Array.isArray(data) ? data.map(normalizeDocument) : []);
       }
     } catch (err) {
       console.error(err);

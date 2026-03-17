@@ -6,6 +6,9 @@ import { getResendClient } from "@/lib/resend";
 import { saveOtp } from "../otp-store";
 import { signAuthToken } from "@/lib/jwt";
 
+const OTP_TTL_MS = 5 * 60 * 1000;
+const OTP_RESEND_AFTER_SEC = 60;
+
 async function sendOtpEmail(email: string, otp: string): Promise<string | null> {
   const resend = getResendClient();
   if (!resend) {
@@ -69,7 +72,7 @@ export async function POST(req: NextRequest) {
       };
 
       const otp = Math.floor(100000 + Math.random() * 900000).toString();
-      saveOtp(userInfo.email, otp, userInfo);
+      saveOtp(userInfo.email, otp, userInfo, OTP_TTL_MS);
 
       const sendError = await sendOtpEmail(userInfo.email, otp);
       if (sendError) {
@@ -84,6 +87,8 @@ export async function POST(req: NextRequest) {
         success: true,
         role: userInfo.role,
         route: userInfo.route,
+        otpExpiresInSec: Math.floor(OTP_TTL_MS / 1000),
+        resendAfterSec: OTP_RESEND_AFTER_SEC,
       });
     }
 
@@ -103,7 +108,7 @@ export async function POST(req: NextRequest) {
     };
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    saveOtp(userInfo.email, otp, userInfo);
+    saveOtp(userInfo.email, otp, userInfo, OTP_TTL_MS);
 
     const sendError = await sendOtpEmail(userInfo.email, otp);
     if (sendError) {
@@ -118,6 +123,8 @@ export async function POST(req: NextRequest) {
       success: true,
       role: userInfo.role,
       route: userInfo.route,
+      otpExpiresInSec: Math.floor(OTP_TTL_MS / 1000),
+      resendAfterSec: OTP_RESEND_AFTER_SEC,
     });
   } catch (error: any) {
 

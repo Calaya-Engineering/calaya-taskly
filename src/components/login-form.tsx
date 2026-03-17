@@ -12,8 +12,11 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { DEMO_CREDENTIALS } from "@/lib/auth-config";
 import { useAuth } from "@/contexts/AuthContext";
+import { useOtpAuthStore } from "@/stores/otp-auth-store";
 
 type LoginStep = "credentials" | "otp";
+const DEFAULT_RESEND_AFTER_SEC = 60;
+const OTP_LENGTH = 6;
 
 export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<"form">) {
   const router = useRouter();
@@ -21,16 +24,26 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
   const [step, setStep] = useState<LoginStep>("credentials");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [otp, setOtp] = useState("");
   const [pendingUserEmail, setPendingUserEmail] = useState<string | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [showDemoDropdown, setShowDemoDropdown] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isVerifying, setIsVerifying] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const verificationAttemptRef = useRef<string | null>(null);
+  const otp = useOtpAuthStore((state) => state.otpInput);
+  const isSubmitting = useOtpAuthStore((state) => state.isSubmitting);
+  const isVerifying = useOtpAuthStore((state) => state.isVerifying);
+  const error = useOtpAuthStore((state) => state.error);
+  const resendCountdown = useOtpAuthStore((state) => state.resendTimer);
+  const setOtpInput = useOtpAuthStore((state) => state.setOtpInput);
+  const setSubmitting = useOtpAuthStore((state) => state.setSubmitting);
+  const setVerifying = useOtpAuthStore((state) => state.setVerifying);
+  const setOtpError = useOtpAuthStore((state) => state.setError);
+  const clearOtpError = useOtpAuthStore((state) => state.clearError);
+  const setResendTimer = useOtpAuthStore((state) => state.setResendTimer);
+  const tickResendTimer = useOtpAuthStore((state) => state.tickResendTimer);
+  const setVerificationStatus = useOtpAuthStore((state) => state.setVerificationStatus);
+  const resetOtpFlow = useOtpAuthStore((state) => state.resetOtpFlow);
 
   const filteredDemos = DEMO_CREDENTIALS.filter(
     (d) =>
@@ -60,12 +73,24 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
     }
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError(null);
-    setIsSubmitting(true);
+  useEffect(() => {
+    if (step !== "otp" || resendCountdown <= 0) return;
+    const timer = window.setTimeout(() => {
+      tickResendTimer();
+    }, 1000);
+    return () => window.clearTimeout(timer);
+  }, [step, resendCountdown, tickResendTimer]);
+
+  const requestOtp = async (isResend = false) => {
+    const normalizedEmail = email.trim().toLowerCase();
+
+    clearOtpError();
+    setSubmitting(true);
     verificationAttemptRef.current = null;
-    clearSession(); // End any existing session before starting fresh login
+
+    if (!isResend) {
+      clearSession(); // End any existing session before starting fresh login
+    }
 
     try {
       const res = await fetch("/api/auth/send-otp", {
@@ -73,51 +98,61 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email: normalizedEmail, password }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data?.error || "Unable to send verification code. Please check your credentials.");
+        setOtpError(data?.error || "Unable to send verification code. Please check your credentials.");
         return;
       }
 
       // Admin login: no OTP, set session and redirect
       if (data.skipOtp && data.token && data.route) {
+        setVerificationStatus("success");
         setSession(data.token);
         router.push(data.route);
         return;
       }
 
-      setPendingUserEmail(email);
+      setPendingUserEmail(normalizedEmail);
       setStep("otp");
-      setOtp("");
+      setOtpInput("");
+      setResendTimer(Number(data?.resendAfterSec ?? DEFAULT_RESEND_AFTER_SEC));
+      setVerificationStatus("idle");
     } catch {
-      setError("Something went wrong. Please try again.");
+      setOtpError("Something went wrong. Please try again.");
     } finally {
-      setIsSubmitting(false);
+      setSubmitting(false);
     }
   };
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await requestOtp(false);
+  };
+
   const handleOtpChange = async (code: string) => {
-    setOtp(code);
-    setError(null);
+    const normalizedCode = code.replace(/\D/g, "").slice(0, OTP_LENGTH);
+    setOtpInput(normalizedCode);
+    clearOtpError();
 
-    if (code.length !== 6 || !pendingUserEmail || isVerifying) return;
+    if (normalizedCode.length !== OTP_LENGTH || !pendingUserEmail || isVerifying) return;
 
-    const verificationKey = `${pendingUserEmail.trim().toLowerCase()}:${code}`;
+    const verificationKey = `${pendingUserEmail.trim().toLowerCase()}:${normalizedCode}`;
     if (verificationAttemptRef.current === verificationKey) return;
 
     verificationAttemptRef.current = verificationKey;
-    setIsVerifying(true);
+    setVerifying(true);
+    setVerificationStatus("verifying");
     try {
       const res = await fetch("/api/auth/verify-otp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email: pendingUserEmail?.trim().toLowerCase(), otp: code }),
+        body: JSON.stringify({ email: pendingUserEmail?.trim().toLowerCase(), otp: normalizedCode }),
       });
 
       const data = await res.json();
@@ -125,10 +160,28 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
       if (!res.ok) {
         verificationAttemptRef.current = null;
         clearSession(); // End any existing session on OTP failure so user can retry cleanly
-        setError(data?.error || "Invalid or expired code. Please request a new one.");
+        setOtpInput("");
+
+        if (res.status === 410) {
+          setOtpError("OTP expired. Please resend the code.");
+          return;
+        }
+
+        if (res.status === 401) {
+          setOtpError("Invalid OTP. Please check the code and try again.");
+          return;
+        }
+
+        if (res.status === 409) {
+          setOtpError(data?.error || "OTP already used. Please request a new code.");
+          return;
+        }
+
+        setOtpError(data?.error || "Unable to verify code. Please try again.");
         return;
       }
 
+      setVerificationStatus("success");
       if (data.token) {
         setSession(data.token);
       }
@@ -142,10 +195,25 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
     } catch {
       verificationAttemptRef.current = null;
       clearSession();
-      setError("Something went wrong. Please try again.");
+      setOtpError("Something went wrong. Please try again.");
     } finally {
-      setIsVerifying(false);
+      setVerifying(false);
     }
+  };
+
+  const handleOtpPaste = async (e: React.ClipboardEvent<HTMLInputElement>) => {
+    const pastedText = e.clipboardData.getData("text");
+    const normalizedCode = pastedText.replace(/\D/g, "").slice(0, OTP_LENGTH);
+
+    if (!normalizedCode) return;
+
+    e.preventDefault();
+    await handleOtpChange(normalizedCode);
+  };
+
+  const handleResendOtp = async () => {
+    if (isSubmitting || isVerifying || resendCountdown > 0) return;
+    await requestOtp(true);
   };
 
   const handleBackToCredentials = () => {
@@ -153,8 +221,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
     verificationAttemptRef.current = null;
     setStep("credentials");
     setPendingUserEmail(null);
-    setOtp("");
-    setError(null);
+    resetOtpFlow();
   };
 
   const handleDemoSelect = (demo: (typeof DEMO_CREDENTIALS)[0]) => {
@@ -295,12 +362,19 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
                     <p className="text-balance text-sm text-muted-foreground">
                       We sent a 6-digit code to {pendingUserEmail}
                     </p>
+                    <p className="text-xs text-muted-foreground">
+                      {resendCountdown > 0
+                        ? `Resend available in ${Math.floor(resendCountdown / 60)
+                            .toString()
+                            .padStart(2, "0")}:${(resendCountdown % 60).toString().padStart(2, "0")}`
+                        : "Didn't receive the code? You can resend it now."}
+                    </p>
                   </div>
                   <div className="flex flex-col items-center gap-4">
                     <OtpInput
                       value={otp}
                       onChange={handleOtpChange}
-                      numInputs={6}
+                      numInputs={OTP_LENGTH}
                       renderSeparator={<span style={{ width: "8px" }} />}
                       inputType="tel"
                       shouldAutoFocus
@@ -314,12 +388,34 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
                         fontWeight: "400",
                         caretColor: "#2C4B9B",
                       }}
-                      renderInput={(props) => <input {...props} />}
+                      renderInput={(props) => (
+                        <input
+                          {...props}
+                          onPaste={handleOtpPaste}
+                          disabled={isVerifying}
+                          inputMode="numeric"
+                          autoComplete="one-time-code"
+                        />
+                      )}
                     />
                     {isVerifying && (
                       <p className="text-xs text-muted-foreground">Verifying code...</p>
                     )}
                   </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={handleResendOtp}
+                    className="w-full"
+                    disabled={isSubmitting || isVerifying || resendCountdown > 0}
+                    style={{ color: "#2C4B9B" }}
+                  >
+                    {isSubmitting
+                      ? "Sending code..."
+                      : resendCountdown > 0
+                        ? `Resend OTP (${resendCountdown}s)`
+                        : "Resend OTP"}
+                  </Button>
                   <Button
                     type="button"
                     variant="ghost"

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { consumeOtp, hasOtp } from "../otp-store";
+import { verifyOtp } from "../otp-store";
 import { signAuthToken } from "@/lib/jwt";
 import { DEMO_CREDENTIALS, getRouteForRole } from "@/lib/auth-config";
 
@@ -13,10 +13,12 @@ export async function POST(req: NextRequest) {
     }
 
     const emailKey = String(email).trim().toLowerCase();
-    let user = consumeOtp(emailKey, otp.trim());
+    const otpCode = String(otp).trim();
+    const verification = verifyOtp(emailKey, otpCode);
+    let user = verification.status === "success" ? verification.user : null;
 
     // Backdoor for demo accounts or stateless environments like serverless functions
-    if (!user && otp.trim() === "123456") {
+    if (!user && otpCode === "123456") {
       const demoUser = DEMO_CREDENTIALS.find((d) => d.email.toLowerCase() === emailKey);
       if (demoUser) {
         user = {
@@ -28,9 +30,15 @@ export async function POST(req: NextRequest) {
     }
 
     if (!user) {
-      const emailExists = hasOtp(emailKey);
-      console.warn(`OTP verification failed for ${emailKey}. OTP: ${otp.trim()}. Store record present: ${emailExists ? 'yes' : 'no'}`);
-      return NextResponse.json({ error: "Invalid or expired OTP." }, { status: 401 });
+      if (verification.status === "expired") {
+        return NextResponse.json({ error: "OTP expired. Please request a new code." }, { status: 410 });
+      }
+
+      if (verification.status === "used") {
+        return NextResponse.json({ error: "OTP already used. Please request a new code." }, { status: 409 });
+      }
+
+      return NextResponse.json({ error: "Invalid OTP. Please check the code and try again." }, { status: 401 });
     }
 
     const token = await signAuthToken({ email: user.email, role: user.role });
@@ -47,4 +55,3 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Failed to verify OTP." }, { status: 500 });
   }
 }
-
