@@ -53,7 +53,9 @@ const Pill = ({ children, tone = "default" }: { children: React.ReactNode; tone?
 
 const fmtDate = (iso) => {
   if (!iso) return "Not set";
-  return new Date(iso).toLocaleDateString("en-US", {
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return "Invalid Date";
+  return d.toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",

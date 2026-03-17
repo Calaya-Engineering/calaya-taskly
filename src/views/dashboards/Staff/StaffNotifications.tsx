@@ -105,7 +105,11 @@ export default function StaffNotifications() {
         type: n.actionType || "SYSTEM_ALERT",
         title: (n.actionType || "System Alert").replace(/_/g, " "),
         message: n.message,
-        time: new Date(n.createdAt).toLocaleString("en-US", { timeZone: "UTC" }),
+        time: (() => {
+          const d = new Date(n.createdAt);
+          if (isNaN(d.getTime())) return "Invalid Date";
+          return d.toLocaleString("en-US", { timeZone: "UTC" });
+        })(),
         timestamp: n.createdAt,
         read: n.read,
         link: "#",
@@ -303,7 +307,8 @@ export default function StaffNotifications() {
     if (diffMins < 60) return `${diffMins} minute${diffMins !== 1 ? 's' : ''} ago`;
     if (diffHours < 24) return `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
     if (diffDays < 7) return `${diffDays} day${diffDays !== 1 ? 's' : ''} ago`;
-
+    
+    if (isNaN(date.getTime())) return "Invalid Date";
     return date.toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
