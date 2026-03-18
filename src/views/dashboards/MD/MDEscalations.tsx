@@ -8,6 +8,7 @@ import { MDMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
 import { fetchWithAuth } from "@/lib/api";
 import { useSSE } from "@/hooks/useSSE";
+import { isTaskPendingApproval } from "@/lib/task-approval";
 
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
@@ -154,7 +155,7 @@ export default function MDEscalations() {
         const now = Date.now();
         // Include all tasks that are escalated, overdue, or at-risk (within 3 days)
         const relevant = (Array.isArray(tasks) ? tasks : []).filter((t) => {
-          if (t.status === "COMPLETED") return false;
+          if (t.status === "COMPLETED" || t.status === "CANCELLED" || isTaskPendingApproval(t.status)) return false;
           if (t.escalated) return true;
           const due = t.dueDate ? new Date(t.dueDate) : null;
           if (!due) return false;

@@ -280,11 +280,19 @@ export async function POST(req: NextRequest) {
     // Fire-and-forget: notification
     createNotification({
       actorEmail: auth.email,
-      actionType: "UPLOAD_DOCUMENT",
+      actionType: "REPORT_SUBMITTED",
       targetId: doc.id,
       message: urgentReview
         ? `🚨 URGENT: ${submitterName} (${auth.role}) submitted a daily report for ${department} on ${reportDate} — requires urgent review`
         : `${submitterName} (${auth.role}) submitted a daily report for ${department} on ${reportDate}`,
+      recipients: {
+        roles: ["HOD", "MD"],
+        departments: [department.trim()],
+        includeActor: false,
+      },
+      sendEmail: true,
+      emailSubject: `Daily Report Submitted — ${submitterName} | ${department.trim()} | ${reportDate}`,
+      linkPath: `/open/item?type=report&id=${doc.id}`,
     }).catch((e) => console.error("Notification error (non-fatal):", e));
 
     return NextResponse.json(

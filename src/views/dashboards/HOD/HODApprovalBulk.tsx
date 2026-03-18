@@ -8,6 +8,7 @@ import Layout from "@/components/Layout";
 import { HODMenuItems } from "@/utils/menus";
 import { fetchWithAuth } from "@/lib/api";
 import { useSSE } from "@/hooks/useSSE";
+import { TASK_STATUS_PENDING_HOD_APPROVAL } from "@/lib/task-approval";
 
 const Card = ({ className = "", children }: any) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -48,7 +49,7 @@ export default function HODApprovalBulk() {
 
   const fetchApprovals = useCallback(async () => {
     try {
-      const res = await fetchWithAuth("/api/tasks?limit=100&status=PENDING");
+      const res = await fetchWithAuth(`/api/tasks?limit=100&status=${TASK_STATUS_PENDING_HOD_APPROVAL}`);
       if (res.ok) {
         const tasks = await res.json();
         const mapped = tasks.map((t: any) => ({
@@ -109,7 +110,7 @@ export default function HODApprovalBulk() {
         })
       );
       await Promise.all(promises);
-      toast.success(`Successfully approved ${selectedItems.length} items`);
+      toast.success(`Forwarded ${selectedItems.length} items to MD`);
       setSelectedItems([]);
       fetchApprovals();
     } catch {
@@ -206,7 +207,7 @@ export default function HODApprovalBulk() {
                   className="px-6 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition"
                   style={{ backgroundColor: '#10B981' }}
                 >
-                  ✓ Approve All
+                  ✓ Forward All
                 </button>
                 <button
                   onClick={handleBulkReject}

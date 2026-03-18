@@ -54,9 +54,6 @@ const btnBase = "px-5 py-3 rounded-2xl font-semibold active:scale-[0.99] transit
 const btnOutline = `${btnBase} border bg-white hover:bg-gray-50`;
 const btnSolid = `${btnBase} text-white`;
 
-const textareaBase =
-  "w-full px-4 py-3 rounded-2xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100";
-
 const priorityTone = (priority) => {
   switch (priority) {
     case "URGENT": return "danger";
@@ -127,9 +124,6 @@ export default function SecretaryAnnouncementDetail() {
   const params = useParams() || {};
   const announcementId = params.announcementId;
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState('content');
-  const [newComment, setNewComment] = useState('');
-  const [isInternal, setIsInternal] = useState(false);
 
   const [announcement, setAnnouncement] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -187,13 +181,6 @@ export default function SecretaryAnnouncementDetail() {
 
   const downloadDocument = (doc) => toast.info(`Downloading ${doc.name} (${doc.size})`);
   const handleDownloadAll = () => toast.info('Downloading all attachments...');
-
-  const handleSubmitComment = () => {
-    if (!newComment.trim()) return toast.warning('Please enter a comment');
-    toast.success('Comment submitted!');
-    setNewComment('');
-    setIsInternal(false);
-  };
 
   if (loading) {
     return (
@@ -305,222 +292,81 @@ export default function SecretaryAnnouncementDetail() {
           {/* MAIN */}
           <div className="lg:col-span-2 space-y-6">
             <Card className="overflow-hidden">
-              {/* Tabs */}
-              <div className="flex border-b border-gray-200/70">
-                {[
-                  { id: "content", label: "Content" },
-                  { id: "comments", label: `Comments (${announcement.comments.length})` },
-                  { id: "readby", label: `Read By (${announcement.readBy.length})` },
-                ].map((t) => (
-                  <button
-                    key={t.id}
-                    onClick={() => setActiveTab(t.id)}
-                    className={`px-6 py-4 text-sm font-semibold transition ${activeTab === t.id ? "text-blue-700" : "text-gray-500 hover:text-gray-700"
-                      }`}
-                    style={{
-                      borderBottom: activeTab === t.id ? "2px solid var(--primary-blue)" : "2px solid transparent",
-                    }}
-                  >
-                    {t.label}
-                  </button>
-                ))}
-              </div>
-
-              {/* Content */}
-              {activeTab === "content" && (
-                <div className="p-6">
-                  <div className="flex flex-wrap items-center gap-2 mb-4">
-                    <Pill tone={scopeTone(announcement.scope)}>{announcement.scope}</Pill>
-                    {announcement.expiresAt && <Pill tone="muted">Expires: {formatDate(announcement.expiresAt)}</Pill>}
-                    <Pill tone="muted">ID: {announcement.id}</Pill>
-                  </div>
-
-                  <div className="rounded-2xl border border-gray-200/70 bg-white p-5">
-                    <pre className="whitespace-pre-wrap font-sans text-gray-700 leading-relaxed">{announcement.message}</pre>
-                  </div>
-
-                  {/* Documents */}
-                  {announcement.documents?.length > 0 && (
-                    <div className="mt-6">
-                      <h4 className="text-sm font-extrabold mb-3" style={{ color: "var(--primary-blue)" }}>
-                        Attached Documents ({announcement.documents.length})
-                      </h4>
-
-                      <div className="grid grid-cols-1 gap-3">
-                        {announcement.documents.map((doc) => (
-                          <div
-                            key={doc.id}
-                            className="p-4 rounded-2xl border border-gray-200/70 bg-white flex flex-col md:flex-row md:items-center md:justify-between gap-3 transition"
-                          >
-                            <div className="flex items-start gap-3 min-w-0">
-                              <div className="w-11 h-11 rounded-2xl bg-blue-50 flex items-center justify-center text-xl">
-                                {getFileIcon(doc.name)}
-                              </div>
-                              <div className="min-w-0">
-                                <p className="font-extrabold text-gray-900 truncate">{doc.name}</p>
-                                <p className="text-xs text-gray-500 mt-1">
-                                  Uploaded by {doc.uploadedBy} • {doc.date} • {doc.size}
-                                </p>
-                              </div>
-                            </div>
-                            <button className={btnSolid} style={{ backgroundColor: "var(--secondary-blue)" }} onClick={() => downloadDocument(doc)}>
-                              Download
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Additional Attachments */}
-                  {announcement.attachments?.length > 0 && (
-                    <div className="mt-6">
-                      <h4 className="text-sm font-extrabold mb-3" style={{ color: "var(--primary-blue)" }}>
-                        Additional Attachments ({announcement.attachments.length})
-                      </h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        {announcement.attachments.map((att) => (
-                          <div
-                            key={att.id}
-                            className="p-4 rounded-2xl border border-gray-200/70 bg-white transition flex items-center justify-between"
-                          >
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-2xl bg-blue-50 flex items-center justify-center text-xl">
-                                {att.type === 'image' ? '🖼️' : '📄'}
-                              </div>
-                              <div>
-                                <p className="font-extrabold text-sm text-gray-900">{att.name}</p>
-                                <p className="text-xs text-gray-500 mt-1">{att.size}</p>
-                              </div>
-                            </div>
-                            <button
-                              onClick={() => downloadDocument(att)}
-                              className="text-sm font-semibold" style={{ color: "var(--primary-blue)" }}
-                            >
-                              View
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+              <div className="p-6">
+                <div className="flex flex-wrap items-center gap-2 mb-4">
+                  <Pill tone={scopeTone(announcement.scope)}>{announcement.scope}</Pill>
+                  {announcement.expiresAt && <Pill tone="muted">Expires: {formatDate(announcement.expiresAt)}</Pill>}
+                  <Pill tone="muted">ID: {announcement.id}</Pill>
                 </div>
-              )}
 
-              {/* Comments */}
-              {activeTab === "comments" && (
-                <div className="p-6">
-                  <SectionTitle title="Comments" subtitle={`${announcement.comments.length} comments`} />
+                <div className="rounded-2xl border border-gray-200/70 bg-white p-5">
+                  <pre className="whitespace-pre-wrap font-sans text-gray-700 leading-relaxed">{announcement.message}</pre>
+                </div>
 
-                  {/* Add Comment */}
-                  <div className="mt-6 mb-8">
-                    <div className="flex items-start gap-4">
-                      <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-extrabold text-sm shrink-0" style={{ backgroundColor: "var(--secondary-blue)" }}>
-                        S
-                      </div>
-                      <div className="flex-1">
-                        <textarea
-                          value={newComment}
-                          onChange={(e) => setNewComment(e.target.value)}
-                          placeholder="Type your comment or question..."
-                          className={textareaBase}
-                          rows="3"
-                        />
-                        <div className="mt-3 flex items-center justify-between">
-                          <label className="flex items-center gap-2 cursor-pointer">
-                            <input
-                              type="checkbox"
-                              checked={isInternal}
-                              onChange={(e) => setIsInternal(e.target.checked)}
-                              className="rounded border-gray-300"
-                            />
-                            <span className="text-sm text-gray-600">Mark as internal comment</span>
-                          </label>
-                          <button
-                            onClick={handleSubmitComment}
-                            disabled={!newComment.trim()}
-                            className="px-5 py-2.5 rounded-2xl text-sm font-semibold text-white active:scale-[0.99] transition disabled:opacity-50 disabled:cursor-not-allowed"
-                            style={{ backgroundColor: "var(--primary-blue)" }}
-                          >
-                            Submit Comment
+                {announcement.documents?.length > 0 && (
+                  <div className="mt-6">
+                    <h4 className="text-sm font-extrabold mb-3" style={{ color: "var(--primary-blue)" }}>
+                      Attached Documents ({announcement.documents.length})
+                    </h4>
+
+                    <div className="grid grid-cols-1 gap-3">
+                      {announcement.documents.map((doc) => (
+                        <div
+                          key={doc.id}
+                          className="p-4 rounded-2xl border border-gray-200/70 bg-white flex flex-col md:flex-row md:items-center md:justify-between gap-3 transition"
+                        >
+                          <div className="flex items-start gap-3 min-w-0">
+                            <div className="w-11 h-11 rounded-2xl bg-blue-50 flex items-center justify-center text-xl">
+                              {getFileIcon(doc.name)}
+                            </div>
+                            <div className="min-w-0">
+                              <p className="font-extrabold text-gray-900 truncate">{doc.name}</p>
+                              <p className="text-xs text-gray-500 mt-1">
+                                Uploaded by {doc.uploadedBy} • {doc.date} • {doc.size}
+                              </p>
+                            </div>
+                          </div>
+                          <button className={btnSolid} style={{ backgroundColor: "var(--secondary-blue)" }} onClick={() => downloadDocument(doc)}>
+                            Download
                           </button>
                         </div>
-                      </div>
+                      ))}
                     </div>
                   </div>
+                )}
 
-                  {/* Comments List */}
-                  <div className="space-y-4">
-                    {announcement.comments.map((c) => (
-                      <div key={c.id} className={`p-4 rounded-2xl border ${c.isInternal ? 'bg-amber-50/50 border-amber-200' : 'bg-gray-50 border-gray-200/70'
-                        }`}>
-                        <div className="flex items-start justify-between gap-3">
+                {announcement.attachments?.length > 0 && (
+                  <div className="mt-6">
+                    <h4 className="text-sm font-extrabold mb-3" style={{ color: "var(--primary-blue)" }}>
+                      Additional Attachments ({announcement.attachments.length})
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {announcement.attachments.map((att) => (
+                        <div
+                          key={att.id}
+                          className="p-4 rounded-2xl border border-gray-200/70 bg-white transition flex items-center justify-between"
+                        >
                           <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-xl flex items-center justify-center text-white text-xs font-extrabold" style={{ backgroundColor: c.isInternal ? "#F59E0B" : "var(--primary-blue)" }}>
-                              {c.user?.[0]}
+                            <div className="w-10 h-10 rounded-2xl bg-blue-50 flex items-center justify-center text-xl">
+                              {att.type === 'image' ? '🖼️' : '📄'}
                             </div>
                             <div>
-                              <div className="flex items-center gap-2">
-                                <span className="font-extrabold text-xs text-gray-900">{c.user}</span>
-                                <Pill tone={roleTone(c.role)}>{c.role}</Pill>
-                                {c.isInternal && <Pill tone="warn">Internal</Pill>}
-                              </div>
-                              <p className="text-xs text-gray-500 mt-1">{formatDateTime(c.timestamp)}</p>
+                              <p className="font-extrabold text-sm text-gray-900">{att.name}</p>
+                              <p className="text-xs text-gray-500 mt-1">{att.size}</p>
                             </div>
                           </div>
+                          <button
+                            onClick={() => downloadDocument(att)}
+                            className="text-sm font-semibold" style={{ color: "var(--primary-blue)" }}
+                          >
+                            View
+                          </button>
                         </div>
-                        <p className="text-sm text-gray-700 mt-3 ml-11">{c.comment}</p>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
-
-              {/* Read By */}
-              {activeTab === "readby" && (
-                <div className="p-6">
-                  <SectionTitle title="Read By" subtitle={`${announcement.readBy.length} people`} />
-
-                  <div className="mt-6 space-y-3">
-                    {announcement.readBy.map((reader, index) => (
-                      <div key={index} className="flex items-center justify-between p-4 rounded-2xl border border-gray-200/70 hover:bg-gray-50 transition">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-extrabold text-sm" style={{ backgroundColor: "var(--secondary-blue)" }}>
-                            {reader.name.charAt(0)}
-                          </div>
-                          <div>
-                            <p className="font-extrabold text-sm text-gray-900">{reader.name}</p>
-                            <p className="text-xs text-gray-500 mt-1">{reader.department}</p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-sm font-semibold text-gray-800">{formatDateTime(reader.readAt)}</p>
-                          <p className="text-xs text-gray-500 mt-1">Read</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Card className="p-5 bg-blue-50 border-blue-100 text-center">
-                      <p className="text-2xl font-extrabold" style={{ color: "var(--primary-blue)" }}>
-                        {announcement.readCount}
-                      </p>
-                      <p className="text-sm text-gray-600 mt-1">Total Views</p>
-                    </Card>
-                    <Card className="p-5 bg-emerald-50 border-emerald-100 text-center">
-                      <p className="text-2xl font-extrabold text-emerald-700">
-                        {[...new Set(announcement.readBy.map((x) => x.department))].length}
-                      </p>
-                      <p className="text-sm text-gray-600 mt-1">Departments</p>
-                    </Card>
-                    <Card className="p-5 bg-purple-50 border-purple-100 text-center">
-                      <p className="text-2xl font-extrabold text-purple-700">{announcement.comments.length}</p>
-                      <p className="text-sm text-gray-600 mt-1">Comments</p>
-                    </Card>
-                  </div>
-                </div>
-              )}
+                )}
+              </div>
             </Card>
           </div>
 
@@ -614,15 +460,15 @@ export default function SecretaryAnnouncementDetail() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="text-center p-4 rounded-2xl border border-gray-200/70">
                     <p className="text-2xl font-extrabold" style={{ color: "var(--primary-blue)" }}>
-                      {announcement.readCount}
+                      {announcement.documents.length}
                     </p>
-                    <p className="text-xs text-gray-500 mt-1">Total Views</p>
+                    <p className="text-xs text-gray-500 mt-1">Documents</p>
                   </div>
                   <div className="text-center p-4 rounded-2xl border border-gray-200/70">
                     <p className="text-2xl font-extrabold" style={{ color: "#10B981" }}>
-                      {announcement.comments.length}
+                      {announcement.attachments.length}
                     </p>
-                    <p className="text-xs text-gray-500 mt-1">Comments</p>
+                    <p className="text-xs text-gray-500 mt-1">Attachments</p>
                   </div>
                 </div>
 

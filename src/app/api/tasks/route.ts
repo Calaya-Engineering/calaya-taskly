@@ -3,8 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { emitTaskEvent } from "@/lib/task-events";
 import { emitAnnouncementEvent } from "@/lib/announcement-events";
-import { createNotification } from "@/lib/notifications";
 import { getManagedDepartmentNamesByUserId } from "@/lib/hod-departments";
+import { ensureMidpointRemindersForTasks, notifyTaskAssignments } from "@/lib/task-notifications";
 
 /**
  * GET /api/tasks - List tasks with optional filters.
@@ -107,6 +107,10 @@ export async function GET(req: NextRequest) {
         },
       });
 
+    if (!compact && Array.isArray(tasks) && tasks.length > 0) {
+      await ensureMidpointRemindersForTasks(tasks);
+    }
+
     return NextResponse.json(tasks);
   } catch (error) {
     console.error("Error fetching tasks:", error);
@@ -202,12 +206,13 @@ export async function POST(req: NextRequest) {
       emitTaskEvent({ type: "task:assigned", taskId: task.id, userId: a.userId });
     }
 
-    createNotification({
-      actorEmail: auth.email,
-      actionType: 'CREATE_TASK',
-      targetId: task.id,
-      message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) created a new task: ${task.title}`
-    });
+    if (task.assignments.length > 0) {
+      await notifyTaskAssignments({
+        actorEmail: auth.email,
+        task,
+        mode: "created",
+      });
+    }
 
     // Put all meetings/events in the announcement table as well
     if (task.type === "MEETING" || task.type === "EVENT") {

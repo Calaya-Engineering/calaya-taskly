@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { resolveBadgeSectionPath, TRACKED_BADGE_PATHS, getDashboardPrefixForRole } from "@/lib/badge-paths";
 import { getManagedDepartmentNamesByUserId } from "@/lib/hod-departments";
+import { TASK_STATUS_PENDING_HOD_APPROVAL, TASK_STATUS_PENDING_MD_APPROVAL } from "@/lib/task-approval";
 
 type BadgeCounts = Record<string, number>;
 
@@ -230,7 +231,12 @@ export async function getBadgeCountsForUser(email: string): Promise<BadgeCounts>
     approvalsSection,
     await prisma.task.count({
       where: {
-        status: "PENDING",
+        status:
+          prefix === "/hod-dashboard"
+            ? TASK_STATUS_PENDING_HOD_APPROVAL
+            : prefix === "/md-dashboard"
+              ? TASK_STATUS_PENDING_MD_APPROVAL
+              : "PENDING",
         type: {
           not: "EVENT",
         },

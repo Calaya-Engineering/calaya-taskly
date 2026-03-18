@@ -3,7 +3,13 @@ import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { emitTaskEvent } from "@/lib/task-events";
 import { emitAnnouncementEvent } from "@/lib/announcement-events";
-import { createNotification } from "@/lib/notifications";
+import { getTaskSubmissionStatusForRole } from "@/lib/task-approval";
+import {
+  ensureMidpointRemindersForTasks,
+  notifyTaskApprovalTransition,
+  notifyTaskAssignments,
+  notifyTaskUpdated,
+} from "@/lib/task-notifications";
 
 const taskInclude = {
   createdBy: { select: { id: true, email: true, name: true, role: true } },
@@ -42,12 +48,7 @@ export async function GET(
       return NextResponse.json({ error: "Task not found" }, { status: 404 });
     }
 
-    createNotification({
-      actorEmail: auth.email,
-      actionType: 'VIEW_TASK',
-      targetId: task.id,
-      message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) viewed task: ${task.title}`
-    });
+    await ensureMidpointRemindersForTasks([task]);
 
     return NextResponse.json(task);
   } catch (error) {
@@ -86,7 +87,7 @@ export async function PATCH(
   try {
     const existing = await prisma.task.findUnique({
       where: { id: taskId },
-      select: { id: true, createdById: true },
+      include: taskInclude,
     });
 
     if (!existing) {
@@ -106,6 +107,7 @@ export async function PATCH(
       estimatedHours,
       visibility,
       assigneeIds,
+      comment,
     } = body as {
       title?: string;
       description?: string;
@@ -118,6 +120,7 @@ export async function PATCH(
       estimatedHours?: number;
       visibility?: string;
       assigneeIds?: number[];
+      comment?: string;
     };
 
     const data: Record<string, unknown> = {};
@@ -125,7 +128,9 @@ export async function PATCH(
     if (description !== undefined) data.description = description?.trim() || null;
     if (department !== undefined) data.department = department?.trim() || null;
     if (priority) data.priority = priority;
-    if (status) data.status = status;
+    if (status) {
+      data.status = status === "COMPLETED" ? getTaskSubmissionStatusForRole(auth.role) : status;
+    }
     if (type) data.type = type;
     if (startDate !== undefined) data.startDate = startDate ? new Date(startDate) : null;
     if (dueDate !== undefined) data.dueDate = dueDate ? new Date(dueDate) : null;
@@ -134,7 +139,16 @@ export async function PATCH(
 
     const updateData: Record<string, unknown> = { ...data };
 
+    const previousStatus = existing.status;
+    const previousAssigneeIds = existing.assignments.map((assignment) => assignment.userId).sort((a, b) => a - b);
+    let assignmentsChanged = false;
+    const contentChangedKeys = new Set(Object.keys(data).filter((key) => key !== "status"));
+
     if (Array.isArray(assigneeIds)) {
+      const nextAssigneeIds = [...assigneeIds].sort((a, b) => a - b);
+      assignmentsChanged =
+        previousAssigneeIds.length !== nextAssigneeIds.length ||
+        previousAssigneeIds.some((userId, index) => userId !== nextAssigneeIds[index]);
       await prisma.taskAssignment.deleteMany({ where: { taskId } });
       if (assigneeIds.length > 0) {
         await prisma.taskAssignment.createMany({
@@ -159,11 +173,27 @@ export async function PATCH(
 
     emitTaskEvent({ type: "task:updated", taskId });
 
-    createNotification({
+    if (assignmentsChanged && task.assignments.length > 0) {
+      await notifyTaskAssignments({
+        actorEmail: auth.email,
+        task,
+        mode: "updated",
+      });
+    }
+
+    if (contentChangedKeys.size > 0 || Boolean(comment?.trim())) {
+      await notifyTaskUpdated({
+        actorEmail: auth.email,
+        task,
+        comment,
+      });
+    }
+
+    await notifyTaskApprovalTransition({
       actorEmail: auth.email,
-      actionType: 'UPDATE_TASK',
-      targetId: task.id,
-      message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) updated task: ${task.title}`
+      task,
+      previousStatus,
+      nextStatus: task.status,
     });
 
     // Put all meetings/events in the announcement table as well

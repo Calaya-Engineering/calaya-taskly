@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { emitTaskEvent } from "@/lib/task-events";
-import { createNotification } from "@/lib/notifications";
+import { notifyTaskAssignments, notifyTaskUnassigned } from "@/lib/task-notifications";
 
 /**
  * POST /api/tasks/[id]/assign - Assign user(s) to a task.
@@ -42,7 +42,14 @@ export async function POST(
 
     const task = await prisma.task.findUnique({
       where: { id: taskId },
-      select: { id: true },
+      include: {
+        createdBy: { select: { id: true, email: true, name: true, role: true } },
+        assignments: {
+          include: {
+            user: { select: { id: true, email: true, name: true, role: true, department: true } },
+          },
+        },
+      },
     });
     if (!task) {
       return NextResponse.json({ error: "Task not found" }, { status: 404 });
@@ -61,12 +68,24 @@ export async function POST(
       emitTaskEvent({ type: "task:assigned", taskId, userId: uid });
     }
 
-    createNotification({
-      actorEmail: auth.email,
-      actionType: 'ASSIGN_TASK',
-      targetId: taskId,
-      message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) assigned a task.`
+    const updatedTask = await prisma.task.findUnique({
+      where: { id: taskId },
+      include: {
+        createdBy: { select: { id: true, email: true, name: true, role: true } },
+        assignments: {
+          include: {
+            user: { select: { id: true, email: true, name: true, role: true, department: true } },
+          },
+        },
+      },
     });
+    if (updatedTask) {
+      await notifyTaskAssignments({
+        actorEmail: auth.email,
+        task: updatedTask,
+        mode: "updated",
+      });
+    }
 
     return NextResponse.json({
       success: true,
@@ -104,17 +123,24 @@ export async function DELETE(
   }
 
   try {
+    const existingTask = await prisma.task.findUnique({
+      where: { id: taskId },
+      select: { id: true, title: true },
+    });
+    if (!existingTask) {
+      return NextResponse.json({ error: "Task not found" }, { status: 404 });
+    }
+
     const deleted = await prisma.taskAssignment.deleteMany({
       where: { taskId, userId },
     });
 
     if (deleted.count > 0) {
       emitTaskEvent({ type: "task:unassigned", taskId, userId });
-      createNotification({
+      await notifyTaskUnassigned({
         actorEmail: auth.email,
-        actionType: 'UNASSIGN_TASK',
-        targetId: taskId,
-        message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) unassigned a user from a task.`
+        task: existingTask,
+        recipientIds: [userId],
       });
     }
 

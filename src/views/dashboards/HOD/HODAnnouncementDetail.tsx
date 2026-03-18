@@ -36,9 +36,6 @@ const btnBase = "px-5 py-3 rounded-2xl font-semibold active:scale-[0.99] transit
 const btnOutline = `${btnBase} border bg-white hover:bg-gray-50`;
 const btnSolid = `${btnBase} text-white`;
 
-const textareaBase =
-  "w-full px-4 py-3 rounded-2xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100";
-
 export default function HODAnnouncementDetail() {
   const params = useParams() || {};
   const announcementId = params.announcementId;
@@ -46,7 +43,6 @@ export default function HODAnnouncementDetail() {
   if (!announcementId) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
 
   const [activeTab, setActiveTab] = useState("content");
-  const [newComment, setNewComment] = useState("");
   const [isAcknowledged, setIsAcknowledged] = useState(false);
 
   const [announcement, setAnnouncement] = useState(null);
@@ -128,12 +124,6 @@ export default function HODAnnouncementDetail() {
   const formatDateTime = (dateTime) => {
     const date = new Date(dateTime);
     return date.toLocaleString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
-  };
-
-  const handleSubmitComment = () => {
-    if (!newComment.trim()) return toast.warning("Please enter a comment");
-    toast.success("Comment submitted!");
-    setNewComment("");
   };
 
   const handleAcknowledge = () => {
@@ -275,8 +265,6 @@ export default function HODAnnouncementDetail() {
               <div className="flex border-b border-gray-200/70">
                 {[
                   { id: "content", label: "Content" },
-                  { id: "comments", label: `Comments (${announcement.comments.length})` },
-                  { id: "readby", label: `Read By (${announcement.readBy.length})` },
                   { id: "acknowledgements", label: `Acknowledgements (${announcement.pendingAcknowledgements.length} pending)` },
                 ].map((t) => (
                   <button
@@ -364,90 +352,6 @@ export default function HODAnnouncementDetail() {
                       </div>
                     </div>
                   )}
-                </div>
-              )}
-
-              {/* Comments Tab */}
-              {activeTab === "comments" && (
-                <div className="p-6">
-                  <div className="space-y-4">
-                    {announcement.comments.map((c) => (
-                      <div key={c.id} className="p-4 rounded-2xl border border-gray-200/70 bg-gray-50">
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-2xl bg-blue-50 flex items-center justify-center font-extrabold" style={{ color: "var(--primary-blue)" }}>
-                              {c.user?.[0]}
-                            </div>
-                            <div>
-                              <p className="font-extrabold text-gray-900">{c.user}</p>
-                              <p className="text-xs text-gray-500">{formatDateTime(c.timestamp)}</p>
-                            </div>
-                          </div>
-                        </div>
-                        <p className="text-gray-700 mt-3">{c.comment}</p>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="mt-6 pt-6 border-t border-gray-200/70">
-                    <h4 className="text-sm font-extrabold mb-3" style={{ color: "var(--primary-blue)" }}>
-                      Add a Comment
-                    </h4>
-                    <textarea
-                      value={newComment}
-                      onChange={(e) => setNewComment(e.target.value)}
-                      rows={4}
-                      className={textareaBase}
-                      placeholder="Type your comment or question..."
-                    />
-                    <div className="mt-3 flex justify-end">
-                      <button className={btnSolid} style={{ backgroundColor: "var(--secondary-blue)" }} onClick={handleSubmitComment} type="button">
-                        Post Comment
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Read By Tab */}
-              {activeTab === "readby" && (
-                <div className="p-6">
-                  <div className="grid grid-cols-1 gap-3">
-                    {announcement.readBy.map((r, idx) => (
-                      <div key={idx} className="p-4 rounded-2xl border border-gray-200/70 hover:bg-gray-50 transition flex items-center justify-between gap-3">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-2xl bg-blue-50 flex items-center justify-center font-extrabold" style={{ color: "var(--primary-blue)" }}>
-                            {r.name?.[0]}
-                          </div>
-                          <div>
-                            <p className="font-extrabold text-gray-900">{r.name}</p>
-                            <p className="text-xs text-gray-500">{r.department}</p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-sm font-semibold text-gray-800">{formatDateTime(r.readAt)}</p>
-                          <p className="text-xs text-gray-500">Read</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Card className="p-5 bg-blue-50 border-blue-100 text-center">
-                      <p className="text-2xl font-extrabold" style={{ color: "var(--primary-blue)" }}>
-                        {announcement.readCount}
-                      </p>
-                      <p className="text-sm text-gray-600 mt-1">Total Views</p>
-                    </Card>
-                    <Card className="p-5 bg-emerald-50 border-emerald-100 text-center">
-                      <p className="text-2xl font-extrabold text-emerald-700">{[...new Set(announcement.readBy.map((x) => x.department))].length}</p>
-                      <p className="text-sm text-gray-600 mt-1">Departments</p>
-                    </Card>
-                    <Card className="p-5 bg-purple-50 border-purple-100 text-center">
-                      <p className="text-2xl font-extrabold text-purple-700">{Math.round((announcement.readBy.length / 150) * 100)}%</p>
-                      <p className="text-sm text-gray-600 mt-1">Read Rate</p>
-                    </Card>
-                  </div>
                 </div>
               )}
 
@@ -579,9 +483,9 @@ export default function HODAnnouncementDetail() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="text-center">
                   <p className="text-2xl font-extrabold" style={{ color: "var(--primary-blue)" }}>
-                    {announcement.comments.length}
+                    {announcement.acknowledgedCount}
                   </p>
-                  <p className="text-xs text-gray-600 mt-1">Comments</p>
+                  <p className="text-xs text-gray-600 mt-1">Acknowledged</p>
                 </div>
                 <div className="text-center">
                   <p className="text-2xl font-extrabold" style={{ color: "#8B5CF6" }}>

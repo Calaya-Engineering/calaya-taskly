@@ -188,6 +188,12 @@ model Notification {
   actionType  String
   targetId    Int?
   message     String   @db.Text
+  linkPath    String?  @db.Text
+  emailSubject String? @db.Text
+  emailStatus String   @default("SKIPPED")
+  emailAttempts Int    @default(0)
+  emailLastError String? @db.Text
+  emailSentAt  DateTime?
   createdAt   DateTime @default(now())
   read        Boolean  @default(false)
   actor       User     @relation("PerformedActions", fields: [actorId], references: [id], onDelete: Cascade)

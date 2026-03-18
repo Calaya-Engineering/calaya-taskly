@@ -9,6 +9,12 @@ import { MDMenuItems } from "@/utils/menus";
 import { fetchWithAuth } from "@/lib/api";
 import { useSSE } from "@/hooks/useSSE";
 import { getIconByKey } from "@/lib/icons";
+import {
+  TASK_STATUS_PENDING_HOD_APPROVAL,
+  TASK_STATUS_PENDING_MD_APPROVAL,
+  getTaskApprovalNextStep,
+  getTaskStatusLabel,
+} from "@/lib/task-approval";
 
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children, ...props }: any) => (
@@ -55,7 +61,7 @@ export default function MDApprovals() {
   const [loading, setLoading] = useState(true);
   const [approvalType, setApprovalType] = useState("All");
   const [priorityFilter, setPriorityFilter] = useState("All");
-  const [statusFilter, setStatusFilter] = useState("PENDING");
+  const [statusFilter, setStatusFilter] = useState(TASK_STATUS_PENDING_MD_APPROVAL);
   const [selectedApproval, setSelectedApproval] = useState<any>(null);
   const [comment, setComment] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -79,6 +85,8 @@ export default function MDApprovals() {
           dueDate: t.dueDate || "",
           priority: t.priority || "MEDIUM",
           status: t.status || "PENDING",
+          statusLabel: getTaskStatusLabel(t.status || "PENDING"),
+          nextStep: getTaskApprovalNextStep(t.status || "PENDING"),
           description: t.description || "",
           reference: t.type === "JOB" ? `JOB-${t.id}` : `TSK-${t.id}`,
           attachments: 0,
@@ -134,6 +142,9 @@ export default function MDApprovals() {
   const getStatusTone = (status: string) => {
     switch (status) {
       case "PENDING":
+      case TASK_STATUS_PENDING_HOD_APPROVAL:
+        return "info";
+      case TASK_STATUS_PENDING_MD_APPROVAL:
         return "warn";
       case "COMPLETED":
       case "APPROVED":
@@ -209,8 +220,19 @@ export default function MDApprovals() {
     closeModal();
   };
 
-  const pendingCount = useMemo(() => approvals.filter((a) => a.status === "PENDING").length, [approvals]);
-  const criticalPendingCount = useMemo(() => approvals.filter((a) => (a.priority === "CRITICAL" || a.priority === "URGENT") && a.status === "PENDING").length, [approvals]);
+  const pendingCount = useMemo(
+    () => approvals.filter((a) => a.status === TASK_STATUS_PENDING_MD_APPROVAL).length,
+    [approvals],
+  );
+  const criticalPendingCount = useMemo(
+    () =>
+      approvals.filter(
+        (a) =>
+          (a.priority === "CRITICAL" || a.priority === "URGENT") &&
+          a.status === TASK_STATUS_PENDING_MD_APPROVAL,
+      ).length,
+    [approvals],
+  );
 
   if (loading) return (
     <Layout menuItems={MDMenuItems} userRole="MD">
@@ -300,7 +322,8 @@ export default function MDApprovals() {
                 className="w-full px-3 py-2.5 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100"
               >
                 <option value="All">All Status</option>
-                <option value="PENDING">Pending</option>
+                <option value={TASK_STATUS_PENDING_MD_APPROVAL}>Pending MD Approval</option>
+                <option value={TASK_STATUS_PENDING_HOD_APPROVAL}>Awaiting HOD Review</option>
                 <option value="COMPLETED">Approved</option>
                 <option value="ON_HOLD">On Hold</option>
               </select>
@@ -323,12 +346,15 @@ export default function MDApprovals() {
               >
                 <div className="flex flex-wrap items-center gap-2 mb-3">
                   <Pill tone={getPriorityTone(item.priority)}>{item.priority}</Pill>
-                  <Pill tone={getStatusTone(item.status)}>{item.status}</Pill>
+                        <Pill tone={getStatusTone(item.status)}>{item.statusLabel}</Pill>
                   <Pill>{item.department}</Pill>
                   <Pill tone="info">{getIconByKey(getTypeIcon(item.type), "w-4 h-4 mr-1")} {item.type.replace('_', ' ')}</Pill>
                 </div>
                 <h3 className="text-lg font-extrabold" style={{ color: "var(--primary-blue)" }}>{item.title}</h3>
-                <p className="text-sm text-gray-600 mt-2">{item.description}</p>
+                      <p className="text-sm text-gray-600 mt-2">{item.description}</p>
+                      <p className="text-xs font-semibold mt-2" style={{ color: "var(--secondary-blue)" }}>
+                        {item.nextStep}
+                      </p>
                 <div className="mt-4 flex flex-wrap gap-4 text-xs text-gray-500">
                   <span>Submitted by <b>{item.submittedBy}</b></span>
                   <span>Ref: <code className="bg-gray-100 px-1 rounded">{item.reference}</code></span>

@@ -81,6 +81,13 @@ export async function POST(
             actionType: "ESCALATE_TASK",
             targetId: taskId,
             message: escalationMsg,
+            recipients: {
+                roles: ["MD", "Admin"],
+                includeActor: false,
+            },
+            sendEmail: true,
+            emailSubject: `Task Escalated — ${task.title}`,
+            linkPath: `/open/item?type=task&id=${taskId}`,
         });
 
         return NextResponse.json(updated);
@@ -124,7 +131,14 @@ export async function DELETE(
             actorEmail: auth.email,
             actionType: 'DEESCALATE_TASK',
             targetId: taskId,
-            message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) de-escalated task: "${updated.title}"`
+            message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) de-escalated task: "${updated.title}"`,
+            recipients: {
+                roles: ["MD", "Admin"],
+                includeActor: false,
+            },
+            sendEmail: true,
+            emailSubject: `Task De-escalated — ${updated.title}`,
+            linkPath: `/open/item?type=task&id=${taskId}`,
         });
 
         return NextResponse.json(updated);

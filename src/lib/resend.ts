@@ -12,7 +12,7 @@ export function getResendClient(): Resend | null {
   if (!apiKey) {
     if (!warnedMissingKey) {
       // eslint-disable-next-line no-console
-      console.warn("RESEND_API_KEY is not set. OTP emails will not be sent.");
+      console.warn("RESEND_API_KEY is not set. Email notifications will not be sent.");
       warnedMissingKey = true;
     }
     return null;

@@ -4,6 +4,8 @@ import { getAuthFromRequest } from "@/lib/jwt";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
 import { createNotification } from "@/lib/notifications";
 
+const DOCUMENT_RECIPIENT_ROLES = ["HOD", "Staff", "Personnel", "Corp Member", "Secretary"];
+
 function parseDocId(id: string): number | null {
   const num = parseInt(id, 10);
   if (!Number.isNaN(num)) return num;
@@ -147,6 +149,16 @@ export async function PATCH(
       actionType: 'UPDATE_DOCUMENT',
       targetId: doc.id,
       message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) updated document: ${doc.title}`,
+      recipients: {
+        roles: DOCUMENT_RECIPIENT_ROLES,
+        ...(doc.scope.toUpperCase().includes("ALL") || doc.scope.toUpperCase().includes("COMPANY")
+          ? {}
+          : { departments: [doc.department] }),
+        includeActor: false,
+      },
+      sendEmail: true,
+      emailSubject: `Document Updated — ${doc.title}`,
+      linkPath: `/open/item?type=document&id=${doc.id}`,
     });
 
     return NextResponse.json({

@@ -4,6 +4,8 @@ import { getAuthFromRequest } from "@/lib/jwt";
 import { createNotification } from "@/lib/notifications";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
 
+const DOCUMENT_RECIPIENT_ROLES = ["HOD", "Staff", "Personnel", "Corp Member", "Secretary"];
+
 /**
  * GET /api/documents - List documents (MD, HOD, Secretary, Staff - authenticated)
  * Query params: type, scope, department, departments, search
@@ -170,6 +172,16 @@ export async function POST(req: NextRequest) {
         actionType: 'UPLOAD_DOCUMENT',
         targetId: doc.id,
         message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) uploaded a document: ${doc.title}`,
+        recipients: {
+          roles: DOCUMENT_RECIPIENT_ROLES,
+          ...(doc.scope.toUpperCase().includes("ALL") || doc.scope.toUpperCase().includes("COMPANY")
+            ? {}
+            : { departments: [doc.department] }),
+          includeActor: false,
+        },
+        sendEmail: true,
+        emailSubject: `Document Uploaded — ${doc.title}`,
+        linkPath: `/open/item?type=document&id=${doc.id}`,
       });
 
       return NextResponse.json({

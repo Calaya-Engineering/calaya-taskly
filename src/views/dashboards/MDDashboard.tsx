@@ -47,6 +47,12 @@ const Pill = ({ children, tone = "default" }) => {
 
 const priorityTone = (p) => (p === "URGENT" ? "danger" : p === "IMPORTANT" ? "warn" : "default");
 
+const formatTurnaround = (hours: number | null) => {
+  if (hours == null || Number.isNaN(hours)) return "N/A";
+  if (hours >= 48) return `${(hours / 24).toFixed(1)}d`;
+  return `${hours.toFixed(1)}h`;
+};
+
 export default function MDDashboard() {
   const [tasksData, setTasksData] = useState<any[]>([]);
   const [rawAnnouncements, setRawAnnouncements] = useState<any[]>([]);
@@ -175,6 +181,84 @@ export default function MDDashboard() {
       };
     });
   }, [rawAnnouncements]);
+
+  const staffCompletionRows = useMemo(() => {
+    const rows = new Map<number, {
+      staffId: number;
+      staffName: string;
+      department: string;
+      assigned: number;
+      completed: number;
+      onTime: number;
+      turnaroundHours: number;
+    }>();
+
+    tasksData.forEach((task) => {
+      (task.assignments || []).forEach((assignment) => {
+        const user = assignment.user;
+        if (!user || user.role !== "Staff") return;
+
+        const existing = rows.get(user.id) || {
+          staffId: user.id,
+          staffName: user.name || user.email || `Staff ${user.id}`,
+          department: user.department || task.department || "Unassigned",
+          assigned: 0,
+          completed: 0,
+          onTime: 0,
+          turnaroundHours: 0,
+        };
+
+        existing.assigned += 1;
+
+        if (task.status === "COMPLETED") {
+          existing.completed += 1;
+
+          const assignedAt = assignment.assignedAt ? new Date(assignment.assignedAt) : null;
+          const completedAt = task.updatedAt ? new Date(task.updatedAt) : null;
+          if (assignedAt && completedAt && !Number.isNaN(assignedAt.getTime()) && !Number.isNaN(completedAt.getTime())) {
+            existing.turnaroundHours += Math.max(0, completedAt.getTime() - assignedAt.getTime()) / 3_600_000;
+          }
+
+          if (!task.dueDate) {
+            existing.onTime += 1;
+          } else {
+            const dueDate = new Date(task.dueDate);
+            const completedOnTime = completedAt && !Number.isNaN(dueDate.getTime()) && completedAt.getTime() <= dueDate.getTime();
+            if (completedOnTime) {
+              existing.onTime += 1;
+            }
+          }
+        }
+
+        rows.set(user.id, existing);
+      });
+    });
+
+    return Array.from(rows.values())
+      .map((row) => ({
+        ...row,
+        completionRate: row.assigned ? Math.round((row.completed / row.assigned) * 100) : 0,
+        onTimeRate: row.completed ? Math.round((row.onTime / row.completed) * 100) : 0,
+        avgTurnaroundHours: row.completed ? row.turnaroundHours / row.completed : null,
+      }))
+      .sort((a, b) => {
+        if (b.completionRate !== a.completionRate) return b.completionRate - a.completionRate;
+        return (a.avgTurnaroundHours ?? Number.POSITIVE_INFINITY) - (b.avgTurnaroundHours ?? Number.POSITIVE_INFINITY);
+      });
+  }, [tasksData]);
+
+  const staffCompletionSummary = useMemo(() => {
+    const totalStaff = staffCompletionRows.length;
+    const avgCompletionRate = totalStaff
+      ? Math.round(staffCompletionRows.reduce((sum, row) => sum + row.completionRate, 0) / totalStaff)
+      : 0;
+    const avgTurnaroundHours = totalStaff
+      ? staffCompletionRows.reduce((sum, row) => sum + (row.avgTurnaroundHours || 0), 0) / totalStaff
+      : null;
+    const departmentCount = new Set(staffCompletionRows.map((row) => row.department)).size;
+
+    return { totalStaff, avgCompletionRate, avgTurnaroundHours, departmentCount };
+  }, [staffCompletionRows]);
 
   if (loading && tasksData.length === 0) {
     return <DashboardSkeleton />;
@@ -391,6 +475,60 @@ export default function MDDashboard() {
             </div>
           </Card>
         </div>
+
+        <Card className="p-6">
+          <SectionTitle
+            title="Staff Completion Rate"
+            subtitle="Every department, calculated from assignment time to final completion time"
+            action={
+              <div className="flex flex-wrap gap-2">
+                <Pill>{staffCompletionSummary.totalStaff} Staff</Pill>
+                <Pill tone="success">{staffCompletionSummary.avgCompletionRate}% Avg Completion</Pill>
+                <Pill tone="warn">{formatTurnaround(staffCompletionSummary.avgTurnaroundHours)} Avg Turnaround</Pill>
+                <Pill tone="default">{staffCompletionSummary.departmentCount} Departments</Pill>
+              </div>
+            }
+          />
+
+          <div className="mt-5 overflow-x-auto">
+            {staffCompletionRows.length > 0 ? (
+              <table className="min-w-full text-sm">
+                <thead>
+                  <tr className="text-left text-gray-500 border-b border-gray-200/70">
+                    <th className="px-4 py-3 font-semibold">Staff</th>
+                    <th className="px-4 py-3 font-semibold">Department</th>
+                    <th className="px-4 py-3 font-semibold">Assigned</th>
+                    <th className="px-4 py-3 font-semibold">Completed</th>
+                    <th className="px-4 py-3 font-semibold">Completion Rate</th>
+                    <th className="px-4 py-3 font-semibold">On Time</th>
+                    <th className="px-4 py-3 font-semibold">Avg Turnaround</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {staffCompletionRows.map((row) => (
+                    <tr key={row.staffId} className="border-b border-gray-100">
+                      <td className="px-4 py-3 font-semibold text-gray-900">{row.staffName}</td>
+                      <td className="px-4 py-3 text-gray-600">{row.department}</td>
+                      <td className="px-4 py-3">{row.assigned}</td>
+                      <td className="px-4 py-3">{row.completed}</td>
+                      <td className="px-4 py-3">
+                        <Pill tone={row.completionRate >= 80 ? "success" : row.completionRate >= 50 ? "warn" : "danger"}>
+                          {row.completionRate}%
+                        </Pill>
+                      </td>
+                      <td className="px-4 py-3">{row.onTimeRate}%</td>
+                      <td className="px-4 py-3">{formatTurnaround(row.avgTurnaroundHours)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <div className="rounded-2xl border border-gray-200/70 p-8 text-center text-gray-500">
+                No staff completion data yet. Assigned staff tasks will appear here automatically.
+              </div>
+            )}
+          </div>
+        </Card>
 
         {/* Bottom Section */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">

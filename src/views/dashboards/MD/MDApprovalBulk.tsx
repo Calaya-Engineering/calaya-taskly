@@ -8,6 +8,7 @@ import Layout from "@/components/Layout";
 import { MDMenuItems } from "@/utils/menus";
 import { fetchWithAuth } from "@/lib/api";
 import { useSSE } from "@/hooks/useSSE";
+import { TASK_STATUS_PENDING_MD_APPROVAL } from "@/lib/task-approval";
 const Card = ({ className = "", children, ...props }: any) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`} {...props}>{children}</div>
 );
@@ -47,7 +48,7 @@ export default function MDApprovalBulk() {
 
   const fetchApprovals = useCallback(async () => {
     try {
-      const res = await fetchWithAuth("/api/tasks?limit=100&status=PENDING");
+      const res = await fetchWithAuth(`/api/tasks?limit=100&status=${TASK_STATUS_PENDING_MD_APPROVAL}`);
       if (res.ok) {
         const tasks = await res.json();
         const mapped = tasks.map((t: any) => ({

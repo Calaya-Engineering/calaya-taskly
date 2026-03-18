@@ -19,6 +19,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { fetchWithAuth } from "@/lib/api";
 import { useSSE } from "@/hooks/useSSE";
 import DashboardSkeleton from "@/components/DashboardSkeleton";
+import { TASK_STATUS_PENDING_HOD_APPROVAL } from "@/lib/task-approval";
 
 /* ─── Types ─────────────────────────────────────────────────────── */
 interface TaskItem {
@@ -252,7 +253,7 @@ export default function HODDashboard() {
     () =>
       tasks.filter(
         (t) =>
-          t.status === "PENDING" &&
+          t.status === TASK_STATUS_PENDING_HOD_APPROVAL &&
           (activeDepartments.length === 0 || activeDepartments.includes(t.department || ""))
       ),
     [tasks, activeDepartments]

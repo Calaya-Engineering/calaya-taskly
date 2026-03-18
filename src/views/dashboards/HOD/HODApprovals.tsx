@@ -9,6 +9,12 @@ import { HODMenuItems } from "@/utils/menus";
 import { getIconByKey } from "@/lib/icons";
 import { fetchWithAuth } from "@/lib/api";
 import { useSSE } from "@/hooks/useSSE";
+import {
+  TASK_STATUS_PENDING_HOD_APPROVAL,
+  TASK_STATUS_PENDING_MD_APPROVAL,
+  getTaskApprovalNextStep,
+  getTaskStatusLabel,
+} from "@/lib/task-approval";
 
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children, ...props }: any) => (
@@ -55,7 +61,7 @@ export default function HODApprovals() {
   const [loading, setLoading] = useState(true);
   const [approvalType, setApprovalType] = useState("All");
   const [priorityFilter, setPriorityFilter] = useState("All");
-  const [statusFilter, setStatusFilter] = useState("PENDING");
+  const [statusFilter, setStatusFilter] = useState(TASK_STATUS_PENDING_HOD_APPROVAL);
   const [selectedApproval, setSelectedApproval] = useState<any>(null);
   const [comment, setComment] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -79,6 +85,8 @@ export default function HODApprovals() {
           dueDate: t.dueDate || "",
           priority: t.priority || "MEDIUM",
           status: t.status || "PENDING",
+          statusLabel: getTaskStatusLabel(t.status || "PENDING"),
+          nextStep: getTaskApprovalNextStep(t.status || "PENDING"),
           description: t.description || "",
           reference: t.type === "JOB" ? `JOB-${t.id}` : `TSK-${t.id}`,
           attachments: 0,
@@ -106,7 +114,18 @@ export default function HODApprovals() {
   });
 
   const approvals = approvalsData as any[];
-  const approvalHistory = useMemo(() => approvals.filter((a) => a.status === "COMPLETED" || a.status === "APPROVED" || a.status === "REJECTED"), [approvals]);
+  const approvalHistory = useMemo(
+    () =>
+      approvals.filter(
+        (a) =>
+          a.status === "COMPLETED" ||
+          a.status === "APPROVED" ||
+          a.status === "REJECTED" ||
+          a.status === "ON_HOLD" ||
+          a.status === TASK_STATUS_PENDING_MD_APPROVAL,
+      ),
+    [approvals],
+  );
 
   const filteredApprovals = useMemo(() => approvals.filter((approval) => {
     if (approvalType !== "All" && approval.type !== approvalType) return false;
@@ -134,7 +153,10 @@ export default function HODApprovals() {
   const getStatusTone = (status: string) => {
     switch (status) {
       case "PENDING":
+      case TASK_STATUS_PENDING_HOD_APPROVAL:
         return "warn";
+      case TASK_STATUS_PENDING_MD_APPROVAL:
+        return "info";
       case "COMPLETED":
       case "APPROVED":
         return "success";
@@ -180,7 +202,7 @@ export default function HODApprovals() {
         body: JSON.stringify({ status: "COMPLETED" }),
       });
       if (res.ok) {
-        toast.success(`Task ${sel.id} approved`);
+        toast.success(`Task ${sel.id} reviewed and forwarded to MD`);
         fetchApprovals();
       } else {
         toast.error("Failed to approve task");
@@ -213,8 +235,19 @@ export default function HODApprovals() {
     closeModal();
   };
 
-  const pendingCount = useMemo(() => approvals.filter((a) => a.status === "PENDING").length, [approvals]);
-  const urgentPendingCount = useMemo(() => approvals.filter((a) => (a.priority === "URGENT" || a.priority === "CRITICAL") && a.status === "PENDING").length, [approvals]);
+  const pendingCount = useMemo(
+    () => approvals.filter((a) => a.status === TASK_STATUS_PENDING_HOD_APPROVAL).length,
+    [approvals],
+  );
+  const urgentPendingCount = useMemo(
+    () =>
+      approvals.filter(
+        (a) =>
+          (a.priority === "URGENT" || a.priority === "CRITICAL") &&
+          a.status === TASK_STATUS_PENDING_HOD_APPROVAL,
+      ).length,
+    [approvals],
+  );
 
   const reviewedCount = selectedApproval?.documents
     ? selectedApproval.documents.filter((d: any) => reviewedDocs[d.name]).length
@@ -249,7 +282,7 @@ export default function HODApprovals() {
                 <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
                   HOD Approvals Dashboard
                 </h1>
-                <p className="text-gray-600 mt-2 max-w-2xl">Review and approve pending requests from your department</p>
+                <p className="text-gray-600 mt-2 max-w-2xl">Review staff submissions, approve them, and forward them to MD for final sign-off.</p>
               </div>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link href="/hod-dashboard/approvals/bulk">
@@ -305,7 +338,8 @@ export default function HODApprovals() {
                 className="w-full px-3 py-2.5 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100"
               >
                 <option value="All">All Status</option>
-                <option value="PENDING">Pending</option>
+                <option value={TASK_STATUS_PENDING_HOD_APPROVAL}>Pending HOD Approval</option>
+                <option value={TASK_STATUS_PENDING_MD_APPROVAL}>Forwarded to MD</option>
                 <option value="COMPLETED">Approved</option>
                 <option value="ON_HOLD">On Hold</option>
               </select>
@@ -317,7 +351,7 @@ export default function HODApprovals() {
         <div className="space-y-4">
           <SectionTitle
             title="Approvals Queue"
-            subtitle="Requests awaiting your decision"
+            subtitle="Requests awaiting your review before they move up to MD"
             action={<span className="text-sm text-gray-500">{filteredApprovals.length} results found</span>}
           />
 
@@ -345,7 +379,7 @@ export default function HODApprovals() {
                     <div className="flex-1">
                       <div className="flex flex-wrap items-center gap-2 mb-3">
                         <Pill tone={getPriorityTone(approval.priority)}>{approval.priority}</Pill>
-                        <Pill tone={getStatusTone(approval.status)}>{approval.status}</Pill>
+                        <Pill tone={getStatusTone(approval.status)}>{approval.statusLabel}</Pill>
                         <Pill>{approval.department}</Pill>
                         <Pill tone="info">
                           {getIconByKey(getTypeIcon(approval.type), "w-4 h-4 inline-block mr-1 align-middle")} {approval.type.replace("_", " ")}
@@ -357,6 +391,9 @@ export default function HODApprovals() {
                         {approval.title}
                       </h3>
                       <p className="text-sm text-gray-600 mt-2">{approval.description}</p>
+                      <p className="text-xs font-semibold mt-2" style={{ color: "var(--secondary-blue)" }}>
+                        {approval.nextStep}
+                      </p>
 
                       <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div className="rounded-xl border border-gray-200/70 p-3">
@@ -391,7 +428,9 @@ export default function HODApprovals() {
                   <div>
                     <div className="flex items-center gap-2 mb-1">
                       <code className="text-xs font-mono text-gray-400">{item.id}</code>
-                      <Pill tone={item.status === "COMPLETED" || item.status === "APPROVED" ? "success" : "danger"}>{item.status}</Pill>
+                      <Pill tone={item.status === "COMPLETED" || item.status === "APPROVED" ? "success" : item.status === TASK_STATUS_PENDING_MD_APPROVAL ? "info" : "danger"}>
+                        {item.statusLabel}
+                      </Pill>
                     </div>
                     <p className="font-semibold">{item.title}</p>
                     <p className="text-xs text-gray-500 mt-1">By {item.submittedBy} • {item.department}</p>
@@ -460,7 +499,7 @@ export default function HODApprovals() {
                       onClick={handleApprove}
                       className="flex-1 bg-green-500 text-white font-bold py-3 rounded-xl hover:bg-green-600 transition"
                     >
-                      ✓ Approve
+                      ✓ Forward to MD
                     </button>
                     <button 
                       onClick={handleReject}

@@ -9,6 +9,7 @@ import { SearchIcon, getIconByKey } from "@/lib/icons";
 import { toast } from "@/lib/toast";
 import { fetchWithAuth } from "@/lib/api";
 import { useSSE } from "@/hooks/useSSE";
+import { isTaskPendingApproval } from "@/lib/task-approval";
 
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
@@ -129,7 +130,7 @@ export default function HODEscalations() {
         const now = Date.now();
         // Include escalated tasks and tasks due within 3 days (at-risk / overdue)
         const relevant = (Array.isArray(tasks) ? tasks : []).filter((t) => {
-          if (t.status === "COMPLETED") return false;
+          if (t.status === "COMPLETED" || t.status === "CANCELLED" || isTaskPendingApproval(t.status)) return false;
           if (t.escalated) return true;
           const due = t.dueDate ? new Date(t.dueDate) : null;
           if (!due) return false;

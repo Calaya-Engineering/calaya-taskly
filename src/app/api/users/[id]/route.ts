@@ -283,6 +283,15 @@ export async function PATCH(
       actionType: "UPDATE_USER",
       targetId: user.id,
       message: `${auth.name || auth.email.split("@")[0]} (${auth.role}) updated details for user: ${user.name || user.email}`,
+      recipients: {
+        userIds: [user.id],
+        roles: ["MD", "HOD"],
+        departments: user.department ? [user.department] : [],
+        includeActor: false,
+      },
+      sendEmail: true,
+      emailSubject: `Staff Profile Updated — ${user.name || user.email}`,
+      linkPath: `/open/item?type=user&id=${user.id}`,
     });
 
     return NextResponse.json(serializeUser(user));

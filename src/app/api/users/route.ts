@@ -244,7 +244,29 @@ export async function POST(req: NextRequest) {
       actorEmail: auth.email,
       actionType: "CREATE_USER",
       targetId: user.id,
+      message: `Your Calaya Taskly account has been created. You can now sign in with your email address and the password provided by the administrator.`,
+      recipients: {
+        userIds: [user.id],
+        includeActor: false,
+      },
+      sendEmail: true,
+      emailSubject: `Welcome to Calaya Taskly — ${user.name || user.email}`,
+      linkPath: `/open/item?type=user&id=${user.id}`,
+    });
+
+    createNotification({
+      actorEmail: auth.email,
+      actionType: "CREATE_USER",
+      targetId: user.id,
       message: `${auth.name || auth.email.split("@")[0]} (${auth.role}) created a new user: ${user.name || user.email}`,
+      recipients: {
+        roles: ["MD", "HOD"],
+        departments: user.department ? [user.department] : [],
+        includeActor: false,
+      },
+      sendEmail: true,
+      emailSubject: `New Staff Account Created — ${user.name || user.email}`,
+      linkPath: `/open/item?type=user&id=${user.id}`,
     });
 
     return NextResponse.json(serializeUser(user));

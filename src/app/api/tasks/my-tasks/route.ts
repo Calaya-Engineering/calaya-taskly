@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
+import { ensureMidpointRemindersForTasks } from "@/lib/task-notifications";
 
 /**
  * GET /api/tasks/my-tasks - Tasks assigned to the authenticated user.
@@ -86,6 +87,10 @@ export async function GET(req: NextRequest) {
             },
           },
         });
+
+    if (!compact && Array.isArray(tasks) && tasks.length > 0) {
+      await ensureMidpointRemindersForTasks(tasks);
+    }
 
     return NextResponse.json(tasks);
   } catch (error) {

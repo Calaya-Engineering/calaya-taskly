@@ -9,6 +9,11 @@ import { StaffMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
 import { fetchWithAuth } from "@/lib/api";
 import { useSSE } from "@/hooks/useSSE";
+import {
+  TASK_STATUS_PENDING_HOD_APPROVAL,
+  TASK_STATUS_PENDING_MD_APPROVAL,
+  getTaskStatusLabel,
+} from "@/lib/task-approval";
 
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
@@ -51,6 +56,8 @@ const getStatusTone = (status) => {
     case 'COMPLETED': return 'success';
     case 'IN_PROGRESS': return 'info';
     case 'PENDING': return 'warn';
+    case TASK_STATUS_PENDING_HOD_APPROVAL: return 'warn';
+    case TASK_STATUS_PENDING_MD_APPROVAL: return 'info';
     case 'OVERDUE': return 'danger';
     default: return 'default';
   }
@@ -71,7 +78,7 @@ const getStatusLabel = (status) => {
     case 'PENDING': return 'Pending';
     case 'COMPLETED': return 'Completed';
     case 'OVERDUE': return 'Overdue';
-    default: return status;
+    default: return getTaskStatusLabel(status);
   }
 };
 
@@ -153,7 +160,11 @@ export default function StaffMyTasks() {
     return tasksData.filter((task) => {
       const matchesFilter = filter === 'all' ||
         (filter === 'in_progress' && task.status === 'IN_PROGRESS') ||
-        (filter === 'pending' && task.status === 'PENDING') ||
+        (filter === 'pending' && (
+          task.status === 'PENDING' ||
+          task.status === TASK_STATUS_PENDING_HOD_APPROVAL ||
+          task.status === TASK_STATUS_PENDING_MD_APPROVAL
+        )) ||
         (filter === 'completed' && task.status === 'COMPLETED') ||
         (filter === 'overdue' && task.status === 'OVERDUE');
 
@@ -173,10 +184,13 @@ export default function StaffMyTasks() {
     const completed = tasksData.filter(t => t.status === 'COMPLETED').length;
     const inProgress = tasksData.filter(t => t.status === 'IN_PROGRESS').length;
     const overdue = tasksData.filter(t => t.status === 'OVERDUE').length;
+    const pending = tasksData.filter(
+      t => t.status === 'PENDING' || t.status === TASK_STATUS_PENDING_HOD_APPROVAL || t.status === TASK_STATUS_PENDING_MD_APPROVAL
+    ).length;
     const totalHours = tasksData.reduce((sum, t) => sum + (t.actualHours || 0), 0);
     const completionRate = total ? Math.round((completed / total) * 100) : 0;
 
-    return { total, completed, inProgress, overdue, totalHours, completionRate };
+    return { total, completed, inProgress, overdue, pending, totalHours, completionRate };
   }, [tasksData]);
 
   const clearFilters = () => {
@@ -192,7 +206,12 @@ export default function StaffMyTasks() {
         body: JSON.stringify({ status: newStatus }),
       });
       if (res.ok) {
-        toast.success(`Task status updated to ${newStatus}`);
+        const updatedTask = await res.json().catch(() => null);
+        if (newStatus === 'COMPLETED') {
+          toast.success(`Task submitted: ${getTaskStatusLabel(updatedTask?.status || TASK_STATUS_PENDING_HOD_APPROVAL)}`);
+        } else {
+          toast.success(`Task status updated to ${getTaskStatusLabel(updatedTask?.status || newStatus)}`);
+        }
         fetchTasks();
       } else {
         toast.error("Failed to update status");
@@ -479,7 +498,9 @@ export default function StaffMyTasks() {
                               View
                             </button>
                           </Link>
-                          {task.status !== 'COMPLETED' ? (
+                          {task.status !== 'COMPLETED' &&
+                          task.status !== TASK_STATUS_PENDING_HOD_APPROVAL &&
+                          task.status !== TASK_STATUS_PENDING_MD_APPROVAL ? (
                             <button
                               onClick={() => updateTaskStatus(task.id, 'COMPLETED')}
                               className="px-3 py-1.5 rounded-xl text-[11px] font-semibold text-white active:scale-[0.99] transition"
@@ -487,6 +508,16 @@ export default function StaffMyTasks() {
                             >
                               Complete
                             </button>
+                          ) : task.status === TASK_STATUS_PENDING_HOD_APPROVAL || task.status === TASK_STATUS_PENDING_MD_APPROVAL ? (
+                            <span
+                              className="px-3 py-1.5 rounded-xl text-[11px] font-semibold"
+                              style={{
+                                backgroundColor: task.status === TASK_STATUS_PENDING_HOD_APPROVAL ? "#FEF3C7" : "#DBEAFE",
+                                color: task.status === TASK_STATUS_PENDING_HOD_APPROVAL ? "#92400E" : "#1D4ED8",
+                              }}
+                            >
+                              {task.status === TASK_STATUS_PENDING_HOD_APPROVAL ? "Awaiting HOD" : "Awaiting MD"}
+                            </span>
                           ) : (
                             <button
                               onClick={() => updateTaskStatus(task.id, 'IN_PROGRESS')}
