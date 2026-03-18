@@ -6,6 +6,56 @@ import { createNotification } from "@/lib/notifications";
 
 const DEFAULT_TENDER_DEPARTMENT = "Company-wide";
 
+type TenderDocumentInput = {
+  title?: unknown;
+  fileUrl?: unknown;
+  fileSize?: unknown;
+  fileType?: unknown;
+};
+
+type NormalizedTenderDocument = {
+  title: string;
+  type: string;
+  department: string;
+  uploadedBy: string;
+  scope: string;
+  fileSize: string;
+  fileUrl: string;
+};
+
+function normalizeTenderDocuments(input: unknown, uploadedBy: string) {
+  if (!Array.isArray(input)) return [];
+
+  return input
+    .map((doc) => {
+      const candidate = (doc ?? {}) as TenderDocumentInput;
+      const fileUrl = typeof candidate.fileUrl === "string" ? candidate.fileUrl.trim() : "";
+      if (!fileUrl) return null;
+
+      const title =
+        typeof candidate.title === "string" && candidate.title.trim()
+          ? candidate.title.trim()
+          : "Tender Document";
+
+      return {
+        title,
+        type:
+          typeof candidate.fileType === "string" && candidate.fileType.trim()
+            ? candidate.fileType.trim()
+            : "Tender Document",
+        department: DEFAULT_TENDER_DEPARTMENT,
+        uploadedBy,
+        scope: "TENDER",
+        fileSize:
+          typeof candidate.fileSize === "string" && candidate.fileSize.trim()
+            ? candidate.fileSize.trim()
+            : "—",
+        fileUrl,
+      };
+    })
+    .filter((doc): doc is NormalizedTenderDocument => doc !== null);
+}
+
 /**
  * GET /api/tenders - List tenders (Authenticated)
  * Query params: status, department, search
@@ -113,7 +163,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { title, description, closingDate, referenceNo, status } = body;
+    const { title, description, closingDate, referenceNo, status, documents } = body;
 
     if (!title || !closingDate || !description) {
       return NextResponse.json(
@@ -121,6 +171,9 @@ export async function POST(req: NextRequest) {
         { status: 400 },
       );
     }
+
+    const uploaderName = auth.name || auth.email.split("@")[0] || "Unknown";
+    const tenderDocuments = normalizeTenderDocuments(documents, uploaderName);
 
     const tender = await prisma.tender.create({
       data: {
@@ -132,6 +185,13 @@ export async function POST(req: NextRequest) {
         closingDate: new Date(closingDate),
         createdBy: auth.email || "Unknown",
         status: typeof status === "string" && status.trim() ? status : "OPEN",
+        ...(tenderDocuments.length > 0
+          ? {
+              documents: {
+                create: tenderDocuments,
+              },
+            }
+          : {}),
       },
     });
 

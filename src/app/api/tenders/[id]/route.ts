@@ -6,6 +6,56 @@ import { createNotification } from "@/lib/notifications";
 
 const DEFAULT_TENDER_DEPARTMENT = "Company-wide";
 
+type TenderDocumentInput = {
+    title?: unknown;
+    fileUrl?: unknown;
+    fileSize?: unknown;
+    fileType?: unknown;
+};
+
+type NormalizedTenderDocument = {
+    title: string;
+    type: string;
+    department: string;
+    uploadedBy: string;
+    scope: string;
+    fileSize: string;
+    fileUrl: string;
+};
+
+function normalizeTenderDocuments(input: unknown, uploadedBy: string) {
+    if (!Array.isArray(input)) return [];
+
+    return input
+        .map((doc) => {
+            const candidate = (doc ?? {}) as TenderDocumentInput;
+            const fileUrl = typeof candidate.fileUrl === "string" ? candidate.fileUrl.trim() : "";
+            if (!fileUrl) return null;
+
+            const title =
+                typeof candidate.title === "string" && candidate.title.trim()
+                    ? candidate.title.trim()
+                    : "Tender Document";
+
+            return {
+                title,
+                type:
+                    typeof candidate.fileType === "string" && candidate.fileType.trim()
+                        ? candidate.fileType.trim()
+                        : "Tender Document",
+                department: DEFAULT_TENDER_DEPARTMENT,
+                uploadedBy,
+                scope: "TENDER",
+                fileSize:
+                    typeof candidate.fileSize === "string" && candidate.fileSize.trim()
+                        ? candidate.fileSize.trim()
+                        : "—",
+                fileUrl,
+            };
+        })
+        .filter((doc): doc is NormalizedTenderDocument => doc !== null);
+}
+
 function parseTenderId(value: string) {
     const trimmed = value.trim();
     return /^\d+$/.test(trimmed) ? parseInt(trimmed, 10) : Number.NaN;
@@ -108,11 +158,13 @@ export async function PATCH(
             return NextResponse.json({ error: "Tender not found" }, { status: 404 });
         }
 
+        const uploaderName = auth.name || auth.email.split("@")[0] || "Unknown";
         const nextData: Record<string, unknown> = {};
         if (typeof body.title === "string" && body.title.trim()) nextData.title = body.title.trim();
         if (typeof body.description === "string" && body.description.trim()) nextData.description = body.description.trim();
         if (typeof body.closingDate === "string" && body.closingDate.trim()) nextData.closingDate = new Date(body.closingDate);
         if (typeof body.status === "string" && body.status.trim()) nextData.status = body.status.trim();
+        const tenderDocuments = normalizeTenderDocuments(body.documents, uploaderName);
 
         const updatedTender = await prisma.tender.update({
             where: {
@@ -122,6 +174,13 @@ export async function PATCH(
                 ...nextData,
                 department: DEFAULT_TENDER_DEPARTMENT,
                 category: null,
+                ...(tenderDocuments.length > 0
+                    ? {
+                        documents: {
+                            create: tenderDocuments,
+                        },
+                    }
+                    : {}),
             }
         });
 

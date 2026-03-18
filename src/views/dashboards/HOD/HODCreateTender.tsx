@@ -65,6 +65,8 @@ export default function HODCreateTender() {
   const isEditMode = !!tenderId;
   const [loading, setLoading] = useState(isEditMode);
   const [saving, setSaving] = useState(false);
+  const [documents, setDocuments] = useState([]);
+  const [existingDocuments, setExistingDocuments] = useState([]);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -94,6 +96,7 @@ export default function HODCreateTender() {
             closingDate: toDateInput(data?.closingDate),
             status: String(data?.status ?? "OPEN"),
           });
+          setExistingDocuments(Array.isArray(data?.documents) ? data.documents : []);
         }
       } catch (error) {
         console.error("Failed to load tender:", error);
@@ -127,6 +130,49 @@ export default function HODCreateTender() {
     setFormData((prev) => ({ ...prev, [field]: event.target.value }));
   };
 
+  const handleFileUpload = (event) => {
+    const files = Array.from(event.target.files || []);
+    if (!files.length) return;
+    setDocuments((prev) => [...prev, ...files]);
+    event.target.value = "";
+  };
+
+  const removeDocument = (index) => {
+    setDocuments((prev) => prev.filter((_, currentIndex) => currentIndex !== index));
+  };
+
+  async function uploadTenderDocuments() {
+    if (documents.length === 0) return [];
+
+    const uploadedDocuments = [];
+    for (const file of documents) {
+      const uploadFormData = new FormData();
+      uploadFormData.append("file", file);
+
+      const uploadRes = await fetchWithAuth("/api/upload/cloudinary", {
+        method: "POST",
+        body: uploadFormData,
+      });
+      const uploadData = await uploadRes.json().catch(() => null);
+
+      const uploadedUrl = uploadData?.secureUrl || uploadData?.url;
+
+      if (!uploadRes.ok || !uploadedUrl) {
+        throw new Error(uploadData?.error || `Failed to upload ${file.name}`);
+      }
+
+      const extension = file.name.includes(".") ? file.name.split(".").pop()?.toUpperCase() : "FILE";
+      uploadedDocuments.push({
+        title: file.name,
+        fileUrl: uploadedUrl,
+        fileSize: `${(file.size / 1024 / 1024).toFixed(2)} MB`,
+        fileType: extension ? `${extension} Document` : "Tender Document",
+      });
+    }
+
+    return uploadedDocuments;
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (saving) return;
@@ -137,11 +183,13 @@ export default function HODCreateTender() {
 
     setSaving(true);
     try {
+      const uploadedDocuments = await uploadTenderDocuments();
       const payload = {
         title: formData.title.trim(),
         description: formData.description.trim(),
         closingDate: formData.closingDate,
         status: formData.status,
+        documents: uploadedDocuments,
       };
 
       const res = await fetchWithAuth(isEditMode ? `/api/tenders/${tenderId}` : "/api/tenders", {
@@ -265,11 +313,77 @@ export default function HODCreateTender() {
                       onChange={handleChange("description")}
                     />
                   </div>
+
+                  <div className="md:col-span-2">
+                    <FieldLabel>Documents</FieldLabel>
+                    <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-6">
+                      <input
+                        type="file"
+                        multiple
+                        className="hidden"
+                        id="hod-tender-document-upload"
+                        onChange={handleFileUpload}
+                        accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.zip,.jpg,.jpeg,.png"
+                      />
+                      <label htmlFor="hod-tender-document-upload" className="block cursor-pointer text-center">
+                        <div className="w-14 h-14 mx-auto mb-3 rounded-full flex items-center justify-center bg-blue-50 text-sm font-black tracking-[0.2em] text-blue-700">
+                          FILE
+                        </div>
+                        <p className="font-extrabold text-gray-900">Add tender documents</p>
+                        <p className="text-sm text-gray-500 mt-1">Files will upload to Cloudinary when you save this tender.</p>
+                      </label>
+                    </div>
+                  </div>
                 </div>
+
+                {isEditMode && existingDocuments.length > 0 ? (
+                  <div className="mt-6">
+                    <h3 className="text-sm font-extrabold mb-3" style={{ color: "var(--primary-blue)" }}>
+                      Existing Documents
+                    </h3>
+                    <div className="space-y-3">
+                      {existingDocuments.map((doc) => (
+                        <div key={doc.id} className="flex items-center justify-between gap-3 p-4 rounded-2xl border border-gray-200/70 bg-gray-50">
+                          <div className="min-w-0">
+                            <p className="font-semibold text-gray-900 truncate">{doc.name}</p>
+                            <p className="text-xs text-gray-500 mt-1">{doc.size || "—"}</p>
+                          </div>
+                          <span className="text-xs text-gray-500 shrink-0">{doc.uploadedAt || "Saved"}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+
+                {documents.length > 0 ? (
+                  <div className="mt-6">
+                    <h3 className="text-sm font-extrabold mb-3" style={{ color: "var(--primary-blue)" }}>
+                      Documents Ready to Upload ({documents.length})
+                    </h3>
+                    <div className="space-y-3">
+                      {documents.map((file, index) => (
+                        <div key={`${file.name}-${index}`} className="flex items-center justify-between gap-3 p-4 rounded-2xl border border-gray-200/70 bg-white">
+                          <div className="min-w-0">
+                            <p className="font-semibold text-gray-900 truncate">{file.name}</p>
+                            <p className="text-xs text-gray-500 mt-1">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => removeDocument(index)}
+                            className="px-4 py-2 rounded-2xl font-semibold border bg-white hover:bg-red-50 active:scale-[0.99] transition"
+                            style={{ borderColor: "rgba(237,50,55,0.45)", color: "var(--accent-red)" }}
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
 
                 <div className="mt-8 pt-6 border-t border-gray-200/70 flex flex-col sm:flex-row justify-between gap-3">
                   <div className="text-sm text-gray-500">
-                    Tender documents can still be managed separately from the tender documents screens.
+                    Any selected documents will be uploaded to Cloudinary and linked to this tender when you save.
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-3">
