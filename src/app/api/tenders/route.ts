@@ -4,6 +4,11 @@ import { getAuthFromRequest } from "@/lib/jwt";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
 import { createNotification } from "@/lib/notifications";
 import { getTenderAudience } from "@/lib/notification-audiences";
+import {
+  buildUserDisplayLookup,
+  getDisplayNameForUserValue,
+  getRoleForUserValue,
+} from "@/lib/user-display";
 
 const DEFAULT_TENDER_DEPARTMENT = "Company-wide";
 
@@ -57,24 +62,9 @@ function normalizeTenderDocuments(input: unknown, uploadedBy: string) {
     .filter((doc): doc is NormalizedTenderDocument => doc !== null);
 }
 
-function getUserLookupKeys(value: string) {
-  const trimmed = value.trim();
-  if (!trimmed) return [];
-
-  const keys = new Set<string>([trimmed.toLowerCase()]);
-  if (trimmed.includes("@")) {
-    keys.add(trimmed.split("@")[0].toLowerCase());
-  }
-
-  return Array.from(keys);
-}
-
-function inferUploadedByRole(uploadedBy: string, roleLookup: Map<string, string>) {
-  for (const key of getUserLookupKeys(uploadedBy)) {
-    const role = roleLookup.get(key);
-    if (role) return role;
-  }
-
+function inferUploadedByRole(uploadedBy: string, userLookup: Map<string, { name: string | null; role: string | null }>) {
+  const resolvedRole = getRoleForUserValue(uploadedBy, userLookup);
+  if (resolvedRole) return resolvedRole;
   return uploadedBy.toLowerCase().includes("vendor") ? "Vendor" : "Staff";
 }
 
@@ -176,47 +166,21 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    const uploaderValues = includeDocuments
+    const uploaderValues: string[] = includeDocuments
       ? Array.from(
           new Set(
             tenders.flatMap((tender) =>
-              (((tender as any).documents as Array<{ uploadedBy?: string }> | undefined) || [])
-                .map((document) => document.uploadedBy?.trim())
-                .filter(Boolean) as string[],
+              ((((tender as any).documents as Array<{ uploadedBy?: unknown }> | undefined) || [])
+                .map((document) =>
+                  typeof document.uploadedBy === "string" ? document.uploadedBy.trim() : "",
+                )
+                .filter((value): value is string => Boolean(value))),
             ),
           ),
         )
       : [];
 
-    const users = uploaderValues.length
-      ? await prisma.user.findMany({
-          where: {
-            OR: [
-              { email: { in: uploaderValues } },
-              { name: { in: uploaderValues } },
-            ],
-          },
-          select: {
-            email: true,
-            name: true,
-            role: true,
-          },
-        })
-      : [];
-
-    const roleLookup = new Map<string, string>();
-    for (const user of users) {
-      if (user.email) {
-        for (const key of getUserLookupKeys(user.email)) {
-          roleLookup.set(key, user.role);
-        }
-      }
-      if (user.name) {
-        for (const key of getUserLookupKeys(user.name)) {
-          roleLookup.set(key, user.role);
-        }
-      }
-    }
+    const userLookup = await buildUserDisplayLookup(uploaderValues);
 
     const formatted = tenders.map((t) => {
       const tenderDocuments = (((t as any).documents as any[]) || []);
@@ -237,8 +201,8 @@ export async function GET(req: NextRequest) {
               tenderId: t.referenceNo,
               title: document.title,
               fileName: document.title,
-              uploadedBy: document.uploadedBy,
-              uploadedByRole: inferUploadedByRole(document.uploadedBy, roleLookup),
+              uploadedBy: getDisplayNameForUserValue(document.uploadedBy, userLookup),
+              uploadedByRole: inferUploadedByRole(document.uploadedBy, userLookup),
               uploadedDate: document.createdAt.toISOString().split("T")[0],
               fileSize: document.fileSize || "—",
               fileType: inferDocumentFileType(document.title, document.fileUrl, document.type),
@@ -285,6 +249,7 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
     const { title, description, closingDate, referenceNo, status, documents } = body;
+    const authName = typeof auth.name === "string" ? auth.name.trim() : "";
 
     if (!title || !closingDate || !description) {
       return NextResponse.json(
@@ -293,7 +258,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const uploaderName = auth.name || auth.email.split("@")[0] || "Unknown";
+    const uploaderName = authName || auth.email.split("@")[0] || "Unknown";
     const tenderDocuments = normalizeTenderDocuments(documents, uploaderName);
 
     const tender = await prisma.tender.create({

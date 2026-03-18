@@ -522,15 +522,17 @@ export default function MDDailyReports() {
                           <Pill tone={deptTone(report.department)}>{report.department}</Pill>
                         </td>
 
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center">
+                        <td className="px-6 py-4">
+                          <div className="flex items-center min-w-0">
                             <div
                               className="w-8 h-8 rounded-2xl flex items-center justify-center text-white text-sm mr-2 "
                               style={{ backgroundColor: "var(--secondary-blue)" }}
                             >
                               {String(report.uploadedBy || "U").charAt(0).toUpperCase()}
                             </div>
-                            <span className="text-sm font-semibold text-gray-900">{report.uploadedBy}</span>
+                            <span className="block max-w-[170px] truncate text-sm font-semibold text-gray-900">
+                              {report.uploadedBy}
+                            </span>
                           </div>
                         </td>
 
@@ -600,7 +602,7 @@ export default function MDDailyReports() {
                   <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
                     <div className="p-3 rounded-2xl border border-gray-200/70">
                       <div className="text-xs text-gray-500">Uploaded By</div>
-                      <div className="font-semibold text-gray-900">{r.uploadedBy}</div>
+                      <div className="font-semibold text-gray-900 break-words line-clamp-2">{r.uploadedBy}</div>
                     </div>
                     <div className="p-3 rounded-2xl border border-gray-200/70">
                       <div className="text-xs text-gray-500">Size</div>

@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
 import { createNotification } from "@/lib/notifications";
+import { getDisplayNameForUserValue } from "@/lib/user-display";
 
 const DOCUMENT_RECIPIENT_ROLES = ["HOD", "Staff", "Personnel", "Corp Member", "Secretary"];
 
@@ -53,7 +54,7 @@ export async function GET(
       title: doc.title,
       type: doc.type,
       department: doc.department,
-      uploadedBy: doc.uploadedBy,
+      uploadedBy: getDisplayNameForUserValue(doc.uploadedBy),
       date: doc.createdAt,
       size: doc.fileSize || "—",
       scope: doc.scope,
@@ -167,7 +168,7 @@ export async function PATCH(
       title: doc.title,
       type: doc.type,
       department: doc.department,
-      uploadedBy: doc.uploadedBy,
+      uploadedBy: getDisplayNameForUserValue(doc.uploadedBy),
       date: doc.createdAt,
       size: doc.fileSize || "—",
       scope: doc.scope,

@@ -368,7 +368,9 @@ export default function HODDocuments() {
                       <div className="flex items-center justify-between gap-3">
                         <div className="min-w-0">
                           <p className="text-xs text-gray-500">Uploaded By</p>
-                          <p className="text-sm font-semibold text-gray-900 mt-1 truncate">{doc.uploadedBy}</p>
+                          <p className="mt-1 max-w-[12rem] break-words text-sm font-semibold text-gray-900 line-clamp-2">
+                            {doc.uploadedBy}
+                          </p>
                         </div>
                         <div className="text-right shrink-0">
                           <p className="text-xs text-gray-500">Date</p>
@@ -470,8 +472,8 @@ export default function HODDocuments() {
                         <Pill tone={scopeTone(doc.scope)}>{formatScope(doc.scope)}</Pill>
                       </td>
 
-                      <td className="px-4 py-2.5 whitespace-nowrap">
-                        <div className="text-[12.5px] font-semibold text-gray-900">{doc.uploadedBy}</div>
+                      <td className="px-4 py-2.5">
+                        <div className="max-w-[180px] truncate text-[12.5px] font-semibold text-gray-900">{doc.uploadedBy}</div>
                       </td>
 
                       <td className="px-4 py-2.5 whitespace-nowrap">

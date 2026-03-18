@@ -575,7 +575,7 @@ export default function MDTenderDocuments() {
                                       <p className="font-extrabold text-gray-900 truncate">{doc.title}</p>
                                       <div className="flex flex-wrap items-center gap-2 mt-1 text-xs text-gray-500">
                                         <Pill tone={getRoleTone(doc.uploadedByRole)}>{doc.uploadedByRole}</Pill>
-                                        <span className="truncate">{doc.uploadedBy}</span>
+                                        <span className="inline-block max-w-[180px] truncate align-bottom">{doc.uploadedBy}</span>
                                         <span className="text-gray-300">•</span>
                                         <span>{doc.uploadedDate}</span>
                                       </div>
@@ -684,7 +684,7 @@ export default function MDTenderDocuments() {
                                     <p className="font-extrabold text-gray-900 truncate">{doc.title}</p>
                                     <div className="flex flex-wrap items-center gap-2 mt-1 text-xs text-gray-500">
                                       <Pill tone="success">Vendor</Pill>
-                                      <span className="truncate">{doc.uploadedBy}</span>
+                                      <span className="inline-block max-w-[180px] truncate align-bottom">{doc.uploadedBy}</span>
                                       <span className="text-gray-300">•</span>
                                       <span>{doc.uploadedDate}</span>
                                     </div>

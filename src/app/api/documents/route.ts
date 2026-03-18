@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { createNotification } from "@/lib/notifications";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
+import { buildUserDisplayLookup, getDisplayNameForUserValue } from "@/lib/user-display";
 
 const DOCUMENT_RECIPIENT_ROLES = ["HOD", "Staff", "Personnel", "Corp Member", "Secretary"];
 
@@ -73,6 +74,8 @@ export async function GET(req: NextRequest) {
         },
       });
 
+      const uploadedByLookup = await buildUserDisplayLookup(documents.map((document) => document.uploadedBy));
+
       // Format for frontend
       const formatted = documents.map((d) => ({
         id: `DOC-${String(d.id).padStart(3, "0")}`,
@@ -80,7 +83,7 @@ export async function GET(req: NextRequest) {
         title: d.title,
         type: d.type,
         department: d.department,
-        uploadedBy: d.uploadedBy,
+        uploadedBy: getDisplayNameForUserValue(d.uploadedBy, uploadedByLookup),
         date: d.createdAt,
         size: d.fileSize || "—",
         scope: d.scope,
@@ -122,6 +125,7 @@ export async function POST(req: NextRequest) {
 
     try {
       const body = await req.json().catch(() => ({}));
+      const authName = typeof auth.name === "string" ? auth.name.trim() : "";
       const { title, type, department, scope, fileSize, fileUrl, uploadedBy } = body as {
         title?: string;
         type?: string;
@@ -152,7 +156,9 @@ export async function POST(req: NextRequest) {
           department: department.trim(),
           scope: scope.trim(),
           uploadedBy:
-            (uploadedBy && typeof uploadedBy === "string" ? uploadedBy.trim() : auth.email) ||
+            (uploadedBy && typeof uploadedBy === "string"
+              ? uploadedBy.trim()
+              : authName || auth.email.split("@")[0]) ||
             "Unknown",
           fileSize: fileSize && typeof fileSize === "string" ? fileSize.trim() : null,
           fileUrl: fileUrl && typeof fileUrl === "string" ? fileUrl.trim() : null,
@@ -190,7 +196,7 @@ export async function POST(req: NextRequest) {
         title: doc.title,
         type: doc.type,
         department: doc.department,
-        uploadedBy: doc.uploadedBy,
+        uploadedBy: getDisplayNameForUserValue(doc.uploadedBy),
         date: doc.createdAt,
         size: doc.fileSize || "—",
         scope: doc.scope,

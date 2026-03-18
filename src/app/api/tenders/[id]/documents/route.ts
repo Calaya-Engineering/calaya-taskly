@@ -31,11 +31,13 @@ async function resolveUploaderContext(auth: { email: string; role: string; name?
     select: { name: true, department: true },
   });
 
+  const authName = typeof auth.name === "string" ? auth.name.trim() : "";
+
   const managedDepartments =
     auth.role === "HOD" ? await getManagedDepartmentNamesByEmail(auth.email) : [];
 
   return {
-    uploaderName: user?.name?.trim() || auth.name?.trim() || auth.email.split("@")[0] || "Unknown",
+    uploaderName: user?.name?.trim() || authName || auth.email.split("@")[0] || "Unknown",
     primaryDepartment:
       managedDepartments[0] ||
       user?.department?.trim() ||

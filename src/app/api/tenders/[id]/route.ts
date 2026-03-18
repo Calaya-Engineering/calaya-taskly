@@ -4,6 +4,7 @@ import { getAuthFromRequest } from "@/lib/jwt";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
 import { createNotification } from "@/lib/notifications";
 import { getTenderAudience } from "@/lib/notification-audiences";
+import { buildUserDisplayLookup, getDisplayNameForUserValue } from "@/lib/user-display";
 
 const DEFAULT_TENDER_DEPARTMENT = "Company-wide";
 
@@ -77,6 +78,10 @@ async function findTenderByIdentifier(id: string) {
     });
 }
 
+function getSafeAuthName(auth: { email: string; name?: unknown }) {
+    return typeof auth.name === "string" ? auth.name.trim() : "";
+}
+
 /**
  * GET /api/tenders/[id] - Get tender details
  */
@@ -97,6 +102,11 @@ export async function GET(
             return NextResponse.json({ error: "Tender not found" }, { status: 404 });
         }
 
+        const userLookup = await buildUserDisplayLookup([
+            tender.createdBy,
+            ...tender.documents.map((document) => document.uploadedBy),
+        ]);
+
         const formatted = {
             id: tender.referenceNo,
             dbId: tender.id,
@@ -109,12 +119,14 @@ export async function GET(
             category: tender.category,
             status: tender.status,
             createdBy: tender.createdBy,
+            uploadedBy: getDisplayNameForUserValue(tender.createdBy, userLookup),
             createdAt: tender.createdAt.toISOString().split("T")[0],
             documents: tender.documents.map(d => ({
                 id: `DOC-${String(d.id).padStart(3, "0")}`,
                 dbId: d.id,
                 name: d.title,
                 size: d.fileSize || "—",
+                uploadedBy: getDisplayNameForUserValue(d.uploadedBy, userLookup),
                 uploadedAt: d.createdAt.toISOString().split("T")[0],
                 fileUrl: d.fileUrl,
                 type: d.type
@@ -159,7 +171,7 @@ export async function PATCH(
             return NextResponse.json({ error: "Tender not found" }, { status: 404 });
         }
 
-        const uploaderName = auth.name || auth.email.split("@")[0] || "Unknown";
+        const uploaderName = getSafeAuthName(auth) || auth.email.split("@")[0] || "Unknown";
         const nextData: Record<string, unknown> = {};
         if (typeof body.title === "string" && body.title.trim()) nextData.title = body.title.trim();
         if (typeof body.description === "string" && body.description.trim()) nextData.description = body.description.trim();

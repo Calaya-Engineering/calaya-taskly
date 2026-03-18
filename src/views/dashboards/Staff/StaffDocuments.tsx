@@ -344,7 +344,7 @@ export default function StaffDocuments() {
               <div className="space-y-2 text-sm text-gray-600 mb-4">
                 <div className="flex items-center gap-2">
                   <span className="text-gray-400">👤</span>
-                  <span className="truncate">{doc.uploadedBy}</span>
+                  <span className="min-w-0 max-w-[12rem] truncate">{doc.uploadedBy}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-gray-400">📅</span>
