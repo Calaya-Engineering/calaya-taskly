@@ -217,7 +217,7 @@ export default function MDDailyReports() {
         return matchesDate && matchesDept && matchesSearch;
       })
       .sort((a, b) => (a.date < b.date ? 1 : -1));
-  }, [selectedDate, selectedDepartment, search]);
+  }, [reportsData, selectedDate, selectedDepartment, search]);
 
   const totals = useMemo(() => {
     const totalReports = filteredReports.length;
@@ -250,7 +250,7 @@ export default function MDDailyReports() {
       return { key: iso, day, iso, hasReport };
     });
     return [...blanks, ...days];
-  }, [daysInMonth, firstDay]);
+  }, [reportsData, daysInMonth, firstDay]);
 
   const quickBtnStyle = (active) => ({
     backgroundColor: active ? "var(--primary-blue)" : "#F3F4F6",
