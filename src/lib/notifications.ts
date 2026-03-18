@@ -58,6 +58,8 @@ function formatStatusLabel(actionType: string) {
     ASSIGN_TASK: "Assigned",
     CREATE_ANNOUNCEMENT: "Created",
     CREATE_DEPARTMENT: "Created",
+    CREATE_EVENT: "Created",
+    CREATE_MEETING: "Created",
     CREATE_ROLE: "Created",
     CREATE_TENDER: "Created",
     CREATE_USER: "Created",
@@ -80,6 +82,8 @@ function formatStatusLabel(actionType: string) {
     UPDATE_ANNOUNCEMENT: "Updated",
     UPDATE_DEPARTMENT: "Updated",
     UPDATE_DOCUMENT: "Updated",
+    UPDATE_EVENT: "Updated",
+    UPDATE_MEETING: "Updated",
     UPDATE_ROLE: "Updated",
     UPDATE_TASK: "Updated",
     UPDATE_TENDER: "Updated",
@@ -122,6 +126,8 @@ function formatEntityLabel(entityType: string) {
   const entityLabels: Record<string, string> = {
     announcement: "Announcement",
     document: "Document",
+    event: "Event",
+    meeting: "Meeting",
     notification: "Notification",
     report: "Report",
     task: "Task",
@@ -189,6 +195,8 @@ function getEmailHeading(actionType: string, entityLabel: string) {
     APPROVAL_FORWARDED: "A task has been<br>forwarded to MD",
     APPROVAL_REQUESTED: "A task is awaiting<br>approval",
     ASSIGN_TASK: "You&#39;ve been assigned<br>a new task",
+    CREATE_EVENT: "A new event has been<br>scheduled",
+    CREATE_MEETING: "A new meeting has been<br>scheduled",
     DEESCALATE_TASK: "A task has been<br>de-escalated",
     ESCALATE_TASK: "A task has been<br>escalated",
     REPORT_SUBMITTED: "A new report has been<br>submitted",
@@ -198,7 +206,10 @@ function getEmailHeading(actionType: string, entityLabel: string) {
     TASK_OVERDUE: "A task is now<br>overdue",
     TASK_REJECTED: "A task was returned<br>for update",
     UNASSIGN_TASK: "A task assignment has<br>been removed",
+    UPDATE_EVENT: "An event has been<br>updated",
+    UPDATE_MEETING: "A meeting has been<br>updated",
     UPDATE_TASK: "A task has been<br>updated",
+    CREATE_USER: "Your account has been<br>created",
   };
 
   return headingMap[actionType] || `You have a new<br>${escapeHtml(entityLabel.toLowerCase())} notification`;
@@ -223,8 +234,13 @@ function getEmailIntro(params: {
       This is to notify you that a new task has been assigned to you by <strong>${actorName} (${actorRole})</strong>. Please log in to the system to review the full details and take the necessary action.`;
   }
 
+  if (params.actionType === "CREATE_USER") {
+    return `Hi <strong>${recipientName}</strong>,<br><br>
+      Your Calaya Taskly account has been created by <strong>${actorName} (${actorRole})</strong>. Please review your account details below and sign in to the system to get started.`;
+  }
+
   return `Hi <strong>${recipientName}</strong>,<br><br>
-      This is to notify you that ${actorName} (${actorRole}) marked a ${entityLabel} as <strong>${statusLabel}</strong>. Please log in to the system to review the latest update and take any necessary action.`;
+      This is to notify you of a ${entityLabel} update from <strong>${actorName} (${actorRole})</strong>. Current status: <strong>${statusLabel}</strong>. Please log in to the system to review the latest update and take any necessary action.`;
 }
 
 function getCtaLabel(entityLabel: string) {
@@ -244,6 +260,7 @@ function renderNotificationEmailHtml(params: {
   itemTitle: string;
   dueLabel?: string | null;
   statusLabel: string;
+  extraDetails?: Array<{ label: string; value: string }>;
   actionDate: string;
   actionTime: string;
   viewUrl: string;
@@ -261,6 +278,12 @@ function renderNotificationEmailHtml(params: {
   const actionTime = escapeHtml(params.actionTime);
   const viewUrl = escapeHtml(params.viewUrl);
   const ctaLabel = escapeHtml(getCtaLabel(params.cardLabel.replace(" Name", "")));
+  const extraDetails = (params.extraDetails || [])
+    .filter((detail) => detail.label?.trim() && detail.value?.trim())
+    .map((detail) => ({
+      label: escapeHtml(detail.label),
+      value: escapeHtml(detail.value),
+    }));
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -574,6 +597,14 @@ function renderNotificationEmailHtml(params: {
         <div class="detail-label">Time</div>
         <div class="detail-value">${actionTime}</div>
       </div>
+      ${extraDetails
+        .map(
+          (detail) => `<div class="detail-item">
+        <div class="detail-label">${detail.label}</div>
+        <div class="detail-value">${detail.value}</div>
+      </div>`,
+        )
+        .join("")}
       <div class="detail-item full">
         <div class="detail-label">Status</div>
         <div class="detail-value">
@@ -601,6 +632,95 @@ function renderNotificationEmailHtml(params: {
 </html>`;
 }
 
+async function getAccountCreatedEmailDetails(userId: number) {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      name: true,
+      email: true,
+      role: true,
+      department: true,
+      managedDepartmentRelations: {
+        select: {
+          department: {
+            select: {
+              name: true,
+              hodAssignments: {
+                select: {
+                  hod: {
+                    select: {
+                      name: true,
+                      email: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        orderBy: {
+          department: {
+            name: "asc",
+          },
+        },
+      },
+    },
+  });
+
+  if (!user) {
+    return null;
+  }
+
+  const managedDepartments = user.managedDepartmentRelations.map((relation) => relation.department.name).filter(Boolean);
+  const primaryDepartment = user.department?.trim() || managedDepartments[0] || "Not assigned";
+  const hodNames = new Set<string>();
+
+  for (const relation of user.managedDepartmentRelations) {
+    for (const assignment of relation.department.hodAssignments) {
+      const label = assignment.hod.name?.trim() || assignment.hod.email?.split("@")[0] || "";
+      if (label) hodNames.add(label);
+    }
+  }
+
+  if (primaryDepartment && hodNames.size === 0) {
+    const departmentRecord = await prisma.department.findFirst({
+      where: { name: primaryDepartment },
+      select: {
+        hodAssignments: {
+          select: {
+            hod: {
+              select: {
+                name: true,
+                email: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    for (const assignment of departmentRecord?.hodAssignments || []) {
+      const label = assignment.hod.name?.trim() || assignment.hod.email?.split("@")[0] || "";
+      if (label) hodNames.add(label);
+    }
+  }
+
+  return {
+    itemTitle: user.name?.trim() || user.email,
+    extraDetails: [
+      { label: "Role", value: user.role || "Not assigned" },
+      { label: "Email", value: user.email || "Not available" },
+      { label: "Department", value: primaryDepartment },
+      {
+        label: user.role === "HOD" ? "Managed Departments" : "HOD",
+        value: user.role === "HOD"
+          ? (managedDepartments.length ? managedDepartments.join(", ") : primaryDepartment)
+          : (Array.from(hodNames).join(", ") || "Not assigned"),
+      },
+    ],
+  };
+}
+
 async function buildNotificationEmailContent(notification: {
   actionType: string;
   targetId?: number | null;
@@ -620,15 +740,25 @@ async function buildNotificationEmailContent(notification: {
   const subject = notification.emailSubject || `${actionLabel} — ${notification.createdAt.toLocaleDateString("en-GB")}`;
   const entityType = getEntityType(notification.linkPath);
   const entityLabel = formatEntityLabel(entityType);
-  const task = entityType === "task" && notification.targetId
+  const task = ["task", "event", "meeting"].includes(entityType) && notification.targetId
     ? await prisma.task.findUnique({
         where: { id: notification.targetId },
-        select: { title: true, dueDate: true },
+        select: { title: true, dueDate: true, type: true },
       })
     : null;
+  const resolvedEntityLabel =
+    task?.type === "EVENT"
+      ? "Event"
+      : task?.type === "MEETING"
+        ? "Meeting"
+        : entityLabel;
+  const accountCreatedDetails =
+    notification.actionType === "CREATE_USER" && notification.targetId
+      ? await getAccountCreatedEmailDetails(notification.targetId)
+      : null;
   const itemTitle = entityType === "task"
     ? task?.title || extractTaskTitleFromSubject(notification.emailSubject)
-    : extractItemTitle(notification.emailSubject, `${entityLabel} Update`);
+    : accountCreatedDetails?.itemTitle || extractItemTitle(notification.emailSubject, `${resolvedEntityLabel} Update`);
 
   const lines = [
     `Hi ${recipientName},`,
@@ -639,6 +769,7 @@ async function buildNotificationEmailContent(notification: {
     `- Action      : ${actionLabel}`,
     `- By          : ${actorName} (${notification.actorRole})`,
     `- Date & Time : ${notification.createdAt.toLocaleString("en-GB")}`,
+    ...(accountCreatedDetails?.extraDetails || []).map((detail) => `- ${detail.label.padEnd(11, " ")}: ${detail.value}`),
     `- Status      : ${statusLabel}`,
     "",
     `View in System: ${viewUrl}`,
@@ -655,20 +786,21 @@ async function buildNotificationEmailContent(notification: {
       actorName,
       actorRole: notification.actorRole,
       actionLabel,
-      cardLabel: `${entityLabel} Name`,
-      headerTag: `${entityLabel} Notification`,
-      heading: getEmailHeading(notification.actionType, entityLabel),
+      cardLabel: `${resolvedEntityLabel} Name`,
+      headerTag: `${resolvedEntityLabel} Notification`,
+      heading: getEmailHeading(notification.actionType, resolvedEntityLabel),
       introHtml: getEmailIntro({
         actionType: notification.actionType,
         recipientName,
         actorName,
         actorRole: notification.actorRole,
-        entityLabel,
+        entityLabel: resolvedEntityLabel,
         statusLabel,
       }),
       itemTitle,
-      dueLabel: entityType === "task" ? formatEmailDueDate(task?.dueDate || null) : null,
+      dueLabel: ["task", "event", "meeting"].includes(entityType) ? formatEmailDueDate(task?.dueDate || null) : null,
       statusLabel,
+      extraDetails: accountCreatedDetails?.extraDetails,
       actionDate: formatLongDate(notification.createdAt),
       actionTime: formatTimeWithSeconds(notification.createdAt),
       viewUrl,
