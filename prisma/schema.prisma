@@ -42,6 +42,32 @@ model User {
   sectionSeen                UserSectionSeen[]
 }
 
+model AccessRequest {
+  id              Int       @id @default(autoincrement())
+  fullName        String
+  email           String
+  phone           String
+  department      String
+  requestedRole   String
+  jobTitle        String?
+  hodId           Int?
+  hodName         String?
+  hodEmail        String?
+  reason          String    @db.Text
+  status          String    @default("PENDING")
+  reviewNote      String?   @db.Text
+  reviewedAt      DateTime?
+  reviewedByEmail String?
+  createdUserId   Int?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
+  @@index([department])
+}
+
 model DepartmentHod {
   id           Int        @id @default(autoincrement())
   departmentId Int

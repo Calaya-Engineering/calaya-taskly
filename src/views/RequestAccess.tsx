@@ -1,6 +1,6 @@
 "use client";
 // pages/RequestAccess.jsx
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -15,29 +15,16 @@ export default function RequestAccess() {
     department: "",
     role: "",
     jobTitle: "",
-    supervisor: "",
+    hodId: "",
     reason: "",
     agreeTerms: false,
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
-
-  // Department options based on your database schema
-  const departments = [
-    "Technical",
-    "Workshop",
-    "Logistics",
-    "Contract and Procurement",
-    "Legal and Compliances",
-    "Human Resources",
-    "HSE",
-    "Business Development (BDD)",
-    "Accounts",
-    "NCD",
-    "QHSE",
-    "Admin"
-  ];
+  const [departments, setDepartments] = useState([]);
+  const [hods, setHods] = useState([]);
+  const [optionsLoading, setOptionsLoading] = useState(true);
 
   // Role options based on your database schema
   const roles = [
@@ -47,12 +34,59 @@ export default function RequestAccess() {
     "Secretary/Admin Officer"
   ];
 
+  useEffect(() => {
+    const loadOptions = async () => {
+      try {
+        const response = await fetch("/api/request-access/options", { cache: "no-store" });
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data?.error || "Failed to load access request options");
+        }
+
+        setDepartments(Array.isArray(data?.departments) ? data.departments : []);
+        setHods(Array.isArray(data?.hods) ? data.hods : []);
+      } catch (error) {
+        console.error("Failed to load request access options:", error);
+        toast.error("Failed to load departments and HOD list");
+      } finally {
+        setOptionsLoading(false);
+      }
+    };
+
+    loadOptions();
+  }, []);
+
+  const filteredHods = useMemo(() => {
+    if (!formData.department) return hods;
+    return hods.filter((hod) => Array.isArray(hod.departments) && hod.departments.includes(formData.department));
+  }, [formData.department, hods]);
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
+    setFormData(prev => {
+      if (name === "department") {
+        const nextDepartment = type === "checkbox" ? checked : value;
+        const nextHodId = hods.some(
+          (hod) =>
+            String(hod.id) === String(prev.hodId) &&
+            Array.isArray(hod.departments) &&
+            hod.departments.includes(String(nextDepartment)),
+        )
+          ? prev.hodId
+          : "";
+
+        return {
+          ...prev,
+          department: String(nextDepartment),
+          hodId: nextHodId,
+        };
+      }
+
+      return {
+        ...prev,
+        [name]: type === "checkbox" ? checked : value,
+      };
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -64,15 +98,32 @@ export default function RequestAccess() {
       return;
     }
 
+    if (!formData.hodId) {
+      toast.warning("Please select an HOD");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
-      // In a real app, you would make an API call here
-      // For demo, we'll simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-
-      // Log the request (in real app, send to backend)
-      console.log("Access Request Submitted:", formData);
+      const response = await fetch("/api/request-access", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+          department: formData.department,
+          role: formData.role,
+          jobTitle: formData.jobTitle,
+          hodId: formData.hodId,
+          reason: formData.reason,
+        }),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(data?.error || "Failed to submit request");
+      }
 
       // Show success message
       setSubmitSuccess(true);
@@ -86,7 +137,7 @@ export default function RequestAccess() {
           department: "",
           role: "",
           jobTitle: "",
-          supervisor: "",
+          hodId: "",
           reason: "",
           agreeTerms: false,
         });
@@ -311,7 +362,7 @@ export default function RequestAccess() {
                 >
                   <option value="">Select Department</option>
                   {departments.map((dept, index) => (
-                    <option key={index} value={dept}>{dept}</option>
+                    <option key={dept.id || index} value={dept.name || dept}>{dept.name || dept}</option>
                   ))}
                 </select>
               </div>
@@ -361,24 +412,37 @@ export default function RequestAccess() {
               </div>
             </div>
 
-            {/* Supervisor */}
+            {/* HOD */}
             <div className="space-y-2">
               <label className="block text-sm font-semibold" style={{ color: "#2C4B9B" }}>
-                Immediate Supervisor/HOD
+                HOD *
               </label>
-              <input
-                type="text"
-                name="supervisor"
-                value={formData.supervisor}
+              <select
+                name="hodId"
+                value={formData.hodId}
                 onChange={handleChange}
-                placeholder="Name of your supervisor or HOD"
-                className="w-full rounded-xl border-2 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200"
+                className="w-full rounded-xl border-2 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200 appearance-none"
                 style={{
                   borderColor: "#6DC6DF",
                   backgroundColor: "#f8fafc",
                   focusRingColor: "#2C4B9B",
                 }}
-              />
+                required
+                disabled={optionsLoading || filteredHods.length === 0}
+              >
+                <option value="">
+                  {optionsLoading
+                    ? "Loading HODs..."
+                    : formData.department
+                      ? "Select HOD"
+                      : "Select department first"}
+                </option>
+                {filteredHods.map((hod) => (
+                  <option key={hod.id} value={hod.id}>
+                    {hod.label}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {/* Reason for Access */}

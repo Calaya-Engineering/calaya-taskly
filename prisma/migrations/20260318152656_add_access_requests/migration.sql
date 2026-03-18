@@ -1,0 +1,26 @@
+CREATE TABLE `AccessRequest` (
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
+  `fullName` VARCHAR(191) NOT NULL,
+  `email` VARCHAR(191) NOT NULL,
+  `phone` VARCHAR(191) NOT NULL,
+  `department` VARCHAR(191) NOT NULL,
+  `requestedRole` VARCHAR(191) NOT NULL,
+  `jobTitle` VARCHAR(191) NULL,
+  `hodId` INTEGER NULL,
+  `hodName` VARCHAR(191) NULL,
+  `hodEmail` VARCHAR(191) NULL,
+  `reason` TEXT NOT NULL,
+  `status` VARCHAR(191) NOT NULL DEFAULT 'PENDING',
+  `reviewNote` TEXT NULL,
+  `reviewedAt` DATETIME(3) NULL,
+  `reviewedByEmail` VARCHAR(191) NULL,
+  `createdUserId` INTEGER NULL,
+  `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `updatedAt` DATETIME(3) NOT NULL,
+
+  INDEX `AccessRequest_email_idx`(`email`),
+  INDEX `AccessRequest_status_idx`(`status`),
+  INDEX `AccessRequest_createdAt_idx`(`createdAt`),
+  INDEX `AccessRequest_department_idx`(`department`),
+  PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

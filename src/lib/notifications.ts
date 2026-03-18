@@ -53,6 +53,8 @@ function formatActionLabel(actionType: string) {
 
 function formatStatusLabel(actionType: string) {
   const statusMap: Record<string, string> = {
+    ACCESS_REQUEST_APPROVED: "Approved",
+    ACCESS_REQUEST_DENIED: "Denied",
     APPROVAL_FORWARDED: "Forwarded to MD",
     APPROVAL_REQUESTED: "Approval Requested",
     ASSIGN_TASK: "Assigned",
@@ -124,6 +126,7 @@ function getEntityType(linkPath?: string | null) {
 
 function formatEntityLabel(entityType: string) {
   const entityLabels: Record<string, string> = {
+    access: "Access Request",
     announcement: "Announcement",
     document: "Document",
     event: "Event",
@@ -192,6 +195,8 @@ function extractItemTitle(subject: string | null | undefined, fallbackLabel: str
 
 function getEmailHeading(actionType: string, entityLabel: string, isTargetRecipient = false) {
   const headingMap: Record<string, string> = {
+    ACCESS_REQUEST_APPROVED: "Your access request has been<br>approved",
+    ACCESS_REQUEST_DENIED: "Your access request was<br>not approved",
     APPROVAL_FORWARDED: "A task has been<br>forwarded to MD",
     APPROVAL_REQUESTED: "A task is awaiting<br>approval",
     ASSIGN_TASK: "You&#39;ve been assigned<br>a new task",
@@ -252,6 +257,36 @@ function getEmailIntro(params: {
 function getCtaLabel(entityLabel: string) {
   if (entityLabel === "Notification") return "View Notification in System";
   return `View ${entityLabel} in System`;
+}
+
+function buildPlainTextEmail(params: {
+  recipientName: string;
+  intro: string;
+  actionLabel: string;
+  actorName: string;
+  actorRole: string;
+  actionDateTime: string;
+  statusLabel: string;
+  viewUrl: string;
+  extraDetails?: Array<{ label: string; value: string }>;
+}) {
+  return [
+    `Hi ${params.recipientName},`,
+    "",
+    params.intro,
+    "",
+    "DETAILS:",
+    `- Action      : ${params.actionLabel}`,
+    `- By          : ${params.actorName} (${params.actorRole})`,
+    `- Date & Time : ${params.actionDateTime}`,
+    ...((params.extraDetails || []).map((detail) => `- ${detail.label.padEnd(11, " ")}: ${detail.value}`)),
+    `- Status      : ${params.statusLabel}`,
+    "",
+    `View in System: ${params.viewUrl}`,
+    "",
+    "This is an automated notification from Calaya Taskly.",
+    "Do not reply to this email.",
+  ].join("\n");
 }
 
 function renderNotificationEmailHtml(params: {
@@ -1056,5 +1091,79 @@ export async function notifyUsers(params: {
     sendEmail: params.sendEmail,
     emailSubject: params.emailSubject,
     linkPath: params.linkPath,
+  });
+}
+
+export async function sendAccessRequestDecisionEmail(params: {
+  recipientEmail: string;
+  recipientName: string;
+  actorName: string;
+  actorRole: string;
+  requestedRole: string;
+  department: string;
+  hodName?: string | null;
+  reviewNote?: string | null;
+  status: "APPROVED" | "DENIED";
+  temporaryPassword?: string | null;
+}) {
+  const resend = getResendClient();
+  if (!resend) {
+    return;
+  }
+
+  const now = new Date();
+  const isApproved = params.status === "APPROVED";
+  const actionType = isApproved ? "ACCESS_REQUEST_APPROVED" : "ACCESS_REQUEST_DENIED";
+  const statusLabel = formatStatusLabel(actionType);
+  const viewUrl = buildAppUrl(isApproved ? "/login" : "/request-access");
+  const extraDetails = [
+    { label: "Role", value: params.requestedRole },
+    { label: "Department", value: params.department },
+    { label: "HOD", value: params.hodName?.trim() || "Not assigned" },
+    ...(params.temporaryPassword ? [{ label: "Temporary Password", value: params.temporaryPassword }] : []),
+    ...(params.reviewNote?.trim() ? [{ label: "Review Note", value: params.reviewNote.trim() }] : []),
+  ];
+  const introText = isApproved
+    ? `Your request for Calaya Taskly access has been approved by ${params.actorName} (${params.actorRole}). Your account is now ready, and your login details are included below.`
+    : `Your request for Calaya Taskly access was reviewed by ${params.actorName} (${params.actorRole}) and was not approved at this time.`;
+  const introHtml = isApproved
+    ? `Hi <strong>${escapeHtml(params.recipientName)}</strong>,<br><br>
+      Your request for Calaya Taskly access has been approved by <strong>${escapeHtml(params.actorName)} (${escapeHtml(params.actorRole)})</strong>. Your account is now ready, and your login details are included below.`
+    : `Hi <strong>${escapeHtml(params.recipientName)}</strong>,<br><br>
+      Your request for Calaya Taskly access was reviewed by <strong>${escapeHtml(params.actorName)} (${escapeHtml(params.actorRole)})</strong> and was not approved at this time.`;
+
+  await resend.emails.send({
+    from: NOTIFICATION_SENDER,
+    to: [params.recipientEmail],
+    subject: isApproved
+      ? `Access Request Approved — ${params.department}`
+      : `Access Request Denied — ${params.department}`,
+    text: buildPlainTextEmail({
+      recipientName: params.recipientName,
+      intro: introText,
+      actionLabel: "Access Request Review",
+      actorName: params.actorName,
+      actorRole: params.actorRole,
+      actionDateTime: now.toLocaleString("en-GB"),
+      statusLabel,
+      viewUrl,
+      extraDetails,
+    }),
+    html: renderNotificationEmailHtml({
+      recipientName: params.recipientName,
+      actorName: params.actorName,
+      actorRole: params.actorRole,
+      actionLabel: "Access Request Review",
+      cardLabel: "Access Request Name",
+      headerTag: "Access Request Notification",
+      heading: getEmailHeading(actionType, "Access Request", true),
+      introHtml,
+      itemTitle: params.recipientName,
+      statusLabel,
+      extraDetails,
+      actionDate: formatLongDate(now),
+      actionTime: formatTimeWithSeconds(now),
+      viewUrl,
+    }),
   });
 }

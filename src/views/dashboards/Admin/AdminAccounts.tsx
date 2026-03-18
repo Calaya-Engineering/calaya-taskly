@@ -1,8 +1,7 @@
 "use client";
 
-import AdminUsers from "./AdminUsers";
+import AdminAccessRequests from "./AdminAccessRequests";
 
-/** Accounts = User accounts (same as Users management). */
 export default function AdminAccounts() {
-  return <AdminUsers />;
+  return <AdminAccessRequests />;
 }
