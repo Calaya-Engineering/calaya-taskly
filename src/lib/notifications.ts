@@ -21,7 +21,6 @@ type CreateNotificationParams = {
 };
 
 const NOTIFICATION_SENDER = "Calaya Taskly <noreply@calayaengineering.com>";
-const TASK_ASSIGNMENT_ACTION = "ASSIGN_TASK";
 
 const globalForNotifications = globalThis as typeof globalThis & {
   __notificationQueueRunning?: boolean;
@@ -50,6 +49,87 @@ function formatActionLabel(actionType: string) {
     .toLowerCase()
     .replace(/_/g, " ")
     .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+function formatStatusLabel(actionType: string) {
+  const statusMap: Record<string, string> = {
+    APPROVAL_FORWARDED: "Forwarded to MD",
+    APPROVAL_REQUESTED: "Approval Requested",
+    ASSIGN_TASK: "Assigned",
+    CREATE_ANNOUNCEMENT: "Created",
+    CREATE_DEPARTMENT: "Created",
+    CREATE_ROLE: "Created",
+    CREATE_TENDER: "Created",
+    CREATE_USER: "Created",
+    DEESCALATE_TASK: "De-escalated",
+    DELETE_ANNOUNCEMENT: "Deleted",
+    DELETE_DEPARTMENT: "Deleted",
+    DELETE_ROLE: "Deleted",
+    DELETE_TENDER: "Deleted",
+    DELETE_USER: "Deleted",
+    DOWNLOAD_DOCUMENT: "Downloaded",
+    ESCALATE_TASK: "Escalated",
+    READ_ANNOUNCEMENT: "Read",
+    REPORT_SUBMITTED: "Submitted",
+    TASK_APPROVED: "Approved",
+    TASK_DEADLINE_REMINDER: "Reminder",
+    TASK_DUE_SOON: "Deadline Approaching",
+    TASK_OVERDUE: "Overdue",
+    TASK_REJECTED: "Returned for Update",
+    UNASSIGN_TASK: "Assignment Removed",
+    UPDATE_ANNOUNCEMENT: "Updated",
+    UPDATE_DEPARTMENT: "Updated",
+    UPDATE_DOCUMENT: "Updated",
+    UPDATE_ROLE: "Updated",
+    UPDATE_TASK: "Updated",
+    UPDATE_TENDER: "Updated",
+    UPDATE_USER: "Updated",
+    UPLOAD_DOCUMENT: "Uploaded",
+    VIEW_ANNOUNCEMENT: "Viewed",
+    VIEW_DOCUMENT: "Viewed",
+    VIEW_ROLES: "Viewed",
+    VIEW_TENDER: "Viewed",
+    VIEW_USER: "Viewed",
+    VIEW_USERS: "Viewed",
+  };
+
+  return statusMap[actionType] || formatActionLabel(actionType);
+}
+
+function getEntityType(linkPath?: string | null) {
+  const normalizedPath = normalizePath(linkPath);
+  if (!normalizedPath) return "notification";
+
+  try {
+    const url = new URL(normalizedPath, "https://calayaengineering.com");
+    const openItemType = url.searchParams.get("type")?.trim().toLowerCase();
+    if (openItemType) return openItemType;
+
+    if (url.pathname.includes("/task/")) return "task";
+    if (url.pathname.includes("/document/")) return "document";
+    if (url.pathname.includes("/announcement/")) return "announcement";
+    if (url.pathname.includes("/report")) return "report";
+    if (url.pathname.includes("/tender")) return "tender";
+    if (url.pathname.includes("/user")) return "user";
+  } catch {
+    return "notification";
+  }
+
+  return "notification";
+}
+
+function formatEntityLabel(entityType: string) {
+  const entityLabels: Record<string, string> = {
+    announcement: "Announcement",
+    document: "Document",
+    notification: "Notification",
+    report: "Report",
+    task: "Task",
+    tender: "Tender",
+    user: "User",
+  };
+
+  return entityLabels[entityType] || formatActionLabel(entityType);
 }
 
 function escapeHtml(value: string) {
@@ -97,12 +177,73 @@ function extractTaskTitleFromSubject(subject: string | null | undefined) {
   return lastPart || subject.trim() || "Untitled Task";
 }
 
-function renderTaskAssignedEmailHtml(params: {
+function extractItemTitle(subject: string | null | undefined, fallbackLabel: string) {
+  if (!subject?.trim()) return fallbackLabel;
+  const parts = subject.split("—");
+  const lastPart = parts[parts.length - 1]?.trim();
+  return lastPart || subject.trim() || fallbackLabel;
+}
+
+function getEmailHeading(actionType: string, entityLabel: string) {
+  const headingMap: Record<string, string> = {
+    APPROVAL_FORWARDED: "A task has been<br>forwarded to MD",
+    APPROVAL_REQUESTED: "A task is awaiting<br>approval",
+    ASSIGN_TASK: "You&#39;ve been assigned<br>a new task",
+    DEESCALATE_TASK: "A task has been<br>de-escalated",
+    ESCALATE_TASK: "A task has been<br>escalated",
+    REPORT_SUBMITTED: "A new report has been<br>submitted",
+    TASK_APPROVED: "A task has been<br>approved",
+    TASK_DEADLINE_REMINDER: "A task reminder is<br>waiting for you",
+    TASK_DUE_SOON: "A task deadline is<br>approaching",
+    TASK_OVERDUE: "A task is now<br>overdue",
+    TASK_REJECTED: "A task was returned<br>for update",
+    UNASSIGN_TASK: "A task assignment has<br>been removed",
+    UPDATE_TASK: "A task has been<br>updated",
+  };
+
+  return headingMap[actionType] || `You have a new<br>${escapeHtml(entityLabel.toLowerCase())} notification`;
+}
+
+function getEmailIntro(params: {
+  actionType: string;
   recipientName: string;
   actorName: string;
   actorRole: string;
-  taskTitle: string;
-  dueLabel: string;
+  entityLabel: string;
+  statusLabel: string;
+}) {
+  const recipientName = escapeHtml(params.recipientName);
+  const actorName = escapeHtml(params.actorName);
+  const actorRole = escapeHtml(params.actorRole);
+  const entityLabel = escapeHtml(params.entityLabel.toLowerCase());
+  const statusLabel = escapeHtml(params.statusLabel.toLowerCase());
+
+  if (params.actionType === "ASSIGN_TASK") {
+    return `Hi <strong>${recipientName}</strong>,<br><br>
+      This is to notify you that a new task has been assigned to you by <strong>${actorName} (${actorRole})</strong>. Please log in to the system to review the full details and take the necessary action.`;
+  }
+
+  return `Hi <strong>${recipientName}</strong>,<br><br>
+      This is to notify you that ${actorName} (${actorRole}) marked a ${entityLabel} as <strong>${statusLabel}</strong>. Please log in to the system to review the latest update and take any necessary action.`;
+}
+
+function getCtaLabel(entityLabel: string) {
+  if (entityLabel === "Notification") return "View Notification in System";
+  return `View ${entityLabel} in System`;
+}
+
+function renderNotificationEmailHtml(params: {
+  recipientName: string;
+  actorName: string;
+  actorRole: string;
+  actionLabel: string;
+  cardLabel: string;
+  headerTag: string;
+  heading: string;
+  introHtml: string;
+  itemTitle: string;
+  dueLabel?: string | null;
+  statusLabel: string;
   actionDate: string;
   actionTime: string;
   viewUrl: string;
@@ -110,18 +251,23 @@ function renderTaskAssignedEmailHtml(params: {
   const recipientName = escapeHtml(params.recipientName);
   const actorName = escapeHtml(params.actorName);
   const actorRole = escapeHtml(params.actorRole);
-  const taskTitle = escapeHtml(params.taskTitle);
-  const dueLabel = escapeHtml(params.dueLabel);
+  const actionLabel = escapeHtml(params.actionLabel);
+  const cardLabel = escapeHtml(params.cardLabel);
+  const headerTag = escapeHtml(params.headerTag);
+  const itemTitle = escapeHtml(params.itemTitle);
+  const dueLabel = params.dueLabel ? escapeHtml(params.dueLabel) : null;
+  const statusLabel = escapeHtml(params.statusLabel);
   const actionDate = escapeHtml(params.actionDate);
   const actionTime = escapeHtml(params.actionTime);
   const viewUrl = escapeHtml(params.viewUrl);
+  const ctaLabel = escapeHtml(getCtaLabel(params.cardLabel.replace(" Name", "")));
 
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Calaya Taskly - Task Assigned</title>
+<title>Calaya Taskly - Notification</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Sora:wght@600;700&display=swap" rel="stylesheet" />
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -394,31 +540,30 @@ function renderTaskAssignedEmailHtml(params: {
         <div class="logo-text">Calaya <span>Taskly</span></div>
       </div>
     </div>
-    <div class="header-tag">Task Notification</div>
-    <h1>You&#39;ve been assigned<br>a new task</h1>
-    <p>Action required - please review and complete before the due date.</p>
+    <div class="header-tag">${headerTag}</div>
+    <h1>${params.heading}</h1>
+    <p>Action required - please review the latest update in the system.</p>
   </div>
 
   <div class="body">
     <p class="greeting">
-      Hi <strong>${recipientName}</strong>,<br><br>
-      This is to notify you that a new task has been assigned to you by <strong>${actorName} (${actorRole})</strong>. Please log in to the system to review the full details and take the necessary action.
+      ${params.introHtml}
     </p>
 
     <div class="task-card">
-      <div class="task-title-label">Task Name</div>
-      <div class="task-title">${taskTitle}</div>
-      <div class="due-badge">Due: ${dueLabel}</div>
+      <div class="task-title-label">${cardLabel}</div>
+      <div class="task-title">${itemTitle}</div>
+      ${dueLabel ? `<div class="due-badge">Due: ${dueLabel}</div>` : ""}
     </div>
 
     <div class="section-title">Activity Details</div>
     <div class="details-grid">
       <div class="detail-item">
         <div class="detail-label">Action</div>
-        <div class="detail-value">Assign Task</div>
+        <div class="detail-value">${actionLabel}</div>
       </div>
       <div class="detail-item">
-        <div class="detail-label">Assigned By</div>
+        <div class="detail-label">Triggered By</div>
         <div class="detail-value">${actorName} (${actorRole})</div>
       </div>
       <div class="detail-item">
@@ -432,7 +577,7 @@ function renderTaskAssignedEmailHtml(params: {
       <div class="detail-item full">
         <div class="detail-label">Status</div>
         <div class="detail-value">
-          <span class="status-pill"><span class="status-dot"></span>Task Assigned</span>
+          <span class="status-pill"><span class="status-dot"></span>${statusLabel}</span>
         </div>
       </div>
     </div>
@@ -440,7 +585,7 @@ function renderTaskAssignedEmailHtml(params: {
     <div class="divider"></div>
 
     <div class="cta-row">
-      <a href="${viewUrl}" class="cta-btn">View Task in System &rarr;</a>
+      <a href="${viewUrl}" class="cta-btn">${ctaLabel} &rarr;</a>
     </div>
   </div>
 
@@ -470,8 +615,20 @@ async function buildNotificationEmailContent(notification: {
   const recipientName = getDisplayName(notification.recipient);
   const actorName = getDisplayName(notification.actor);
   const actionLabel = formatActionLabel(notification.actionType);
+  const statusLabel = formatStatusLabel(notification.actionType);
   const viewUrl = buildAppUrl(notification.linkPath);
   const subject = notification.emailSubject || `${actionLabel} — ${notification.createdAt.toLocaleDateString("en-GB")}`;
+  const entityType = getEntityType(notification.linkPath);
+  const entityLabel = formatEntityLabel(entityType);
+  const task = entityType === "task" && notification.targetId
+    ? await prisma.task.findUnique({
+        where: { id: notification.targetId },
+        select: { title: true, dueDate: true },
+      })
+    : null;
+  const itemTitle = entityType === "task"
+    ? task?.title || extractTaskTitleFromSubject(notification.emailSubject)
+    : extractItemTitle(notification.emailSubject, `${entityLabel} Update`);
 
   const lines = [
     `Hi ${recipientName},`,
@@ -482,7 +639,7 @@ async function buildNotificationEmailContent(notification: {
     `- Action      : ${actionLabel}`,
     `- By          : ${actorName} (${notification.actorRole})`,
     `- Date & Time : ${notification.createdAt.toLocaleString("en-GB")}`,
-    `- Status      : ${notification.actionType}`,
+    `- Status      : ${statusLabel}`,
     "",
     `View in System: ${viewUrl}`,
     "",
@@ -490,34 +647,32 @@ async function buildNotificationEmailContent(notification: {
     "Do not reply to this email.",
   ];
 
-  if (notification.actionType === TASK_ASSIGNMENT_ACTION) {
-    const task = notification.targetId
-      ? await prisma.task.findUnique({
-          where: { id: notification.targetId },
-          select: { title: true, dueDate: true },
-        })
-      : null;
-
-    return {
-      subject,
-      text: lines.join("\n"),
-      html: renderTaskAssignedEmailHtml({
-        recipientName,
-        actorName,
-        actorRole: notification.actorRole,
-        taskTitle: task?.title || extractTaskTitleFromSubject(notification.emailSubject),
-        dueLabel: formatEmailDueDate(task?.dueDate || null),
-        actionDate: formatLongDate(notification.createdAt),
-        actionTime: formatTimeWithSeconds(notification.createdAt),
-        viewUrl,
-      }),
-    };
-  }
-
   return {
     subject,
     text: lines.join("\n"),
-    html: undefined,
+    html: renderNotificationEmailHtml({
+      recipientName,
+      actorName,
+      actorRole: notification.actorRole,
+      actionLabel,
+      cardLabel: `${entityLabel} Name`,
+      headerTag: `${entityLabel} Notification`,
+      heading: getEmailHeading(notification.actionType, entityLabel),
+      introHtml: getEmailIntro({
+        actionType: notification.actionType,
+        recipientName,
+        actorName,
+        actorRole: notification.actorRole,
+        entityLabel,
+        statusLabel,
+      }),
+      itemTitle,
+      dueLabel: entityType === "task" ? formatEmailDueDate(task?.dueDate || null) : null,
+      statusLabel,
+      actionDate: formatLongDate(notification.createdAt),
+      actionTime: formatTimeWithSeconds(notification.createdAt),
+      viewUrl,
+    }),
   };
 }
 
