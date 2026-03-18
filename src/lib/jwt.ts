@@ -47,8 +47,11 @@ export function getBearerToken(authHeader: string | null): string | null {
  */
 export async function getAuthFromRequest(request: Request): Promise<AuthTokenPayload | null> {
   const authHeader = request.headers.get("Authorization");
-  const token = getBearerToken(authHeader);
+  const headerToken = getBearerToken(authHeader);
+  const token =
+    headerToken ||
+    new URL(request.url).searchParams.get("token")?.trim() ||
+    null;
   if (!token) return null;
   return verifyAuthToken(token);
 }
-

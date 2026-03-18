@@ -168,7 +168,7 @@ export async function GET(req: NextRequest) {
       ? Array.from(
           new Set(
             tenders.flatMap((tender) =>
-              (tender.documents || [])
+              (((tender as any).documents as Array<{ uploadedBy?: string }> | undefined) || [])
                 .map((document) => document.uploadedBy?.trim())
                 .filter(Boolean) as string[],
             ),
@@ -206,46 +206,50 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    const formatted = tenders.map((t) => ({
-      id: t.referenceNo, // In frontend, ID is used as the reference No or short ID
-      dbId: t.id,
-      title: t.title,
-      referenceNo: t.referenceNo,
-      description: t.description,
-      issuedDate: t.issuedDate.toISOString().split("T")[0],
-      closingDate: t.closingDate.toISOString().split("T")[0],
-      department: t.department || DEFAULT_TENDER_DEPARTMENT,
-      category: t.category,
-      documents: includeDocuments
-        ? (t.documents || []).map((document) => ({
-            id: document.id,
-            tenderId: t.referenceNo,
-            title: document.title,
-            fileName: document.title,
-            uploadedBy: document.uploadedBy,
-            uploadedByRole: inferUploadedByRole(document.uploadedBy, roleLookup),
-            uploadedDate: document.createdAt.toISOString().split("T")[0],
-            fileSize: document.fileSize || "—",
-            fileType: inferDocumentFileType(document.title, document.fileUrl, document.type),
-            category: isSubmissionDocument(document.type) ? "Bid Submission" : "Tender Document",
-            downloads: document.downloads,
-            status: "ACTIVE",
-            department: document.department || t.department || DEFAULT_TENDER_DEPARTMENT,
-            comments: [],
-            type: document.type,
-            fileUrl: document.fileUrl,
-          }))
-        : t._count.documents,
-      documentsCount: t._count.documents,
-      submissions: includeDocuments
-        ? (t.documents || []).filter((document) => isSubmissionDocument(document.type)).length
-        : 0,
-      downloads: 0,
-      fileSize: `${t._count.documents} file${t._count.documents === 1 ? "" : "s"}`,
-      status: t.status,
-      createdBy: t.createdBy,
-      createdAt: t.createdAt.toISOString().split("T")[0],
-    }));
+    const formatted = tenders.map((t) => {
+      const tenderDocuments = (((t as any).documents as any[]) || []);
+
+      return {
+        id: t.referenceNo, // In frontend, ID is used as the reference No or short ID
+        dbId: t.id,
+        title: t.title,
+        referenceNo: t.referenceNo,
+        description: t.description,
+        issuedDate: t.issuedDate.toISOString().split("T")[0],
+        closingDate: t.closingDate.toISOString().split("T")[0],
+        department: t.department || DEFAULT_TENDER_DEPARTMENT,
+        category: t.category,
+        documents: includeDocuments
+          ? tenderDocuments.map((document) => ({
+              id: document.id,
+              tenderId: t.referenceNo,
+              title: document.title,
+              fileName: document.title,
+              uploadedBy: document.uploadedBy,
+              uploadedByRole: inferUploadedByRole(document.uploadedBy, roleLookup),
+              uploadedDate: document.createdAt.toISOString().split("T")[0],
+              fileSize: document.fileSize || "—",
+              fileType: inferDocumentFileType(document.title, document.fileUrl, document.type),
+              category: isSubmissionDocument(document.type) ? "Bid Submission" : "Tender Document",
+              downloads: document.downloads,
+              status: "ACTIVE",
+              department: document.department || t.department || DEFAULT_TENDER_DEPARTMENT,
+              comments: [],
+              type: document.type,
+              fileUrl: document.fileUrl,
+            }))
+          : t._count.documents,
+        documentsCount: t._count.documents,
+        submissions: includeDocuments
+          ? tenderDocuments.filter((document) => isSubmissionDocument(document.type)).length
+          : 0,
+        downloads: 0,
+        fileSize: `${t._count.documents} file${t._count.documents === 1 ? "" : "s"}`,
+        status: t.status,
+        createdBy: t.createdBy,
+        createdAt: t.createdAt.toISOString().split("T")[0],
+      };
+    });
 
     return NextResponse.json(formatted);
   } catch (error: any) {

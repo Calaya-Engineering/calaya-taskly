@@ -39,6 +39,7 @@ interface Document {
   department: string;
   comments: Comment[];
   type?: string;
+  fileUrl?: string | null;
 }
 
 interface Tender {
@@ -52,6 +53,7 @@ interface Tender {
   department: string;
   category: string;
   documents: Document[];
+  documentsCount?: number;
   submissions: number;
   status: string;
   createdBy: string;
@@ -98,6 +100,9 @@ const SectionTitle = ({ title, subtitle, action }: { title: string; subtitle?: s
   </div>
 );
 
+const getTenderDocuments = (tender?: Tender | null) =>
+  Array.isArray(tender?.documents) ? tender.documents : [];
+
 export default function MDTenderDocuments() {
   const params = useParams() || {};
   const tenderId = params.tenderId;
@@ -105,7 +110,7 @@ export default function MDTenderDocuments() {
 
   const [selectedTender, setSelectedTender] = useState<Tender | null>(null);
   const [comment, setComment] = useState("");
-  const [activeTab, setActiveTab] = useState("all");
+  const [activeTab, setActiveTab] = useState("documents");
   const [statusFilter, setStatusFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
@@ -125,14 +130,41 @@ export default function MDTenderDocuments() {
 
   const fetchTenders = useCallback(async () => {
     try {
-      const res = await fetchWithAuth("/api/tenders");
+      const res = await fetchWithAuth("/api/tenders?includeDocuments=true");
       if (res.ok) {
         const data = await res.json();
-        setTenders(data);
-        if (tenderId) {
-          const found = data.find((t: Tender) => t.id === tenderId);
-          if (found) setSelectedTender(found);
-        }
+        const normalizedData = Array.isArray(data)
+          ? data.map((tender) => {
+              const documents = Array.isArray(tender?.documents) ? tender.documents : [];
+              const documentsCount =
+                typeof tender?.documentsCount === "number"
+                  ? tender.documentsCount
+                  : documents.length;
+
+              return {
+                ...tender,
+                documents,
+                documentsCount,
+                submissions:
+                  typeof tender?.submissions === "number"
+                    ? tender.submissions
+                    : documents.filter((doc) => doc?.category === "Bid Submission" || doc?.type === "SUBMISSION").length,
+              };
+            })
+          : [];
+
+        setTenders(normalizedData);
+        setSelectedTender((currentSelectedTender) => {
+          if (tenderId) {
+            return normalizedData.find((t: Tender) => t.id === tenderId) || currentSelectedTender;
+          }
+
+          if (currentSelectedTender) {
+            return normalizedData.find((t: Tender) => t.id === currentSelectedTender.id) || normalizedData[0] || null;
+          }
+
+          return normalizedData[0] || null;
+        });
       }
     } catch (err) {
       console.error("Failed to fetch tenders:", err);
@@ -172,7 +204,7 @@ export default function MDTenderDocuments() {
   }, [fetchTenders]); // fetchDepartments removed from dependency array
 
   const tenderDocuments = useMemo(() => {
-    return selectedTender?.documents || [];
+    return getTenderDocuments(selectedTender);
   }, [selectedTender]);
 
   const updateTenderDocuments = (newDocs: Document[]) => {
@@ -207,12 +239,19 @@ export default function MDTenderDocuments() {
     });
   }, [searchTerm, statusFilter]);
 
+  const totalTenderDocuments = useMemo(() => {
+    return tenders.reduce(
+      (sum, tender) => sum + (typeof tender.documentsCount === "number" ? tender.documentsCount : getTenderDocuments(tender).length),
+      0,
+    );
+  }, [tenders]);
+
   const documentsForSelectedTender = useMemo(() => {
-    return selectedTender?.documents || [];
+    return getTenderDocuments(selectedTender);
   }, [selectedTender]);
 
   const submissionsForSelectedTender = useMemo(() => {
-    return (selectedTender?.documents || []).filter((doc) => doc.category === "Bid Submission" || (doc.type === "SUBMISSION"));
+    return getTenderDocuments(selectedTender).filter((doc) => doc.category === "Bid Submission" || doc.type === "SUBMISSION");
   }, [selectedTender]);
 
   const handleSelectTender = (tender: Tender) => {
@@ -331,7 +370,11 @@ export default function MDTenderDocuments() {
           {/* LEFT: TENDER LIST */}
           <div className="lg:col-span-1">
             <Card className="p-6 sticky top-6">
-              <SectionTitle title="Available Tenders" subtitle={`${tenders.length} total`} action={null} />
+              <SectionTitle
+                title="Available Tenders"
+                subtitle={`${tenders.length} total • ${totalTenderDocuments} documents`}
+                action={null}
+              />
 
               {/* Search + filters */}
               <div className="mt-5 space-y-3">
