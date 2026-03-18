@@ -88,6 +88,17 @@ function isSubmissionDocument(type: string) {
   return type.toUpperCase() === "SUBMISSION";
 }
 
+function getTenderDocumentCategory(type: string) {
+  if (isSubmissionDocument(type)) return "Bid Submission";
+
+  const trimmed = type.trim();
+  if (!trimmed || /document$/i.test(trimmed)) {
+    return "Tender Document";
+  }
+
+  return trimmed;
+}
+
 /**
  * GET /api/tenders - List tenders (Authenticated)
  * Query params: status, department, search
@@ -230,7 +241,7 @@ export async function GET(req: NextRequest) {
               uploadedDate: document.createdAt.toISOString().split("T")[0],
               fileSize: document.fileSize || "—",
               fileType: inferDocumentFileType(document.title, document.fileUrl, document.type),
-              category: isSubmissionDocument(document.type) ? "Bid Submission" : "Tender Document",
+              category: getTenderDocumentCategory(document.type),
               downloads: document.downloads,
               status: "ACTIVE",
               department: document.department || t.department || DEFAULT_TENDER_DEPARTMENT,

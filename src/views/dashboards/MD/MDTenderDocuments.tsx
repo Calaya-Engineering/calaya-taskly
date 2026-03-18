@@ -254,6 +254,21 @@ export default function MDTenderDocuments() {
     return getTenderDocuments(selectedTender).filter((doc) => doc.category === "Bid Submission" || doc.type === "SUBMISSION");
   }, [selectedTender]);
 
+  const sectionGroups = useMemo(() => {
+    const groups = new Map<string, Document[]>();
+    for (const document of documentsForSelectedTender.filter((doc) => doc.category !== "Bid Submission")) {
+      const department = document.department || "Unassigned";
+      const existing = groups.get(department) || [];
+      existing.push(document);
+      groups.set(department, existing);
+    }
+
+    return Array.from(groups.entries()).map(([department, documents]) => ({
+      department,
+      documents,
+    }));
+  }, [documentsForSelectedTender]);
+
   const handleSelectTender = (tender: Tender) => {
     setSelectedTender(tender);
     setActiveTab("documents");
@@ -479,6 +494,7 @@ export default function MDTenderDocuments() {
                         <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600 mt-3">
                           <span className="px-3 py-1 rounded-full bg-gray-100">{selectedTender.department}</span>
                           <span>📄 {documentsForSelectedTender.length} documents</span>
+                          <span>🏢 {sectionGroups.length} sections</span>
                           <span>📥 {submissionsForSelectedTender.length} submissions</span>
                         </div>
                       </div>
@@ -521,9 +537,25 @@ export default function MDTenderDocuments() {
                     <div className="space-y-4">
                       <SectionTitle
                         title="Tender Documents"
-                        subtitle="Internal tender files (excluding vendor bids)"
+                        subtitle="Internal tender files grouped by department section"
                         action={<Pill tone="default">MD Review</Pill>}
                       />
+
+                      {sectionGroups.length ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          {sectionGroups.map((section) => (
+                            <div key={section.department} className="rounded-2xl border border-gray-200/70 bg-white p-4">
+                              <div className="flex items-center justify-between gap-3">
+                                <div>
+                                  <p className="font-extrabold text-gray-900">{section.department}</p>
+                                  <p className="text-sm text-gray-500 mt-1">{section.documents.length} file{section.documents.length === 1 ? "" : "s"}</p>
+                                </div>
+                                <Pill>{section.department}</Pill>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : null}
 
                       <div className="mt-5 space-y-4">
                         {documentsForSelectedTender.filter((d) => d.category !== "Bid Submission").length ? (

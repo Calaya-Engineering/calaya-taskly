@@ -7,7 +7,7 @@ import { useParams, useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { StaffMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
-import { fetchWithAuth } from "@/lib/api";
+import { fetchWithAuth, getAuthToken } from "@/lib/api";
 import { useSSE } from "@/hooks/useSSE";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }: { className?: string; children: React.ReactNode }) => (
@@ -89,6 +89,7 @@ interface Document {
   department: string;
   comments: Comment[];
   type?: string;
+  fileUrl?: string | null;
 }
 
 interface Tender {
@@ -102,6 +103,7 @@ interface Tender {
   department: string;
   category: string;
   documents: Document[];
+  documentsCount?: number;
   submissions: number;
   status: string;
   createdBy: string;
@@ -159,6 +161,8 @@ const fmtDateTime = (iso) =>
   }) : "Not set";
 
 const safeLower = (value) => String(value ?? "").toLowerCase();
+const getTenderDocuments = (tender?: Tender | null) =>
+  Array.isArray(tender?.documents) ? tender.documents : [];
 
 export default function StaffTenderDocuments() {
   const params = useParams() || {};
@@ -183,17 +187,48 @@ export default function StaffTenderDocuments() {
   const [tenders, setTenders] = useState<Tender[]>([]);
   const [loading, setLoading] = useState(true);
   const lastRefetchRef = useRef(0);
+  const [currentUser, setCurrentUser] = useState({
+    name: STAFF_NAME,
+    department: STAFF_DEPARTMENT,
+  });
 
   const fetchTenders = useCallback(async () => {
     try {
-      const res = await fetchWithAuth("/api/tenders");
+      const res = await fetchWithAuth("/api/tenders?includeDocuments=true");
       if (res.ok) {
         const data = await res.json();
-        setTenders(data);
-        if (tenderId) {
-          const found = data.find((t: Tender) => t.id === tenderId);
-          if (found) setSelectedTender(found);
-        }
+        const normalizedData = Array.isArray(data)
+          ? data.map((tender) => {
+              const documents = Array.isArray(tender?.documents) ? tender.documents : [];
+              const documentsCount =
+                typeof tender?.documentsCount === "number"
+                  ? tender.documentsCount
+                  : documents.length;
+
+              return {
+                ...tender,
+                documents,
+                documentsCount,
+                submissions:
+                  typeof tender?.submissions === "number"
+                    ? tender.submissions
+                    : documents.filter((doc) => doc?.category === "Bid Submission" || doc?.type === "SUBMISSION").length,
+              };
+            })
+          : [];
+
+        setTenders(normalizedData);
+        setSelectedTender((currentSelectedTender) => {
+          if (tenderId) {
+            return normalizedData.find((t: Tender) => t.id === tenderId) || currentSelectedTender;
+          }
+
+          if (currentSelectedTender) {
+            return normalizedData.find((t: Tender) => t.id === currentSelectedTender.id) || normalizedData[0] || null;
+          }
+
+          return normalizedData[0] || null;
+        });
       }
     } catch (err) {
       console.error("Failed to fetch tenders:", err);
@@ -206,6 +241,31 @@ export default function StaffTenderDocuments() {
     fetchTenders();
   }, [fetchTenders]);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadCurrentUser() {
+      try {
+        const res = await fetchWithAuth("/api/me");
+        const data = await res.json().catch(() => null);
+        if (!res.ok || cancelled) return;
+
+        setCurrentUser({
+          name: data?.name || data?.email?.split("@")[0] || STAFF_NAME,
+          department: data?.department || STAFF_DEPARTMENT,
+        });
+      } catch (error) {
+        console.error("Failed to load current user:", error);
+      }
+    }
+
+    loadCurrentUser();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   useSSE("/api/realtime/events", (ev) => {
     if (!ev?.type || ev.type === "ping" || !String(ev.type).startsWith("tender:")) return;
     const now = Date.now();
@@ -215,7 +275,7 @@ export default function StaffTenderDocuments() {
   });
 
   const tenderDocuments = useMemo(() => {
-    return selectedTender?.documents || [];
+    return getTenderDocuments(selectedTender);
   }, [selectedTender]);
 
   const updateTenderDocuments = (newDocs: Document[]) => {
@@ -253,24 +313,41 @@ export default function StaffTenderDocuments() {
   }, [searchTerm]);
 
   const documentsForSelectedTender = useMemo(() => {
-    return selectedTender?.documents || [];
+    return getTenderDocuments(selectedTender);
   }, [selectedTender]);
 
   const staffDocumentsForSelectedTender = useMemo(() => {
-    return (selectedTender?.documents || []).filter((doc) => doc.uploadedByRole === "Staff");
-  }, [selectedTender]);
+    return getTenderDocuments(selectedTender).filter((doc) => doc.department === currentUser.department && doc.category !== "Bid Submission");
+  }, [currentUser.department, selectedTender]);
+
+  const sectionGroups = useMemo(() => {
+    const groups = new Map<string, Document[]>();
+    for (const document of documentsForSelectedTender.filter((doc) => doc.category !== "Bid Submission")) {
+      const department = document.department || "Unassigned";
+      const existing = groups.get(department) || [];
+      existing.push(document);
+      groups.set(department, existing);
+    }
+
+    return Array.from(groups.entries()).map(([department, documents]) => ({
+      department,
+      documents,
+    }));
+  }, [documentsForSelectedTender]);
 
   const handleSelectTender = (tender: Tender) => {
     setSelectedTender(tender);
   };
 
   const handleDownload = (doc: Document) => {
-    toast.info(`Downloading: ${doc.fileName}\nSize: ${doc.fileSize}\nCategory: ${doc.category}`);
+    const token = getAuthToken();
+    const url = `/api/documents/${doc.id}/download${token ? `?token=${token}` : ""}`;
+    window.open(url, "_blank");
   };
 
   const handleDeleteDocument = (documentId) => {
     const docToDelete = tenderDocuments.find((doc) => doc.id === documentId);
-    if (docToDelete && docToDelete.uploadedBy === STAFF_NAME) {
+    if (docToDelete && docToDelete.uploadedBy === currentUser.name) {
       if (window.confirm('Are you sure you want to delete this document?')) {
         const newDocs = tenderDocuments.filter((doc) => doc.id !== documentId);
         updateTenderDocuments(newDocs);
@@ -288,7 +365,7 @@ export default function StaffTenderDocuments() {
       id: allComments.length + 1,
       tenderId: String(selectedTender?.id || ""),
       documentId,
-      user: STAFF_NAME,
+      user: currentUser.name,
       role: 'Staff',
       comment: comment.trim(),
       date: new Date().toISOString().split('T')[0] + ' ' +
@@ -337,45 +414,60 @@ export default function StaffTenderDocuments() {
     });
   };
 
-  const handleUploadDocument = (e) => {
+  const handleUploadDocument = async (e) => {
     e.preventDefault();
     if (!uploadFormData.title.trim()) return toast.warning('Please enter document title');
     if (!uploadFormData.file) return toast.warning('Please select a file');
+    if (!selectedTender) return toast.warning("Please select a tender first");
 
     setIsUploading(true);
     setUploadProgress(0);
 
-    const interval = setInterval(() => {
-      setUploadProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          const newDocument: Document = {
-            id: tenderDocuments.length + 1,
-            tenderId: String(selectedTender?.id || ""),
-            title: uploadFormData.title,
-            fileName: uploadFormData.file?.name || "unknown",
-            uploadedBy: STAFF_NAME,
-            uploadedByRole: 'Staff',
-            uploadedDate: new Date().toISOString().split('T')[0],
-            fileSize: uploadFormData.fileSize,
-            fileType: uploadFormData.fileType || "PDF",
-            category: uploadFormData.category,
-            downloads: 0,
-            status: 'active',
-            department: selectedTender?.department || "",
-            comments: [],
-          };
-          const newDocs = [...tenderDocuments, newDocument];
-          updateTenderDocuments(newDocs);
-          setIsUploading(false);
-          toast.success('Document uploaded successfully!');
-          setIsUploadModalOpen(false);
-          resetUploadForm();
-          return 0;
-        }
-        return prev + 10;
+    try {
+      setUploadProgress(25);
+      const uploadPayload = new FormData();
+      uploadPayload.append("file", uploadFormData.file);
+
+      const uploadRes = await fetchWithAuth("/api/upload/cloudinary", {
+        method: "POST",
+        body: uploadPayload,
       });
-    }, 200);
+      const uploadData = await uploadRes.json().catch(() => null);
+
+      if (!uploadRes.ok || !(uploadData?.secureUrl || uploadData?.url)) {
+        throw new Error(uploadData?.error || "Failed to upload document file");
+      }
+
+      setUploadProgress(70);
+
+      const createRes = await fetchWithAuth(`/api/tenders/${selectedTender.id}/documents`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: uploadFormData.title.trim(),
+          type: uploadFormData.category,
+          fileUrl: uploadData.secureUrl || uploadData.url,
+          fileSize: uploadFormData.fileSize,
+        }),
+      });
+      const createdDocument = await createRes.json().catch(() => null);
+
+      if (!createRes.ok) {
+        throw new Error(createdDocument?.error || "Failed to save tender document");
+      }
+
+      setUploadProgress(100);
+      await fetchTenders();
+      toast.success("Document uploaded to your section successfully");
+      setIsUploadModalOpen(false);
+      resetUploadForm();
+    } catch (error) {
+      console.error("Failed to upload tender document:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to upload document");
+    } finally {
+      setIsUploading(false);
+      setUploadProgress(0);
+    }
   };
 
   return (
@@ -403,8 +495,8 @@ export default function StaffTenderDocuments() {
                 <p className="text-gray-600 mt-2">View tender documents and submit your own documents for review.</p>
                 <div className="mt-3 flex items-center gap-2">
                   <span className="text-sm text-gray-500">Staff:</span>
-                  <Pill tone="warn">{STAFF_NAME}</Pill>
-                  <Pill tone={getDepartmentTone(STAFF_DEPARTMENT)}>{STAFF_DEPARTMENT}</Pill>
+                  <Pill tone="warn">{currentUser.name}</Pill>
+                  <Pill tone={getDepartmentTone(currentUser.department)}>{currentUser.department}</Pill>
                 </div>
               </div>
 
@@ -467,7 +559,7 @@ export default function StaffTenderDocuments() {
                       </div>
 
                       <div className="mt-2 flex items-center justify-between text-xs text-gray-500">
-                        <span>📄 {tender.documents?.length || 0} docs</span>
+                        <span>📄 {Array.isArray(tender.documents) ? tender.documents.length : tender.documentsCount || 0} docs</span>
                         <span>📥 {tender.submissions || 0} bids</span>
                         <span>⏰ {tender.closingDate}</span>
                       </div>
@@ -504,7 +596,8 @@ export default function StaffTenderDocuments() {
 
                         <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600 mt-3">
                           <span>📄 {documentsForSelectedTender.length} documents</span>
-                          <span>📥 {staffDocumentsForSelectedTender.length} your docs</span>
+                          <span>🏢 {sectionGroups.length} sections</span>
+                          <span>📥 {staffDocumentsForSelectedTender.length} in your section</span>
                         </div>
                       </div>
 
@@ -548,13 +641,35 @@ export default function StaffTenderDocuments() {
                         borderBottom: activeTab === "staff" ? "2px solid var(--primary-blue)" : "2px solid transparent",
                       }}
                     >
-                      My Documents ({staffDocumentsForSelectedTender.length})
+                      My Section ({staffDocumentsForSelectedTender.length})
                     </button>
                   </div>
                 </Card>
 
                 {/* Documents list */}
                 <Card className="p-6">
+                  {sectionGroups.length ? (
+                    <div className="mb-6">
+                      <SectionTitle title="Department Sections" subtitle="Each department works in its own section, but everyone can view all shared files." />
+                      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {sectionGroups.map((section) => (
+                          <div
+                            key={section.department}
+                            className={`rounded-2xl border p-4 ${section.department === currentUser.department ? "border-blue-200 bg-blue-50/60" : "border-gray-200/70 bg-white"}`}
+                          >
+                            <div className="flex items-center justify-between gap-3">
+                              <div>
+                                <p className="font-extrabold text-gray-900">{section.department}</p>
+                                <p className="text-sm text-gray-500 mt-1">{section.documents.length} file{section.documents.length === 1 ? "" : "s"}</p>
+                              </div>
+                              {section.department === currentUser.department ? <Pill tone={getDepartmentTone(section.department)}>Your Section</Pill> : null}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ) : null}
+
                   <div className="space-y-4">
                     {(activeTab === "all"
                       ? documentsForSelectedTender
@@ -598,15 +713,6 @@ export default function StaffTenderDocuments() {
                           <div className="mt-4 flex items-center justify-between gap-3">
                             <div className="text-xs text-gray-500">Comments: {doc.comments?.length || 0}</div>
                             <div className="flex gap-2">
-                              {doc.uploadedByRole === 'Staff' && doc.uploadedBy === STAFF_NAME && (
-                                <button
-                                  onClick={() => handleDeleteDocument(doc.id)}
-                                  className="px-4 py-2 rounded-2xl text-sm font-semibold border bg-white hover:bg-red-50 active:scale-[0.99] transition"
-                                  style={{ borderColor: "rgba(237,50,55,0.45)", color: "var(--accent-red)" }}
-                                >
-                                  Delete
-                                </button>
-                              )}
                               <button
                                 onClick={() => handleDownload(doc)}
                                 className="px-5 py-2 rounded-2xl text-sm font-semibold text-white active:scale-[0.99] transition inline-flex items-center gap-2"
@@ -650,7 +756,7 @@ export default function StaffTenderDocuments() {
                                 className="w-8 h-8 rounded-xl flex items-center justify-center text-white text-xs font-extrabold"
                                 style={{ backgroundColor: "var(--warn)" }}
                               >
-                                {STAFF_NAME.charAt(0)}
+                                {currentUser.name.charAt(0)}
                               </div>
                               <div className="flex-1">
                                 <textarea
@@ -717,7 +823,8 @@ export default function StaffTenderDocuments() {
                     <p className="text-gray-600 mt-2">Add a document to {selectedTender.title}</p>
                     <div className="mt-2 flex items-center gap-2">
                       <Pill tone="warn">Staff</Pill>
-                      <Pill tone={getDepartmentTone(selectedTender.department)}>{selectedTender.department}</Pill>
+                      <Pill tone={getDepartmentTone(currentUser.department)}>{currentUser.department}</Pill>
+                      <Pill tone="info">Your Section</Pill>
                     </div>
                   </div>
                   <button
@@ -742,6 +849,13 @@ export default function StaffTenderDocuments() {
                       className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-100"
                       placeholder="e.g., Technical Question"
                     />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-extrabold text-gray-700 mb-2">Section</label>
+                    <div className="w-full px-4 py-3 border border-gray-200 rounded-2xl bg-gray-50 text-gray-700">
+                      {currentUser.department}
+                    </div>
                   </div>
 
                   <div>
@@ -803,7 +917,7 @@ export default function StaffTenderDocuments() {
                               Click to upload or drag and drop
                             </p>
                             <p className="text-sm text-gray-500">
-                              PDF, DOC, XLSX up to 50MB
+                              PDF, DOC, XLSX up to 50MB. Your upload will appear in the {currentUser.department} section.
                             </p>
                           </div>
                         )}

@@ -40,6 +40,7 @@ interface Document {
   department: string;
   comments: Comment[];
   type?: string;
+  fileUrl?: string | null;
 }
 
 interface Tender {
@@ -53,6 +54,7 @@ interface Tender {
   department: string;
   category: string;
   documents: Document[];
+  documentsCount?: number;
   submissions: number;
   status: string;
   createdBy: string;
@@ -109,6 +111,9 @@ const EmptyState = ({ icon, title, subtitle }) => (
   </div>
 );
 
+const getTenderDocuments = (tender?: Tender | null) =>
+  Array.isArray(tender?.documents) ? tender.documents : [];
+
 export default function HODTenderDocuments() {
   const params = useParams() || {};
   const tenderId = params.tenderId;
@@ -134,17 +139,50 @@ export default function HODTenderDocuments() {
   const [tenders, setTenders] = useState<Tender[]>([]);
   const [departmentsList, setDepartmentsList] = useState<Department[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState({
+    name: "HOD",
+    department: MANAGED_DEPARTMENTS[0] || "",
+    managedDepartments: MANAGED_DEPARTMENTS,
+  });
+  const [selectedUploadDepartment, setSelectedUploadDepartment] = useState(MANAGED_DEPARTMENTS[0] || "");
 
   const fetchTenders = useCallback(async () => {
     try {
-      const res = await fetchWithAuth("/api/tenders");
+      const res = await fetchWithAuth("/api/tenders?includeDocuments=true");
       if (res.ok) {
         const data = await res.json();
-        setTenders(data);
-        if (tenderId) {
-          const found = data.find(t => t.id === tenderId);
-          if (found) setSelectedTender(found);
-        }
+        const normalizedData = Array.isArray(data)
+          ? data.map((tender) => {
+              const documents = Array.isArray(tender?.documents) ? tender.documents : [];
+              const documentsCount =
+                typeof tender?.documentsCount === "number"
+                  ? tender.documentsCount
+                  : documents.length;
+
+              return {
+                ...tender,
+                documents,
+                documentsCount,
+                submissions:
+                  typeof tender?.submissions === "number"
+                    ? tender.submissions
+                    : documents.filter((doc) => doc?.category === "Bid Submission" || doc?.type === "SUBMISSION").length,
+              };
+            })
+          : [];
+
+        setTenders(normalizedData);
+        setSelectedTender((currentSelectedTender) => {
+          if (tenderId) {
+            return normalizedData.find((t: Tender) => t.id === tenderId) || currentSelectedTender;
+          }
+
+          if (currentSelectedTender) {
+            return normalizedData.find((t: Tender) => t.id === currentSelectedTender.id) || normalizedData[0] || null;
+          }
+
+          return normalizedData[0] || null;
+        });
       }
     } catch (err) {
       console.error("Failed to fetch tenders:", err);
@@ -186,8 +224,41 @@ export default function HODTenderDocuments() {
     return () => source.close();
   }, [fetchTenders, fetchDepartments]);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadCurrentUser() {
+      try {
+        const res = await fetchWithAuth("/api/me");
+        const data = await res.json().catch(() => null);
+        if (!res.ok || cancelled) return;
+
+        const managedDepartments =
+          Array.isArray(data?.managedDepartments) && data.managedDepartments.length
+            ? data.managedDepartments
+            : MANAGED_DEPARTMENTS;
+        const department = data?.department || managedDepartments[0] || "";
+
+        setCurrentUser({
+          name: data?.name || data?.email?.split("@")[0] || "HOD",
+          department,
+          managedDepartments,
+        });
+        setSelectedUploadDepartment((currentDepartment) => currentDepartment || department || managedDepartments[0] || "");
+      } catch (error) {
+        console.error("Failed to load current user:", error);
+      }
+    }
+
+    loadCurrentUser();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const tenderDocuments = useMemo(() => {
-    return selectedTender?.documents || [];
+    return getTenderDocuments(selectedTender);
   }, [selectedTender]);
 
   const updateTenderDocuments = (newDocs: Document[]) => {
@@ -223,12 +294,27 @@ export default function HODTenderDocuments() {
   }, [searchTerm, statusFilter, departmentFilter]);
 
   const documentsForSelectedTender = useMemo(() => {
-    return selectedTender?.documents || [];
+    return getTenderDocuments(selectedTender);
   }, [selectedTender]);
 
   const submissionsForSelectedTender = useMemo(() => {
-    return (selectedTender?.documents || []).filter((doc) => doc.category === "Bid Submission" || (doc.type === "SUBMISSION"));
+    return getTenderDocuments(selectedTender).filter((doc) => doc.category === "Bid Submission" || doc.type === "SUBMISSION");
   }, [selectedTender]);
+
+  const sectionGroups = useMemo(() => {
+    const groups = new Map<string, Document[]>();
+    for (const document of documentsForSelectedTender.filter((doc) => doc.category !== "Bid Submission")) {
+      const department = document.department || "Unassigned";
+      const existing = groups.get(department) || [];
+      existing.push(document);
+      groups.set(department, existing);
+    }
+
+    return Array.from(groups.entries()).map(([department, documents]) => ({
+      department,
+      documents,
+    }));
+  }, [documentsForSelectedTender]);
 
   const handleSelectTender = (tender: Tender) => {
     setSelectedTender(tender);
@@ -236,7 +322,9 @@ export default function HODTenderDocuments() {
   };
 
   const handleDownload = (doc: Document) => {
-    toast.info(`Downloading: ${doc.fileName}\nSize: ${doc.fileSize}\nCategory: ${doc.category}`);
+    const token = getAuthToken();
+    const url = `/api/documents/${doc.id}/download${token ? `?token=${token}` : ""}`;
+    window.open(url, "_blank");
   };
 
   const handleDeleteDocument = (documentId) => {
@@ -256,7 +344,7 @@ export default function HODTenderDocuments() {
     if (!selectedTender) return;
     if (!comment.trim()) return toast.warning("Please enter a comment");
 
-    const hodName = `HOD - ${selectedTender.department || "Department"}`;
+    const hodName = currentUser.name || `HOD - ${selectedTender.department || "Department"}`;
     const now = new Date();
     const newComment: Comment = {
       id: allComments.length + 1,
@@ -307,45 +395,62 @@ export default function HODTenderDocuments() {
     });
   };
 
-  const handleUploadDocument = (e) => {
+  const handleUploadDocument = async (e) => {
     e.preventDefault();
     if (!uploadFormData.title.trim()) return toast.warning("Please enter document title");
     if (!uploadFormData.file) return toast.warning("Please select a file");
+    if (!selectedTender) return toast.warning("Please select a tender first");
+    if (!selectedUploadDepartment) return toast.warning("Please choose a department section");
 
     setIsUploading(true);
     setUploadProgress(0);
 
-    const interval = setInterval(() => {
-      setUploadProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          const newDocument: Document = {
-            id: Number(tenderDocuments.length + 1),
-            tenderId: String(selectedTender?.id || ""),
-            title: uploadFormData.title,
-            fileName: uploadFormData.file?.name || "unknown",
-            uploadedBy: `HOD - ${selectedTender?.department}`,
-            uploadedByRole: "HOD",
-            uploadedDate: new Date().toISOString().split("T")[0],
-            fileSize: uploadFormData.fileSize,
-            fileType: uploadFormData.fileType || "PDF",
-            category: uploadFormData.category,
-            downloads: 0,
-            status: "active",
-            department: selectedTender?.department || "",
-            comments: [],
-          };
-          const newDocs = [...tenderDocuments, newDocument];
-          updateTenderDocuments(newDocs);
-          setIsUploading(false);
-          toast.success("Document uploaded successfully!");
-          setIsUploadModalOpen(false);
-          resetUploadForm();
-          return 0;
-        }
-        return prev + 10;
+    try {
+      setUploadProgress(25);
+      const uploadPayload = new FormData();
+      uploadPayload.append("file", uploadFormData.file);
+
+      const uploadRes = await fetchWithAuth("/api/upload/cloudinary", {
+        method: "POST",
+        body: uploadPayload,
       });
-    }, 200);
+      const uploadData = await uploadRes.json().catch(() => null);
+
+      if (!uploadRes.ok || !(uploadData?.secureUrl || uploadData?.url)) {
+        throw new Error(uploadData?.error || "Failed to upload document file");
+      }
+
+      setUploadProgress(70);
+
+      const createRes = await fetchWithAuth(`/api/tenders/${selectedTender.id}/documents`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: uploadFormData.title.trim(),
+          type: uploadFormData.category,
+          fileUrl: uploadData.secureUrl || uploadData.url,
+          fileSize: uploadFormData.fileSize,
+          department: selectedUploadDepartment,
+        }),
+      });
+      const createdDocument = await createRes.json().catch(() => null);
+
+      if (!createRes.ok) {
+        throw new Error(createdDocument?.error || "Failed to save tender document");
+      }
+
+      setUploadProgress(100);
+      await fetchTenders();
+      toast.success(`Document uploaded to the ${selectedUploadDepartment} section`);
+      setIsUploadModalOpen(false);
+      resetUploadForm();
+    } catch (error) {
+      console.error("Failed to upload tender document:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to upload document");
+    } finally {
+      setIsUploading(false);
+      setUploadProgress(0);
+    }
   };
 
   const getStatusTone = (status) => {
@@ -416,7 +521,7 @@ export default function HODTenderDocuments() {
                 <p className="text-gray-600 mt-2">Review tender documents, vendor submissions, and add HOD feedback.</p>
                 <div className="mt-2 flex items-center gap-2">
                   <span className="text-xs text-gray-500">Your Departments:</span>
-                  {MANAGED_DEPARTMENTS.map((dept) => (
+                  {currentUser.managedDepartments.map((dept) => (
                     <Pill key={dept} tone={getDepartmentTone(dept)}>{dept}</Pill>
                   ))}
                 </div>
@@ -497,7 +602,7 @@ export default function HODTenderDocuments() {
                   </div>
                 ) : filteredTenders.map((tender) => {
                   const selected = selectedTender?.id === tender.id;
-                  const isMyDept = MANAGED_DEPARTMENTS.includes(tender.department);
+                  const isMyDept = currentUser.managedDepartments.includes(tender.department);
 
                   return (
                     <button
@@ -520,7 +625,7 @@ export default function HODTenderDocuments() {
                       </div>
 
                       <div className="mt-2 flex items-center justify-between text-xs text-gray-500">
-                        <span>📄 {tender.documents?.length || 0} docs</span>
+                        <span>📄 {Array.isArray(tender.documents) ? tender.documents.length : tender.documentsCount || 0} docs</span>
                         <span>📥 {tender.submissions || 0} bids</span>
                         <span>⏰ {tender.closingDate}</span>
                       </div>
@@ -549,7 +654,7 @@ export default function HODTenderDocuments() {
                           <Pill>📌 Selected</Pill>
                           <Pill tone={getStatusTone(selectedTender.status)}>{selectedTender.status}</Pill>
                           <Pill tone={getDepartmentTone(selectedTender.department)}>{selectedTender.department}</Pill>
-                          {MANAGED_DEPARTMENTS.includes(selectedTender.department) && (
+                          {currentUser.managedDepartments.includes(selectedTender.department) && (
                             <Pill tone="info">📌 Your Department</Pill>
                           )}
                         </div>
@@ -560,6 +665,7 @@ export default function HODTenderDocuments() {
 
                         <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600 mt-3">
                           <span>📄 {documentsForSelectedTender.length} documents</span>
+                          <span>🏢 {sectionGroups.length} sections</span>
                           <span>📥 {submissionsForSelectedTender.length} submissions</span>
                         </div>
                       </div>
@@ -611,6 +717,25 @@ export default function HODTenderDocuments() {
                     <div className="space-y-4">
                       <SectionTitle title="Tender Documents" subtitle="Internal tender files (excluding vendor bids)" action={null} />
 
+                      {sectionGroups.length ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          {sectionGroups.map((section) => (
+                            <div
+                              key={section.department}
+                              className={`rounded-2xl border p-4 ${currentUser.managedDepartments.includes(section.department) ? "border-blue-200 bg-blue-50/60" : "border-gray-200/70 bg-white"}`}
+                            >
+                              <div className="flex items-center justify-between gap-3">
+                                <div>
+                                  <p className="font-extrabold text-gray-900">{section.department}</p>
+                                  <p className="text-sm text-gray-500 mt-1">{section.documents.length} file{section.documents.length === 1 ? "" : "s"}</p>
+                                </div>
+                                {currentUser.managedDepartments.includes(section.department) ? <Pill tone="info">Your Section</Pill> : null}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : null}
+
                       <div className="mt-5 space-y-4">
                         {documentsForSelectedTender.filter((d) => d.category !== "Bid Submission").length ? (
                           documentsForSelectedTender
@@ -650,15 +775,6 @@ export default function HODTenderDocuments() {
                                 <div className="mt-4 flex items-center justify-between gap-3">
                                   <div className="text-xs text-gray-500">Comments: {doc.comments?.length || 0}</div>
                                   <div className="flex gap-2">
-                                    {canDeleteDocument(doc) && (
-                                      <button
-                                        onClick={() => handleDeleteDocument(doc.id)}
-                                        className="px-4 py-2 rounded-2xl text-sm font-semibold border bg-white hover:bg-red-50 active:scale-[0.99] transition"
-                                        style={{ borderColor: "rgba(237,50,55,0.45)", color: "var(--accent-red)" }}
-                                      >
-                                        Delete
-                                      </button>
-                                    )}
                                     <button
                                       onClick={() => handleDownload(doc)}
                                       className="px-5 py-2 rounded-2xl text-sm font-semibold text-white active:scale-[0.99] transition inline-flex items-center gap-2"
@@ -911,10 +1027,8 @@ export default function HODTenderDocuments() {
                     </h3>
                     <p className="text-gray-600 mt-2">Add a document to {selectedTender.title}</p>
                     <div className="mt-2 flex items-center gap-2">
-                      <Pill tone={getDepartmentTone(selectedTender.department)}>{selectedTender.department}</Pill>
-                      {MANAGED_DEPARTMENTS.includes(selectedTender.department) && (
-                        <Pill tone="info">Your Department</Pill>
-                      )}
+                      <Pill tone={getDepartmentTone(selectedUploadDepartment || currentUser.department)}>{selectedUploadDepartment || currentUser.department}</Pill>
+                      <Pill tone="info">Department Section</Pill>
                     </div>
                   </div>
                   <button
@@ -939,6 +1053,21 @@ export default function HODTenderDocuments() {
                       className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-100"
                       placeholder="e.g., Technical Specifications"
                     />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-extrabold text-gray-700 mb-2">Section</label>
+                    <select
+                      value={selectedUploadDepartment}
+                      onChange={(e) => setSelectedUploadDepartment(e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-100"
+                    >
+                      {currentUser.managedDepartments.map((department) => (
+                        <option key={department} value={department}>
+                          {department}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   <div>
