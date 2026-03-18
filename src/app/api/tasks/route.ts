@@ -4,6 +4,7 @@ import { getAuthFromRequest } from "@/lib/jwt";
 import { emitTaskEvent } from "@/lib/task-events";
 import { emitAnnouncementEvent } from "@/lib/announcement-events";
 import { createNotification } from "@/lib/notifications";
+import { getManagedDepartmentNamesByUserId } from "@/lib/hod-departments";
 
 /**
  * GET /api/tasks - List tasks with optional filters.
@@ -42,8 +43,14 @@ export async function GET(req: NextRequest) {
     }
 
     if (currentUser?.role === "HOD") {
+      const managedDepartments = await getManagedDepartmentNamesByUserId(currentUser.id);
+      const scopedDepartments = managedDepartments.length > 0
+        ? managedDepartments
+        : currentUser.department
+          ? [currentUser.department]
+          : [];
       const hodOrConditions = [
-        { department: currentUser.department },
+        ...(scopedDepartments.length > 0 ? [{ department: { in: scopedDepartments } }] : []),
         { assignments: { some: { userId: currentUser.id } } }
       ];
 

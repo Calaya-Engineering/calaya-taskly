@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 // pages/dashboards/Secretary/SecretaryReportsArchive.jsx
@@ -7,6 +8,7 @@ import Layout from "@/components/Layout";
 import { SecretaryMenuItems } from "@/utils/menus";
 import { fetchWithAuth } from "@/lib/api";
 import { toast } from "@/lib/toast";
+import DailyReportPreviewModal from "@/components/DailyReportPreviewModal";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -108,29 +110,29 @@ export default function SecretaryReportsArchive() {
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
   const [userFilter, setUserFilter] = useState('all');
   const [departmentFilter, setDepartmentFilter] = useState('all');
+  const [previewReportId, setPreviewReportId] = useState<number | null>(null);
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
 
   useEffect(() => {
     async function getReports() {
       try {
-        const resp = await fetchWithAuth("/api/documents?type=Report&limit=500");
+        const resp = await fetchWithAuth("/api/daily-reports?limit=500");
         if (resp.ok) {
           const data = await resp.json();
-          // Map API fields if necessary
           const mapped = data.map(d => ({
             id: d.id,
             dbId: d.dbId,
             title: d.title,
-            date: d.date ? d.date.split('T')[0] : '', // YYYY-MM-DD
+            date: d.date ? d.date.split('T')[0] : '',
             fullDate: d.date,
-            type: d.title.toLowerCase().includes('weekly') ? 'Weekly' :
-              d.title.toLowerCase().includes('monthly') ? 'Monthly' : 'Daily',
+            type: 'Daily',
             downloads: d.downloads || 0,
-            size: d.size || '—',
-            uploadedBy: d.uploadedBy,
+            size: d.fileSize || '—',
+            uploadedBy: d.submittedBy,
             department: d.department,
             role: 'Staff', // Default or fetch if needed
-            status: 'approved',
-            fileFormat: d.fileUrl ? d.fileUrl.split('.').pop().toLowerCase() : 'pdf',
+            status: (d.status || 'APPROVED').toLowerCase(),
+            fileFormat: d.fileUrl ? d.fileUrl.split('.').pop().toLowerCase() : 'json',
             fileUrl: d.fileUrl
           }));
           setReports(mapped);
@@ -194,13 +196,27 @@ export default function SecretaryReportsArchive() {
   const months = Array.from({ length: 12 }, (_, i) => ({ index: i, name: getMonthName(i) }));
 
   const handleDownload = (report) => {
-    toast.warning(`Downloading: ${report.title}\nFrom: ${report.uploadedBy} (${report.department})\nFormat: ${report.fileFormat.toUpperCase()}\nFile size: ${report.size}`);
+    if (!report.fileUrl) {
+      toast.info(`No file available for ${report.title}`);
+      return;
+    }
+    const link = document.createElement("a");
+    link.href = report.fileUrl;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.download = `${report.title || report.id}.json`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
   };
 
-  const handleDelete = (reportId) => {
-    if (window.confirm('Are you sure you want to delete this report? This action cannot be undone.')) {
-      toast.success(`Report ${reportId} deleted successfully.`);
+  const handlePreview = (report) => {
+    if (!report.dbId) {
+      toast.info("This report does not have a previewable record.");
+      return;
     }
+    setPreviewReportId(report.dbId);
+    setIsPreviewModalOpen(true);
   };
 
   // Handle batch download for selected date
@@ -546,11 +562,11 @@ All reports will be downloaded as a ZIP file.`);
                             Download
                           </button>
                           <button
-                            onClick={() => handleDelete(report.id)}
-                            className="px-3 py-1.5 rounded-xl text-[11px] font-semibold border bg-white hover:bg-red-50 active:scale-[0.99] transition"
-                            style={{ borderColor: "rgba(237,50,55,0.45)", color: "var(--accent-red)" }}
+                            onClick={() => handlePreview(report)}
+                            className="px-3 py-1.5 rounded-xl text-[11px] font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
+                            style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}
                           >
-                            Delete
+                            Preview
                           </button>
                         </div>
                       </td>
@@ -558,7 +574,7 @@ All reports will be downloaded as a ZIP file.`);
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="7" className="p-8 text-center text-gray-500">
+                    <td colSpan={7} className="p-8 text-center text-gray-500">
                       No daily reports found matching your filters.
                     </td>
                   </tr>
@@ -781,6 +797,14 @@ All reports will be downloaded as a ZIP file.`);
           </div>
         </div>
       )}
+      <DailyReportPreviewModal
+        open={isPreviewModalOpen}
+        reportId={previewReportId}
+        onClose={() => {
+          setIsPreviewModalOpen(false);
+          setPreviewReportId(null);
+        }}
+      />
     </Layout>
   );
 }

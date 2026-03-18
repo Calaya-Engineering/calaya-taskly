@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
+import { getManagedDepartmentNamesByEmail } from "@/lib/hod-departments";
 
 /**
  * GET /api/profile/me
@@ -30,6 +31,9 @@ export async function GET(req: NextRequest) {
         if (!user) {
             return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
+
+        const managedDepartments = user.role === "HOD" ? await getManagedDepartmentNamesByEmail(auth.email) : [];
+        const primaryDepartment = managedDepartments[0] || user.department || null;
 
         // ── Live task stats ──────────────────────────────────────────────────
         const [activeTasks, completedTasks, totalDocs, recentNotifications] = await Promise.all([
@@ -87,14 +91,15 @@ export async function GET(req: NextRequest) {
         let performanceStats: any = null;
         let departmentTasks = 0;
 
-        if (user.role === "HOD" && user.department) {
+        if (user.role === "HOD" && managedDepartments.length > 0) {
             const rawTeam = await prisma.user.findMany({
-                where: { department: user.department, role: { not: "HOD" } },
+                where: { department: { in: managedDepartments }, role: { not: "HOD" } },
                 select: {
                     id: true,
                     name: true,
                     role: true,
                     email: true,
+                    department: true,
                     tasksAssigned: { select: { status: true } }
                 }
             });
@@ -104,21 +109,22 @@ export async function GET(req: NextRequest) {
                 name: member.name || member.email.split("@")[0],
                 role: member.role,
                 email: member.email,
+                department: member.department,
                 tasks: member.tasksAssigned.length,
                 status: "Active"
             }));
 
             departmentTasks = await prisma.task.count({
-                where: { department: user.department }
+                where: { department: { in: managedDepartments } }
             });
 
             const deptCompletedTasks = await prisma.task.count({
-                where: { department: user.department, status: { in: ["COMPLETED", "DONE"] } }
+                where: { department: { in: managedDepartments }, status: { in: ["COMPLETED", "DONE"] } }
             });
 
             const overdueTasks = await prisma.task.count({
                 where: {
-                    department: user.department,
+                    department: { in: managedDepartments },
                     status: { notIn: ["COMPLETED", "DONE"] },
                     dueDate: { lt: new Date() }
                 }
@@ -141,7 +147,9 @@ export async function GET(req: NextRequest) {
             fullName: user.name || auth.email.split("@")[0],
             email: user.email,
             role: user.role,
-            department: user.department || "—",
+            department: primaryDepartment || "—",
+            primaryDepartment: primaryDepartment || "—",
+            managedDepartments,
             joinDate: user.createdAt,
             // stats
             activeTasks,
@@ -178,12 +186,31 @@ export async function PATCH(req: NextRequest) {
     try {
         const body = await req.json();
         const { name, department } = body as { name?: string; department?: string };
+        const currentUser = await prisma.user.findUnique({
+            where: { email: auth.email },
+            select: { role: true, department: true },
+        });
+
+        if (!currentUser) {
+            return NextResponse.json({ error: "User not found" }, { status: 404 });
+        }
+
+        if (currentUser.role === "HOD" && department !== undefined) {
+            const managedDepartments = await getManagedDepartmentNamesByEmail(auth.email);
+            const primaryDepartment = managedDepartments[0] || currentUser.department || null;
+            if ((department.trim() || null) !== primaryDepartment) {
+                return NextResponse.json(
+                    { error: "HOD primary department is managed by the administrator" },
+                    { status: 400 }
+                );
+            }
+        }
 
         const updated = await prisma.user.update({
             where: { email: auth.email },
             data: {
                 ...(name !== undefined && { name: name.trim() || null }),
-                ...(department !== undefined && { department: department.trim() || null }),
+                ...(currentUser.role !== "HOD" && department !== undefined && { department: department.trim() || null }),
             },
             select: { id: true, email: true, name: true, role: true, department: true },
         });
@@ -195,7 +222,15 @@ export async function PATCH(req: NextRequest) {
             entityId: updated.id,
         });
 
-        return NextResponse.json(updated);
+        const managedDepartments = updated.role === "HOD" ? await getManagedDepartmentNamesByEmail(auth.email) : [];
+        const primaryDepartment = managedDepartments[0] || updated.department || null;
+
+        return NextResponse.json({
+            ...updated,
+            department: primaryDepartment,
+            primaryDepartment,
+            managedDepartments,
+        });
     } catch (error) {
         console.error("Error updating profile:", error);
         return NextResponse.json(

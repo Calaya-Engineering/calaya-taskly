@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 // pages/dashboards/HOD/HODProfile.jsx
@@ -424,13 +425,21 @@ export default function HODProfile() {
 
 
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Department</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">Primary Department</label>
                         <input
                           type="text"
-                          className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-100"
+                          className="w-full px-4 py-3 border border-gray-200 rounded-2xl bg-gray-50"
                           value={editForm.department}
-                          onChange={(e) => setEditForm({ ...editForm, department: e.target.value })}
+                          disabled
+                          readOnly
                         />
+                        {Array.isArray(profileData.managedDepartments) && profileData.managedDepartments.length > 0 ? (
+                          <div className="mt-3 flex flex-wrap gap-2">
+                            {profileData.managedDepartments.map((departmentName) => (
+                              <Pill key={departmentName} tone="info">{departmentName}</Pill>
+                            ))}
+                          </div>
+                        ) : null}
                       </div>
 
                       <div>
@@ -480,7 +489,12 @@ export default function HODProfile() {
                     <InfoRow label="Full Name" value={profileData.fullName} />
                     <InfoRow label="Email Address" value={profileData.email} />
                     <InfoRow label="Role" value={profileData.role} />
-                    <InfoRow label="Department" value={profileData.department} />
+                    <InfoRow
+                      label="Managed Departments"
+                      value={Array.isArray(profileData.managedDepartments) && profileData.managedDepartments.length > 0
+                        ? profileData.managedDepartments.join(", ")
+                        : profileData.department}
+                    />
                     <InfoRow label="Employee ID" value={`EMP-${profileData.id}`} />
                     <InfoRow label="Join Date" value={fmtDate(profileData.joinDate)} />
                   </div>

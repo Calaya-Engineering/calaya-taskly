@@ -7,6 +7,7 @@ import Layout from "@/components/Layout";
 import { StaffMenuItems } from "@/utils/menus";
 import { fetchWithAuth } from "@/lib/api";
 import { toast } from "@/lib/toast";
+import DailyReportPreviewModal from "@/components/DailyReportPreviewModal";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -189,6 +190,8 @@ export default function StaffDailyReports() {
   const [currentPage, setCurrentPage] = useState(1);
   const [tableScrollTop, setTableScrollTop] = useState(0);
   const tableViewportRef = useRef<HTMLDivElement | null>(null);
+  const [previewReportId, setPreviewReportId] = useState<number | null>(null);
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
 
   const staffDepartment = staffProfile.department || DEFAULT_STAFF_PROFILE.department;
   const staffName = staffProfile.name || DEFAULT_STAFF_PROFILE.name;
@@ -483,12 +486,12 @@ export default function StaffDailyReports() {
   const getReportUrl = (report: DailyReportItem) => report.entriesUrl || report.fileUrl || null;
 
   const handlePreview = (report: DailyReportItem) => {
-    const url = getReportUrl(report);
-    if (!url) {
-      toast.info("No report file available to preview");
+    if (!report.dbId) {
+      toast.info("This report does not have a previewable record.");
       return;
     }
-    window.open(url, "_blank", "noopener,noreferrer");
+    setPreviewReportId(report.dbId);
+    setIsPreviewModalOpen(true);
   };
 
   const handleDownload = (report: DailyReportItem) => {
@@ -1130,6 +1133,14 @@ export default function StaffDailyReports() {
           </div>
         )}
       </div>
+      <DailyReportPreviewModal
+        open={isPreviewModalOpen}
+        reportId={previewReportId}
+        onClose={() => {
+          setIsPreviewModalOpen(false);
+          setPreviewReportId(null);
+        }}
+      />
     </Layout>
   );
 }

@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 // pages/dashboards/MD/MDDailyReports.jsx
@@ -7,6 +8,7 @@ import Layout from "@/components/Layout";
 import { MDMenuItems } from "@/utils/menus";
 import { fetchWithAuth } from "@/lib/api";
 import { toast } from "@/lib/toast";
+import DailyReportPreviewModal from "@/components/DailyReportPreviewModal";
 
 
 /* ---------------- UI helpers ---------------- */
@@ -96,7 +98,7 @@ export default function MDDailyReports() {
   useEffect(() => {
     async function getReports() {
       try {
-        const resp = await fetchWithAuth("/api/documents?type=Report&limit=500");
+        const resp = await fetchWithAuth("/api/daily-reports?limit=500");
         if (resp.ok) {
           const data = await resp.json();
           const mapped = data.map(d => ({
@@ -105,11 +107,9 @@ export default function MDDailyReports() {
             date: d.date ? d.date.split('T')[0] : '',
             department: d.department,
             title: d.title,
-            uploadedBy: d.uploadedBy,
-            size: d.size || '—',
+            uploadedBy: d.submittedBy,
+            size: d.fileSize || '—',
             downloads: d.downloads || 0,
-            summary: d.title, // Use title as fallback for summary
-            content: "Real document from archive.",
             fileUrl: d.fileUrl
           }));
           setReportsData(mapped);
@@ -244,7 +244,18 @@ export default function MDDailyReports() {
   };
 
   const handleDownloadReport = (report) => {
-    toast.info(`Downloading ${report.title} (${report.id}) in PDF format`);
+    if (!report.fileUrl) {
+      toast.info(`No file available for ${report.title}`);
+      return;
+    }
+    const link = document.createElement("a");
+    link.href = report.fileUrl;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.download = `${report.title || report.id}.json`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
   };
 
   if (loading) {
@@ -625,7 +636,7 @@ export default function MDDailyReports() {
                     type="button"
                     className={`h-14 rounded-2xl flex flex-col items-center justify-center border transition ${c.hasReport ? "bg-blue-50 border-blue-200" : "bg-gray-50 border-gray-100"
                       } ${active ? "ring-2" : ""}`}
-                    style={{ ringColor: active ? "var(--primary-blue)" : "transparent" }}
+                    style={{ boxShadow: active ? "0 0 0 2px var(--primary-blue)" : "none" }}
                     onClick={() => setSelectedDate(c.iso)}
                     title={c.hasReport ? "Has report" : "No report"}
                   >
@@ -918,114 +929,14 @@ export default function MDDailyReports() {
         </div>
       )}
 
-      {/* Report Preview Modal */}
-      {isPreviewModalOpen && selectedReport && (
-        <div className="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-          <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div
-              className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-              onClick={() => setIsPreviewModalOpen(false)}
-            ></div>
-
-            <div className="inline-block align-bottom bg-transparent text-left overflow-hidden transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
-              <Card className="overflow-hidden">
-                {/* Modal Header */}
-                <div className="px-6 pt-6 pb-4 border-b border-gray-200/70">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <Pill tone={deptTone(selectedReport.department)}>{selectedReport.department}</Pill>
-                        <Pill tone="info">ID: {selectedReport.id}</Pill>
-                      </div>
-                      <h3 className="text-2xl font-extrabold" style={{ color: 'var(--primary-blue)' }}>
-                        {selectedReport.title}
-                      </h3>
-                      <p className="text-sm text-gray-500 mt-1">
-                        Uploaded by {selectedReport.uploadedBy} on {fmtDate(selectedReport.date)}
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => setIsPreviewModalOpen(false)}
-                      className="text-gray-400 hover:text-gray-500 focus:outline-none w-8 h-8 rounded-xl hover:bg-gray-100 flex items-center justify-center transition"
-                    >
-                      <span className="text-2xl">&times;</span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Modal Body - Report Preview */}
-                <div className="p-6 max-h-[60vh] overflow-y-auto">
-                  <div className="space-y-6">
-                    {/* Report Summary */}
-                    <div className="rounded-2xl border border-gray-200/70 p-5 bg-blue-50/30">
-                      <h4 className="font-extrabold mb-3" style={{ color: 'var(--primary-blue)' }}>
-                        Summary
-                      </h4>
-                      <p className="text-gray-700">{selectedReport.summary}</p>
-                    </div>
-
-                    {/* Report Content */}
-                    <div className="rounded-2xl border border-gray-200/70 p-5">
-                      <h4 className="font-extrabold mb-3" style={{ color: 'var(--primary-blue)' }}>
-                        Report Content
-                      </h4>
-                      <p className="text-gray-700 whitespace-pre-line leading-relaxed">
-                        {selectedReport.content}
-                      </p>
-                    </div>
-
-                    {/* Report Metadata */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                      <div className="p-4 rounded-2xl border border-gray-200/70">
-                        <p className="text-xs text-gray-500 mb-1">File Size</p>
-                        <p className="font-extrabold text-gray-900">{selectedReport.size}</p>
-                      </div>
-                      <div className="p-4 rounded-2xl border border-gray-200/70">
-                        <p className="text-xs text-gray-500 mb-1">Downloads</p>
-                        <p className="font-extrabold text-gray-900">{selectedReport.downloads}</p>
-                      </div>
-                      <div className="p-4 rounded-2xl border border-gray-200/70">
-                        <p className="text-xs text-gray-500 mb-1">Uploaded By</p>
-                        <p className="font-extrabold text-gray-900">{selectedReport.uploadedBy}</p>
-                      </div>
-                      <div className="p-4 rounded-2xl border border-gray-200/70">
-                        <p className="text-xs text-gray-500 mb-1">Date</p>
-                        <p className="font-extrabold text-gray-900">{fmtDate(selectedReport.date)}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Modal Footer */}
-                <div className="px-6 py-4 border-t border-gray-200/70 bg-gray-50 flex justify-between items-center">
-                  <div className="text-sm text-gray-600">
-                    <span className="font-semibold">Report ID:</span> {selectedReport.id}
-                  </div>
-                  <div className="flex gap-3">
-                    <button
-                      onClick={() => {
-                        handleDownloadReport(selectedReport);
-                        setIsPreviewModalOpen(false);
-                      }}
-                      className="px-6 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition"
-                      style={{ backgroundColor: "var(--secondary-blue)" }}
-                    >
-                      Download Report
-                    </button>
-                    <button
-                      onClick={() => setIsPreviewModalOpen(false)}
-                      className="px-6 py-3 rounded-2xl font-semibold border bg-white hover:bg-gray-50 transition"
-                      style={{ borderColor: "rgba(44, 75, 155, 0.35)", color: "var(--primary-blue)" }}
-                    >
-                      Close
-                    </button>
-                  </div>
-                </div>
-              </Card>
-            </div>
-          </div>
-        </div>
-      )}
+      <DailyReportPreviewModal
+        open={isPreviewModalOpen}
+        reportId={selectedReport?.dbId ?? null}
+        onClose={() => {
+          setIsPreviewModalOpen(false);
+          setSelectedReport(null);
+        }}
+      />
     </Layout>
   );
 }

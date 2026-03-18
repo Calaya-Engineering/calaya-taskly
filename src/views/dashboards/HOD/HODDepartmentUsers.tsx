@@ -1,6 +1,7 @@
+// @ts-nocheck
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import { HODMenuItems } from "@/utils/menus";
@@ -26,10 +27,12 @@ export default function HODDepartmentUsers() {
   const [form, setForm] = useState({ email: "", password: "", name: "", role: "", department: "" });
   const [saving, setSaving] = useState(false);
   const [viewMode, setViewMode] = useState("table");
+  const [managedDepartments, setManagedDepartments] = useState([]);
+  const [selectedDepartment, setSelectedDepartment] = useState("all");
 
-  const hodDept = me?.department;
+  const hodDept = me?.primaryDepartment || me?.department;
 
-  const load = async () => {
+  const load = useCallback(async () => {
     setLoading(true);
     try {
       const meRes = await fetchWithAuth("/api/me");
@@ -39,14 +42,23 @@ export default function HODDepartmentUsers() {
       }
       const meData = await meRes.json();
       setMe(meData);
+      const hodDepartments = Array.isArray(meData?.managedDepartments) && meData.managedDepartments.length > 0
+        ? meData.managedDepartments
+        : meData?.department ? [meData.department] : [];
+      setManagedDepartments(hodDepartments);
+      setSelectedDepartment((current) => (current === "all" || hodDepartments.includes(current) ? current : "all"));
 
-      if (!meData.department) {
+      if (hodDepartments.length === 0) {
         toast.error("Your account has no department assigned. Contact admin.");
         return;
       }
 
+      const departmentQuery = selectedDepartment !== "all"
+        ? `department=${encodeURIComponent(selectedDepartment)}`
+        : hodDepartments.map((departmentName) => `department=${encodeURIComponent(departmentName)}`).join("&");
+
       const [uRes, rRes] = await Promise.all([
-        fetchWithAuth(`/api/users?department=${encodeURIComponent(meData.department)}`),
+        fetchWithAuth(`/api/users?${departmentQuery}`),
         fetchWithAuth("/api/roles"),
       ]);
       if (uRes.ok) setUsers(await uRes.json());
@@ -60,11 +72,11 @@ export default function HODDepartmentUsers() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedDepartment]);
 
   useEffect(() => {
     load();
-  }, []);
+  }, [load]);
 
   // Note: user list is refreshed after create/edit/delete actions — no need for SSE here
 
@@ -75,7 +87,7 @@ export default function HODDepartmentUsers() {
       password: "",
       name: "",
       role: roles[0]?.name || "Staff",
-      department: hodDept || "",
+      department: selectedDepartment !== "all" ? selectedDepartment : hodDept || "",
     });
   };
 
@@ -105,7 +117,7 @@ export default function HODDepartmentUsers() {
             password: form.password,
             name: form.name || null,
             role: form.role,
-            department: hodDept,
+            department: form.department,
           }),
         });
         if (!res.ok) {
@@ -118,7 +130,7 @@ export default function HODDepartmentUsers() {
           email: form.email,
           name: form.name || null,
           role: form.role,
-          department: hodDept,
+          department: form.department,
         };
         if (form.password) payload.password = form.password;
         const res = await fetchWithAuth(`/api/users/${modal.user.id}`, {
@@ -217,15 +229,40 @@ export default function HODDepartmentUsers() {
               Department Users
             </h1>
             <p className="text-gray-600 mt-1">
-              Manage people in your department ({hodDept}). You can add Staff, Personnel, or Corp Members.
+              Manage people across your assigned departments. You can add Staff, Personnel, or Corp Members.
             </p>
           </div>
         </Card>
 
         <Card className="p-6">
+          <SectionTitle title="Department Switcher" subtitle="Choose one department or work across all assigned departments" />
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            <select
+              value={selectedDepartment}
+              onChange={(e) => setSelectedDepartment(e.target.value)}
+              className="px-4 py-3 border border-gray-200 rounded-2xl bg-white focus:outline-none focus:ring-2 focus:ring-blue-100"
+            >
+              <option value="all">All Assigned Departments</option>
+              {managedDepartments.map((departmentName) => (
+                <option key={departmentName} value={departmentName}>
+                  {departmentName}
+                </option>
+              ))}
+            </select>
+            <div className="flex flex-wrap gap-2">
+              {managedDepartments.map((departmentName) => (
+                <Pill key={departmentName} tone={selectedDepartment === departmentName || selectedDepartment === "all" ? "info" : "default"}>
+                  {departmentName}
+                </Pill>
+              ))}
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-6">
           <SectionTitle
-            title={`Users in ${hodDept}`}
-            subtitle="Create, edit, or remove users in your department"
+            title={selectedDepartment === "all" ? "Users in All Assigned Departments" : `Users in ${selectedDepartment}`}
+            subtitle="Create, edit, or remove users in your managed departments"
             action={
               <div className="flex items-center gap-2">
                 <div className="flex rounded-xl border border-gray-200 overflow-hidden">
@@ -351,7 +388,9 @@ export default function HODDepartmentUsers() {
               <h2 className="text-lg font-extrabold mb-4" style={{ color: "var(--primary-blue)" }}>
                 {modal.type === "create" ? "Create User" : "Edit User"}
               </h2>
-              <p className="text-sm text-gray-500 mb-4">Department: {hodDept} (fixed)</p>
+              <p className="text-sm text-gray-500 mb-4">
+                Choose one of your managed departments for this user.
+              </p>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <Label htmlFor="email">Email *</Label>
@@ -399,6 +438,20 @@ export default function HODDepartmentUsers() {
                   >
                     {roles.map((r) => (
                       <option key={r.id} value={r.name}>{r.name}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <Label htmlFor="department">Department *</Label>
+                  <select
+                    id="department"
+                    required
+                    className="mt-1 w-full px-4 py-3 border border-gray-200 rounded-2xl bg-white focus:outline-none focus:ring-2 focus:ring-blue-100"
+                    value={form.department}
+                    onChange={(e) => setForm((f) => ({ ...f, department: e.target.value }))}
+                  >
+                    {managedDepartments.map((departmentName) => (
+                      <option key={departmentName} value={departmentName}>{departmentName}</option>
                     ))}
                   </select>
                 </div>

@@ -8,10 +8,11 @@ datasource db {
 }
 
 model Department {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id             Int             @id @default(autoincrement())
+  name           String          @unique
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  hodAssignments DepartmentHod[]
 }
 
 model Role {
@@ -23,20 +24,34 @@ model Role {
 }
 
 model User {
-  id                    Int                @id @default(autoincrement())
-  email                 String             @unique
-  password              String
-  role                  String
-  name                  String?
-  department            String?
-  createdAt             DateTime           @default(now())
-  updatedAt             DateTime           @updatedAt
-  announcementsRead     AnnouncementRead[]
-  actionsPerformed      Notification[]     @relation("PerformedActions")
-  notificationsReceived Notification[]     @relation("ReceivedNotifications")
-  tasksCreated          Task[]             @relation("CreatedBy")
-  assignmentsMade       TaskAssignment[]   @relation("AssignedBy")
-  tasksAssigned         TaskAssignment[]   @relation("AssignedTo")
+  id                         Int                @id @default(autoincrement())
+  email                      String             @unique
+  password                   String
+  role                       String
+  name                       String?
+  department                 String?
+  createdAt                  DateTime           @default(now())
+  updatedAt                  DateTime           @updatedAt
+  announcementsRead          AnnouncementRead[]
+  actionsPerformed           Notification[]     @relation("PerformedActions")
+  notificationsReceived      Notification[]     @relation("ReceivedNotifications")
+  tasksCreated               Task[]             @relation("CreatedBy")
+  assignmentsMade            TaskAssignment[]   @relation("AssignedBy")
+  tasksAssigned              TaskAssignment[]   @relation("AssignedTo")
+  managedDepartmentRelations DepartmentHod[]    @relation("HodAssignments")
+}
+
+model DepartmentHod {
+  id           Int        @id @default(autoincrement())
+  departmentId Int
+  hodId        Int
+  assignedAt   DateTime   @default(now())
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  hod          User       @relation("HodAssignments", fields: [hodId], references: [id], onDelete: Cascade)
+
+  @@unique([departmentId, hodId])
+  @@index([hodId])
+  @@index([departmentId])
 }
 
 model Task {

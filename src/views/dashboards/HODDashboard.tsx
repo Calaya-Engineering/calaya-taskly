@@ -53,6 +53,8 @@ interface MeData {
   id?: string;
   name?: string;
   department?: string;
+  primaryDepartment?: string;
+  managedDepartments?: string[];
 }
 
 /* ─── UI helpers ─────────────────────────────────────────────────── */
@@ -140,6 +142,7 @@ export default function HODDashboard() {
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [selectedDepartment, setSelectedDepartment] = useState("all");
 
   /* ── Fetch all dashboard data ── */
   const fetchAll = useCallback(async () => {
@@ -188,8 +191,22 @@ export default function HODDashboard() {
   /* ── Derived analytics ── */
   const now = Date.now();
 
-  const myDept = me?.department || null;
+  const managedDepartments = Array.isArray(me?.managedDepartments) && me.managedDepartments.length > 0
+    ? me.managedDepartments
+    : me?.department ? [me.department] : [];
+  const activeDepartments = selectedDepartment === "all"
+    ? managedDepartments
+    : managedDepartments.filter((departmentName) => departmentName === selectedDepartment);
+  const myDept = me?.primaryDepartment || me?.department || null;
   const myId = me?.id || null;
+
+  useEffect(() => {
+    if (managedDepartments.length <= 1) {
+      setSelectedDepartment(managedDepartments[0] || "all");
+      return;
+    }
+    setSelectedDepartment((current) => (current === "all" || managedDepartments.includes(current) ? current : "all"));
+  }, [managedDepartments]);
 
   // All non-completed, non-event tasks in HOD's department (or assigned to HOD)
   const deptTasks = useMemo(
@@ -198,9 +215,12 @@ export default function HODDashboard() {
         (t) =>
           t.status !== "COMPLETED" &&
           t.type !== "EVENT" &&
-          (t.department === myDept || t.assignments?.some((a) => a.userId === myId))
+          (
+            activeDepartments.includes(t.department || "") ||
+            t.assignments?.some((a) => String(a.userId) === String(myId))
+          )
       ),
-    [tasks, myDept, myId]
+    [tasks, activeDepartments, myId]
   );
 
   const inProgressTasks = useMemo(
@@ -229,13 +249,23 @@ export default function HODDashboard() {
   );
 
   const pendingApprovals = useMemo(
-    () => tasks.filter((t) => t.status === "PENDING"),
-    [tasks]
+    () =>
+      tasks.filter(
+        (t) =>
+          t.status === "PENDING" &&
+          (activeDepartments.length === 0 || activeDepartments.includes(t.department || ""))
+      ),
+    [tasks, activeDepartments]
   );
 
   const activeTenders = useMemo(
-    () => tenders.filter((t) => t.status === "OPEN" || t.status === "ACTIVE"),
-    [tenders]
+    () =>
+      tenders.filter(
+        (t) =>
+          (t.status === "OPEN" || t.status === "ACTIVE") &&
+          (activeDepartments.length === 0 || activeDepartments.includes(t.department || ""))
+      ),
+    [tenders, activeDepartments]
   );
 
   const escalatedCount = useMemo(
@@ -250,9 +280,12 @@ export default function HODDashboard() {
         (t) =>
           t.status === "COMPLETED" &&
           t.type !== "EVENT" &&
-          (t.department === myDept || t.assignments?.some((a) => a.userId === myId))
+          (
+            activeDepartments.includes(t.department || "") ||
+            t.assignments?.some((a) => String(a.userId) === String(myId))
+          )
       ),
-    [tasks, myDept, myId]
+    [tasks, activeDepartments, myId]
   );
 
   const totalDeptAll = deptTasks.length + completedDeptTasks.length;
@@ -330,18 +363,19 @@ export default function HODDashboard() {
 
   /* ── Department breakdown ── */
   const deptBreakdown = useMemo(() => {
-    if (!myDept) return [];
-    const deptOnly = tasks.filter(
-      (t) => t.department === myDept && t.type !== "EVENT"
-    );
-    const completed = deptOnly.filter((t) => t.status === "COMPLETED").length;
-    const total = deptOnly.length;
-    const overdue = deptOnly.filter(
-      (t) => t.status !== "COMPLETED" && t.dueDate && new Date(t.dueDate).getTime() < now
-    ).length;
-    const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
-    return [{ name: myDept, tasks: total, progress, overdue }];
-  }, [tasks, myDept, now]);
+    return activeDepartments.map((departmentName) => {
+      const deptOnly = tasks.filter(
+        (t) => t.department === departmentName && t.type !== "EVENT"
+      );
+      const completed = deptOnly.filter((t) => t.status === "COMPLETED").length;
+      const total = deptOnly.length;
+      const overdue = deptOnly.filter(
+        (t) => t.status !== "COMPLETED" && t.dueDate && new Date(t.dueDate).getTime() < now
+      ).length;
+      const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
+      return { name: departmentName, tasks: total, progress, overdue };
+    });
+  }, [tasks, activeDepartments, now]);
 
   if (loading && tasks.length === 0) {
     return <DashboardSkeleton />;
@@ -370,7 +404,11 @@ export default function HODDashboard() {
                   ) : (
                     <Pill tone="success">All Clear</Pill>
                   )}
-                  {myDept && <Pill tone="purple">{myDept}</Pill>}
+                  {selectedDepartment === "all" && managedDepartments.length > 1 ? (
+                    <Pill tone="purple">All Assigned Departments</Pill>
+                  ) : myDept ? (
+                    <Pill tone="purple">{selectedDepartment === "all" ? myDept : selectedDepartment}</Pill>
+                  ) : null}
                 </div>
 
                 <h1
@@ -380,11 +418,26 @@ export default function HODDashboard() {
                   Welcome{me?.name ? `, ${me.name}` : ""}
                 </h1>
                 <p className="text-gray-600 mt-2 max-w-2xl">
-                  Manage your department tasks, monitor performance, and oversee operations at a glance.
+                  Manage your assigned department tasks, monitor performance, and oversee operations at a glance.
                 </p>
               </div>
 
               <div className="flex flex-wrap gap-2">
+                {managedDepartments.length > 1 ? (
+                  <select
+                    value={selectedDepartment}
+                    onChange={(e) => setSelectedDepartment(e.target.value)}
+                    className="px-4 py-3 rounded-2xl border bg-white hover:bg-gray-50 transition"
+                    style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}
+                  >
+                    <option value="all">All Assigned Departments</option>
+                    {managedDepartments.map((departmentName) => (
+                      <option key={departmentName} value={departmentName}>
+                        {departmentName}
+                      </option>
+                    ))}
+                  </select>
+                ) : null}
                 <button
                   onClick={() => fetchAll()}
                   className="px-5 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition"

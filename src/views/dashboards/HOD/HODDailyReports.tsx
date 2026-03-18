@@ -8,6 +8,7 @@ import { HODMenuItems } from "@/utils/menus";
 import { fetchWithAuth } from "@/lib/api";
 import { toast } from "@/lib/toast";
 import { useSSE } from "@/hooks/useSSE";
+import DailyReportPreviewModal from "@/components/DailyReportPreviewModal";
 /* ---------- Types ---------- */
 interface ReportEntry {
   id?: number;
@@ -20,6 +21,7 @@ interface ReportEntry {
 interface DailyReport {
   id: string;
   dbId?: number;
+  title: string;
   date: string;
   department: string;
   submittedBy: string;
@@ -83,9 +85,6 @@ const FieldLabel = ({ children, required }: { children: React.ReactNode; require
     {children} {required ? <span className="text-red-500">*</span> : null}
   </label>
 );
-
-// HOD managed departments
-const DEFAULT_MANAGED_DEPARTMENTS = ['Technical', 'Workshop', 'HSE'];
 
 // Storage keys
 const STORAGE_KEYS = {
@@ -188,12 +187,14 @@ export default function HODDailyReports() {
   const [departmentFilter, setDepartmentFilter] = useState('All');
   const [viewMode, setViewMode] = useState('list');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [managedDepartments, setManagedDepartments] = useState<string[]>(DEFAULT_MANAGED_DEPARTMENTS);
-  const [selectedDepartments, setSelectedDepartments] = useState<string[]>([DEFAULT_MANAGED_DEPARTMENTS[0]]);
+  const [managedDepartments, setManagedDepartments] = useState<string[]>([]);
+  const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [tableScrollTop, setTableScrollTop] = useState(0);
   const tableViewportRef = useRef<HTMLDivElement>(null);
   const lastRefreshAtRef = useRef(0);
+  const [previewReportId, setPreviewReportId] = useState<number | null>(null);
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
 
   /* ── New state for modal extras ── */
   const [urgentReview, setUrgentReview] = useState(false);
@@ -218,12 +219,14 @@ export default function HODDailyReports() {
         const res = await fetchWithAuth("/api/me");
         if (!res.ok) return;
         const me = await res.json();
-        const dept = String(me?.department ?? "").trim();
-        if (!dept) return;
-        setManagedDepartments([dept]);
+        const departments = Array.isArray(me?.managedDepartments) && me.managedDepartments.length > 0
+          ? me.managedDepartments
+          : String(me?.department ?? "").trim() ? [String(me.department).trim()] : [];
+        if (departments.length === 0) return;
+        setManagedDepartments(departments);
         setSelectedDepartments((prev) => {
-          const next = prev.filter((item) => item === dept);
-          return next.length > 0 ? next : [dept];
+          const next = prev.filter((item) => departments.includes(item));
+          return next.length > 0 ? next : [departments[0]];
         });
       } catch (err) {
         console.error("Failed to load HOD department:", err);
@@ -302,7 +305,7 @@ export default function HODDailyReports() {
   useEffect(() => {
     setSelectedDepartments((prev) => {
       const next = prev.filter((dept) => managedDepartments.includes(dept));
-      return next.length > 0 ? next : [managedDepartments[0] ?? DEFAULT_MANAGED_DEPARTMENTS[0]];
+      return next.length > 0 ? next : managedDepartments[0] ? [managedDepartments[0]] : [];
     });
 
     setDepartmentFilter((prev) => {
@@ -411,7 +414,7 @@ export default function HODDailyReports() {
       nextDayTask: ''
     }];
     setReportEntries(defaultEntries);
-    setSelectedDepartments([managedDepartments[0] ?? DEFAULT_MANAGED_DEPARTMENTS[0]]);
+    setSelectedDepartments(managedDepartments[0] ? [managedDepartments[0]] : []);
     setUrgentReview(false);
     setAttachDocs(false);
     setAttachedFiles([]);
@@ -507,12 +510,12 @@ export default function HODDailyReports() {
   const getReportUrl = (report: DailyReport) => report.entriesUrl || report.fileUrl || null;
 
   const handleViewReport = (report: DailyReport) => {
-    const url = getReportUrl(report);
-    if (!url) {
-      toast.info("No report file available to preview");
+    if (!report.dbId) {
+      toast.info("This report does not have a previewable record.");
       return;
     }
-    window.open(url, "_blank", "noopener,noreferrer");
+    setPreviewReportId(report.dbId);
+    setIsPreviewModalOpen(true);
   };
 
   const handleDownloadReport = (report: DailyReport) => {
@@ -1353,6 +1356,14 @@ export default function HODDailyReports() {
           </div>
         </div>
       )}
+      <DailyReportPreviewModal
+        open={isPreviewModalOpen}
+        reportId={previewReportId}
+        onClose={() => {
+          setIsPreviewModalOpen(false);
+          setPreviewReportId(null);
+        }}
+      />
     </Layout>
   );
 }

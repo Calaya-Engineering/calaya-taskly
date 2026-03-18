@@ -135,6 +135,7 @@ export default function MDActiveJobs() {
   const filteredJobs = useMemo(() => {
     const query = q.trim().toLowerCase();
     return jobsData.filter((job) => {
+      const matchesOpenStatus = job.status !== "COMPLETED" && job.status !== "CANCELLED";
       const matchesDept = dept === "all" || job.department === dept;
       const matchesQ =
         !query ||
@@ -142,15 +143,16 @@ export default function MDActiveJobs() {
         job.title.toLowerCase().includes(query) ||
         (job.project && job.project.toLowerCase().includes(query)) ||
         job.supervisor.toLowerCase().includes(query);
-      return matchesDept && matchesQ;
+      return matchesOpenStatus && matchesDept && matchesQ;
     });
   }, [dept, q, jobsData]);
 
   const overview = useMemo(() => {
-    const active = jobsData.filter((j) => j.status === "ACTIVE" || j.status === "IN_PROGRESS").length;
-    const hold = jobsData.filter((j) => j.status === "ON_HOLD").length;
-    const critical = jobsData.filter((j) => j.priority === "CRITICAL").length;
-    const avg = jobsData.length ? Math.round(jobsData.reduce((sum, j) => sum + j.progress, 0) / jobsData.length) : 0;
+    const openJobs = jobsData.filter((j) => j.status !== "COMPLETED" && j.status !== "CANCELLED");
+    const active = openJobs.length;
+    const hold = openJobs.filter((j) => j.status === "ON_HOLD").length;
+    const critical = openJobs.filter((j) => j.priority === "CRITICAL").length;
+    const avg = openJobs.length ? Math.round(openJobs.reduce((sum, j) => sum + j.progress, 0) / openJobs.length) : 0;
     return { active, hold, critical, avg };
   }, [jobsData]);
 

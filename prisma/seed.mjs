@@ -3,6 +3,30 @@ import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import { PrismaClient } from "../generated/prisma/client.js";
 import crypto from "crypto";
 
+const databaseHost = process.env.DATABASE_HOST ?? "";
+
+function envFlag(value, fallback) {
+  if (value === undefined) return fallback;
+  return !["0", "false", "off", "no", "disable", "disabled"].includes(String(value).trim().toLowerCase());
+}
+
+function buildSslConfig() {
+  const shouldUseSsl = envFlag(
+    process.env.DATABASE_SSL_MODE ?? process.env.DATABASE_SSL,
+    /aivencloud\.com|amazonaws\.com|planetscale|render\.com|railway\.app/i.test(databaseHost)
+  );
+
+  if (!shouldUseSsl) return undefined;
+
+  const ca = process.env.DATABASE_SSL_CA?.replace(/\\n/g, "\n");
+  const rejectUnauthorized = envFlag(
+    process.env.DATABASE_SSL_REJECT_UNAUTHORIZED,
+    !/aivencloud\.com/i.test(databaseHost)
+  );
+
+  return ca ? { ca, rejectUnauthorized } : { rejectUnauthorized };
+}
+
 const adapter = new PrismaMariaDb({
   host: process.env.DATABASE_HOST,
   user: process.env.DATABASE_USER,
@@ -10,6 +34,9 @@ const adapter = new PrismaMariaDb({
   database: process.env.DATABASE_NAME,
   port: parseInt(process.env.DATABASE_PORT ?? "3306", 10),
   connectionLimit: 5,
+  connectTimeout: parseInt(process.env.DATABASE_CONNECT_TIMEOUT_MS ?? "10000", 10),
+  acquireTimeout: parseInt(process.env.DATABASE_ACQUIRE_TIMEOUT_MS ?? "10000", 10),
+  ssl: buildSslConfig(),
 });
 
 const prisma = new PrismaClient({ adapter });
@@ -97,4 +124,3 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
-

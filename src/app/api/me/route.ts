@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
+import { getManagedDepartmentNamesByEmail } from "@/lib/hod-departments";
 
 /**
  * GET /api/me - Current authenticated user profile (id, email, name, role, department)
@@ -19,7 +20,16 @@ export async function GET(req: NextRequest) {
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
-    return NextResponse.json(user);
+
+    const managedDepartments = user.role === "HOD" ? await getManagedDepartmentNamesByEmail(auth.email) : [];
+    const primaryDepartment = managedDepartments[0] || user.department || null;
+
+    return NextResponse.json({
+      ...user,
+      department: primaryDepartment,
+      primaryDepartment,
+      managedDepartments,
+    });
   } catch (error) {
     console.error("Error fetching current user:", error);
     return NextResponse.json({ error: "Failed to fetch user" }, { status: 500 });

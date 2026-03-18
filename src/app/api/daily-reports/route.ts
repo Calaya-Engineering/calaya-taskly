@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { createNotification } from "@/lib/notifications";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
+import { getManagedDepartmentNamesByEmail } from "@/lib/hod-departments";
 
 // Configure Cloudinary from env (CLOUDINARY_URL)
 cloudinary.config();
@@ -31,19 +32,33 @@ export async function GET(req: NextRequest) {
     const date = searchParams.get("date");
     const limitParam = searchParams.get("limit");
     const limit = limitParam ? Math.min(parseInt(limitParam, 10) || 200, 500) : 200;
+    const managedDepartments = auth.role === "HOD" ? await getManagedDepartmentNamesByEmail(auth.email) : [];
 
     const where: any = { type: "Report" };
 
-    // MD sees ALL departments; HOD/Staff filtered by dept param
+    if (auth.role === "HOD") {
+      if (managedDepartments.length === 0) {
+        return NextResponse.json([]);
+      }
+      where.department = { in: managedDepartments };
+    }
+
     if (department && department !== "All") {
+      if (auth.role === "HOD" && !managedDepartments.includes(department)) {
+        return NextResponse.json([]);
+      }
       where.department = department;
     } else if (departments) {
       const list = departments
         .split(",")
         .map((d) => d.trim())
         .filter(Boolean);
-      if (list.length === 1) where.department = list[0];
-      else if (list.length > 1) where.department = { in: list };
+      const filteredList = auth.role === "HOD"
+        ? list.filter((deptName) => managedDepartments.includes(deptName))
+        : list;
+      if (filteredList.length === 1) where.department = filteredList[0];
+      else if (filteredList.length > 1) where.department = { in: filteredList };
+      else if (auth.role === "HOD") return NextResponse.json([]);
     }
 
     if (date) {
@@ -65,6 +80,7 @@ export async function GET(req: NextRequest) {
         scope: true,
         fileSize: true,
         fileUrl: true,
+        downloads: true,
         createdAt: true,
       },
     });
@@ -90,6 +106,7 @@ export async function GET(req: NextRequest) {
         fileSize: d.fileSize || "—",
         fileType: "Report",
         status,
+        downloads: d.downloads,
         fileUrl: d.fileUrl,
       };
     });
@@ -165,8 +182,9 @@ export async function POST(req: NextRequest) {
       typeof auth.name === "string" && auth.name
         ? auth.name
         : auth.email.split("@")[0] || "Unknown";
+    const normalizedRole = String(auth.role || "").toUpperCase();
     const reportStatus =
-      auth.role === "STAFF"
+      normalizedRole === "STAFF"
         ? "PENDING"
         : urgentReview
           ? "REVIEW_URGENTLY"

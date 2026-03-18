@@ -91,7 +91,7 @@ export default function MDDashboard() {
   const summary = useMemo(() => {
     const totalItems = tasksData.length;
     const taskCount = tasksData.filter((t) => t.type === "TASK").length;
-    const activeJobs = tasksData.filter((t) => t.type === "JOB" && t.status !== "COMPLETED").length;
+    const activeJobs = tasksData.filter((t) => t.type === "JOB" && t.status !== "COMPLETED" && t.status !== "CANCELLED").length;
     const overdueTasks = tasksData.filter((t) => {
       if (!t.dueDate || t.status === "COMPLETED") return false;
       const d = new Date(t.dueDate);
