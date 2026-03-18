@@ -53,6 +53,8 @@ function formatActionLabel(actionType: string) {
 
 function formatStatusLabel(actionType: string) {
   const statusMap: Record<string, string> = {
+    ANNOUNCEMENT_REMINDER: "Reminder",
+    ANNOUNCEMENT_SHARED: "Shared",
     ACCESS_REQUEST_APPROVED: "Approved",
     ACCESS_REQUEST_DENIED: "Denied",
     APPROVAL_FORWARDED: "Forwarded to MD",
@@ -73,6 +75,10 @@ function formatStatusLabel(actionType: string) {
     DELETE_USER: "Deleted",
     DOWNLOAD_DOCUMENT: "Downloaded",
     ESCALATE_TASK: "Escalated",
+    EVENT_REMINDER: "Reminder",
+    EVENT_SHARED: "Shared",
+    MEETING_REMINDER: "Reminder",
+    MEETING_SHARED: "Shared",
     READ_ANNOUNCEMENT: "Read",
     REPORT_SUBMITTED: "Submitted",
     TASK_APPROVED: "Approved",
@@ -195,6 +201,8 @@ function extractItemTitle(subject: string | null | undefined, fallbackLabel: str
 
 function getEmailHeading(actionType: string, entityLabel: string, isTargetRecipient = false) {
   const headingMap: Record<string, string> = {
+    ANNOUNCEMENT_REMINDER: "An announcement reminder is<br>waiting for you",
+    ANNOUNCEMENT_SHARED: "An announcement has been<br>shared with you",
     ACCESS_REQUEST_APPROVED: "Your access request has been<br>approved",
     ACCESS_REQUEST_DENIED: "Your access request was<br>not approved",
     APPROVAL_FORWARDED: "A task has been<br>forwarded to MD",
@@ -204,6 +212,10 @@ function getEmailHeading(actionType: string, entityLabel: string, isTargetRecipi
     CREATE_MEETING: "A new meeting has been<br>scheduled",
     DEESCALATE_TASK: "A task has been<br>de-escalated",
     ESCALATE_TASK: "A task has been<br>escalated",
+    EVENT_REMINDER: "An event reminder is<br>waiting for you",
+    EVENT_SHARED: "An event has been<br>shared with you",
+    MEETING_REMINDER: "A meeting reminder is<br>waiting for you",
+    MEETING_SHARED: "A meeting has been<br>shared with you",
     REPORT_SUBMITTED: "A new report has been<br>submitted",
     TASK_APPROVED: "A task has been<br>approved",
     TASK_DEADLINE_REMINDER: "A task reminder is<br>waiting for you",

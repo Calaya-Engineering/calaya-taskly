@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
+import EntityQuickActions from "@/components/EntityQuickActions";
 import { MDMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
 import { fetchWithAuth } from "@/lib/api";
@@ -284,49 +285,13 @@ export default function MDAnnouncementDetail() {
               </div>
             </Card>
 
-            <Card className="p-6">
-              <h3 className="text-sm font-extrabold mb-4" style={{ color: "var(--primary-blue)" }}>
-                Quick Actions
-              </h3>
-              <div className="space-y-2">
-                <button
-                  className={`${btnOutline} w-full flex items-center justify-between`}
-                  style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}
-                  onClick={() => toast.info("Emailing announcement...")}
-                  type="button"
-                >
-                  <span>Email Announcement</span>
-                  <span>📧</span>
-                </button>
-                <button
-                  className={`${btnOutline} w-full flex items-center justify-between`}
-                  style={{ borderColor: "rgba(109,198,223,0.55)", color: "var(--secondary-blue)" }}
-                  onClick={() => toast.info("Link copied to clipboard")}
-                  type="button"
-                >
-                  <span>Share Link</span>
-                  <span>🔗</span>
-                </button>
-                <button
-                  className={`${btnOutline} w-full flex items-center justify-between`}
-                  style={{ borderColor: "rgba(245,158,11,1)", color: "rgba(245,158,11,1)" }}
-                  onClick={() => toast.info("Viewing analytics...")}
-                  type="button"
-                >
-                  <span>View Analytics</span>
-                  <span>📊</span>
-                </button>
-                <button
-                  className={`${btnOutline} w-full flex items-center justify-between`}
-                  style={{ borderColor: "rgba(16,185,129,1)", color: "rgba(16,185,129,1)" }}
-                  onClick={() => toast.info("Re-posting announcement...")}
-                  type="button"
-                >
-                  <span>Re-post</span>
-                  <span>🔄</span>
-                </button>
-              </div>
-            </Card>
+            <EntityQuickActions
+              entityType="announcement"
+              entityId={announcement.id}
+              title={announcement.title}
+              currentDate={announcement.createdDate}
+              currentExpiresAt={announcement.expiresAt}
+            />
 
             <Card className="p-6">
               <div className="flex items-start gap-3">

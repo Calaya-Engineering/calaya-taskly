@@ -4,6 +4,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import EntityQuickActions from "@/components/EntityQuickActions";
 import Layout from "@/components/Layout";
 import { SecretaryMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
@@ -797,39 +798,13 @@ export default function SecretaryEventDetail() {
             </Card>
 
             {/* Quick Actions */}
-            <Card className="p-6">
-              <SectionTitle title="Quick Actions" />
-
-              <div className="mt-4 space-y-2">
-                <button
-                  onClick={handleSendReminder}
-                  className="w-full px-4 py-3 rounded-2xl border bg-white hover:bg-gray-50 active:scale-[0.99] transition flex items-center justify-between"
-                  style={{ borderColor: "rgba(109,198,223,0.55)", color: "var(--secondary-blue)" }}
-                >
-                  <span className="font-semibold text-sm">Send Reminder</span>
-                  <span>🔔</span>
-                </button>
-                <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(window.location.href);
-                    toast.info('Event link copied to clipboard');
-                  }}
-                  className="w-full px-4 py-3 rounded-2xl border bg-white hover:bg-gray-50 active:scale-[0.99] transition flex items-center justify-between"
-                  style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}
-                >
-                  <span className="font-semibold text-sm">Copy Event Link</span>
-                  <span>🔗</span>
-                </button>
-                <button
-                  onClick={() => toast.info('Exporting calendar...')}
-                  className="w-full px-4 py-3 rounded-2xl border bg-white hover:bg-gray-50 active:scale-[0.99] transition flex items-center justify-between"
-                  style={{ borderColor: "rgba(245,158,11,0.35)", color: "#F59E0B" }}
-                >
-                  <span className="font-semibold text-sm">Export to Calendar</span>
-                  <span>📤</span>
-                </button>
-              </div>
-            </Card>
+            <EntityQuickActions
+              entityType={event.type === "MEETING" ? "meeting" : "event"}
+              entityId={eventId}
+              title={event.title}
+              currentStartDate={event.startAt}
+              currentEndDate={event.endAt}
+            />
           </div>
         </div>
       </div>

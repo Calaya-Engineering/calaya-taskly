@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
+import EntityQuickActions from "@/components/EntityQuickActions";
 import { SecretaryMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
 import { fetchWithAuth } from "@/lib/api";
@@ -413,44 +414,13 @@ export default function SecretaryAnnouncementDetail() {
             </Card>
 
             {/* Quick Actions */}
-            <Card className="p-6">
-              <SectionTitle title="Quick Actions" />
-
-              <div className="mt-4 space-y-2">
-                <button
-                  onClick={() => toast.info('Printing announcement...')}
-                  className="w-full px-4 py-3 rounded-2xl border bg-white hover:bg-gray-50 active:scale-[0.99] transition flex items-center justify-between"
-                  style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}
-                >
-                  <span className="font-semibold text-sm">Print Announcement</span>
-                  <span>🖨️</span>
-                </button>
-                <button
-                  onClick={() => toast.success('Saved for later')}
-                  className="w-full px-4 py-3 rounded-2xl border bg-white hover:bg-gray-50 active:scale-[0.99] transition flex items-center justify-between"
-                  style={{ borderColor: "rgba(109,198,223,0.55)", color: "var(--secondary-blue)" }}
-                >
-                  <span className="font-semibold text-sm">Save for Later</span>
-                  <span>💾</span>
-                </button>
-                <button
-                  onClick={handleDownloadAll}
-                  className="w-full px-4 py-3 rounded-2xl border bg-white hover:bg-gray-50 active:scale-[0.99] transition flex items-center justify-between"
-                  style={{ borderColor: "rgba(16,185,129,0.35)", color: "#10B981" }}
-                >
-                  <span className="font-semibold text-sm">Download All</span>
-                  <span>📥</span>
-                </button>
-                <button
-                  onClick={() => toast.info('Reported to HR')}
-                  className="w-full px-4 py-3 rounded-2xl border bg-white hover:bg-gray-50 active:scale-[0.99] transition flex items-center justify-between"
-                  style={{ borderColor: "rgba(245,158,11,0.35)", color: "#F59E0B" }}
-                >
-                  <span className="font-semibold text-sm">Report Issue</span>
-                  <span>⚠️</span>
-                </button>
-              </div>
-            </Card>
+            <EntityQuickActions
+              entityType="announcement"
+              entityId={announcement.id}
+              title={announcement.title}
+              currentDate={announcement.createdDate}
+              currentExpiresAt={announcement.expiresAt}
+            />
 
             {/* Statistics */}
             <Card className="p-6">

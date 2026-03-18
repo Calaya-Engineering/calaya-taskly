@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
+import EntityQuickActions from "@/components/EntityQuickActions";
 import { HODMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
 import { fetchWithAuth } from "@/lib/api";
@@ -441,40 +442,13 @@ export default function HODAnnouncementDetail() {
               </div>
             </Card>
 
-            <Card className="p-6">
-              <h3 className="text-sm font-extrabold mb-4" style={{ color: "var(--primary-blue)" }}>
-                Quick Actions
-              </h3>
-              <div className="space-y-2">
-                <button
-                  className={`${btnOutline} w-full flex items-center justify-between`}
-                  style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}
-                  onClick={() => toast.info("Printing announcement...")}
-                  type="button"
-                >
-                  <span>Print Announcement</span>
-                  <span>🖨️</span>
-                </button>
-                <button
-                  className={`${btnOutline} w-full flex items-center justify-between`}
-                  style={{ borderColor: "rgba(109,198,223,0.55)", color: "var(--secondary-blue)" }}
-                  onClick={() => toast.info("Sending reminders...")}
-                  type="button"
-                >
-                  <span>Send Reminders</span>
-                  <span>📧</span>
-                </button>
-                <button
-                  className={`${btnOutline} w-full flex items-center justify-between`}
-                  style={{ borderColor: "#EF4444", color: "#EF4444" }}
-                  onClick={() => toast.info("Deleting announcement...")}
-                  type="button"
-                >
-                  <span>Delete Announcement</span>
-                  <span>🗑️</span>
-                </button>
-              </div>
-            </Card>
+            <EntityQuickActions
+              entityType="announcement"
+              entityId={announcement.id}
+              title={announcement.title}
+              currentDate={announcement.createdDate}
+              currentExpiresAt={announcement.expiresAt}
+            />
 
             <Card className="p-6">
               <h3 className="text-sm font-extrabold mb-4" style={{ color: "var(--primary-blue)" }}>

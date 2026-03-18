@@ -4,6 +4,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import EntityQuickActions from "@/components/EntityQuickActions";
 import Layout from "@/components/Layout";
 import { MDMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
@@ -781,32 +782,16 @@ export default function MDEventDetail() {
         ) : null}
 
         {/* Quick Actions (MD style buttons) */}
-        <Card className="p-6">
-          <h2 className="text-lg md:text-xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
-            Event Actions
-          </h2>
-          <p className="text-sm text-gray-500 mt-1">Common actions you may want to perform</p>
-
-          <div className="mt-5 grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              { icon: "📧", label: "Send Reminders" },
-              { icon: "📝", label: "Take Minutes" },
-              { icon: "🔄", label: "Reschedule" },
-              { icon: "📊", label: "Export Attendance" },
-            ].map((a) => (
-              <button
-                key={a.label}
-                className="p-4 rounded-2xl border border-gray-200/70 bg-white hover:bg-gray-50 transition text-center"
-                onClick={() => toast.info(`${a.label} (demo)`)}
-              >
-                <div className="text-2xl mb-2">{a.icon}</div>
-                <div className="font-semibold" style={{ color: "var(--primary-blue)" }}>
-                  {a.label}
-                </div>
-              </button>
-            ))}
-          </div>
-        </Card>
+        <EntityQuickActions
+          entityType={eventData.eventType === "MEETING" ? "meeting" : "event"}
+          entityId={eventId}
+          title={eventData.title}
+          sectionTitle="Event Actions"
+          sectionSubtitle="Common actions you may want to perform"
+          layout="grid"
+          currentStartDate={eventData.startAt}
+          currentEndDate={eventData.endAt}
+        />
       </div>
 
       {/* Delete Confirm Modal */}
