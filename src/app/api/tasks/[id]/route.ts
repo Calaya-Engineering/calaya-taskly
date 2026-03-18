@@ -4,6 +4,8 @@ import { getAuthFromRequest } from "@/lib/jwt";
 import { emitTaskEvent } from "@/lib/task-events";
 import { emitAnnouncementEvent } from "@/lib/announcement-events";
 import { getTaskSubmissionStatusForRole } from "@/lib/task-approval";
+import { createNotification } from "@/lib/notifications";
+import { getEventAudience } from "@/lib/notification-audiences";
 import {
   ensureMidpointRemindersForTasks,
   notifyTaskApprovalTransition,
@@ -199,6 +201,7 @@ export async function PATCH(
     // Put all meetings/events in the announcement table as well
     if (task.type === "MEETING" || task.type === "EVENT") {
       try {
+        const eventType = task.type.toUpperCase() === "MEETING" ? "meeting" : "event";
         const announcementDate = task.startDate || task.createdAt;
         const announcementTitle = `${task.type === "MEETING" ? "📅 Meeting" : "🗓️ Event"}: ${task.title}`;
 
@@ -236,6 +239,20 @@ export async function PATCH(
           });
           emitAnnouncementEvent({ type: "announcement:updated", announcementId: announcement.id });
         }
+
+        await createNotification({
+          actorEmail: auth.email,
+          actionType: task.type === "MEETING" ? "UPDATE_MEETING" : "UPDATE_EVENT",
+          targetId: task.id,
+          message: `${auth.name || auth.email.split("@")[0]} (${auth.role}) updated the ${eventType}: ${task.title}`,
+          recipients: getEventAudience({
+            visibility: task.visibility,
+            departments: task.department ? task.department.split(",") : [],
+          }),
+          sendEmail: true,
+          emailSubject: `${task.type === "MEETING" ? "Meeting" : "Event"} Updated — ${task.title}`,
+          linkPath: `/open/item?type=${eventType}&id=${task.id}`,
+        });
       } catch (err) {
         console.error("Failed to sync meeting/event update to announcement:", err);
       }

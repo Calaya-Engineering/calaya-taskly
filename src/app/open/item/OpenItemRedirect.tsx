@@ -12,12 +12,52 @@ type OpenItemRedirectProps = {
 function resolveTargetPath(role: string, type: string, id: string) {
   const normalizedRole = String(role || "").toUpperCase();
   const normalizedType = String(type || "").toLowerCase();
+  const hasId = Boolean(String(id || "").trim());
 
   switch (normalizedType) {
     case "task":
+      if (!hasId) {
+        if (normalizedRole === "MD") return `/md-dashboard/tasks`;
+        if (normalizedRole === "HOD") return `/hod-dashboard/tasks`;
+        return `/staff-dashboard/tasks`;
+      }
       if (normalizedRole === "MD") return `/md-dashboard/task/${id}`;
       if (normalizedRole === "HOD") return `/hod-dashboard/task/${id}`;
       return `/staff-dashboard/task/${id}`;
+    case "event":
+    case "meeting":
+      if (!hasId) {
+        if (normalizedRole === "MD") return `/md-dashboard/events`;
+        if (normalizedRole === "HOD") return `/hod-dashboard/events`;
+        if (normalizedRole === "SECRETARY") return `/secretary-dashboard/events`;
+        return `/staff-dashboard/events`;
+      }
+      if (normalizedRole === "MD") return `/md-dashboard/event/${id}`;
+      if (normalizedRole === "HOD") return `/hod-dashboard/event/${id}`;
+      if (normalizedRole === "SECRETARY") return `/secretary-dashboard/event/${id}`;
+      return `/staff-dashboard/event/${id}`;
+    case "announcement":
+      if (!hasId) {
+        if (normalizedRole === "MD") return `/md-dashboard/announcements`;
+        if (normalizedRole === "HOD") return `/hod-dashboard/announcements`;
+        if (normalizedRole === "SECRETARY") return `/secretary-dashboard/announcements`;
+        return `/staff-dashboard/announcements`;
+      }
+      if (normalizedRole === "MD") return `/md-dashboard/announcement/${id}`;
+      if (normalizedRole === "HOD") return `/hod-dashboard/announcement/${id}`;
+      if (normalizedRole === "SECRETARY") return `/secretary-dashboard/announcement/${id}`;
+      return `/staff-dashboard/announcement/${id}`;
+    case "tender":
+      if (!hasId) {
+        if (normalizedRole === "MD") return `/md-dashboard/tenders`;
+        if (normalizedRole === "HOD") return `/hod-dashboard/tenders`;
+        if (normalizedRole === "SECRETARY") return `/secretary-dashboard/tenders`;
+        return `/staff-dashboard/tenders`;
+      }
+      if (normalizedRole === "MD") return `/md-dashboard/tender/${id}`;
+      if (normalizedRole === "HOD") return `/hod-dashboard/tender/${id}`;
+      if (normalizedRole === "SECRETARY") return `/secretary-dashboard/tender/${id}`;
+      return `/staff-dashboard/tender/${id}`;
     case "report":
       if (normalizedRole === "MD") return `/md-dashboard/reports`;
       if (normalizedRole === "HOD") return `/hod-dashboard/reports`;

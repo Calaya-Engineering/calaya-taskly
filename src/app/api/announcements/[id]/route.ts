@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { emitAnnouncementEvent } from "@/lib/announcement-events";
 import { createNotification } from "@/lib/notifications";
+import { getAnnouncementAudience } from "@/lib/notification-audiences";
 
 /**
  * GET /api/announcements/[id] - Get details of an announcement
@@ -79,7 +80,15 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
             actorEmail: auth.email,
             actionType: 'UPDATE_ANNOUNCEMENT',
             targetId: announcement.id,
-            message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) updated announcement: ${announcement.title}`
+            message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) updated announcement: ${announcement.title}`,
+            recipients: getAnnouncementAudience({
+                scopeType: announcement.scopeType,
+                selectedDepartments: announcement.department ? announcement.department.split(",") : [],
+                targetRole: announcement.targetRole,
+            }),
+            sendEmail: true,
+            emailSubject: `Announcement Updated — ${announcement.title}`,
+            linkPath: `/open/item?type=announcement&id=${announcement.id}`,
         });
 
         return NextResponse.json(announcement);
@@ -114,7 +123,15 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
             actorEmail: auth.email,
             actionType: 'DELETE_ANNOUNCEMENT',
             targetId: id,
-            message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) deleted an announcement.`
+            message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) deleted an announcement: ${existing.title}.`,
+            recipients: getAnnouncementAudience({
+                scopeType: existing.scopeType,
+                selectedDepartments: existing.department ? existing.department.split(",") : [],
+                targetRole: existing.targetRole,
+            }),
+            sendEmail: true,
+            emailSubject: `Announcement Deleted — ${existing.title}`,
+            linkPath: `/open/item?type=announcement`,
         });
 
         return NextResponse.json({ success: true, message: "Announcement deleted" });

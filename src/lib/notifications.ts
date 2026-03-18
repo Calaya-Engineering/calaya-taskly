@@ -190,7 +190,7 @@ function extractItemTitle(subject: string | null | undefined, fallbackLabel: str
   return lastPart || subject.trim() || fallbackLabel;
 }
 
-function getEmailHeading(actionType: string, entityLabel: string) {
+function getEmailHeading(actionType: string, entityLabel: string, isTargetRecipient = false) {
   const headingMap: Record<string, string> = {
     APPROVAL_FORWARDED: "A task has been<br>forwarded to MD",
     APPROVAL_REQUESTED: "A task is awaiting<br>approval",
@@ -209,7 +209,7 @@ function getEmailHeading(actionType: string, entityLabel: string) {
     UPDATE_EVENT: "An event has been<br>updated",
     UPDATE_MEETING: "A meeting has been<br>updated",
     UPDATE_TASK: "A task has been<br>updated",
-    CREATE_USER: "Your account has been<br>created",
+    CREATE_USER: isTargetRecipient ? "Your account has been<br>created" : "A new account has been<br>created",
   };
 
   return headingMap[actionType] || `You have a new<br>${escapeHtml(entityLabel.toLowerCase())} notification`;
@@ -222,6 +222,7 @@ function getEmailIntro(params: {
   actorRole: string;
   entityLabel: string;
   statusLabel: string;
+  isTargetRecipient?: boolean;
 }) {
   const recipientName = escapeHtml(params.recipientName);
   const actorName = escapeHtml(params.actorName);
@@ -235,8 +236,13 @@ function getEmailIntro(params: {
   }
 
   if (params.actionType === "CREATE_USER") {
-    return `Hi <strong>${recipientName}</strong>,<br><br>
+    if (params.isTargetRecipient) {
+      return `Hi <strong>${recipientName}</strong>,<br><br>
       Your Calaya Taskly account has been created by <strong>${actorName} (${actorRole})</strong>. Please review your account details below and sign in to the system to get started.`;
+    }
+
+    return `Hi <strong>${recipientName}</strong>,<br><br>
+      This is to notify you that <strong>${actorName} (${actorRole})</strong> created a new Calaya Taskly account. The account details are included below for reference.`;
   }
 
   return `Hi <strong>${recipientName}</strong>,<br><br>
@@ -707,6 +713,7 @@ async function getAccountCreatedEmailDetails(userId: number) {
 
   return {
     itemTitle: user.name?.trim() || user.email,
+    email: user.email,
     extraDetails: [
       { label: "Role", value: user.role || "Not assigned" },
       { label: "Email", value: user.email || "Not available" },
@@ -756,7 +763,10 @@ async function buildNotificationEmailContent(notification: {
     notification.actionType === "CREATE_USER" && notification.targetId
       ? await getAccountCreatedEmailDetails(notification.targetId)
       : null;
-  const itemTitle = entityType === "task"
+  const isTargetRecipient =
+    Boolean(accountCreatedDetails?.email) &&
+    accountCreatedDetails?.email?.trim().toLowerCase() === notification.recipient.email.trim().toLowerCase();
+  const itemTitle = ["task", "event", "meeting"].includes(entityType)
     ? task?.title || extractTaskTitleFromSubject(notification.emailSubject)
     : accountCreatedDetails?.itemTitle || extractItemTitle(notification.emailSubject, `${resolvedEntityLabel} Update`);
 
@@ -788,7 +798,7 @@ async function buildNotificationEmailContent(notification: {
       actionLabel,
       cardLabel: `${resolvedEntityLabel} Name`,
       headerTag: `${resolvedEntityLabel} Notification`,
-      heading: getEmailHeading(notification.actionType, resolvedEntityLabel),
+      heading: getEmailHeading(notification.actionType, resolvedEntityLabel, isTargetRecipient),
       introHtml: getEmailIntro({
         actionType: notification.actionType,
         recipientName,
@@ -796,6 +806,7 @@ async function buildNotificationEmailContent(notification: {
         actorRole: notification.actorRole,
         entityLabel: resolvedEntityLabel,
         statusLabel,
+        isTargetRecipient,
       }),
       itemTitle,
       dueLabel: ["task", "event", "meeting"].includes(entityType) ? formatEmailDueDate(task?.dueDate || null) : null,

@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
 import { createNotification } from "@/lib/notifications";
+import { getTenderAudience } from "@/lib/notification-audiences";
 
 const DEFAULT_TENDER_DEPARTMENT = "Company-wide";
 
@@ -327,6 +328,10 @@ export async function POST(req: NextRequest) {
       actionType: "CREATE_TENDER",
       targetId: tender.id,
       message: `${auth.name || auth.email.split("@")[0]} (${auth.role}) created a new tender: ${tender.title}`,
+      recipients: getTenderAudience([tender.department || DEFAULT_TENDER_DEPARTMENT]),
+      sendEmail: true,
+      emailSubject: `Tender Created — ${tender.title}`,
+      linkPath: `/open/item?type=tender&id=${tender.id}`,
     });
 
     return NextResponse.json(tender);

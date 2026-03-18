@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
 import { createNotification } from "@/lib/notifications";
+import { getTenderAudience } from "@/lib/notification-audiences";
 
 const DEFAULT_TENDER_DEPARTMENT = "Company-wide";
 
@@ -195,7 +196,11 @@ export async function PATCH(
             actorEmail: auth.email,
             actionType: 'UPDATE_TENDER',
             targetId: updatedTender.id,
-            message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) updated tender: ${updatedTender.title}`
+            message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) updated tender: ${updatedTender.title}`,
+            recipients: getTenderAudience([updatedTender.department || DEFAULT_TENDER_DEPARTMENT]),
+            sendEmail: true,
+            emailSubject: `Tender Updated — ${updatedTender.title}`,
+            linkPath: `/open/item?type=tender&id=${updatedTender.id}`,
         });
 
         return NextResponse.json(updatedTender);
@@ -244,7 +249,11 @@ export async function DELETE(
             actorEmail: auth.email,
             actionType: 'DELETE_TENDER',
             targetId: tender.id,
-            message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) deleted tender: ${tender.title}.`
+            message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) deleted tender: ${tender.title}.`,
+            recipients: getTenderAudience([tender.department || DEFAULT_TENDER_DEPARTMENT]),
+            sendEmail: true,
+            emailSubject: `Tender Deleted — ${tender.title}`,
+            linkPath: `/open/item?type=tender`,
         });
 
         return NextResponse.json({ success: true });

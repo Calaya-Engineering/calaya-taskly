@@ -4,6 +4,7 @@ import { getAuthFromRequest } from "@/lib/jwt";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
 import { createNotification } from "@/lib/notifications";
 import { getManagedDepartmentNamesByEmail } from "@/lib/hod-departments";
+import { getTenderAudience } from "@/lib/notification-audiences";
 
 const DEFAULT_TENDER_DEPARTMENT = "Company-wide";
 
@@ -152,6 +153,10 @@ export async function POST(
       actionType: "UPLOAD_DOCUMENT",
       targetId: tender.id,
       message: `${uploaderName} (${inferDocumentRole(auth.role)}) uploaded a tender document to ${department}: ${title}`,
+      recipients: getTenderAudience([department]),
+      sendEmail: true,
+      emailSubject: `Tender Document Uploaded — ${tender.title}`,
+      linkPath: `/open/item?type=tender&id=${tender.id}`,
     });
 
     return NextResponse.json({

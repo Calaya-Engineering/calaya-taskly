@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { emitAnnouncementEvent } from "@/lib/announcement-events";
 import { createNotification } from "@/lib/notifications";
+import { getAnnouncementAudience } from "@/lib/notification-audiences";
 
 export async function GET(req: NextRequest) {
     const auth = await getAuthFromRequest(req);
@@ -170,7 +171,15 @@ export async function POST(req: NextRequest) {
             actorEmail: auth.email,
             actionType: 'CREATE_ANNOUNCEMENT',
             targetId: announcement.id,
-            message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) posted an announcement: ${announcement.title}`
+            message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) posted an announcement: ${announcement.title}`,
+            recipients: getAnnouncementAudience({
+                scopeType: announcement.scopeType,
+                selectedDepartments: announcement.department ? announcement.department.split(",") : [],
+                targetRole: announcement.targetRole,
+            }),
+            sendEmail: true,
+            emailSubject: `Announcement Posted — ${announcement.title}`,
+            linkPath: `/open/item?type=announcement&id=${announcement.id}`,
         });
 
         return NextResponse.json(announcement);

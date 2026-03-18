@@ -4,6 +4,8 @@ import { getAuthFromRequest } from "@/lib/jwt";
 import { emitTaskEvent } from "@/lib/task-events";
 import { emitAnnouncementEvent } from "@/lib/announcement-events";
 import { getManagedDepartmentNamesByUserId } from "@/lib/hod-departments";
+import { createNotification } from "@/lib/notifications";
+import { getEventAudience } from "@/lib/notification-audiences";
 import { ensureMidpointRemindersForTasks, notifyTaskAssignments } from "@/lib/task-notifications";
 
 /**
@@ -217,6 +219,7 @@ export async function POST(req: NextRequest) {
     // Put all meetings/events in the announcement table as well
     if (task.type === "MEETING" || task.type === "EVENT") {
       try {
+        const eventType = task.type.toUpperCase() === "MEETING" ? "meeting" : "event";
         const announcement = await prisma.announcement.create({
           data: {
             title: `${task.type === "MEETING" ? "📅 Meeting" : "🗓️ Event"}: ${task.title}`,
@@ -229,6 +232,20 @@ export async function POST(req: NextRequest) {
           }
         });
         emitAnnouncementEvent({ type: "announcement:created", announcementId: announcement.id });
+
+        await createNotification({
+          actorEmail: auth.email,
+          actionType: task.type === "MEETING" ? "CREATE_MEETING" : "CREATE_EVENT",
+          targetId: task.id,
+          message: `${auth.name || auth.email.split("@")[0]} (${auth.role}) scheduled a new ${eventType}: ${task.title}`,
+          recipients: getEventAudience({
+            visibility: task.visibility,
+            departments: task.department ? task.department.split(",") : [],
+          }),
+          sendEmail: true,
+          emailSubject: `${task.type === "MEETING" ? "Meeting" : "Event"} Scheduled — ${task.title}`,
+          linkPath: `/open/item?type=${eventType}&id=${task.id}`,
+        });
       } catch (err) {
         console.error("Failed to sync meeting/event to announcement:", err);
       }

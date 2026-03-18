@@ -8,6 +8,34 @@ import { getManagedDepartmentNamesByEmail, getValidatedDepartmentRecords } from 
 
 const HOD_ALLOWED_ROLES = ["Staff", "Personnel", "Corp Member"];
 
+async function getDepartmentHodNames(department: string | null) {
+  if (!department?.trim()) return [];
+
+  const record = await prisma.department.findFirst({
+    where: { name: department.trim() },
+    select: {
+      hodAssignments: {
+        select: {
+          hod: {
+            select: {
+              name: true,
+              email: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  return Array.from(
+    new Set(
+      (record?.hodAssignments || [])
+        .map((assignment) => assignment.hod.name?.trim() || assignment.hod.email?.split("@")[0] || "")
+        .filter(Boolean),
+    ),
+  );
+}
+
 function serializeUser(user: any) {
   const managedDepartmentRecords = Array.isArray(user.managedDepartmentRelations)
     ? user.managedDepartmentRelations.map((assignment: any) => assignment.department).filter(Boolean)
@@ -240,11 +268,19 @@ export async function POST(req: NextRequest) {
       entityId: user.id,
     });
 
+    const serializedUser = serializeUser(user);
+    const hodNames = await getDepartmentHodNames(serializedUser.primaryDepartment);
+    const accountDetails = [
+      `Role: ${serializedUser.role}`,
+      `Department: ${serializedUser.primaryDepartment || "Not assigned"}`,
+      `HOD: ${hodNames.join(", ") || "Not assigned"}`,
+    ].join(" ");
+
     createNotification({
       actorEmail: auth.email,
       actionType: "CREATE_USER",
       targetId: user.id,
-      message: `Your Calaya Taskly account has been created. You can now sign in with your email address and the password provided by the administrator.`,
+      message: `Your Calaya Taskly account has been created. You can now sign in with your email address and the password provided by the administrator. ${accountDetails}`,
       recipients: {
         userIds: [user.id],
         includeActor: false,
@@ -258,7 +294,7 @@ export async function POST(req: NextRequest) {
       actorEmail: auth.email,
       actionType: "CREATE_USER",
       targetId: user.id,
-      message: `${auth.name || auth.email.split("@")[0]} (${auth.role}) created a new user: ${user.name || user.email}`,
+      message: `${auth.name || auth.email.split("@")[0]} (${auth.role}) created a new user: ${user.name || user.email}. ${accountDetails}`,
       recipients: {
         roles: ["MD", "HOD"],
         departments: user.department ? [user.department] : [],
@@ -269,7 +305,7 @@ export async function POST(req: NextRequest) {
       linkPath: `/open/item?type=user&id=${user.id}`,
     });
 
-    return NextResponse.json(serializeUser(user));
+    return NextResponse.json(serializedUser);
   } catch (error: unknown) {
     const prismaErr = error as { code?: string };
     if (prismaErr.code === "P2002") {

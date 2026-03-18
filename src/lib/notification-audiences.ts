@@ -58,6 +58,14 @@ export function getEventAudience(params: {
   const visibility = params.visibility?.trim() || "ALL_COMPANY";
   const departments = unique(params.departments || []);
 
+  if (visibility === "USERS") {
+    return {
+      roles: [],
+      departments: [],
+      includeActor: false,
+    } satisfies NotificationAudience;
+  }
+
   if (visibility === "HODS_ONLY") {
     return getDashboardAudience({
       roles: ["HOD", "MD"],
