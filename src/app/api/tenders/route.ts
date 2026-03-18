@@ -56,6 +56,38 @@ function normalizeTenderDocuments(input: unknown, uploadedBy: string) {
     .filter((doc): doc is NormalizedTenderDocument => doc !== null);
 }
 
+function getUserLookupKeys(value: string) {
+  const trimmed = value.trim();
+  if (!trimmed) return [];
+
+  const keys = new Set<string>([trimmed.toLowerCase()]);
+  if (trimmed.includes("@")) {
+    keys.add(trimmed.split("@")[0].toLowerCase());
+  }
+
+  return Array.from(keys);
+}
+
+function inferUploadedByRole(uploadedBy: string, roleLookup: Map<string, string>) {
+  for (const key of getUserLookupKeys(uploadedBy)) {
+    const role = roleLookup.get(key);
+    if (role) return role;
+  }
+
+  return uploadedBy.toLowerCase().includes("vendor") ? "Vendor" : "Staff";
+}
+
+function inferDocumentFileType(title: string, fileUrl: string | null | undefined, type: string) {
+  const fromTitle = title.includes(".") ? title.split(".").pop() : "";
+  const fromUrl = fileUrl ? fileUrl.split("?")[0].split(".").pop() : "";
+  const fromType = type.replace(/\s*document$/i, "").trim();
+  return String(fromTitle || fromUrl || fromType || "FILE").toUpperCase();
+}
+
+function isSubmissionDocument(type: string) {
+  return type.toUpperCase() === "SUBMISSION";
+}
+
 /**
  * GET /api/tenders - List tenders (Authenticated)
  * Query params: status, department, search
@@ -72,6 +104,7 @@ export async function GET(req: NextRequest) {
     const department = searchParams.get("department");
     const search = searchParams.get("search")?.trim() || "";
     const compact = searchParams.get("compact") === "true";
+    const includeDocuments = searchParams.get("includeDocuments") === "true";
     const limit = Math.min(
       parseInt(searchParams.get("limit") ?? "50", 10) || 50,
       100,
@@ -118,11 +151,60 @@ export async function GET(req: NextRequest) {
       orderBy: { createdAt: "desc" },
       take: limit,
       include: {
+        ...(includeDocuments
+          ? {
+              documents: {
+                orderBy: { createdAt: "desc" },
+              },
+            }
+          : {}),
         _count: {
           select: { documents: true },
         },
       },
     });
+
+    const uploaderValues = includeDocuments
+      ? Array.from(
+          new Set(
+            tenders.flatMap((tender) =>
+              (tender.documents || [])
+                .map((document) => document.uploadedBy?.trim())
+                .filter(Boolean) as string[],
+            ),
+          ),
+        )
+      : [];
+
+    const users = uploaderValues.length
+      ? await prisma.user.findMany({
+          where: {
+            OR: [
+              { email: { in: uploaderValues } },
+              { name: { in: uploaderValues } },
+            ],
+          },
+          select: {
+            email: true,
+            name: true,
+            role: true,
+          },
+        })
+      : [];
+
+    const roleLookup = new Map<string, string>();
+    for (const user of users) {
+      if (user.email) {
+        for (const key of getUserLookupKeys(user.email)) {
+          roleLookup.set(key, user.role);
+        }
+      }
+      if (user.name) {
+        for (const key of getUserLookupKeys(user.name)) {
+          roleLookup.set(key, user.role);
+        }
+      }
+    }
 
     const formatted = tenders.map((t) => ({
       id: t.referenceNo, // In frontend, ID is used as the reference No or short ID
@@ -134,7 +216,30 @@ export async function GET(req: NextRequest) {
       closingDate: t.closingDate.toISOString().split("T")[0],
       department: t.department || DEFAULT_TENDER_DEPARTMENT,
       category: t.category,
-      documents: t._count.documents,
+      documents: includeDocuments
+        ? (t.documents || []).map((document) => ({
+            id: document.id,
+            tenderId: t.referenceNo,
+            title: document.title,
+            fileName: document.title,
+            uploadedBy: document.uploadedBy,
+            uploadedByRole: inferUploadedByRole(document.uploadedBy, roleLookup),
+            uploadedDate: document.createdAt.toISOString().split("T")[0],
+            fileSize: document.fileSize || "—",
+            fileType: inferDocumentFileType(document.title, document.fileUrl, document.type),
+            category: isSubmissionDocument(document.type) ? "Bid Submission" : "Tender Document",
+            downloads: document.downloads,
+            status: "ACTIVE",
+            department: document.department || t.department || DEFAULT_TENDER_DEPARTMENT,
+            comments: [],
+            type: document.type,
+            fileUrl: document.fileUrl,
+          }))
+        : t._count.documents,
+      documentsCount: t._count.documents,
+      submissions: includeDocuments
+        ? (t.documents || []).filter((document) => isSubmissionDocument(document.type)).length
+        : 0,
       downloads: 0,
       fileSize: `${t._count.documents} file${t._count.documents === 1 ? "" : "s"}`,
       status: t.status,
