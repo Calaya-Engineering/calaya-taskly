@@ -2,6 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 
+function isMissingAccessRequestTable(error: unknown) {
+  if (!error || typeof error !== "object") return false;
+
+  const code = "code" in error ? String(error.code || "") : "";
+  const message = "message" in error ? String(error.message || "") : "";
+
+  return code === "P2021" || /accessrequest/i.test(message);
+}
+
 function requireAdmin(auth: { role: string } | null) {
   if (!auth || auth.role !== "Admin") {
     return NextResponse.json({ error: "Admin access required" }, { status: 403 });
@@ -38,6 +47,11 @@ export async function GET(req: NextRequest) {
       })),
     );
   } catch (error) {
+    if (isMissingAccessRequestTable(error)) {
+      console.warn("AccessRequest table is not available yet. Returning an empty list for admin access requests.");
+      return NextResponse.json([]);
+    }
+
     console.error("Failed to load access requests:", error);
     return NextResponse.json({ error: "Failed to load access requests" }, { status: 500 });
   }

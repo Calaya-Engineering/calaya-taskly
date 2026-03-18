@@ -2,6 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { ACCESS_REQUEST_ROLE_OPTIONS, normalizeRequestedRole } from "@/lib/access-requests";
 
+function isMissingAccessRequestTable(error: unknown) {
+  if (!error || typeof error !== "object") return false;
+
+  const code = "code" in error ? String(error.code || "") : "";
+  const message = "message" in error ? String(error.message || "") : "";
+
+  return code === "P2021" || /accessrequest/i.test(message);
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -120,6 +129,14 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ id: accessRequest.id, status: accessRequest.status }, { status: 201 });
   } catch (error) {
+    if (isMissingAccessRequestTable(error)) {
+      console.warn("AccessRequest table is not available yet. Rejecting request-access submission until migrations are applied.");
+      return NextResponse.json(
+        { error: "Access request storage is not ready yet. Apply the latest database migration and try again." },
+        { status: 503 },
+      );
+    }
+
     console.error("Failed to submit access request:", error);
     return NextResponse.json({ error: "Failed to submit access request" }, { status: 500 });
   }

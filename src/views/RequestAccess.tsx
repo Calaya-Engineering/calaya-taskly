@@ -147,7 +147,7 @@ export default function RequestAccess() {
 
     } catch (error) {
       console.error("Error submitting request:", error);
-      toast.error("There was an error submitting your request. Please try again.");
+      toast.error(error instanceof Error ? error.message : "There was an error submitting your request. Please try again.");
       setIsSubmitting(false);
     }
   };
