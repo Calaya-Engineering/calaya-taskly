@@ -100,22 +100,38 @@ export default function SecretaryTenderDetail() {
 
   useEffect(() => {
     if (!tenderId) return;
+
+    let cancelled = false;
+
     async function getTender() {
       try {
         const res = await fetchWithAuth(`/api/tenders/${tenderId}`);
-        if (res.ok) {
-          const data = await res.json();
+        const data = await res.json().catch(() => null);
+
+        if (!res.ok) {
+          throw new Error(data?.error || "Tender not found");
+        }
+
+        if (!cancelled) {
           setTender(data);
-        } else {
-          toast.error("Tender not found");
         }
       } catch (err) {
         console.error("Failed to fetch tender:", err);
+        if (!cancelled) {
+          toast.error(err instanceof Error ? err.message : "Failed to fetch tender");
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
     }
+
     getTender();
+
+    return () => {
+      cancelled = true;
+    };
   }, [tenderId]);
 
   const daysRemaining = useMemo(() => {
@@ -166,22 +182,22 @@ export default function SecretaryTenderDetail() {
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2 mb-2">
                   <Pill>📄 Tender</Pill>
-                  <Pill tone={statusTone(tender?.status)}>{tender?.status}</Pill>
-                  <Pill tone={departmentTone(tender?.department)}>{tender?.department}</Pill>
+                  <Pill tone={statusTone(tender?.status)}>{tender?.status || "—"}</Pill>
+                  <Pill tone={departmentTone(tender?.department)}>{tender?.department || "—"}</Pill>
                   {tender?.status === 'OPEN' && (
                     <Pill tone={daysTone(daysRemaining)}>{daysRemaining} days remaining</Pill>
                   )}
                 </div>
 
                 <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight truncate" style={{ color: "var(--primary-blue)" }}>
-                  {tender?.title}
+                  {tender?.title || "Tender"}
                 </h1>
 
                 <div className="flex flex-wrap items-center gap-2 mt-2 text-sm text-gray-600">
                   <span className="font-semibold">Ref:</span>
-                  <span className="px-2 py-0.5 rounded-full bg-white/70 border border-gray-200">{tender?.referenceNo}</span>
+                  <span className="px-2 py-0.5 rounded-full bg-white/70 border border-gray-200">{tender?.referenceNo || "—"}</span>
                   <span className="text-gray-400">•</span>
-                  <span>{tender?.category}</span>
+                  <span>{tender?.category || "Uncategorized"}</span>
                 </div>
               </div>
 
@@ -202,7 +218,7 @@ export default function SecretaryTenderDetail() {
             </div>
 
             {/* Closing Date Countdown */}
-            {tender.status === 'OPEN' && (
+            {tender?.status === 'OPEN' && (
               <div className="mt-6 p-4 rounded-2xl border border-gray-200/70 bg-white/70">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                   <div className="text-sm text-gray-700">
