@@ -31,7 +31,11 @@ export async function GET(req: NextRequest) {
     const departments = searchParams.get("departments");
     const date = searchParams.get("date");
     const limitParam = searchParams.get("limit");
-    const limit = limitParam ? Math.min(parseInt(limitParam, 10) || 200, 500) : 200;
+    const offsetParam = searchParams.get("offset");
+    const parsedLimit = limitParam ? parseInt(limitParam, 10) : Number.NaN;
+    const parsedOffset = offsetParam ? parseInt(offsetParam, 10) : Number.NaN;
+    const limit = Number.isFinite(parsedLimit) ? Math.min(Math.max(parsedLimit, 1), 500) : 200;
+    const offset = Number.isFinite(parsedOffset) ? Math.max(parsedOffset, 0) : 0;
     const managedDepartments = auth.role === "HOD" ? await getManagedDepartmentNamesByEmail(auth.email) : [];
 
     const where: any = { type: "Report" };
@@ -70,6 +74,7 @@ export async function GET(req: NextRequest) {
     const documents = await prisma.document.findMany({
       where,
       orderBy: { createdAt: "desc" },
+      skip: offset,
       take: limit,
       select: {
         id: true,

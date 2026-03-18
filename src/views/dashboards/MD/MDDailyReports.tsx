@@ -91,17 +91,40 @@ const toISO = (d) => {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 };
 
+const REPORT_BATCH_SIZE = 500;
+
 export default function MDDailyReports() {
   const [reportsData, setReportsData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let cancelled = false;
+
     async function getReports() {
       try {
-        const resp = await fetchWithAuth("/api/daily-reports?limit=500");
-        if (resp.ok) {
+        const allReports = [];
+        let offset = 0;
+        let hasMore = true;
+
+        while (hasMore) {
+          const resp = await fetchWithAuth(`/api/daily-reports?limit=${REPORT_BATCH_SIZE}&offset=${offset}`);
+          if (!resp.ok) {
+            throw new Error("Failed to fetch reports");
+          }
+
           const data = await resp.json();
-          const mapped = data.map(d => ({
+          const batch = Array.isArray(data) ? data : [];
+          allReports.push(...batch);
+          hasMore = batch.length === REPORT_BATCH_SIZE;
+          offset += batch.length;
+
+          if (batch.length === 0) {
+            hasMore = false;
+          }
+        }
+
+        if (!cancelled) {
+          const mapped = allReports.map(d => ({
             id: d.id,
             dbId: d.dbId,
             date: d.date ? d.date.split('T')[0] : '',
@@ -110,17 +133,30 @@ export default function MDDailyReports() {
             uploadedBy: d.submittedBy,
             size: d.fileSize || '—',
             downloads: d.downloads || 0,
-            fileUrl: d.fileUrl
+            fileUrl: d.fileUrl,
+            entriesUrl: d.entriesUrl || d.fileUrl || null,
+            status: d.status || "APPROVED",
+            submittedAt: d.submittedAt || null,
           }));
           setReportsData(mapped);
         }
       } catch (err) {
         console.error("Failed to fetch reports:", err);
+        if (!cancelled) {
+          toast.error("Failed to load daily reports");
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
     }
+
     getReports();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const latestDate = useMemo(() => {
