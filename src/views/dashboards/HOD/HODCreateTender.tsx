@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
+import FileUploadSection from "@/components/FileUploadSection";
 import { HODMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
 import { fetchWithAuth } from "@/lib/api";
@@ -315,24 +316,16 @@ export default function HODCreateTender() {
                   </div>
 
                   <div className="md:col-span-2">
-                    <FieldLabel>Documents</FieldLabel>
-                    <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-6">
-                      <input
-                        type="file"
-                        multiple
-                        className="hidden"
-                        id="hod-tender-document-upload"
-                        onChange={handleFileUpload}
-                        accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.zip,.jpg,.jpeg,.png"
-                      />
-                      <label htmlFor="hod-tender-document-upload" className="block cursor-pointer text-center">
-                        <div className="w-14 h-14 mx-auto mb-3 rounded-full flex items-center justify-center bg-blue-50 text-sm font-black tracking-[0.2em] text-blue-700">
-                          FILE
-                        </div>
-                        <p className="font-extrabold text-gray-900">Add tender documents</p>
-                        <p className="text-sm text-gray-500 mt-1">Files will upload to Cloudinary when you save this tender.</p>
-                      </label>
-                    </div>
+                    <FileUploadSection
+                      inputId="hod-tender-document-upload"
+                      files={documents}
+                      onFileChange={handleFileUpload}
+                      onRemoveFile={removeDocument}
+                      title="Documents"
+                      accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.zip,.jpg,.jpeg,.png"
+                      helperText="Files will upload to Cloudinary when you save this tender."
+                      selectedTitle="Documents Ready to Upload"
+                    />
                   </div>
                 </div>
 
@@ -349,32 +342,6 @@ export default function HODCreateTender() {
                             <p className="text-xs text-gray-500 mt-1">{doc.size || "—"}</p>
                           </div>
                           <span className="text-xs text-gray-500 shrink-0">{doc.uploadedAt || "Saved"}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ) : null}
-
-                {documents.length > 0 ? (
-                  <div className="mt-6">
-                    <h3 className="text-sm font-extrabold mb-3" style={{ color: "var(--primary-blue)" }}>
-                      Documents Ready to Upload ({documents.length})
-                    </h3>
-                    <div className="space-y-3">
-                      {documents.map((file, index) => (
-                        <div key={`${file.name}-${index}`} className="flex items-center justify-between gap-3 p-4 rounded-2xl border border-gray-200/70 bg-white">
-                          <div className="min-w-0">
-                            <p className="font-semibold text-gray-900 truncate">{file.name}</p>
-                            <p className="text-xs text-gray-500 mt-1">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => removeDocument(index)}
-                            className="px-4 py-2 rounded-2xl font-semibold border bg-white hover:bg-red-50 active:scale-[0.99] transition"
-                            style={{ borderColor: "rgba(237,50,55,0.45)", color: "var(--accent-red)" }}
-                          >
-                            Remove
-                          </button>
                         </div>
                       ))}
                     </div>

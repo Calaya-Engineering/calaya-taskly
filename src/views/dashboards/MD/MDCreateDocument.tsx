@@ -5,6 +5,7 @@ import { useMemo, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
+import FileUploadSection from "@/components/FileUploadSection";
 import { MDMenuItems } from "@/utils/menus";
 import { PasswordInput } from "@/components/ui/password-input";
 import { toast } from "@/lib/toast";
@@ -878,65 +879,13 @@ export default function MDCreateDocument() {
               {activeTab === "files" && (
                 <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
                   <div className="xl:col-span-2 space-y-6">
-                    <div className="rounded-2xl border border-gray-200/70 p-5">
-                      <p className="text-sm font-extrabold" style={{ color: "var(--primary-blue)" }}>
-                        Upload Files <span className="text-red-500">*</span>
-                      </p>
-
-                      <div className="mt-4 border-2 border-dashed border-gray-200 rounded-2xl p-8 text-center hover:border-blue-200 transition">
-                        <input type="file" multiple className="hidden" id="file-upload" onChange={handleFileUpload} />
-                        <label htmlFor="file-upload" className="cursor-pointer">
-                          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(109, 198, 223, 0.14)" }}>
-                            <span className="text-3xl">📤</span>
-                          </div>
-                          <p className="text-gray-700 font-semibold mb-2">Click to upload or drag and drop</p>
-                          <p className="text-sm text-gray-500">Max 100MB per file • PDF, DOCX, XLSX, JPG, PNG, PPTX</p>
-                        </label>
-                      </div>
-
-                      {files.length ? (
-                        <div className="mt-6">
-                          <div className="flex items-center justify-between gap-3">
-                            <p className="text-sm font-extrabold" style={{ color: "var(--primary-blue)" }}>
-                              Selected Files
-                            </p>
-                            <div className="flex items-center gap-2">
-                              <Pill tone="info">{files.length} file(s)</Pill>
-                              <Pill tone="info">{totalSizeMB.toFixed(2)} MB</Pill>
-                            </div>
-                          </div>
-
-                          <div className="mt-3 space-y-2">
-                            {files.map((file, idx) => (
-                              <div key={`${file.name}-${idx}`} className="flex items-center justify-between gap-3 p-3 rounded-2xl border border-gray-200/70 bg-white">
-                                <div className="flex items-center gap-3 min-w-0">
-                                  <div className="w-10 h-10 rounded-2xl flex items-center justify-center  shrink-0" style={{ backgroundColor: "rgba(44, 75, 155, 0.08)" }}>
-                                    <span className="text-lg">{fileIcon(file.name)}</span>
-                                  </div>
-                                  <div className="min-w-0">
-                                    <div className="text-sm font-semibold text-gray-900 truncate max-w-[520px]">{file.name}</div>
-                                    <div className="text-xs text-gray-500">
-                                      {bytesToMB(file.size)} MB {file.type ? `• ${file.type}` : ""}
-                                    </div>
-                                  </div>
-                                </div>
-
-                                <button
-                                  type="button"
-                                  onClick={() => removeFile(idx)}
-                                  className="px-3 py-1.5 rounded-xl text-xs font-semibold border bg-white hover:bg-red-50 transition"
-                                  style={{ borderColor: "rgba(239,68,68,0.25)", color: "#DC2626" }}
-                                >
-                                  Remove
-                                </button>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="mt-6 text-sm text-gray-500">No files selected yet.</div>
-                      )}
-                    </div>
+                    <FileUploadSection
+                      inputId="file-upload"
+                      files={files}
+                      onFileChange={handleFileUpload}
+                      onRemoveFile={removeFile}
+                      required
+                    />
                   </div>
 
                   <div className="space-y-5">
