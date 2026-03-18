@@ -93,6 +93,21 @@ const toISO = (d) => {
 
 const REPORT_BATCH_SIZE = 500;
 
+const normalizeReportRecord = (report) => ({
+  id: String(report?.id ?? ""),
+  dbId: typeof report?.dbId === "number" ? report.dbId : null,
+  date: report?.date ? String(report.date).split("T")[0] : "",
+  department: String(report?.department ?? "Unassigned"),
+  title: String(report?.title ?? "Untitled Report"),
+  uploadedBy: String(report?.submittedBy ?? report?.uploadedBy ?? "Unknown User"),
+  size: String(report?.fileSize ?? "\u2014"),
+  downloads: Number(report?.downloads ?? 0) || 0,
+  fileUrl: report?.fileUrl ?? null,
+  entriesUrl: report?.entriesUrl ?? report?.fileUrl ?? null,
+  status: String(report?.status ?? "APPROVED"),
+  submittedAt: report?.submittedAt ?? null,
+});
+
 export default function MDDailyReports() {
   const [reportsData, setReportsData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -124,20 +139,7 @@ export default function MDDailyReports() {
         }
 
         if (!cancelled) {
-          const mapped = allReports.map(d => ({
-            id: d.id,
-            dbId: d.dbId,
-            date: d.date ? d.date.split('T')[0] : '',
-            department: d.department,
-            title: d.title,
-            uploadedBy: d.submittedBy,
-            size: d.fileSize || '—',
-            downloads: d.downloads || 0,
-            fileUrl: d.fileUrl,
-            entriesUrl: d.entriesUrl || d.fileUrl || null,
-            status: d.status || "APPROVED",
-            submittedAt: d.submittedAt || null,
-          }));
+          const mapped = allReports.map(normalizeReportRecord);
           setReportsData(mapped);
         }
       } catch (err) {
@@ -209,9 +211,9 @@ export default function MDDailyReports() {
         const matchesDept = selectedDepartment === "all" || r.department === selectedDepartment;
         const matchesSearch =
           !search ||
-          r.title.toLowerCase().includes(search.toLowerCase()) ||
-          r.id.toLowerCase().includes(search.toLowerCase()) ||
-          r.uploadedBy.toLowerCase().includes(search.toLowerCase());
+          String(r.title || "").toLowerCase().includes(search.toLowerCase()) ||
+          String(r.id || "").toLowerCase().includes(search.toLowerCase()) ||
+          String(r.uploadedBy || "").toLowerCase().includes(search.toLowerCase());
         return matchesDate && matchesDept && matchesSearch;
       })
       .sort((a, b) => (a.date < b.date ? 1 : -1));
@@ -531,7 +533,7 @@ export default function MDDailyReports() {
                               className="w-8 h-8 rounded-2xl flex items-center justify-center text-white text-sm mr-2 "
                               style={{ backgroundColor: "var(--secondary-blue)" }}
                             >
-                              {report.uploadedBy.charAt(0)}
+                              {String(report.uploadedBy || "U").charAt(0).toUpperCase()}
                             </div>
                             <span className="text-sm font-semibold text-gray-900">{report.uploadedBy}</span>
                           </div>
