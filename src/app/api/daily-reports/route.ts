@@ -5,6 +5,7 @@ import { getAuthFromRequest } from "@/lib/jwt";
 import { createNotification } from "@/lib/notifications";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
 import { getManagedDepartmentNamesByEmail } from "@/lib/hod-departments";
+import { buildUserDisplayLookup, getDisplayNameForUserValue } from "@/lib/user-display";
 
 // Configure Cloudinary from env (CLOUDINARY_URL)
 cloudinary.config();
@@ -90,6 +91,8 @@ export async function GET(req: NextRequest) {
       },
     });
 
+    const uploaderLookup = await buildUserDisplayLookup(documents.map((document) => document.uploadedBy));
+
     const formatted = documents.map((d) => {
       // scope stores the report status for new records
       const status = d.scope === "REVIEW_URGENTLY" || d.scope === "APPROVED" || d.scope === "PENDING"
@@ -104,7 +107,7 @@ export async function GET(req: NextRequest) {
         title: d.title,
         date: d.createdAt.toISOString().split("T")[0],
         department: d.department,
-        submittedBy: d.uploadedBy,
+        submittedBy: getDisplayNameForUserValue(d.uploadedBy, uploaderLookup),
         submittedAt: d.createdAt.toISOString(),
         entries: [], // entries loaded separately via fileUrl
         entriesUrl: d.fileUrl,  // client can fetch this URL to get full entries

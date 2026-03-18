@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { resolveDailyReportPayload } from "@/lib/daily-reports";
 import { getManagedDepartmentNamesByEmail } from "@/lib/hod-departments";
+import { buildUserDisplayLookup, getDisplayNameForUserValue } from "@/lib/user-display";
 
 function parseDailyReportId(value: string) {
   const normalized = value.trim();
@@ -57,6 +58,7 @@ export async function GET(
     }
 
     const payload = await resolveDailyReportPayload(report.fileUrl);
+    const uploaderLookup = await buildUserDisplayLookup([report.uploadedBy]);
     const status =
       report.scope === "REVIEW_URGENTLY" || report.scope === "APPROVED" || report.scope === "PENDING"
         ? report.scope
@@ -68,7 +70,7 @@ export async function GET(
       title: report.title,
       date: report.createdAt.toISOString().split("T")[0],
       department: report.department,
-      submittedBy: report.uploadedBy,
+      submittedBy: getDisplayNameForUserValue(report.uploadedBy, uploaderLookup),
       submittedAt: report.createdAt.toISOString(),
       status,
       fileSize: report.fileSize || "—",
