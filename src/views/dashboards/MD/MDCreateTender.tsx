@@ -1,26 +1,12 @@
 "use client";
 
-// pages/dashboards/MD/MDCreateTender.jsx
-import { useMemo, useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { MDMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
 import { fetchWithAuth } from "@/lib/api";
 
-
-const categories = [
-  "Equipment Supply",
-  "Training Services",
-  "IT Services",
-  "Maintenance Services",
-  "Professional Services",
-  "Consultancy",
-  "Construction",
-  "Transport Services",
-];
-
-/* ---------- UI helpers (MATCH MDTenders + MDTenderDetail) ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
 );
@@ -43,15 +29,12 @@ const Pill = ({ children, tone = "default" }) => {
   );
 };
 
-const SectionTitle = ({ title, subtitle, right }) => (
-  <div className="flex items-start justify-between gap-3">
-    <div>
-      <h2 className="text-lg md:text-xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
-        {title}
-      </h2>
-      {subtitle ? <p className="text-sm text-gray-500 mt-1">{subtitle}</p> : null}
-    </div>
-    {right}
+const SectionTitle = ({ title, subtitle }) => (
+  <div>
+    <h2 className="text-lg md:text-xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
+      {title}
+    </h2>
+    {subtitle ? <p className="text-sm text-gray-500 mt-1">{subtitle}</p> : null}
   </div>
 );
 
@@ -63,136 +46,126 @@ const FieldLabel = ({ children, required }) => (
 
 const inputBase =
   "w-full px-4 py-3 rounded-2xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100";
-const selectBase =
-  "w-full px-4 py-3 rounded-2xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100";
 const textareaBase =
   "w-full px-4 py-3 rounded-2xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100";
 
+function toDateInput(value) {
+  if (!value) return "";
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return "";
+  return parsed.toISOString().split("T")[0];
+}
+
 export default function MDCreateTender() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState("details");
-  const [departments, setDepartments] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function getDepartments() {
-      try {
-        const res = await fetchWithAuth("/api/departments");
-        if (res.ok) {
-          const data = await res.json();
-          setDepartments(data.map(d => d.name));
-        }
-      } catch (err) {
-        console.error("Failed to fetch departments:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    getDepartments();
-  }, []);
-
+  const params = useParams() || {};
+  const tenderId = params.tenderId;
+  const isEditMode = !!tenderId;
+  const [loading, setLoading] = useState(isEditMode);
+  const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
-    referenceNo: "",
     description: "",
-    department: "",
-    category: "",
     issuedDate: new Date().toISOString().split("T")[0],
     closingDate: "",
-    budget: "",
-    contactPerson: "",
-    contactEmail: "",
-    contactPhone: "",
-    requirements: [],
-    attachments: [],
+    status: "OPEN",
   });
 
-  const [requirements, setRequirements] = useState([""]);
-  const [attachments, setAttachments] = useState([]);
+  useEffect(() => {
+    if (!isEditMode || !tenderId) return;
 
-  const tabs = useMemo(
-    () => [
-      { id: "details", label: "Tender Details" },
-      { id: "requirements", label: "Requirements" },
-      { id: "documents", label: `Documents${attachments.length ? ` (${attachments.length})` : ""}` },
-    ],
-    [attachments.length]
-  );
+    let cancelled = false;
 
-  const generateReferenceNo = () => {
-    const prefix = "CAL";
-    const deptCode = formData.department ? formData.department.substring(0, 4).toUpperCase() : "TEN";
-    const year = new Date().getFullYear();
-    const sequence = Math.floor(Math.random() * 1000)
-      .toString()
-      .padStart(3, "0");
-    return `${prefix}/${deptCode}/${year}/${sequence}`;
+    async function loadTender() {
+      try {
+        const res = await fetchWithAuth(`/api/tenders/${tenderId}`);
+        const data = await res.json().catch(() => null);
+        if (!res.ok) {
+          throw new Error(data?.error || "Tender not found");
+        }
+
+        if (!cancelled) {
+          setFormData({
+            title: String(data?.title ?? ""),
+            description: String(data?.description ?? ""),
+            issuedDate: toDateInput(data?.issuedDate) || new Date().toISOString().split("T")[0],
+            closingDate: toDateInput(data?.closingDate),
+            status: String(data?.status ?? "OPEN"),
+          });
+        }
+      } catch (error) {
+        console.error("Failed to load tender:", error);
+        if (!cancelled) {
+          toast.error(error instanceof Error ? error.message : "Failed to load tender");
+          router.push("/md-dashboard/tenders");
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadTender();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isEditMode, router, tenderId]);
+
+  const heroCopy = useMemo(() => ({
+    pill: isEditMode ? "Edit Tender" : "Create Tender",
+    title: isEditMode ? "Edit Tender" : "Create New Tender",
+    subtitle: isEditMode
+      ? "Update the tender title, description, closing date, and status."
+      : "Create a company-wide tender with only the core details required.",
+  }), [isEditMode]);
+
+  const handleChange = (field) => (event) => {
+    setFormData((prev) => ({ ...prev, [field]: event.target.value }));
   };
 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (saving) return;
 
+    if (!formData.title.trim()) return toast.warning("Please enter a tender title");
+    if (!formData.description.trim()) return toast.warning("Please enter a description");
+    if (!formData.closingDate) return toast.warning("Please set a closing date");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (loading) return;
-
-    if (!formData.title.trim()) return toast.warning("Please enter tender title");
-    if (!formData.department) return toast.warning("Please select department");
-    if (!formData.description.trim()) return toast.warning("Please enter description");
-    if (!formData.closingDate) return toast.warning("Please set closing date");
-
-    setLoading(true);
+    setSaving(true);
     try {
       const payload = {
-        ...formData,
-        referenceNo: generateReferenceNo(),
-        status: "OPEN",
+        title: formData.title.trim(),
+        description: formData.description.trim(),
+        closingDate: formData.closingDate,
+        status: formData.status,
       };
 
-      const res = await fetchWithAuth("/api/tenders", {
-        method: "POST",
+      const res = await fetchWithAuth(isEditMode ? `/api/tenders/${tenderId}` : "/api/tenders", {
+        method: isEditMode ? "PATCH" : "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
+      const data = await res.json().catch(() => null);
 
-      if (res.ok) {
-        toast.success("Tender created successfully!");
-        router.push("/md-dashboard/tenders");
-      } else {
-        const error = await res.json();
-        toast.error(error.error || "Failed to create tender");
+      if (!res.ok) {
+        throw new Error(data?.error || `Failed to ${isEditMode ? "update" : "create"} tender`);
       }
-    } catch (err) {
-      console.error("Error creating tender:", err);
-      toast.error("An error occurred while creating the tender");
+
+      toast.success(`Tender ${isEditMode ? "updated" : "created"} successfully`);
+      router.push("/md-dashboard/tenders");
+    } catch (error) {
+      console.error("Error saving tender:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to save tender");
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
-
-  const handleRequirementChange = (index, value) => {
-    const next = [...requirements];
-    next[index] = value;
-    setRequirements(next);
-  };
-
-  const addRequirement = () => setRequirements((prev) => [...prev, ""]);
-
-  const removeRequirement = (index) => {
-    if (requirements.length <= 1) return;
-    setRequirements((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const handleFileUpload = (e) => {
-    const files = Array.from(e.target.files || []);
-    if (!files.length) return;
-    setAttachments((prev) => [...prev, ...files]);
-  };
-
-  const removeAttachment = (index) => setAttachments((prev) => prev.filter((_, i) => i !== index));
 
   return (
     <Layout menuItems={MDMenuItems} userRole="MD">
-      <div className="max-w-7xl mx-auto space-y-6">
-        {/* HERO */}
+      <div className="max-w-5xl mx-auto space-y-6">
         <Card className="overflow-hidden">
           <div
             className="p-6 md:p-8"
@@ -204,348 +177,121 @@ export default function MDCreateTender() {
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
               <div>
                 <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <Pill>📄 Create Tender</Pill>
-                  <Pill tone="success">OPEN by default</Pill>
-                  <Pill tone="purple">Calaya</Pill>
+                  <Pill>{heroCopy.pill}</Pill>
+                  <Pill tone="success">Company-wide</Pill>
+                  <Pill tone="purple">{formData.status}</Pill>
                 </div>
 
                 <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
-                  Create New Tender
+                  {heroCopy.title}
                 </h1>
-                <p className="text-gray-600 mt-2">Publish a tender and attach documents for suppliers and contractors.</p>
+                <p className="text-gray-600 mt-2">{heroCopy.subtitle}</p>
               </div>
 
-              <div className="flex gap-2">
-                <button
-                  onClick={() => router.push("/md-dashboard/tenders")}
-                  className="px-5 py-3 rounded-2xl font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
-                  style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}
-                >
-                  ← Back to Tenders
-                </button>
-              </div>
-            </div>
-
-            {/* TAB BAR */}
-            <div className="mt-6 flex flex-wrap gap-6 border-b border-gray-200/70">
-              {tabs.map((t) => (
-                <button
-                  key={t.id}
-                  onClick={() => setActiveTab(t.id)}
-                  className={`pb-4 text-sm font-semibold transition ${activeTab === t.id ? "text-blue-700" : "text-gray-500 hover:text-gray-700"
-                    }`}
-                  style={{
-                    borderBottom: activeTab === t.id ? "2px solid var(--primary-blue)" : "2px solid transparent",
-                  }}
-                >
-                  {t.label}
-                </button>
-              ))}
+              <button
+                type="button"
+                onClick={() => router.push("/md-dashboard/tenders")}
+                className="px-5 py-3 rounded-2xl font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
+                style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}
+              >
+                ← Back to Tenders
+              </button>
             </div>
           </div>
         </Card>
 
-        {/* FORM */}
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* DETAILS */}
-          {activeTab === "details" && (
-            <Card className="p-6 md:p-8">
-              <SectionTitle title="Tender Details" subtitle="Basic info, dates, budget and contact details" />
+        <form onSubmit={handleSubmit}>
+          <Card className="p-6 md:p-8">
+            <SectionTitle
+              title="Tender Details"
+              subtitle="Only the core tender information is required now."
+            />
 
-              <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div className="md:col-span-2">
-                  <FieldLabel required>Tender Title</FieldLabel>
-                  <input
-                    type="text"
-                    required
-                    className={inputBase}
-                    placeholder="e.g., Supply of Pipeline Inspection Equipment"
-                    value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  />
-                </div>
-
-                <div>
-                  <FieldLabel required>Department</FieldLabel>
-                  <select
-                    required
-                    className={selectBase}
-                    value={formData.department}
-                    onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                  >
-                    <option value="">Select department</option>
-                    {departments.map((dept) => (
-                      <option key={dept} value={dept}>
-                        {dept}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <FieldLabel>Category</FieldLabel>
-                  <select
-                    className={selectBase}
-                    value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  >
-                    <option value="">Select category</option>
-                    {categories.map((cat) => (
-                      <option key={cat} value={cat}>
-                        {cat}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <FieldLabel>Issued Date</FieldLabel>
-                  <input type="date" className={`${inputBase} bg-gray-50`} value={formData.issuedDate} readOnly />
-                </div>
-
-                <div>
-                  <FieldLabel required>Closing Date</FieldLabel>
-                  <input
-                    type="date"
-                    required
-                    className={inputBase}
-                    value={formData.closingDate}
-                    onChange={(e) => setFormData({ ...formData, closingDate: e.target.value })}
-                  />
-                </div>
-
-                <div className="md:col-span-2">
-                  <FieldLabel required>Description</FieldLabel>
-                  <textarea
-                    rows={6}
-                    required
-                    className={textareaBase}
-                    placeholder="Describe scope of work, deliverables, and other relevant information..."
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  />
-                </div>
+            {loading ? (
+              <div className="py-16 flex flex-col items-center justify-center">
+                <div className="w-12 h-12 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin mb-4" />
+                <p className="text-gray-500 font-semibold">Loading tender...</p>
               </div>
-
-              {/* Budget & Contact block */}
-              <div className="mt-6 p-5 rounded-2xl border border-gray-200/70 bg-gray-50">
-                <h3 className="text-sm font-extrabold mb-4" style={{ color: "var(--primary-blue)" }}>
-                  Budget & Contact Information
-                </h3>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <div>
-                    <FieldLabel>Budget Range</FieldLabel>
-                    <div className="relative">
-                      <span className="absolute left-4 top-3.5 text-gray-500 font-semibold">₦</span>
-                      <input
-                        type="text"
-                        className={`${inputBase} pl-9`}
-                        placeholder="15,800,000"
-                        value={formData.budget}
-                        onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <FieldLabel>Contact Person</FieldLabel>
+            ) : (
+              <>
+                <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div className="md:col-span-2">
+                    <FieldLabel required>Tender Title</FieldLabel>
                     <input
                       type="text"
+                      required
                       className={inputBase}
-                      placeholder="e.g., Engr. Michael Okonkwo"
-                      value={formData.contactPerson}
-                      onChange={(e) => setFormData({ ...formData, contactPerson: e.target.value })}
+                      placeholder="e.g., Supply of Workshop Equipment"
+                      value={formData.title}
+                      onChange={handleChange("title")}
                     />
                   </div>
 
                   <div>
-                    <FieldLabel>Contact Email</FieldLabel>
-                    <input
-                      type="email"
-                      className={inputBase}
-                      placeholder="procurement@calaya.com"
-                      value={formData.contactEmail}
-                      onChange={(e) => setFormData({ ...formData, contactEmail: e.target.value })}
-                    />
+                    <FieldLabel>Issued Date</FieldLabel>
+                    <input type="date" className={`${inputBase} bg-gray-50`} value={formData.issuedDate} readOnly />
                   </div>
 
                   <div>
-                    <FieldLabel>Contact Phone</FieldLabel>
+                    <FieldLabel required>Closing Date</FieldLabel>
                     <input
-                      type="tel"
+                      type="date"
+                      required
                       className={inputBase}
-                      placeholder="+234 801 234 5678"
-                      value={formData.contactPhone}
-                      onChange={(e) => setFormData({ ...formData, contactPhone: e.target.value })}
+                      value={formData.closingDate}
+                      onChange={handleChange("closingDate")}
+                    />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <FieldLabel>Status</FieldLabel>
+                    <select className={inputBase} value={formData.status} onChange={handleChange("status")}>
+                      <option value="OPEN">Open</option>
+                      <option value="CLOSED">Closed</option>
+                      <option value="AWARDED">Awarded</option>
+                    </select>
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <FieldLabel required>Description</FieldLabel>
+                    <textarea
+                      rows={8}
+                      required
+                      className={textareaBase}
+                      placeholder="Describe the scope of work, deliverables, and any context vendors should know."
+                      value={formData.description}
+                      onChange={handleChange("description")}
                     />
                   </div>
                 </div>
-              </div>
 
-              <div className="mt-6 flex flex-col sm:flex-row justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => setActiveTab("requirements")}
-                  className="px-6 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition"
-                  style={{ backgroundColor: "var(--secondary-blue)" }}
-                >
-                  Continue to Requirements →
-                </button>
-              </div>
-            </Card>
-          )}
-
-          {/* REQUIREMENTS */}
-          {activeTab === "requirements" && (
-            <Card className="p-6 md:p-8">
-              <SectionTitle
-                title="Tender Requirements"
-                subtitle="Add mandatory requirements bidders must meet"
-                right={
-                  <button
-                    type="button"
-                    onClick={addRequirement}
-                    className="px-5 py-2.5 rounded-2xl font-semibold text-white active:scale-[0.99] transition"
-                    style={{ backgroundColor: "var(--secondary-blue)" }}
-                  >
-                    + Add Requirement
-                  </button>
-                }
-              />
-
-              <div className="mt-6 space-y-3">
-                {requirements.map((req, index) => (
-                  <div key={index} className="flex flex-col sm:flex-row gap-2">
-                    <input
-                      type="text"
-                      className={inputBase}
-                      placeholder={`Requirement ${index + 1}`}
-                      value={req}
-                      onChange={(e) => handleRequirementChange(index, e.target.value)}
-                    />
-                    {requirements.length > 1 ? (
-                      <button
-                        type="button"
-                        onClick={() => removeRequirement(index)}
-                        className="px-4 py-3 rounded-2xl font-semibold border bg-white hover:bg-red-50 active:scale-[0.99] transition"
-                        style={{ borderColor: "rgba(237,50,55,0.45)", color: "var(--accent-red)" }}
-                      >
-                        Remove
-                      </button>
-                    ) : null}
+                <div className="mt-8 pt-6 border-t border-gray-200/70 flex flex-col sm:flex-row justify-between gap-3">
+                  <div className="text-sm text-gray-500">
+                    Department assignment, category, budget, contact details, and requirements are no longer part of tender creation.
                   </div>
-                ))}
-                <p className="text-xs text-gray-500 mt-2">Add all mandatory requirements for bidders to qualify.</p>
-              </div>
 
-              <div className="mt-8 pt-6 border-t border-gray-200/70 flex flex-col sm:flex-row justify-between gap-2">
-                <button
-                  type="button"
-                  onClick={() => setActiveTab("details")}
-                  className="px-6 py-3 rounded-2xl font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
-                  style={{ borderColor: "rgba(109,198,223,0.55)", color: "var(--secondary-blue)" }}
-                >
-                  ← Back to Details
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setActiveTab("documents")}
-                  className="px-6 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition"
-                  style={{ backgroundColor: "var(--secondary-blue)" }}
-                >
-                  Continue to Documents →
-                </button>
-              </div>
-            </Card>
-          )}
-
-          {/* DOCUMENTS */}
-          {activeTab === "documents" && (
-            <Card className="p-6 md:p-8">
-              <SectionTitle title="Upload Tender Documents" subtitle="Attach PDFs, Word/Excel files, images, etc." />
-
-              <div className="mt-6 rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center hover:border-blue-300 transition">
-                <input type="file" multiple className="hidden" id="tender-doc-upload" onChange={handleFileUpload} />
-                <label htmlFor="tender-doc-upload" className="cursor-pointer">
-                  <div
-                    className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center"
-                    style={{ backgroundColor: "rgba(109, 198, 223, 0.12)" }}
-                  >
-                    <span className="text-3xl">📎</span>
-                  </div>
-                  <p className="text-gray-800 font-extrabold mb-1">Click to upload</p>
-                  <p className="text-sm text-gray-500">PDF, DOC, XLSX, JPG, PNG up to 100MB each</p>
-                </label>
-              </div>
-
-              {attachments.length > 0 ? (
-                <div className="mt-6">
-                  <h4 className="text-sm font-extrabold mb-3" style={{ color: "var(--primary-blue)" }}>
-                    Uploaded Documents ({attachments.length})
-                  </h4>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {attachments.map((file, index) => (
-                      <div
-                        key={index}
-                        className="p-4 rounded-2xl border border-gray-200/70 bg-white transition flex items-start justify-between gap-3"
-                      >
-                        <div className="flex items-start gap-3 min-w-0">
-                          <div className="w-11 h-11 rounded-2xl bg-blue-50 flex items-center justify-center text-xl">📄</div>
-                          <div className="min-w-0">
-                            <p className="font-extrabold text-sm text-gray-900 truncate">{file.name}</p>
-                            <p className="text-xs text-gray-500 mt-1">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
-                          </div>
-                        </div>
-
-                        <button
-                          type="button"
-                          onClick={() => removeAttachment(index)}
-                          className="px-4 py-2 rounded-2xl font-semibold border bg-white hover:bg-red-50 active:scale-[0.99] transition"
-                          style={{ borderColor: "rgba(237,50,55,0.45)", color: "var(--accent-red)" }}
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    ))}
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <button
+                      type="button"
+                      onClick={() => router.push("/md-dashboard/tenders")}
+                      className="px-6 py-3 rounded-2xl font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
+                      style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={saving}
+                      className="px-6 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition disabled:opacity-60"
+                      style={{ backgroundColor: "var(--accent-red)" }}
+                    >
+                      {saving ? (isEditMode ? "Saving..." : "Creating...") : (isEditMode ? "Save Changes" : "Create Tender")}
+                    </button>
                   </div>
                 </div>
-              ) : null}
-
-              <div className="mt-8 pt-6 border-t border-gray-200/70 flex flex-col sm:flex-row justify-between gap-2">
-                <button
-                  type="button"
-                  onClick={() => setActiveTab("requirements")}
-                  className="px-6 py-3 rounded-2xl font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
-                  style={{ borderColor: "rgba(109,198,223,0.55)", color: "var(--secondary-blue)" }}
-                >
-                  ← Back to Requirements
-                </button>
-
-                <div className="flex flex-col sm:flex-row gap-2">
-                  <button
-                    type="button"
-                    onClick={() => router.push("/md-dashboard/tenders")}
-                    className="px-6 py-3 rounded-2xl font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
-                    style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}
-                  >
-                    Cancel
-                  </button>
-
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="px-7 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition disabled:opacity-50 disabled:cursor-not-allowed"
-                    style={{ backgroundColor: "var(--accent-red)" }}
-                  >
-                    {loading ? "Creating..." : "Create Tender"}
-                  </button>
-                </div>
-              </div>
-            </Card>
-          )}
+              </>
+            )}
+          </Card>
         </form>
       </div>
     </Layout>

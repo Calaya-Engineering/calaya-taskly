@@ -63,21 +63,6 @@ const daysLeftTone = (days) => {
   return "success";
 };
 
-const departmentTone = (dept) => {
-  const tones = {
-    Technical: "info",
-    Workshop: "warn",
-    HSE: "success",
-    IT: "purple",
-    Admin: "default",
-    Legal: "purple",
-    Logistics: "warn",
-    Procurement: "info",
-    HR: "success",
-  };
-  return tones[dept] || "default";
-};
-
 const clamp = (s = "", max = 150) => (s.length > max ? s.slice(0, max).trim() + "…" : s);
 
 
@@ -85,7 +70,6 @@ const clamp = (s = "", max = 150) => (s.length > max ? s.slice(0, max).trim() + 
 export default function HODTenders() {
   const router = useRouter();
   const [status, setStatus] = useState("all");
-  const [department, setDepartment] = useState("all");
   const [q, setQ] = useState("");
   const [tendersData, setTendersData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -112,28 +96,22 @@ export default function HODTenders() {
     if (ev.type?.startsWith("task:")) getTenders();
   });
 
-  const departments = useMemo(() => ["all", ...Array.from(new Set(tendersData.map((t) => t.department)))], [tendersData]);
   const openTenders = useMemo(() => tendersData.filter((t) => t.status === "OPEN"), [tendersData]);
-  const myDeptTenders = useMemo(() =>
-    tendersData.filter((t) => ["Technical", "Workshop", "HSE"].includes(t.department)),
-    [tendersData]);
 
   const filtered = useMemo(() => {
     const term = q.trim().toLowerCase();
     return tendersData.filter((t) => {
       if (status !== "all" && t.status !== status) return false;
-      if (department !== "all" && t.department !== department) return false;
       if (term) {
         const hit =
           t.title.toLowerCase().includes(term) ||
           (t.referenceNo || "").toLowerCase().includes(term) ||
-          (t.category || "").toLowerCase().includes(term) ||
-          t.department.toLowerCase().includes(term);
+          (t.description || "").toLowerCase().includes(term);
         if (!hit) return false;
       }
       return true;
     });
-  }, [status, department, q, tendersData]);
+  }, [status, q, tendersData]);
 
   const getDaysRemaining = (closingDate) => {
     const now = new Date();
@@ -185,13 +163,13 @@ export default function HODTenders() {
                 <div className="flex flex-wrap items-center gap-2 mb-2">
                   <Pill><span className="inline-flex items-center gap-1.5"><DocumentIcon /> Tenders</span></Pill>
                   <Pill tone="success">{openTenders.length} Open</Pill>
-                  <Pill tone="info">{myDeptTenders.length} In Your Depts</Pill>
+                  <Pill tone="info">Company-wide</Pill>
                   <Pill tone="purple">{totals.awarded} Awarded</Pill>
                 </div>
                 <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
                   Department Tenders
                 </h1>
-                <p className="text-gray-600 mt-2">View, create and manage tenders across all departments.</p>
+                <p className="text-gray-600 mt-2">View, create and manage company-wide tenders.</p>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-2">
@@ -216,13 +194,13 @@ export default function HODTenders() {
             </div>
 
             {/* Search + filters */}
-            <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-3">
-              <div className="lg:col-span-1">
+            <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-3">
+              <div>
                 <div className="relative">
                   <input
                     value={q}
                     onChange={(e) => setQ(e.target.value)}
-                    placeholder="Search title, reference, category..."
+                    placeholder="Search title, reference, or description..."
                     className="w-full pl-11 pr-4 py-3 rounded-2xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100"
                   />
                   <span className="absolute left-4 top-3.5 text-gray-400">🔎</span>
@@ -242,19 +220,6 @@ export default function HODTenders() {
                 </select>
               </div>
 
-              <div>
-                <select
-                  className="w-full px-4 py-3 rounded-2xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100"
-                  value={department}
-                  onChange={(e) => setDepartment(e.target.value)}
-                >
-                  {departments.map((d) => (
-                    <option key={d} value={d}>
-                      {d === "all" ? "All Departments" : d}
-                    </option>
-                  ))}
-                </select>
-              </div>
             </div>
           </div>
         </Card>
@@ -276,11 +241,11 @@ export default function HODTenders() {
           </Card>
 
           <Card className="p-6">
-            <p className="text-xs text-gray-500 font-semibold">Your Dept Tenders</p>
+            <p className="text-xs text-gray-500 font-semibold">Awarded Tenders</p>
             <p className="text-3xl font-extrabold mt-2" style={{ color: "var(--secondary-blue)" }}>
-              {myDeptTenders.length}
+              {totals.awarded}
             </p>
-            <p className="text-sm text-gray-500 mt-1">Technical, Workshop, HSE</p>
+            <p className="text-sm text-gray-500 mt-1">Closed with a winner</p>
           </Card>
 
           <Card className="p-6">
@@ -295,19 +260,6 @@ export default function HODTenders() {
           <SectionTitle
             title="Tender List"
             subtitle={`${filtered.length} result(s)`}
-            action={
-              <button
-                onClick={() => {
-                  setStatus("all");
-                  setDepartment("all");
-                  setQ("");
-                }}
-                className="px-4 py-2 rounded-2xl text-sm font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
-                style={{ borderColor: "rgba(44,75,155,0.25)", color: "var(--primary-blue)" }}
-              >
-                Reset
-              </button>
-            }
           />
 
           <div className="mt-5 grid grid-cols-1 lg:grid-cols-2 gap-5">
@@ -318,13 +270,11 @@ export default function HODTenders() {
               </div>
             ) : filtered.map((t) => {
               const days = getDaysRemaining(t.closingDate);
-              const isMyDept = ["Technical", "Workshop", "HSE"].includes(t.department);
-
               return (
                 <div
                   key={t.id}
                   className="p-5 rounded-2xl border border-gray-200/70 transition bg-white cursor-pointer relative"
-                  onClick={() => router.push(`/hod-dashboard/tender/${t.id}`)}
+                  onClick={() => router.push(`/hod-dashboard/tender/${t.dbId}`)}
                   role="button"
                   tabIndex={0}
                 >
@@ -333,8 +283,7 @@ export default function HODTenders() {
                       <div className="flex flex-wrap items-center gap-2 mb-2">
                         <Pill tone={statusTone(t.status)}>{t.status}</Pill>
                         {t.status === "OPEN" ? <Pill tone={daysLeftTone(days)}>{days} days left</Pill> : null}
-                        <Pill tone={departmentTone(t.department)}>{t.department}</Pill>
-                        {isMyDept && <Pill tone="info">📌 Your Dept</Pill>}
+                        <Pill tone="info">Company-wide</Pill>
                       </div>
 
                       <h3 className="text-base font-extrabold text-gray-900 truncate" style={{ color: "var(--primary-blue)" }}>
@@ -346,7 +295,7 @@ export default function HODTenders() {
                     </div>
 
                     <div className="flex gap-1 shrink-0">
-                      <Link href={`/hod-dashboard/tender/edit/${t.id}`} onClick={(e) => e.stopPropagation()}>
+                      <Link href={`/hod-dashboard/tender/edit/${t.dbId}`} onClick={(e) => e.stopPropagation()}>
                         <button
                           className="p-2 rounded-xl hover:bg-gray-100 transition [&_svg]:w-5 [&_svg]:h-5"
                           style={{ color: "var(--primary-blue)" }}
@@ -368,16 +317,16 @@ export default function HODTenders() {
 
                   <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
                     <div className="p-3 rounded-2xl bg-gray-50 border border-gray-200/70">
-                      <p className="text-xs text-gray-500 font-semibold">Category</p>
-                      <p className="font-bold text-gray-900 mt-1">{t.category}</p>
-                    </div>
-                    <div className="p-3 rounded-2xl bg-gray-50 border border-gray-200/70">
                       <p className="text-xs text-gray-500 font-semibold">Issued</p>
                       <p className="font-bold text-gray-900 mt-1">{t.issuedDate}</p>
                     </div>
                     <div className="p-3 rounded-2xl bg-gray-50 border border-gray-200/70">
                       <p className="text-xs text-gray-500 font-semibold">Closing</p>
                       <p className="font-bold text-gray-900 mt-1">{t.closingDate}</p>
+                    </div>
+                    <div className="p-3 rounded-2xl bg-gray-50 border border-gray-200/70">
+                      <p className="text-xs text-gray-500 font-semibold">Scope</p>
+                      <p className="font-bold text-gray-900 mt-1">Company-wide</p>
                     </div>
                     <div className="p-3 rounded-2xl bg-gray-50 border border-gray-200/70">
                       <p className="text-xs text-gray-500 font-semibold">Documents</p>
@@ -393,7 +342,7 @@ export default function HODTenders() {
                     </div>
 
                     <Link
-                      href={`/hod-dashboard/tender/${t.id}`}
+                      href={`/hod-dashboard/tender/${t.dbId}`}
                       onClick={(e) => e.stopPropagation()}
                       className="text-sm font-semibold hover:underline"
                       style={{ color: "var(--primary-blue)" }}

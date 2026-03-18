@@ -4,6 +4,28 @@ import { getAuthFromRequest } from "@/lib/jwt";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
 import { createNotification } from "@/lib/notifications";
 
+const DEFAULT_TENDER_DEPARTMENT = "Company-wide";
+
+function parseTenderId(value: string) {
+    const trimmed = value.trim();
+    return /^\d+$/.test(trimmed) ? parseInt(trimmed, 10) : Number.NaN;
+}
+
+async function findTenderByIdentifier(id: string) {
+    const parsedId = parseTenderId(id);
+    return prisma.tender.findFirst({
+        where: {
+            OR: [
+                { id: Number.isNaN(parsedId) ? -1 : parsedId },
+                { referenceNo: id }
+            ]
+        },
+        include: {
+            documents: true,
+        }
+    });
+}
+
 /**
  * GET /api/tenders/[id] - Get tender details
  */
@@ -18,18 +40,7 @@ export async function GET(
         }
 
         const { id } = await params;
-        // id could be the database ID or the referenceNo
-        const tender = await prisma.tender.findFirst({
-            where: {
-                OR: [
-                    { id: isNaN(parseInt(id)) ? -1 : parseInt(id) },
-                    { referenceNo: id }
-                ]
-            },
-            include: {
-                documents: true,
-            }
-        });
+        const tender = await findTenderByIdentifier(id);
 
         if (!tender) {
             return NextResponse.json({ error: "Tender not found" }, { status: 404 });
@@ -43,7 +54,7 @@ export async function GET(
             description: tender.description,
             issuedDate: tender.issuedDate.toISOString().split("T")[0],
             closingDate: tender.closingDate.toISOString().split("T")[0],
-            department: tender.department,
+            department: tender.department || DEFAULT_TENDER_DEPARTMENT,
             category: tender.category,
             status: tender.status,
             createdBy: tender.createdBy,
@@ -57,12 +68,6 @@ export async function GET(
                 fileUrl: d.fileUrl,
                 type: d.type
             })),
-            // Requirements are not in the schema yet, we could use a text field or related model.
-            // For now, let's just use defaults or dummy if empty.
-            requirements: [
-                "Valid tax clearance certificate",
-                "Evidence of similar projects completed",
-            ],
         };
 
         createNotification({
@@ -91,35 +96,50 @@ export async function PATCH(
 ) {
     try {
         const auth = await getAuthFromRequest(req);
-        if (!auth) {
+        if (!auth || !["MD", "HOD"].includes(auth.role)) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
         const { id } = await params;
         const body = await req.json();
+        const tender = await findTenderByIdentifier(id);
 
-        const tender = await prisma.tender.update({
+        if (!tender) {
+            return NextResponse.json({ error: "Tender not found" }, { status: 404 });
+        }
+
+        const nextData: Record<string, unknown> = {};
+        if (typeof body.title === "string" && body.title.trim()) nextData.title = body.title.trim();
+        if (typeof body.description === "string" && body.description.trim()) nextData.description = body.description.trim();
+        if (typeof body.closingDate === "string" && body.closingDate.trim()) nextData.closingDate = new Date(body.closingDate);
+        if (typeof body.status === "string" && body.status.trim()) nextData.status = body.status.trim();
+
+        const updatedTender = await prisma.tender.update({
             where: {
-                id: parseInt(id)
+                id: tender.id
             },
-            data: body
+            data: {
+                ...nextData,
+                department: DEFAULT_TENDER_DEPARTMENT,
+                category: null,
+            }
         });
 
         emitRealtimeEvent({
             type: "tender:updated",
             entity: "tender",
             action: "updated",
-            entityId: tender.id,
+            entityId: updatedTender.id,
         });
 
         createNotification({
             actorEmail: auth.email,
             actionType: 'UPDATE_TENDER',
-            targetId: tender.id,
-            message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) updated tender: ${tender.title}`
+            targetId: updatedTender.id,
+            message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) updated tender: ${updatedTender.title}`
         });
 
-        return NextResponse.json(tender);
+        return NextResponse.json(updatedTender);
     } catch (error: any) {
         console.error("Error updating tender:", error);
         return NextResponse.json(
@@ -138,14 +158,19 @@ export async function DELETE(
 ) {
     try {
         const auth = await getAuthFromRequest(req);
-        if (!auth) {
+        if (!auth || !["MD", "HOD"].includes(auth.role)) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
         const { id } = await params;
+        const tender = await findTenderByIdentifier(id);
+        if (!tender) {
+            return NextResponse.json({ error: "Tender not found" }, { status: 404 });
+        }
+
         await prisma.tender.delete({
             where: {
-                id: parseInt(id)
+                id: tender.id
             }
         });
 
@@ -153,14 +178,14 @@ export async function DELETE(
             type: "tender:deleted",
             entity: "tender",
             action: "deleted",
-            entityId: parseInt(id),
+            entityId: tender.id,
         });
 
         createNotification({
             actorEmail: auth.email,
             actionType: 'DELETE_TENDER',
-            targetId: parseInt(id),
-            message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) deleted a tender.`
+            targetId: tender.id,
+            message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) deleted tender: ${tender.title}.`
         });
 
         return NextResponse.json({ success: true });
