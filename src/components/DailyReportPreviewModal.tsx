@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { fetchWithAuth } from "@/lib/api";
+import { downloadDailyReport } from "@/lib/daily-report-download";
+import { toast } from "@/lib/toast";
 
 type DailyReportPreviewData = {
   id: string;
@@ -132,6 +134,20 @@ export default function DailyReportPreviewModal({ open, reportId, onClose }: Pro
     };
   }, [open, reportId]);
 
+  const handleDownload = async () => {
+    if (!report) {
+      toast.info("No report is available to download");
+      return;
+    }
+
+    try {
+      await downloadDailyReport(report);
+    } catch (error) {
+      console.error("Failed to download report from preview modal:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to download report");
+    }
+  };
+
   if (!open) return null;
 
   return (
@@ -247,20 +263,16 @@ export default function DailyReportPreviewModal({ open, reportId, onClose }: Pro
 
             <div className="px-6 py-4 border-t border-gray-200/70 bg-gray-50 flex flex-wrap justify-between items-center gap-3">
               <div className="text-sm text-gray-600">
-                {report?.attachmentUrl ? "Attachment available for download." : "No supporting attachment attached."}
+                {report?.attachmentUrl ? "Attachment available for download." : "Download will use the report JSON when no attachment exists."}
               </div>
               <div className="flex gap-3">
-                {report?.attachmentUrl ? (
-                  <a
-                    href={report.attachmentUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-5 py-3 rounded-2xl font-semibold text-white transition"
-                    style={{ backgroundColor: "var(--secondary-blue)" }}
-                  >
-                    Open Attachment
-                  </a>
-                ) : null}
+                <button
+                  onClick={handleDownload}
+                  className="px-5 py-3 rounded-2xl font-semibold text-white transition"
+                  style={{ backgroundColor: "var(--secondary-blue)" }}
+                >
+                  Download Report
+                </button>
                 <button
                   onClick={onClose}
                   className="px-5 py-3 rounded-2xl font-semibold border bg-white hover:bg-gray-50 transition"

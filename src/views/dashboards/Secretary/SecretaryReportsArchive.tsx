@@ -9,6 +9,7 @@ import { SecretaryMenuItems } from "@/utils/menus";
 import { fetchWithAuth } from "@/lib/api";
 import { toast } from "@/lib/toast";
 import DailyReportPreviewModal from "@/components/DailyReportPreviewModal";
+import { downloadDailyReport } from "@/lib/daily-report-download";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -195,19 +196,13 @@ export default function SecretaryReportsArchive() {
   const years = [2025, 2024, 2023, 2022];
   const months = Array.from({ length: 12 }, (_, i) => ({ index: i, name: getMonthName(i) }));
 
-  const handleDownload = (report) => {
-    if (!report.fileUrl) {
-      toast.info(`No file available for ${report.title}`);
-      return;
+  const handleDownload = async (report) => {
+    try {
+      await downloadDailyReport(report);
+    } catch (error) {
+      console.error("Failed to download report:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to download report");
     }
-    const link = document.createElement("a");
-    link.href = report.fileUrl;
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-    link.download = `${report.title || report.id}.json`;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
   };
 
   const handlePreview = (report) => {

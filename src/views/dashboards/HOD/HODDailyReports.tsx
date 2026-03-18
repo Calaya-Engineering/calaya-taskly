@@ -9,6 +9,7 @@ import { fetchWithAuth } from "@/lib/api";
 import { toast } from "@/lib/toast";
 import { useSSE } from "@/hooks/useSSE";
 import DailyReportPreviewModal from "@/components/DailyReportPreviewModal";
+import { downloadDailyReport } from "@/lib/daily-report-download";
 /* ---------- Types ---------- */
 interface ReportEntry {
   id?: number;
@@ -507,8 +508,6 @@ export default function HODDailyReports() {
     e.target.style.height = e.target.scrollHeight + 'px';
   };
 
-  const getReportUrl = (report: DailyReport) => report.entriesUrl || report.fileUrl || null;
-
   const handleViewReport = (report: DailyReport) => {
     if (!report.dbId) {
       toast.info("This report does not have a previewable record.");
@@ -518,21 +517,13 @@ export default function HODDailyReports() {
     setIsPreviewModalOpen(true);
   };
 
-  const handleDownloadReport = (report: DailyReport) => {
-    const url = getReportUrl(report);
-    if (!url) {
-      toast.info("No report file available to download");
-      return;
+  const handleDownloadReport = async (report: DailyReport) => {
+    try {
+      await downloadDailyReport(report);
+    } catch (error) {
+      console.error("Failed to download report:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to download report");
     }
-
-    const link = document.createElement("a");
-    link.href = url;
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-    link.download = `${report.title || report.id}.json`;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
   };
 
   // Initialize textarea heights on mount and when entries change

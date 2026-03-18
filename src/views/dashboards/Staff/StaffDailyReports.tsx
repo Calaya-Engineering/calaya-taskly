@@ -8,6 +8,7 @@ import { StaffMenuItems } from "@/utils/menus";
 import { fetchWithAuth } from "@/lib/api";
 import { toast } from "@/lib/toast";
 import DailyReportPreviewModal from "@/components/DailyReportPreviewModal";
+import { downloadDailyReport } from "@/lib/daily-report-download";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -483,8 +484,6 @@ export default function StaffDailyReports() {
     }
   }, [isModalOpen, reportEntries]);
 
-  const getReportUrl = (report: DailyReportItem) => report.entriesUrl || report.fileUrl || null;
-
   const handlePreview = (report: DailyReportItem) => {
     if (!report.dbId) {
       toast.info("This report does not have a previewable record.");
@@ -494,21 +493,13 @@ export default function StaffDailyReports() {
     setIsPreviewModalOpen(true);
   };
 
-  const handleDownload = (report: DailyReportItem) => {
-    const url = getReportUrl(report);
-    if (!url) {
-      toast.info("No report file available to download");
-      return;
+  const handleDownload = async (report: DailyReportItem) => {
+    try {
+      await downloadDailyReport(report);
+    } catch (error) {
+      console.error("Failed to download daily report:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to download report");
     }
-
-    const link = document.createElement("a");
-    link.href = url;
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-    link.download = `${report.title || report.id}.json`;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
   };
 
   const clearFilters = () => {
