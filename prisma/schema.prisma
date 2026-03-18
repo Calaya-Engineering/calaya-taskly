@@ -39,6 +39,7 @@ model User {
   assignmentsMade            TaskAssignment[]   @relation("AssignedBy")
   tasksAssigned              TaskAssignment[]   @relation("AssignedTo")
   managedDepartmentRelations DepartmentHod[]    @relation("HodAssignments")
+  sectionSeen                UserSectionSeen[]
 }
 
 model DepartmentHod {
@@ -196,4 +197,16 @@ model Notification {
   @@index([createdAt])
   @@index([read])
   @@index([actorId], map: "Notification_actorId_fkey")
+}
+
+model UserSectionSeen {
+  id      Int      @id @default(autoincrement())
+  userId  Int
+  section String
+  seenAt  DateTime @default(now())
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, section])
+  @@index([userId])
+  @@index([section])
 }

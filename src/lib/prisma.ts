@@ -58,7 +58,8 @@ const useCached =
   (globalForPrisma.prisma as any).document &&
   (globalForPrisma.prisma as any).announcementRead &&
   (globalForPrisma.prisma as any).notification &&
-  (globalForPrisma.prisma as any).departmentHod;
+  (globalForPrisma.prisma as any).departmentHod &&
+  (globalForPrisma.prisma as any).userSectionSeen;
 
 export const prisma = useCached ? globalForPrisma.prisma : new PrismaClient({ adapter: globalForPrisma.adapter });
 
