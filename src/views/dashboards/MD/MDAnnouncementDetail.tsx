@@ -117,7 +117,7 @@ export default function MDAnnouncementDetail() {
     return (
       <Layout menuItems={MDMenuItems} userRole="MD">
         <div className="flex flex-col items-center justify-center p-12 gap-4">
-          <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center text-3xl">⚠️</div>
+          <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center text-3xl">{renderNodeWithIcons("⚠️")}</div>
           <h2 className="text-xl font-bold text-gray-900">{error || "Announcement not found"}</h2>
           <button onClick={() => router.push("/md-dashboard/announcements")} className={btnOutline}>
             Back to Announcements
@@ -233,7 +233,7 @@ export default function MDAnnouncementDetail() {
                           className="p-4 rounded-2xl border border-gray-200/70 bg-white flex flex-col md:flex-row md:items-center md:justify-between gap-3 transition"
                         >
                           <div className="flex items-start gap-3 min-w-0">
-                            <div className="w-11 h-11 rounded-2xl bg-blue-50 flex items-center justify-center text-xl">📄</div>
+                            <div className="w-11 h-11 rounded-2xl bg-blue-50 flex items-center justify-center text-xl">{renderNodeWithIcons("📄")}</div>
                             <div className="min-w-0">
                               <p className="font-extrabold text-gray-900 truncate">{doc.name}</p>
                               <p className="text-xs text-gray-500 mt-1">

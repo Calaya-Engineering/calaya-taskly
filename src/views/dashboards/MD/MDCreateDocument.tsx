@@ -557,13 +557,13 @@ export default function MDCreateDocument() {
                       </p>
                       <ul className="mt-3 text-sm text-gray-600 space-y-2">
                         <li className="flex gap-2">
-                          <span className="text-emerald-600 font-bold">✓</span> Maximum file size: 100MB per file
+                          <span className="text-emerald-600 font-bold">{renderNodeWithIcons("✓")}</span> Maximum file size: 100MB per file
                         </li>
                         <li className="flex gap-2">
-                          <span className="text-emerald-600 font-bold">✓</span> Use descriptive titles for searchability
+                          <span className="text-emerald-600 font-bold">{renderNodeWithIcons("✓")}</span> Use descriptive titles for searchability
                         </li>
                         <li className="flex gap-2">
-                          <span className="text-emerald-600 font-bold">✓</span> Choose scope carefully for confidentiality
+                          <span className="text-emerald-600 font-bold">{renderNodeWithIcons("✓")}</span> Choose scope carefully for confidentiality
                         </li>
                       </ul>
                     </div>
@@ -599,7 +599,7 @@ export default function MDCreateDocument() {
                                 }`}
                               style={{ borderColor: active ? "rgba(44, 75, 155, 0.35)" : "rgba(0,0,0,0.08)" }}
                             >
-                              <div className="text-2xl">{s.icon}</div>
+                              <div className="text-2xl">{renderNodeWithIcons(s.icon)}</div>
                               <div className="mt-2 font-semibold" style={{ color: "var(--primary-blue)" }}>
                                 {s.label}
                               </div>
@@ -656,7 +656,7 @@ export default function MDCreateDocument() {
                                   borderColor: active ? "transparent" : "rgba(0,0,0,0.08)",
                                 }}
                               >
-                                {d} {active ? "✓" : ""}
+                                {d} {renderNodeWithIcons(active ? "✓" : "")}
                               </button>
                             );
                           })}
@@ -693,7 +693,7 @@ export default function MDCreateDocument() {
                                   <div className="text-sm font-semibold text-gray-900 truncate">{h.name}</div>
                                   <div className="text-xs text-gray-500 truncate">{h.department}</div>
                                 </div>
-                                {active ? <span className="text-purple-700 font-bold">✓</span> : null}
+                                {active ? <span className="text-purple-700 font-bold">{renderNodeWithIcons("✓")}</span> : null}
                               </button>
                             );
                           })}
@@ -754,7 +754,7 @@ export default function MDCreateDocument() {
                                     {u.department} • {u.email}
                                   </div>
                                 </div>
-                                {active ? <span className="text-blue-700 font-bold">✓</span> : null}
+                                {active ? <span className="text-blue-700 font-bold">{renderNodeWithIcons("✓")}</span> : null}
                               </button>
                             );
                           })}
@@ -862,13 +862,13 @@ export default function MDCreateDocument() {
                       </p>
                       <ul className="mt-3 text-sm text-gray-600 space-y-2">
                         <li className="flex gap-2">
-                          <span className="text-emerald-600 font-bold">✓</span> Use Private for sensitive drafts.
+                          <span className="text-emerald-600 font-bold">{renderNodeWithIcons("✓")}</span> Use Private for sensitive drafts.
                         </li>
                         <li className="flex gap-2">
-                          <span className="text-emerald-600 font-bold">✓</span> Specific Users is best for exceptions.
+                          <span className="text-emerald-600 font-bold">{renderNodeWithIcons("✓")}</span> Specific Users is best for exceptions.
                         </li>
                         <li className="flex gap-2">
-                          <span className="text-emerald-600 font-bold">✓</span> Add encryption only when necessary.
+                          <span className="text-emerald-600 font-bold">{renderNodeWithIcons("✓")}</span> Add encryption only when necessary.
                         </li>
                       </ul>
                     </div>
@@ -896,13 +896,13 @@ export default function MDCreateDocument() {
                       </p>
                       <ul className="mt-3 text-sm text-gray-600 space-y-2">
                         <li className="flex gap-2">
-                          <span className="text-emerald-600 font-bold">✓</span> Use clear filenames (e.g., SiteA_Inspection_Photos.zip)
+                          <span className="text-emerald-600 font-bold">{renderNodeWithIcons("✓")}</span> Use clear filenames (e.g., SiteA_Inspection_Photos.zip)
                         </li>
                         <li className="flex gap-2">
-                          <span className="text-emerald-600 font-bold">✓</span> Confirm scope matches confidentiality
+                          <span className="text-emerald-600 font-bold">{renderNodeWithIcons("✓")}</span> Confirm scope matches confidentiality
                         </li>
                         <li className="flex gap-2">
-                          <span className="text-emerald-600 font-bold">✓</span> Add version labels for updates
+                          <span className="text-emerald-600 font-bold">{renderNodeWithIcons("✓")}</span> Add version labels for updates
                         </li>
                       </ul>
                     </div>
@@ -983,7 +983,7 @@ export default function MDCreateDocument() {
                             <div key={`${f.name}-${idx}`} className="flex items-center justify-between gap-3 p-3 rounded-2xl border border-gray-200/70 bg-white">
                               <div className="flex items-center gap-3 min-w-0">
                                 <div className="w-10 h-10 rounded-2xl flex items-center justify-center  shrink-0" style={{ backgroundColor: "rgba(44, 75, 155, 0.08)" }}>
-                                  <span className="text-lg">{fileIcon(f.name)}</span>
+                                  <span className="text-lg">{renderNodeWithIcons(fileIcon(f.name))}</span>
                                 </div>
                                 <div className="min-w-0">
                                   <div className="text-sm font-semibold text-gray-900 truncate max-w-[520px]">{f.name}</div>

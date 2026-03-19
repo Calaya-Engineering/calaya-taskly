@@ -328,7 +328,7 @@ export default function MDEvents() {
 
               {listEvents.length === 0 ? (
                 <div className="p-10 text-center text-gray-500">
-                  <div className="text-3xl mb-3">📅</div>
+                  <div className="text-3xl mb-3">{renderNodeWithIcons("📅")}</div>
                   <div className="font-semibold text-gray-700">{loading ? "Loading events…" : "No upcoming events."}</div>
                   <div className="text-xs mt-2 text-gray-400">{viewMode === "upcoming" ? "No events or announcements scheduled from today onwards." : "No past events found."}</div>
                 </div>
@@ -363,7 +363,7 @@ export default function MDEvents() {
                                 style={{ backgroundColor: "rgba(109, 198, 223, 0.18)" }}
                                 aria-hidden="true"
                               >
-                                <span className="text-lg">{typeEmoji(event.type)}</span>
+                                <span className="text-lg">{renderNodeWithIcons(typeEmoji(event.type))}</span>
                               </div>
 
                               <div className="min-w-0">
@@ -561,7 +561,7 @@ export default function MDEvents() {
                           className="w-9 h-9 rounded-2xl flex items-center justify-center  mr-3"
                           style={{ backgroundColor: "rgba(109, 198, 223, 0.18)" }}
                         >
-                          <span>{typeEmoji(event.type)}</span>
+                          <span>{renderNodeWithIcons(typeEmoji(event.type))}</span>
                         </div>
                         <div className="min-w-0 flex-1">
                           <p className="font-semibold text-sm truncate">{event.title}</p>
@@ -633,7 +633,7 @@ export default function MDEvents() {
               },
             ].map((stat) => (
               <div key={stat.label} className="text-center">
-                <div className="text-3xl mb-2">{stat.icon}</div>
+                <div className="text-3xl mb-2">{renderNodeWithIcons(stat.icon)}</div>
                 <p className="text-3xl font-extrabold" style={{ color: stat.color }}>
                   {stat.value}
                 </p>

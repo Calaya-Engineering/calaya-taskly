@@ -178,7 +178,7 @@ export default function StaffAnnouncements() {
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
               <div>
                 <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <Pill>📢 Announcements</Pill>
+                  <Pill>{renderNodeWithIcons("📢 Announcements")}</Pill>
                   <Pill tone="success">Unread: {unreadCount}</Pill>
                   <Pill tone={importantCount ? "warn" : "muted"}>Important: {importantCount}</Pill>
                 </div>
@@ -274,7 +274,7 @@ export default function StaffAnnouncements() {
                   placeholder="Search announcements..."
                   className={inputBase}
                 />
-                <span className="absolute left-3 top-3.5 text-gray-400">🔎</span>
+                <span className="absolute left-3 top-3.5 text-gray-400">{renderNodeWithIcons("🔎")}</span>
               </div>
             </div>
           </div>
@@ -285,7 +285,7 @@ export default function StaffAnnouncements() {
           <Card className="p-5 border-red-200 bg-red-50">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
               <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-2xl bg-white/70 flex items-center justify-center text-2xl">🚨</div>
+                <div className="w-11 h-11 rounded-2xl bg-white/70 flex items-center justify-center text-2xl">{renderNodeWithIcons("🚨")}</div>
                 <div>
                   <p className="font-extrabold text-red-800">Urgent announcements need your attention</p>
                   <p className="text-sm text-red-700 mt-0.5">{urgentCount} urgent announcement(s) unread</p>
@@ -332,11 +332,11 @@ export default function StaffAnnouncements() {
 
                           <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-gray-600">
                             <span className="inline-flex items-center gap-2">
-                              <span className="w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center">👤</span>
+                              <span className="w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center">{renderNodeWithIcons("👤")}</span>
                               {a.createdBy}
                             </span>
                             <span className="inline-flex items-center gap-2">
-                              <span className="w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center">🗓️</span>
+                              <span className="w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center">{renderNodeWithIcons("🗓️")}</span>
                               {formatDate(a.createdDate)}
                             </span>
                             <span className="inline-flex items-center gap-2">
@@ -366,13 +366,13 @@ export default function StaffAnnouncements() {
 
                       <div className="mt-5 pt-4 border-t border-gray-200/70 flex flex-wrap items-center justify-between gap-3 text-sm">
                         <div className="flex flex-wrap items-center gap-3 text-gray-600">
-                          <span>📄 {a.documents} attachment{a.documents !== 1 ? "s" : ""}</span>
-                          <span>💬 {a.comments} comment{a.comments !== 1 ? "s" : ""}</span>
+                          <span>{renderNodeWithIcons("📄 ")}{a.documents} attachment{a.documents !== 1 ? "s" : ""}</span>
+                          <span>{renderNodeWithIcons("💬 ")}{a.comments} comment{a.comments !== 1 ? "s" : ""}</span>
                         </div>
 
                         <div className="text-xs text-gray-500 inline-flex items-center gap-2">
                           <span className="font-semibold" style={{ color: "var(--primary-blue)" }}>
-                            {a.read ? "✅ Read" : "📌 New"}
+                            {renderNodeWithIcons(a.read ? "✅ Read" : "📌 New")}
                           </span>
                           <span>•</span>
                           <span>ID: {a.id}</span>
@@ -396,9 +396,7 @@ export default function StaffAnnouncements() {
             {filteredAnnouncements.length === 0 && (
               <Card className="p-12 text-center">
                 <div className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-4" style={{ backgroundColor: "rgba(109, 198, 223, 0.12)" }}>
-                  <span className="text-2xl" style={{ color: "var(--secondary-blue)" }}>
-                    🧐
-                  </span>
+                  <span className="text-2xl" style={{ color: "var(--secondary-blue)" }}>{renderNodeWithIcons("\n                    🧐\n                  ")}</span>
                 </div>
                 <h3 className="text-lg font-extrabold text-gray-900 mb-2">No announcements found</h3>
                 <p className="text-gray-600">Try adjusting your filters or search term.</p>
@@ -419,7 +417,7 @@ export default function StaffAnnouncements() {
               { type: 'Department News', count: 8, icon: '🏢', color: '#F59E0B' },
             ].map((item) => (
               <div key={item.type} className="p-5 rounded-2xl border text-center" style={{ borderColor: item.color }}>
-                <div className="text-3xl mb-2">{item.icon}</div>
+                <div className="text-3xl mb-2">{renderNodeWithIcons(item.icon)}</div>
                 <p className="font-extrabold" style={{ color: item.color }}>{item.type}</p>
                 <p className="text-sm text-gray-600 mt-1">{item.count} announcements</p>
               </div>
@@ -451,7 +449,7 @@ export default function StaffAnnouncements() {
                   <p className="text-2xl font-extrabold mt-2">{s.value}</p>
                 </div>
                 <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(44, 75, 155, 0.08)" }}>
-                  <span className="text-xl">{s.icon}</span>
+                  <span className="text-xl">{renderNodeWithIcons(s.icon)}</span>
                 </div>
               </div>
               <div className="mt-3">

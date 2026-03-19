@@ -360,7 +360,7 @@ export default function MDTenderDocuments() {
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
               <div>
                 <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <Pill>📁 Tender Workspace</Pill>
+                  <Pill>{renderNodeWithIcons("📁 Tender Workspace")}</Pill>
                   <Pill tone="default">Documents & Submissions</Pill>
                 </div>
 
@@ -402,7 +402,7 @@ export default function MDTenderDocuments() {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full pl-11 pr-4 py-3 rounded-2xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100"
                   />
-                  <span className="absolute left-4 top-3.5 text-gray-400">🔎</span>
+                  <span className="absolute left-4 top-3.5 text-gray-400">{renderNodeWithIcons("🔎")}</span>
                 </div>
 
                 <div className="flex flex-wrap gap-2">
@@ -457,8 +457,8 @@ export default function MDTenderDocuments() {
 
                       <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-gray-600">
                         <span className="px-2 py-1 rounded-full bg-gray-100">{tender.department}</span>
-                        <span>📄 {tender.documents?.length || 0} docs</span>
-                        <span>📥 {tender.submissions || 0} bids</span>
+                        <span>{renderNodeWithIcons("📄 ")}{tender.documents?.length || 0} docs</span>
+                        <span>{renderNodeWithIcons("📥 ")}{tender.submissions || 0} bids</span>
                       </div>
 
                       <div className="mt-2 text-xs text-gray-500">⏰ Closing: {tender.closingDate}</div>
@@ -484,7 +484,7 @@ export default function MDTenderDocuments() {
                     <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                       <div className="min-w-0">
                         <div className="flex flex-wrap items-center gap-2 mb-2">
-                          <Pill>📌 Selected</Pill>
+                          <Pill>{renderNodeWithIcons("📌 Selected")}</Pill>
                           <Pill tone={getStatusTone(selectedTender.status)}>{selectedTender.status}</Pill>
                         </div>
                         <h2 className="text-xl md:text-2xl font-extrabold tracking-tight truncate" style={{ color: "var(--primary-blue)" }}>
@@ -494,9 +494,9 @@ export default function MDTenderDocuments() {
 
                         <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600 mt-3">
                           <span className="px-3 py-1 rounded-full bg-gray-100">{selectedTender.department}</span>
-                          <span>📄 {documentsForSelectedTender.length} documents</span>
-                          <span>🏢 {sectionGroups.length} sections</span>
-                          <span>📥 {submissionsForSelectedTender.length} submissions</span>
+                          <span>{renderNodeWithIcons("📄 ")}{documentsForSelectedTender.length} documents</span>
+                          <span>{renderNodeWithIcons("🏢 ")}{sectionGroups.length} sections</span>
+                          <span>{renderNodeWithIcons("📥 ")}{submissionsForSelectedTender.length} submissions</span>
                         </div>
                       </div>
 
@@ -570,7 +570,7 @@ export default function MDTenderDocuments() {
                                       className="w-11 h-11 rounded-2xl flex items-center justify-center text-2xl"
                                       style={{ backgroundColor: "rgba(109, 198, 223, 0.12)" }}
                                     >
-                                      {getFileTypeIcon(doc.fileType)}
+                                      {renderNodeWithIcons(getFileTypeIcon(doc.fileType))}
                                     </div>
                                     <div className="min-w-0">
                                       <p className="font-extrabold text-gray-900 truncate">{doc.title}</p>
@@ -590,7 +590,7 @@ export default function MDTenderDocuments() {
 
                                   <div className="text-right shrink-0">
                                     <div className="text-xs text-gray-500">{doc.fileSize}</div>
-                                    <div className="text-xs text-gray-500 mt-1">📥 {doc.downloads}</div>
+                                    <div className="text-xs text-gray-500 mt-1">{renderNodeWithIcons("📥 ")}{doc.downloads}</div>
                                   </div>
                                 </div>
 
@@ -678,9 +678,7 @@ export default function MDTenderDocuments() {
                             <div key={doc.id} className="p-5 rounded-2xl border border-gray-200/70 transition">
                               <div className="flex items-start justify-between gap-4">
                                 <div className="flex items-start gap-3 min-w-0">
-                                  <div className="w-11 h-11 rounded-2xl flex items-center justify-center text-2xl" style={{ backgroundColor: "rgba(34,197,94,0.12)" }}>
-                                    🏢
-                                  </div>
+                                  <div className="w-11 h-11 rounded-2xl flex items-center justify-center text-2xl" style={{ backgroundColor: "rgba(34,197,94,0.12)" }}>{renderNodeWithIcons("\n                                    🏢\n                                  ")}</div>
                                   <div className="min-w-0">
                                     <p className="font-extrabold text-gray-900 truncate">{doc.title}</p>
                                     <div className="flex flex-wrap items-center gap-2 mt-1 text-xs text-gray-500">
@@ -699,7 +697,7 @@ export default function MDTenderDocuments() {
 
                                 <div className="text-right shrink-0">
                                   <div className="text-xs text-gray-500">{doc.fileSize}</div>
-                                  <div className="text-xs text-gray-500 mt-1">📥 {doc.downloads}</div>
+                                  <div className="text-xs text-gray-500 mt-1">{renderNodeWithIcons("📥 ")}{doc.downloads}</div>
                                 </div>
                               </div>
 
@@ -813,7 +811,7 @@ export default function MDTenderDocuments() {
             ) : (
               <Card className="p-12 text-center">
                 <div className="w-20 h-20 mx-auto rounded-2xl flex items-center justify-center mb-4" style={{ backgroundColor: "rgba(109, 198, 223, 0.12)" }}>
-                  <span className="text-4xl">📋</span>
+                  <span className="text-4xl">{renderNodeWithIcons("📋")}</span>
                 </div>
                 <h3 className="text-xl font-extrabold text-gray-900 mb-2">Select a Tender</h3>
                 <p className="text-gray-600">Choose a tender from the left panel to view documents and submissions.</p>

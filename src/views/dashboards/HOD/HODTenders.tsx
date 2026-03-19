@@ -204,7 +204,7 @@ export default function HODTenders() {
                     placeholder="Search title, reference, or description..."
                     className="w-full pl-11 pr-4 py-3 rounded-2xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100"
                   />
-                  <span className="absolute left-4 top-3.5 text-gray-400">🔎</span>
+                  <span className="absolute left-4 top-3.5 text-gray-400">{renderNodeWithIcons("🔎")}</span>
                 </div>
               </div>
 
@@ -337,7 +337,7 @@ export default function HODTenders() {
 
                   <div className="mt-4 flex flex-wrap items-center justify-between gap-2 pt-4 border-t border-gray-200/70">
                     <div className="flex flex-wrap items-center gap-3 text-xs text-gray-600">
-                      <span>📦 {t.fileSize}</span>
+                      <span>{renderNodeWithIcons("📦 ")}{t.fileSize}</span>
                       <span className="text-gray-300">•</span>
                       <span className="inline-flex items-center gap-1 [&_svg]:w-4 [&_svg]:h-4"><DownloadIcon /> {t.downloads} downloads</span>
                     </div>

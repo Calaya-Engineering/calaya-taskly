@@ -349,7 +349,7 @@ export default function HODEscalations() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🔎</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">{renderNodeWithIcons("🔎")}</span>
               </div>
             </div>
           </div>
@@ -395,7 +395,7 @@ export default function HODEscalations() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
                 {filteredEscalations.length === 0 ? (
                   <div className="lg:col-span-2 p-12 text-center">
-                    <div className="text-4xl mb-3">✅</div>
+                    <div className="text-4xl mb-3">{renderNodeWithIcons("✅")}</div>
                     <div className="font-extrabold text-gray-900">No escalations found</div>
                     <p className="text-gray-500 text-sm mt-1">All tasks are on track for the selected filters.</p>
                   </div>
@@ -418,7 +418,7 @@ export default function HODEscalations() {
                           <span className="text-xs font-semibold text-gray-500">{escalation.id}</span>
                           <Pill tone={getStatusTone(escalation.status)}>{escalation.status.replace("_", " ")}</Pill>
                           <Pill tone={getLevelTone(escalation.escalationLevel)}>{escalation.escalationLevel.replace("_", " ")}</Pill>
-                          {escalation.actionRequired && <Pill tone="warn">⚡ Action Required</Pill>}
+                          {escalation.actionRequired && <Pill tone="warn">{renderNodeWithIcons("⚡ Action Required")}</Pill>}
                         </div>
                         <Pill tone={getPriorityTone(escalation.priority)}>{escalation.priority}</Pill>
                       </div>

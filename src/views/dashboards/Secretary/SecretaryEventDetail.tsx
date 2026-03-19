@@ -438,7 +438,7 @@ export default function SecretaryEventDetail() {
                       <div className="p-5 rounded-2xl border border-blue-200 bg-blue-50">
                         <div className="flex items-center justify-between gap-4">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-2xl bg-white flex items-center justify-center text-xl">🎥</div>
+                            <div className="w-10 h-10 rounded-2xl bg-white flex items-center justify-center text-xl">{renderNodeWithIcons("🎥")}</div>
                             <div>
                               <p className="font-extrabold text-blue-900">Virtual Meeting Link</p>
                               <p className="text-sm text-blue-700 break-all">{event.meetingLink}</p>
@@ -519,7 +519,7 @@ export default function SecretaryEventDetail() {
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-2xl flex items-center justify-center text-xl" style={{ backgroundColor: "rgba(109, 198, 223, 0.1)" }}>
-                              {getFileIcon(doc.name)}
+                              {renderNodeWithIcons(getFileIcon(doc.name))}
                             </div>
                             <div>
                               <p className="font-extrabold text-sm text-gray-900">{doc.name}</p>
@@ -541,9 +541,7 @@ export default function SecretaryEventDetail() {
                   </div>
 
                   <div className="mt-6 p-5 rounded-2xl bg-gray-50 border border-gray-200/70">
-                    <p className="text-sm text-gray-600">
-                      📝 Meeting minutes will be uploaded after the event concludes.
-                    </p>
+                    <p className="text-sm text-gray-600">{renderNodeWithIcons("\n                      📝 Meeting minutes will be uploaded after the event concludes.\n                    ")}</p>
                   </div>
                 </div>
               )}
@@ -560,7 +558,7 @@ export default function SecretaryEventDetail() {
                   <div className="mt-6 mb-8">
                     <div className="flex items-start gap-4">
                       <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-extrabold text-sm shrink-0" style={{ backgroundColor: "var(--secondary-blue)" }}>
-                        {currentUser.avatar}
+                        {renderNodeWithIcons(currentUser.avatar)}
                       </div>
                       <div className="flex-1">
                         <textarea
@@ -663,7 +661,7 @@ export default function SecretaryEventDetail() {
 
                     {comments.filter(c => !c.isDeleted).length === 0 && (
                       <div className="text-center py-12">
-                        <div className="text-4xl mb-3">💬</div>
+                        <div className="text-4xl mb-3">{renderNodeWithIcons("💬")}</div>
                         <p className="text-gray-600">No comments yet. Be the first to start the discussion!</p>
                       </div>
                     )}
@@ -741,13 +739,13 @@ export default function SecretaryEventDetail() {
                   <span className="text-gray-700">{fmtTime(event.startAt)} - {fmtTime(event.endAt)}</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="w-5 h-5 text-gray-400">📅</span>
+                  <span className="w-5 h-5 text-gray-400">{renderNodeWithIcons("📅")}</span>
                   <span className="text-gray-700">
                     {new Date(event.startAt).toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="w-5 h-5 text-gray-400">📍</span>
+                  <span className="w-5 h-5 text-gray-400">{renderNodeWithIcons("📍")}</span>
                   <span className="text-gray-700">{event.location}</span>
                 </div>
               </div>
@@ -819,7 +817,7 @@ export default function SecretaryEventDetail() {
             <div className="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden border border-gray-200 transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
               <div className="bg-white px-6 pt-6 pb-4 sm:p-8">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-red-50 flex items-center justify-center text-xl shrink-0">⚠️</div>
+                  <div className="w-12 h-12 rounded-2xl bg-red-50 flex items-center justify-center text-xl shrink-0">{renderNodeWithIcons("⚠️")}</div>
                   <div>
                     <h3 className="text-xl font-extrabold" style={{ color: "var(--accent-red)" }}>
                       Delete Comment

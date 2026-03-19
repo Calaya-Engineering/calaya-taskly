@@ -230,11 +230,11 @@ export default function MDCreateEvent() {
           <div className="bg-white border-t border-gray-200/70 px-6 py-4">
             <div className="flex flex-wrap items-center gap-3 text-sm text-gray-700">
               <span className="inline-flex items-center gap-2 px-3 py-2 rounded-2xl bg-white border border-gray-200/70">
-                <span className="text-lg">{typeIcon(formData.eventType)}</span>
+                <span className="text-lg">{renderNodeWithIcons(typeIcon(formData.eventType))}</span>
                 <span className="font-semibold">{formData.eventType}</span>
               </span>
               <span className="inline-flex items-center gap-2 px-3 py-2 rounded-2xl bg-white border border-gray-200/70">
-                <span>🎯</span>
+                <span>{renderNodeWithIcons("🎯")}</span>
                 <span className="font-semibold">{formData.scopeType}</span>
               </span>
               <span className="text-gray-500">{scopeSummary}</span>
@@ -266,7 +266,7 @@ export default function MDCreateEvent() {
                     onClick={() => setFormData((p) => ({ ...p, eventType: t.value }))}
                   >
                     <div className="flex items-center justify-between">
-                      <div className="text-2xl">{t.icon}</div>
+                      <div className="text-2xl">{renderNodeWithIcons(t.icon)}</div>
                       {active ? <Pill tone="success">Selected</Pill> : <Pill>Pick</Pill>}
                     </div>
                     <div className="mt-3 font-extrabold" style={{ color: "var(--primary-blue)" }}>
@@ -501,7 +501,7 @@ export default function MDCreateEvent() {
                           <div className="text-xs text-gray-500">{u.department || u.role}</div>
                         </div>
 
-                        {active ? <Pill tone="success">✓ Added</Pill> : <Pill>Add</Pill>}
+                        {active ? <Pill tone="success">{renderNodeWithIcons("✓ Added")}</Pill> : <Pill>Add</Pill>}
                       </button>
                     );
                   })}
@@ -520,9 +520,7 @@ export default function MDCreateEvent() {
                 htmlFor="event-file-upload"
                 className="block cursor-pointer rounded-2xl border-2 border-dashed border-gray-200/70 hover:border-blue-200 hover:bg-blue-50/20 transition p-8 text-center"
               >
-                <div className="text-4xl mb-2" style={{ color: "var(--secondary-blue)" }}>
-                  📎
-                </div>
+                <div className="text-4xl mb-2" style={{ color: "var(--secondary-blue)" }}>{renderNodeWithIcons("\n                  📎\n                ")}</div>
                 <div className="font-extrabold" style={{ color: "var(--primary-blue)" }}>
                   Drag & drop files here or click to browse
                 </div>
@@ -544,7 +542,7 @@ export default function MDCreateEvent() {
                       className="flex items-center justify-between gap-3 p-3 rounded-2xl border border-gray-200/70 bg-gray-50/40"
                     >
                       <div className="min-w-0 flex items-center gap-3">
-                        <div className="text-xl">📄</div>
+                        <div className="text-xl">{renderNodeWithIcons("📄")}</div>
                         <div className="min-w-0">
                           <div className="font-semibold text-gray-900 truncate">{file.name}</div>
                           <div className="text-xs text-gray-500">{(file.size / 1024 / 1024).toFixed(2)} MB</div>
@@ -646,9 +644,7 @@ export default function MDCreateEvent() {
               "Send follow-up emails with meeting minutes",
             ].map((t) => (
               <li key={t} className="flex items-start gap-2">
-                <span className="mt-0.5" style={{ color: "#10B981" }}>
-                  ✓
-                </span>
+                <span className="mt-0.5" style={{ color: "#10B981" }}>{renderNodeWithIcons("\n                  ✓\n                ")}</span>
                 <span>{t}</span>
               </li>
             ))}

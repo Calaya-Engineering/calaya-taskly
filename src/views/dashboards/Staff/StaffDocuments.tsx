@@ -215,7 +215,7 @@ export default function StaffDocuments() {
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
               <div>
                 <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <Pill>📄 Documents</Pill>
+                  <Pill>{renderNodeWithIcons("📄 Documents")}</Pill>
                   <Pill tone="info">{stats.total} Total</Pill>
                 </div>
 
@@ -311,7 +311,7 @@ export default function StaffDocuments() {
                   placeholder="Search by title, type, department..."
                   className="w-full pl-11 pr-4 py-3 rounded-2xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100"
                 />
-                <span className="absolute left-4 top-3.5 text-gray-400">🔎</span>
+                <span className="absolute left-4 top-3.5 text-gray-400">{renderNodeWithIcons("🔎")}</span>
               </div>
             </div>
           </div>
@@ -329,7 +329,7 @@ export default function StaffDocuments() {
             >
               <div className="flex items-start justify-between gap-3 mb-3">
                 <div className="flex items-center gap-2">
-                  <span className="text-2xl">{getFileIcon(doc.fileType)}</span>
+                  <span className="text-2xl">{renderNodeWithIcons(getFileIcon(doc.fileType))}</span>
                   <Pill tone={accessTone(doc.access)}>{doc.access}</Pill>
                   <Pill tone={departmentTone(doc.department)}>{doc.department}</Pill>
                 </div>
@@ -344,11 +344,11 @@ export default function StaffDocuments() {
 
               <div className="space-y-2 text-sm text-gray-600 mb-4">
                 <div className="flex items-center gap-2">
-                  <span className="text-gray-400">👤</span>
+                  <span className="text-gray-400">{renderNodeWithIcons("👤")}</span>
                   <span className="min-w-0 max-w-[12rem] truncate">{doc.uploadedBy}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-gray-400">📅</span>
+                  <span className="text-gray-400">{renderNodeWithIcons("📅")}</span>
                   <span>{fmtDate(doc.uploadedDate)}</span>
                 </div>
               </div>
@@ -359,7 +359,7 @@ export default function StaffDocuments() {
                   {doc.tasks.length > 0 && (
                     <>
                       <span className="text-gray-300">•</span>
-                      <span>📋 {doc.tasks.length} task{doc.tasks.length > 1 ? 's' : ''}</span>
+                      <span>{renderNodeWithIcons("📋 ")}{doc.tasks.length} task{doc.tasks.length > 1 ? 's' : ''}</span>
                     </>
                   )}
                 </div>
@@ -398,7 +398,7 @@ export default function StaffDocuments() {
               className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-4"
               style={{ backgroundColor: "rgba(109, 198, 223, 0.12)" }}
             >
-              <span className="text-2xl" style={{ color: "var(--secondary-blue)" }}>📄</span>
+              <span className="text-2xl" style={{ color: "var(--secondary-blue)" }}>{renderNodeWithIcons("📄")}</span>
             </div>
             <h3 className="text-lg font-extrabold text-gray-900 mb-2">No documents found</h3>
             <p className="text-gray-600">Try adjusting your filters or search term.</p>
@@ -421,7 +421,7 @@ export default function StaffDocuments() {
                 className="p-5 rounded-2xl border text-center transition cursor-pointer"
                 style={{ borderColor: cat.color }}
               >
-                <div className="text-3xl mb-2">{cat.icon}</div>
+                <div className="text-3xl mb-2">{renderNodeWithIcons(cat.icon)}</div>
                 <p className="font-extrabold" style={{ color: cat.color }}>{cat.category}</p>
                 <p className="text-sm text-gray-500 mt-1">{cat.count} documents</p>
               </div>
@@ -440,7 +440,7 @@ export default function StaffDocuments() {
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(44,75,155,0.1)" }}>
-                <span style={{ color: "var(--primary-blue)" }} className="text-xl">📚</span>
+                <span style={{ color: "var(--primary-blue)" }} className="text-xl">{renderNodeWithIcons("📚")}</span>
               </div>
             </div>
           </Card>
@@ -454,7 +454,7 @@ export default function StaffDocuments() {
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(109,198,223,0.1)" }}>
-                <span style={{ color: "var(--secondary-blue)" }} className="text-xl">🌐</span>
+                <span style={{ color: "var(--secondary-blue)" }} className="text-xl">{renderNodeWithIcons("🌐")}</span>
               </div>
             </div>
           </Card>
@@ -468,7 +468,7 @@ export default function StaffDocuments() {
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(245,158,11,0.1)" }}>
-                <span style={{ color: "#F59E0B" }} className="text-xl">🏢</span>
+                <span style={{ color: "#F59E0B" }} className="text-xl">{renderNodeWithIcons("🏢")}</span>
               </div>
             </div>
           </Card>

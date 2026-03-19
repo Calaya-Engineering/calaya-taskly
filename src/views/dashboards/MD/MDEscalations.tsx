@@ -271,7 +271,7 @@ export default function MDEscalations() {
                 <div className="flex flex-wrap items-center gap-2 mb-2">
                   <Pill>MD Escalations Center</Pill>
                   {overview.escalated > 0 && (
-                    <Pill tone="danger">🚨 {overview.escalated} Escalated</Pill>
+                    <Pill tone="danger">{renderNodeWithIcons("🚨 ")}{overview.escalated} Escalated</Pill>
                   )}
                   {overview.overdue > 0 && (
                     <Pill tone="warn">{overview.overdue} Overdue</Pill>
@@ -427,7 +427,7 @@ export default function MDEscalations() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🔎</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">{renderNodeWithIcons("🔎")}</span>
               </div>
             </div>
           </div>
@@ -436,9 +436,7 @@ export default function MDEscalations() {
             <button
               onClick={() => { setActiveTab("escalated"); clearFilters(); }}
               className="px-3.5 py-2 rounded-2xl text-sm font-semibold border bg-red-50 text-red-700 hover:bg-red-100 transition"
-            >
-              🚨 Escalated Only
-            </button>
+            >{renderNodeWithIcons("\n              🚨 Escalated Only\n            ")}</button>
             <button
               onClick={() => { setActiveTab("overdue"); clearFilters(); }}
               className="px-3.5 py-2 rounded-2xl text-sm font-semibold border bg-amber-50 text-amber-800 hover:bg-amber-100 transition"
@@ -448,15 +446,11 @@ export default function MDEscalations() {
             <button
               onClick={() => { setActiveTab("at_risk"); clearFilters(); }}
               className="px-3.5 py-2 rounded-2xl text-sm font-semibold border bg-blue-50 text-blue-700 hover:bg-blue-100 transition"
-            >
-              ⚠️ At Risk Only
-            </button>
+            >{renderNodeWithIcons("\n              ⚠️ At Risk Only\n            ")}</button>
             <button
               onClick={() => { setActiveTab("all"); clearFilters(); }}
               className="px-3.5 py-2 rounded-2xl text-sm font-semibold border bg-white hover:bg-gray-50 transition"
-            >
-              🔄 Clear All
-            </button>
+            >{renderNodeWithIcons("\n              🔄 Clear All\n            ")}</button>
           </div>
         </Card>
 
@@ -480,7 +474,7 @@ export default function MDEscalations() {
                   color: "#991b1b",
                 }}
               >
-                <span className="text-lg">🚨</span>
+                <span className="text-lg">{renderNodeWithIcons("🚨")}</span>
                 <div>
                   <span className="font-bold">
                     {filteredEscalations.length} task{filteredEscalations.length !== 1 ? "s" : ""} escalated to you.
@@ -497,7 +491,7 @@ export default function MDEscalations() {
                 {filteredEscalations.length === 0 ? (
                   <Card className="p-10 text-center xl:col-span-2">
                     <div className="text-4xl">
-                      {activeTab === "escalated" ? "✅" : "📋"}
+                      {renderNodeWithIcons(activeTab === "escalated" ? "✅" : "📋")}
                     </div>
                     <div
                       className="mt-3 font-extrabold"
@@ -564,7 +558,7 @@ export default function MDEscalations() {
                           }}
                         >
                           <span className="text-xl">
-                            {escalation.status === "ESCALATED" ? "🚨" : "⚠️"}
+                            {renderNodeWithIcons(escalation.status === "ESCALATED" ? "🚨" : "⚠️")}
                           </span>
                         </div>
                       </div>
@@ -666,7 +660,7 @@ export default function MDEscalations() {
                             className="w-full px-4 py-2.5 rounded-2xl font-semibold text-sm text-white active:scale-[0.99] transition disabled:opacity-60"
                             style={{ backgroundColor: "#10B981" }}
                           >
-                            {deescalating === escalation.dbId ? "De-escalating..." : "✅ Mark Resolved / De-escalate"}
+                            {renderNodeWithIcons(deescalating === escalation.dbId ? "De-escalating..." : "✅ Mark Resolved / De-escalate")}
                           </button>
                         </div>
                       )}
@@ -704,9 +698,9 @@ export default function MDEscalations() {
                       {filteredEscalations.length === 0 ? (
                         <tr>
                           <td colSpan={9} className="px-5 py-10 text-center text-gray-500">
-                            {activeTab === "escalated"
+                            {renderNodeWithIcons(activeTab === "escalated"
                               ? "No escalated tasks — all clear! ✅"
-                              : "No items found for the selected filters."}
+                              : "No items found for the selected filters.")}
                           </td>
                         </tr>
                       ) : (

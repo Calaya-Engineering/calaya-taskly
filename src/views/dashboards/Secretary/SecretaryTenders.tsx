@@ -187,7 +187,7 @@ export default function SecretaryTenders() {
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
               <div>
                 <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <Pill>📄 Company Tenders</Pill>
+                  <Pill>{renderNodeWithIcons("📄 Company Tenders")}</Pill>
                   <Pill tone="success">{openCount} Open</Pill>
                   <Pill tone="warn">{closedCount} Closed</Pill>
                   <Pill tone="purple">{awardedCount} Awarded</Pill>
@@ -226,7 +226,7 @@ export default function SecretaryTenders() {
                     placeholder="Search by title, reference, department..."
                     className={inputBase}
                   />
-                  <span className="absolute left-4 top-3.5 text-gray-400">🔎</span>
+                  <span className="absolute left-4 top-3.5 text-gray-400">{renderNodeWithIcons("🔎")}</span>
                 </div>
               </div>
 
@@ -272,7 +272,7 @@ export default function SecretaryTenders() {
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(44,75,155,0.1)" }}>
-                <span style={{ color: "var(--primary-blue)" }} className="text-xl">💰</span>
+                <span style={{ color: "var(--primary-blue)" }} className="text-xl">{renderNodeWithIcons("💰")}</span>
               </div>
             </div>
           </Card>
@@ -286,7 +286,7 @@ export default function SecretaryTenders() {
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(16,185,129,0.1)" }}>
-                <span style={{ color: "#10B981" }} className="text-xl">📄</span>
+                <span style={{ color: "#10B981" }} className="text-xl">{renderNodeWithIcons("📄")}</span>
               </div>
             </div>
           </Card>
@@ -314,7 +314,7 @@ export default function SecretaryTenders() {
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(245,158,11,0.1)" }}>
-                <span style={{ color: "#F59E0B" }} className="text-xl">⚡</span>
+                <span style={{ color: "#F59E0B" }} className="text-xl">{renderNodeWithIcons("⚡")}</span>
               </div>
             </div>
           </Card>
@@ -357,21 +357,21 @@ export default function SecretaryTenders() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
                       <div className="space-y-1 text-sm">
                         <div className="flex items-center text-gray-600">
-                          <span className="w-5 mr-2 text-gray-400">💰</span>
+                          <span className="w-5 mr-2 text-gray-400">{renderNodeWithIcons("💰")}</span>
                           <span>{formatCurrency(tender.budget)}</span>
                         </div>
                         <div className="flex items-center text-gray-600">
-                          <span className="w-5 mr-2 text-gray-400">📅</span>
+                          <span className="w-5 mr-2 text-gray-400">{renderNodeWithIcons("📅")}</span>
                           <span>Closing: {fmtDate(tender.closingDate)}</span>
                         </div>
                       </div>
                       <div className="space-y-1 text-sm">
                         <div className="flex items-center text-gray-600">
-                          <span className="w-5 mr-2 text-gray-400">👤</span>
+                          <span className="w-5 mr-2 text-gray-400">{renderNodeWithIcons("👤")}</span>
                           <span className="truncate">{tender.contactPerson}</span>
                         </div>
                         <div className="flex items-center text-gray-600">
-                          <span className="w-5 mr-2 text-gray-400">🎯</span>
+                          <span className="w-5 mr-2 text-gray-400">{renderNodeWithIcons("🎯")}</span>
                           <span>{tender.scope}</span>
                         </div>
                       </div>
@@ -380,10 +380,10 @@ export default function SecretaryTenders() {
                     <p className="text-sm text-gray-600 line-clamp-2 mb-3">{tender.description}</p>
 
                     <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500">
-                      <span>📥 {tender.downloads} downloads</span>
-                      <span>📄 {tender.documents} documents</span>
-                      <span>📦 {tender.fileSize}</span>
-                      <span>👁️ {tender.views} views</span>
+                      <span>{renderNodeWithIcons("📥 ")}{tender.downloads} downloads</span>
+                      <span>{renderNodeWithIcons("📄 ")}{tender.documents} documents</span>
+                      <span>{renderNodeWithIcons("📦 ")}{tender.fileSize}</span>
+                      <span>{renderNodeWithIcons("👁️ ")}{tender.views} views</span>
                     </div>
                   </div>
 
@@ -418,7 +418,7 @@ export default function SecretaryTenders() {
                 className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-4"
                 style={{ backgroundColor: "rgba(109, 198, 223, 0.12)" }}
               >
-                <span className="text-2xl" style={{ color: "var(--secondary-blue)" }}>📋</span>
+                <span className="text-2xl" style={{ color: "var(--secondary-blue)" }}>{renderNodeWithIcons("📋")}</span>
               </div>
               <h3 className="text-lg font-extrabold text-gray-900 mb-2">No Tenders Found</h3>
               <p className="text-gray-600">No tenders match your current filters. Try adjusting your search criteria.</p>
@@ -451,7 +451,7 @@ export default function SecretaryTenders() {
                     <p className="text-xs text-gray-500 mb-2">{tender.referenceNo}</p>
                     <div className="flex items-center justify-between text-xs">
                       <Pill tone={departmentTone(tender.department)}>{tender.department}</Pill>
-                      <span className="text-gray-500">📥 {tender.downloads}</span>
+                      <span className="text-gray-500">{renderNodeWithIcons("📥 ")}{tender.downloads}</span>
                     </div>
                   </div>
                 );
@@ -573,7 +573,7 @@ export default function SecretaryTenders() {
                     className="w-10 h-10 rounded-2xl flex items-center justify-center"
                     style={{ backgroundColor: `${item.color}18` }}
                   >
-                    <span style={{ color: item.color }}>{item.icon}</span>
+                    <span style={{ color: item.color }}>{renderNodeWithIcons(item.icon)}</span>
                   </div>
                   <div>
                     <p className="font-extrabold text-sm text-gray-900">{item.title}</p>

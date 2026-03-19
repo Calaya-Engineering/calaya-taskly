@@ -221,7 +221,7 @@ export default function SecretaryDocumentDetail() {
       <Layout menuItems={SecretaryMenuItems} userRole="Secretary">
         <Card className="p-12 text-center">
           <div className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-4 bg-red-50">
-            <span className="text-2xl text-red-600">⚠️</span>
+            <span className="text-2xl text-red-600">{renderNodeWithIcons("⚠️")}</span>
           </div>
           <h3 className="text-lg font-extrabold text-gray-900 mb-2">Document not found</h3>
           <p className="text-gray-600 mb-6">The document you are looking for might have been removed or renamed.</p>
@@ -261,7 +261,7 @@ export default function SecretaryDocumentDetail() {
 
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2 mb-2">
-                    <span className="text-2xl">{getFileIcon(document.fileType)}</span>
+                    <span className="text-2xl">{renderNodeWithIcons(getFileIcon(document.fileType))}</span>
                     <Pill tone={accessTone(document.access)}>{document.access}</Pill>
                     <Pill tone="info">{document.type}</Pill>
                     <Pill tone="default">v{document.version}</Pill>
@@ -298,7 +298,7 @@ export default function SecretaryDocumentDetail() {
         {isExpiringSoon && (
           <Card className="border-amber-200 bg-amber-50/30 overflow-hidden">
             <div className="p-4 flex items-center gap-3">
-              <span className="text-2xl">⚠️</span>
+              <span className="text-2xl">{renderNodeWithIcons("⚠️")}</span>
               <div>
                 <h3 className="font-extrabold text-amber-800">Document Expiring Soon</h3>
                 <p className="text-amber-600 text-sm">
@@ -399,7 +399,7 @@ export default function SecretaryDocumentDetail() {
                               <div className="p-3 rounded-2xl border border-gray-200/70 hover:bg-gray-50 transition cursor-pointer">
                                 <div className="flex items-center justify-between">
                                   <div className="flex items-center gap-2">
-                                    <span className="text-gray-400">📋</span>
+                                    <span className="text-gray-400">{renderNodeWithIcons("📋")}</span>
                                     <span className="font-extrabold text-gray-900">{taskId}</span>
                                   </div>
                                   <span className="text-sm" style={{ color: "var(--primary-blue)" }}>View →</span>
@@ -546,7 +546,7 @@ export default function SecretaryDocumentDetail() {
                   style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}
                 >
                   <span className="font-semibold text-sm">Preview in Browser</span>
-                  <span>👁️</span>
+                  <span>{renderNodeWithIcons("👁️")}</span>
                 </button>
               </div>
             </Card>
@@ -628,7 +628,7 @@ export default function SecretaryDocumentDetail() {
                 <Link href="/secretary-dashboard/document/DOC-002">
                   <div className="p-3 rounded-2xl border border-gray-200/70 hover:bg-gray-50 transition cursor-pointer">
                     <div className="flex items-center gap-3">
-                      <span className="text-xl">📊</span>
+                      <span className="text-xl">{renderNodeWithIcons("📊")}</span>
                       <div>
                         <p className="font-extrabold text-sm text-gray-900">Safety Procedures Manual</p>
                         <p className="text-xs text-gray-500">HSE • PDF • 6.2 MB</p>
@@ -639,7 +639,7 @@ export default function SecretaryDocumentDetail() {
                 <Link href="/secretary-dashboard/document/DOC-003">
                   <div className="p-3 rounded-2xl border border-gray-200/70 hover:bg-gray-50 transition cursor-pointer">
                     <div className="flex items-center gap-3">
-                      <span className="text-xl">📄</span>
+                      <span className="text-xl">{renderNodeWithIcons("📄")}</span>
                       <div>
                         <p className="font-extrabold text-sm text-gray-900">Training Materials - New Employees</p>
                         <p className="text-xs text-gray-500">HR • ZIP • 15.2 MB</p>
@@ -650,7 +650,7 @@ export default function SecretaryDocumentDetail() {
                 <Link href="/secretary-dashboard/document/DOC-005">
                   <div className="p-3 rounded-2xl border border-gray-200/70 hover:bg-gray-50 transition cursor-pointer">
                     <div className="flex items-center gap-3">
-                      <span className="text-xl">📕</span>
+                      <span className="text-xl">{renderNodeWithIcons("📕")}</span>
                       <div>
                         <p className="font-extrabold text-sm text-gray-900">Quality Control Procedures</p>
                         <p className="text-xs text-gray-500">QHSE • PDF • 5.4 MB</p>
@@ -673,7 +673,7 @@ export default function SecretaryDocumentDetail() {
             <div className="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden border border-gray-200 transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
               <div className="bg-white px-6 pt-6 pb-4 sm:p-8">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-red-50 flex items-center justify-center text-xl shrink-0">⚠️</div>
+                  <div className="w-12 h-12 rounded-2xl bg-red-50 flex items-center justify-center text-xl shrink-0">{renderNodeWithIcons("⚠️")}</div>
                   <div>
                     <h3 className="text-xl font-extrabold" style={{ color: "var(--accent-red)" }}>
                       Delete Comment

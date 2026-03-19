@@ -182,7 +182,7 @@ export default function SecretaryTenderDetail() {
             <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <Pill>📄 Tender</Pill>
+                  <Pill>{renderNodeWithIcons("📄 Tender")}</Pill>
                   <Pill tone={statusTone(tender?.status)}>{tender?.status || "—"}</Pill>
                   <Pill tone={departmentTone(tender?.department)}>{tender?.department || "—"}</Pill>
                   {tender?.status === 'OPEN' && (
@@ -374,7 +374,7 @@ export default function SecretaryTenderDetail() {
                       style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}
                     >
                       <span className="font-semibold text-sm">Download All</span>
-                      <span>📦</span>
+                      <span>{renderNodeWithIcons("📦")}</span>
                     </button>
                     <a
                       href={`mailto:${tender.contactEmail}`}
@@ -382,7 +382,7 @@ export default function SecretaryTenderDetail() {
                       style={{ borderColor: "rgba(109,198,223,0.55)", color: "var(--secondary-blue)" }}
                     >
                       <span className="font-semibold text-sm">Contact Procurement</span>
-                      <span>📧</span>
+                      <span>{renderNodeWithIcons("📧")}</span>
                     </a>
                     <button
                       onClick={handleCopyLink}
@@ -390,7 +390,7 @@ export default function SecretaryTenderDetail() {
                       style={{ borderColor: "rgba(245,158,11,0.35)", color: "#F59E0B" }}
                     >
                       <span className="font-semibold text-sm">Copy Tender Link</span>
-                      <span>🔗</span>
+                      <span>{renderNodeWithIcons("🔗")}</span>
                     </button>
                   </div>
                 </div>
@@ -402,7 +402,7 @@ export default function SecretaryTenderDetail() {
               <div className="mt-6 space-y-3">
                 {(tender.requirements || []).map((req, index) => (
                   <div key={index} className="flex items-start gap-3 p-3 rounded-2xl hover:bg-gray-50 border border-transparent">
-                    <span className="mt-0.5 text-emerald-600">✓</span>
+                    <span className="mt-0.5 text-emerald-600">{renderNodeWithIcons("✓")}</span>
                     <span className="text-sm text-gray-700">{req}</span>
                   </div>
                 ))}
@@ -444,7 +444,7 @@ export default function SecretaryTenderDetail() {
                     <div className="flex items-start justify-between">
                       <div className="flex items-start gap-3">
                         <div className="w-10 h-10 rounded-2xl bg-blue-50 flex items-center justify-center text-xl">
-                          {getFileIcon(doc.name || doc.title)}
+                          {renderNodeWithIcons(getFileIcon(doc.name || doc.title))}
                         </div>
                         <div>
                           <p className="font-extrabold text-gray-900">{doc.name || doc.title}</p>

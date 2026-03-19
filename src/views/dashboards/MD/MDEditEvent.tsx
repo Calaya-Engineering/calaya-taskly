@@ -279,7 +279,7 @@ export default function MDEditEvent() {
                 </button>
 
                 <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <Pill>{typeIcon(formData.type)} {formData.type}</Pill>
+                  <Pill>{renderNodeWithIcons(typeIcon(formData.type))} {formData.type}</Pill>
                   <Pill tone="warn">{formData.scope}</Pill>
                   <Pill tone="success">{formData.color.toUpperCase()}</Pill>
                 </div>
@@ -513,9 +513,7 @@ export default function MDEditEvent() {
                       className="px-3 py-2 rounded-2xl font-semibold border bg-white hover:bg-red-50 active:scale-[0.99] transition"
                       style={{ borderColor: "rgba(237, 50, 55, 0.45)", color: "var(--accent-red)" }}
                       title="Remove item"
-                    >
-                      ✕
-                    </button>
+                    >{renderNodeWithIcons("\n                      ✕\n                    ")}</button>
                   ) : null}
                 </div>
               ))}
@@ -559,7 +557,7 @@ export default function MDEditEvent() {
                           style={{ borderColor: checked ? "rgba(44, 75, 155, 0.35)" : "rgba(0,0,0,0.08)" }}
                         >
                           <span className="font-semibold text-gray-900">{dept.name}</span>
-                          {checked ? <Pill tone="success">✓ Added</Pill> : <Pill>Add</Pill>}
+                          {checked ? <Pill tone="success">{renderNodeWithIcons("✓ Added")}</Pill> : <Pill>Add</Pill>}
                         </button>
                       );
                     })}
@@ -598,7 +596,7 @@ export default function MDEditEvent() {
                             <div className="text-xs text-gray-500">{user.department}</div>
                           </div>
 
-                          {checked ? <Pill tone="success">✓ Added</Pill> : <Pill>Add</Pill>}
+                          {checked ? <Pill tone="success">{renderNodeWithIcons("✓ Added")}</Pill> : <Pill>Add</Pill>}
                         </button>
                       );
                     })}
@@ -649,9 +647,7 @@ export default function MDEditEvent() {
                   onClick={() => setShowDeleteConfirm(false)}
                   className="px-3 py-1.5 rounded-2xl border bg-white hover:bg-gray-50"
                   style={{ borderColor: "rgba(0,0,0,0.10)" }}
-                >
-                  ✕
-                </button>
+                >{renderNodeWithIcons("\n                  ✕\n                ")}</button>
               </div>
 
               <div className="mt-6 flex flex-col sm:flex-row justify-end gap-2">

@@ -173,7 +173,7 @@ export default function StaffTenderDetail() {
             <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <Pill>📄 Tender</Pill>
+                  <Pill>{renderNodeWithIcons("📄 Tender")}</Pill>
                   <Pill tone={statusTone(tender?.status)}>{tender?.status || "—"}</Pill>
                   <Pill tone={departmentTone(tender?.department)}>{tender?.department || "—"}</Pill>
                   {tender?.status === "OPEN" && (
@@ -356,7 +356,7 @@ export default function StaffTenderDetail() {
               <div className="mt-6 space-y-3">
                 {(tender.requirements || []).map((req, index) => (
                   <div key={index} className="flex items-start gap-3 p-3 rounded-2xl hover:bg-gray-50 border border-transparent">
-                    <span className="mt-0.5 text-emerald-600">✓</span>
+                    <span className="mt-0.5 text-emerald-600">{renderNodeWithIcons("✓")}</span>
                     <span className="text-sm text-gray-700">{req}</span>
                   </div>
                 ))}
@@ -397,7 +397,7 @@ export default function StaffTenderDetail() {
                   <div key={doc.id} className="p-4 rounded-2xl border border-gray-200/70 transition">
                     <div className="flex items-start justify-between">
                       <div className="flex items-start gap-3">
-                        <div className="w-10 h-10 rounded-2xl bg-blue-50 flex items-center justify-center text-xl">📄</div>
+                        <div className="w-10 h-10 rounded-2xl bg-blue-50 flex items-center justify-center text-xl">{renderNodeWithIcons("📄")}</div>
                         <div>
                           <p className="font-extrabold text-gray-900">{doc.name || doc.title}</p>
                           <div className="flex flex-wrap items-center gap-2 mt-1 text-xs text-gray-500">

@@ -408,7 +408,7 @@ export default function HODEvents() {
                                 style={{ backgroundColor: "rgba(109, 198, 223, 0.18)" }}
                                 aria-hidden="true"
                               >
-                                <span className="text-lg">{typeEmoji(event.type)}</span>
+                                <span className="text-lg">{renderNodeWithIcons(typeEmoji(event.type))}</span>
                               </div>
 
                               <div className="min-w-0">
@@ -605,7 +605,7 @@ export default function HODEvents() {
                           className="w-9 h-9 rounded-2xl flex items-center justify-center  mr-3"
                           style={{ backgroundColor: "rgba(109, 198, 223, 0.18)" }}
                         >
-                          <span>{typeEmoji(event.type)}</span>
+                          <span>{renderNodeWithIcons(typeEmoji(event.type))}</span>
                         </div>
                         <div className="min-w-0 flex-1">
                           <p className="font-semibold text-sm truncate">{event.title}</p>
@@ -677,7 +677,7 @@ export default function HODEvents() {
               },
             ].map((stat) => (
               <div key={stat.label} className="text-center">
-                <div className="text-3xl mb-2">{stat.icon}</div>
+                <div className="text-3xl mb-2">{renderNodeWithIcons(stat.icon)}</div>
                 <p className="text-3xl font-extrabold" style={{ color: stat.color }}>
                   {stat.value}
                 </p>

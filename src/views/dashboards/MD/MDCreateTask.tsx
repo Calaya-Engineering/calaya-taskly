@@ -526,7 +526,7 @@ export default function MDCreateTask() {
                                     color: active ? "var(--primary-blue)" : "#374151",
                                   }}
                                 >
-                                  <span className="mr-2">{p === "CRITICAL" ? "🟥" : p === "HIGH" ? "🟧" : p === "MEDIUM" ? "🟨" : "🟩"}</span>
+                                  <span className="mr-2">{renderNodeWithIcons(p === "CRITICAL" ? "🟥" : p === "HIGH" ? "🟧" : p === "MEDIUM" ? "🟨" : "🟩")}</span>
                                   {p}
                                 </button>
                               );
@@ -601,7 +601,7 @@ export default function MDCreateTask() {
                                 }`}
                                 style={{ borderColor: active ? "rgba(44, 75, 155, 0.35)" : "rgba(0,0,0,0.08)" }}
                               >
-                                <div className="flex [&_svg]:w-8 [&_svg]:h-8" style={{ color: "var(--primary-blue)" }}>{t.icon}</div>
+                                <div className="flex [&_svg]:w-8 [&_svg]:h-8" style={{ color: "var(--primary-blue)" }}>{renderNodeWithIcons(t.icon)}</div>
                                 <div className="mt-2 font-semibold" style={{ color: "var(--primary-blue)" }}>
                                   {t.label}
                                 </div>
@@ -637,7 +637,7 @@ export default function MDCreateTask() {
                                     borderColor: active ? "transparent" : "rgba(0,0,0,0.08)",
                                   }}
                                 >
-                                  {d} {active ? "✓" : ""}
+                                  {d} {renderNodeWithIcons(active ? "✓" : "")}
                                 </button>
                               );
                             })}
@@ -688,7 +688,7 @@ export default function MDCreateTask() {
                                     <div className="text-sm font-semibold text-gray-900 truncate">{hod.name}</div>
                                     <div className="text-xs text-gray-500 truncate">{hod.department}</div>
                                   </div>
-                                  {active ? <span className="text-blue-600 font-bold">✓</span> : null}
+                                  {active ? <span className="text-blue-600 font-bold">{renderNodeWithIcons("✓")}</span> : null}
                                 </button>
                               );
                             })}
@@ -739,7 +739,7 @@ export default function MDCreateTask() {
                                     <div className="text-sm font-semibold text-gray-900 truncate">{s.name}</div>
                                     <div className="text-xs text-gray-500 truncate">{s.department}</div>
                                   </div>
-                                  {active ? <span className="text-emerald-700 font-bold">✓</span> : null}
+                                  {active ? <span className="text-emerald-700 font-bold">{renderNodeWithIcons("✓")}</span> : null}
                                 </button>
                               );
                             })}
@@ -814,15 +814,15 @@ export default function MDCreateTask() {
                         </p>
                         <ul className="mt-3 text-sm text-gray-600 space-y-2">
                           <li className="flex gap-2">
-                            <span className="text-emerald-600 font-bold">✓</span>
+                            <span className="text-emerald-600 font-bold">{renderNodeWithIcons("✓")}</span>
                             Use <span className="font-semibold">Mixed</span> to combine departments, HODs and staff.
                           </li>
                           <li className="flex gap-2">
-                            <span className="text-emerald-600 font-bold">✓</span>
+                            <span className="text-emerald-600 font-bold">{renderNodeWithIcons("✓")}</span>
                             Select departments first to auto-filter HODs/staff in Mixed.
                           </li>
                           <li className="flex gap-2">
-                            <span className="text-emerald-600 font-bold">✓</span>
+                            <span className="text-emerald-600 font-bold">{renderNodeWithIcons("✓")}</span>
                             Ensure due date is realistic for the priority level.
                           </li>
                         </ul>
@@ -849,7 +849,7 @@ export default function MDCreateTask() {
                               className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center"
                               style={{ backgroundColor: "rgba(109, 198, 223, 0.14)" }}
                             >
-                              <span className="text-3xl">📎</span>
+                              <span className="text-3xl">{renderNodeWithIcons("📎")}</span>
                             </div>
                             <p className="text-gray-700 font-semibold mb-2">Click to upload or drag and drop</p>
                             <p className="text-sm text-gray-500">PDF, DOCX, XLSX, JPG, PNG up to 100MB each</p>
@@ -876,7 +876,7 @@ export default function MDCreateTask() {
                                       className="w-10 h-10 rounded-2xl flex items-center justify-center  shrink-0"
                                       style={{ backgroundColor: "rgba(44, 75, 155, 0.08)" }}
                                     >
-                                      <span className="text-lg">{fileIcon(file.name)}</span>
+                                      <span className="text-lg">{renderNodeWithIcons(fileIcon(file.name))}</span>
                                     </div>
                                     <div className="min-w-0">
                                       <div className="text-sm font-semibold text-gray-900 truncate max-w-[520px]">
@@ -911,15 +911,15 @@ export default function MDCreateTask() {
                         </p>
                         <ul className="mt-3 text-sm text-gray-600 space-y-2">
                           <li className="flex gap-2">
-                            <span className="text-emerald-600 font-bold">✓</span>
+                            <span className="text-emerald-600 font-bold">{renderNodeWithIcons("✓")}</span>
                             Add procedures, photos, or reports to reduce back-and-forth.
                           </li>
                           <li className="flex gap-2">
-                            <span className="text-emerald-600 font-bold">✓</span>
+                            <span className="text-emerald-600 font-bold">{renderNodeWithIcons("✓")}</span>
                             Keep filenames clear: <span className="font-semibold">SiteA_Inspection_Photos.zip</span>
                           </li>
                           <li className="flex gap-2">
-                            <span className="text-emerald-600 font-bold">✓</span>
+                            <span className="text-emerald-600 font-bold">{renderNodeWithIcons("✓")}</span>
                             Confirm sensitive files match the visibility setting.
                           </li>
                         </ul>
@@ -1049,7 +1049,7 @@ export default function MDCreateTask() {
                           <div className="mt-3 flex flex-wrap gap-2">
                             {formData.attachments.map((f, idx) => (
                               <span key={`${f.name}-${idx}`} className="px-3 py-1 rounded-2xl text-xs font-semibold bg-gray-50 text-gray-700 ring-1 ring-gray-100">
-                                {fileIcon(f.name)} {f.name.length > 28 ? `${f.name.slice(0, 28)}…` : f.name}
+                                {renderNodeWithIcons(fileIcon(f.name))} {f.name.length > 28 ? `${f.name.slice(0, 28)}…` : f.name}
                               </span>
                             ))}
                           </div>
@@ -1064,15 +1064,15 @@ export default function MDCreateTask() {
                         </p>
                         <ul className="mt-3 text-sm text-gray-600 space-y-2">
                           <li className="flex gap-2">
-                            <span className="text-emerald-600 font-bold">✓</span>
+                            <span className="text-emerald-600 font-bold">{renderNodeWithIcons("✓")}</span>
                             Ensure <span className="font-semibold">Due Date</span> is set.
                           </li>
                           <li className="flex gap-2">
-                            <span className="text-emerald-600 font-bold">✓</span>
+                            <span className="text-emerald-600 font-bold">{renderNodeWithIcons("✓")}</span>
                             Confirm <span className="font-semibold">Assignees</span> are correct.
                           </li>
                           <li className="flex gap-2">
-                            <span className="text-emerald-600 font-bold">✓</span>
+                            <span className="text-emerald-600 font-bold">{renderNodeWithIcons("✓")}</span>
                             Priority should match urgency and impact.
                           </li>
                         </ul>

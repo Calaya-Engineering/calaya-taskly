@@ -147,6 +147,9 @@ const normalizeEntry = (e: any): ReportEntry => ({
   nextDayTask: e.nextDayTask ?? e.NEXTDAYTASK ?? e.next_day_task ?? '',
 });
 
+const getReportUrl = (report?: Partial<DailyReport> | null) =>
+  report?.fileUrl ?? report?.entriesUrl ?? null;
+
 const fileIcon = (name = '') => {
   const n = name.toLowerCase();
   if (n.endsWith('.pdf')) return '📕';
@@ -565,7 +568,7 @@ export default function HODDailyReports() {
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
               <div>
                 <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <Pill>📊 Daily Reports</Pill>
+                  <Pill>{renderNodeWithIcons("📊 Daily Reports")}</Pill>
                   <Pill tone="info">{stats.total} Total</Pill>
                   <Pill tone="warn">{stats.pending} Pending</Pill>
                   <Pill tone="success">{stats.approved} Approved</Pill>
@@ -593,17 +596,13 @@ export default function HODDailyReports() {
                     className={`p-3 rounded-2xl text-xl transition ${viewMode === 'list' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
                       }`}
                     style={{ color: viewMode === 'list' ? 'var(--primary-blue)' : '#6B7280' }}
-                  >
-                    📋
-                  </button>
+                  >{renderNodeWithIcons("\n                    📋\n                  ")}</button>
                   <button
                     onClick={() => setViewMode('calendar')}
                     className={`p-3 rounded-2xl text-xl transition ${viewMode === 'calendar' ? 'bg-white' : 'bg-gray-50 hover:bg-gray-100'
                       }`}
                     style={{ color: viewMode === 'calendar' ? 'var(--primary-blue)' : '#6B7280' }}
-                  >
-                    📅
-                  </button>
+                  >{renderNodeWithIcons("\n                    📅\n                  ")}</button>
                 </div>
 
                 <button
@@ -768,7 +767,7 @@ export default function HODDailyReports() {
                         <div className="font-semibold text-gray-900">{report.fileSize || '—'}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <Pill tone={getStatusTone(report.status)}>{getStatusLabel(report.status)}</Pill>
+                        <Pill tone={getStatusTone(report.status)}>{renderNodeWithIcons(getStatusLabel(report.status))}</Pill>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className="text-[12px] text-gray-500">
@@ -806,7 +805,7 @@ export default function HODDailyReports() {
 
             {filteredReports.length === 0 && (
               <div className="p-10 text-center">
-                <div className="text-4xl mb-3">📊</div>
+                <div className="text-4xl mb-3">{renderNodeWithIcons("📊")}</div>
                 <div className="font-extrabold" style={{ color: "var(--primary-blue)" }}>
                   No reports found
                 </div>
@@ -999,9 +998,7 @@ export default function HODDailyReports() {
                       Add tasks completed today and plan for next day. You can submit for multiple departments at once.
                     </p>
                     {isClient && getSessionItem(STORAGE_KEYS.REPORT_ENTRIES) && (
-                      <div className="mt-2 inline-flex items-center px-3 py-1 rounded-full text-xs bg-amber-50 text-amber-800 ring-1 ring-amber-100">
-                        ⚡ Draft saved from previous session
-                      </div>
+                      <div className="mt-2 inline-flex items-center px-3 py-1 rounded-full text-xs bg-amber-50 text-amber-800 ring-1 ring-amber-100">{renderNodeWithIcons("\n                        ⚡ Draft saved from previous session\n                      ")}</div>
                     )}
                   </div>
                   <button
@@ -1041,7 +1038,7 @@ export default function HODDailyReports() {
                         }}
                       >
                         {dept}
-                        {selectedDepartments.includes(dept) && <span className="ml-2">✓</span>}
+                        {selectedDepartments.includes(dept) && <span className="ml-2">{renderNodeWithIcons("✓")}</span>}
                       </button>
                     ))}
                   </div>
@@ -1199,13 +1196,11 @@ export default function HODDailyReports() {
                           className={`w-5 h-5 rounded border-2 flex items-center justify-center transition ${urgentReview ? 'border-transparent' : 'border-gray-300 bg-white'}`}
                           style={{ backgroundColor: urgentReview ? 'var(--accent-red)' : undefined }}
                         >
-                          {urgentReview && <span className="text-white text-xs font-bold">✓</span>}
+                          {urgentReview && <span className="text-white text-xs font-bold">{renderNodeWithIcons("✓")}</span>}
                         </div>
                       </div>
                       <div>
-                        <span className={`text-sm font-semibold transition ${urgentReview ? 'text-red-700' : 'text-gray-700'}`}>
-                          🚨 Request urgent review
-                        </span>
+                        <span className={`text-sm font-semibold transition ${urgentReview ? 'text-red-700' : 'text-gray-700'}`}>{renderNodeWithIcons("\n                          🚨 Request urgent review\n                        ")}</span>
                         <p className="text-xs text-gray-500 mt-0.5">
                           Marks this report as needing urgent attention — a red badge will appear on the submitted report.
                         </p>
@@ -1225,13 +1220,11 @@ export default function HODDailyReports() {
                           className={`w-5 h-5 rounded border-2 flex items-center justify-center transition ${attachDocs ? 'border-transparent' : 'border-gray-300 bg-white'}`}
                           style={{ backgroundColor: attachDocs ? 'var(--secondary-blue)' : undefined }}
                         >
-                          {attachDocs && <span className="text-white text-xs font-bold">✓</span>}
+                          {attachDocs && <span className="text-white text-xs font-bold">{renderNodeWithIcons("✓")}</span>}
                         </div>
                       </div>
                       <div>
-                        <span className={`text-sm font-semibold transition ${attachDocs ? 'text-blue-700' : 'text-gray-700'}`}>
-                          📎 Attach supporting documents
-                        </span>
+                        <span className={`text-sm font-semibold transition ${attachDocs ? 'text-blue-700' : 'text-gray-700'}`}>{renderNodeWithIcons("\n                          📎 Attach supporting documents\n                        ")}</span>
                         <p className="text-xs text-gray-500 mt-0.5">
                           Upload a file to accompany this report (PDF, DOCX, XLSX, images).
                         </p>
@@ -1258,7 +1251,7 @@ export default function HODDailyReports() {
                                 className="w-12 h-12 mx-auto mb-3 rounded-2xl flex items-center justify-center"
                                 style={{ backgroundColor: 'rgba(109, 198, 223, 0.14)' }}
                               >
-                                <span className="text-2xl">📤</span>
+                                <span className="text-2xl">{renderNodeWithIcons("📤")}</span>
                               </div>
                               <p className="text-sm text-gray-700 font-semibold mb-1">Click to upload or drag and drop</p>
                               <p className="text-xs text-gray-500">PDF, DOCX, XLSX, PNG, JPG — max 50MB</p>
@@ -1276,7 +1269,7 @@ export default function HODDailyReports() {
                                     className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
                                     style={{ backgroundColor: 'rgba(44, 75, 155, 0.08)' }}
                                   >
-                                    <span className="text-base">{fileIcon(file.name)}</span>
+                                    <span className="text-base">{renderNodeWithIcons(fileIcon(file.name))}</span>
                                   </div>
                                   <div className="min-w-0">
                                     <div className="text-sm font-semibold text-gray-900 truncate max-w-xs">{file.name}</div>
@@ -1337,10 +1330,9 @@ export default function HODDailyReports() {
                       boxShadow: urgentReview ? '0 0 0 3px rgba(185,28,28,0.25)' : undefined,
                     }}
                   >
-                    {submitting
+                    {renderNodeWithIcons(submitting
                       ? 'Submitting...'
-                      : `${urgentReview ? '🚨 ' : ''}Submit Report${selectedDepartments.length > 1 ? `s (${selectedDepartments.length})` : ''}`
-                    }
+                      : `${urgentReview ? '🚨 ' : ''}Submit Report${selectedDepartments.length > 1 ? `s (${selectedDepartments.length})` : ''}`)}
                   </button>
                 </div>
               </div>

@@ -460,7 +460,7 @@ export default function SecretaryUploadReport() {
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
               <div>
                 <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <Pill>📄 Secretary Reports</Pill>
+                  <Pill>{renderNodeWithIcons("📄 Secretary Reports")}</Pill>
                   <Pill tone="info">Personal: {stats.total}</Pill>
                 </div>
 
@@ -513,7 +513,7 @@ export default function SecretaryUploadReport() {
           <Card className="border-amber-200 bg-amber-50/30 overflow-hidden">
             <div className="p-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <span className="text-2xl">📝</span>
+                <span className="text-2xl">{renderNodeWithIcons("📝")}</span>
                 <div>
                   <h3 className="font-extrabold text-amber-800">You have an unsaved personal report draft</h3>
                   <p className="text-amber-600 text-sm">
@@ -545,7 +545,7 @@ export default function SecretaryUploadReport() {
               subtitle="Upload company-wide daily reports for distribution"
               action={
                 <div className="w-10 h-10 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(44,75,155,0.1)" }}>
-                  <span className="text-lg">🏢</span>
+                  <span className="text-lg">{renderNodeWithIcons("🏢")}</span>
                 </div>
               }
             />
@@ -585,9 +585,9 @@ export default function SecretaryUploadReport() {
                 <div className={`rounded-2xl border-2 ${reportFile ? 'border-emerald-300 bg-emerald-50/30' : 'border-dashed border-gray-300'} p-6 text-center hover:border-blue-400 transition`}>
                   {reportFile ? (
                     <div className="text-center">
-                      <div className="text-3xl mb-2 text-emerald-500">✓</div>
+                      <div className="text-3xl mb-2 text-emerald-500">{renderNodeWithIcons("✓")}</div>
                       <div className="flex items-center justify-center gap-2 mb-2">
-                        <span className="text-2xl">{getFileIcon(reportFile.name)}</span>
+                        <span className="text-2xl">{renderNodeWithIcons(getFileIcon(reportFile.name))}</span>
                         <p className="font-extrabold text-gray-900 text-sm">{reportFile.name}</p>
                       </div>
                       <p className="text-xs text-gray-500 mb-3">
@@ -608,7 +608,7 @@ export default function SecretaryUploadReport() {
                         className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center"
                         style={{ backgroundColor: "rgba(109, 198, 223, 0.12)" }}
                       >
-                        <span className="text-3xl" style={{ color: "var(--secondary-blue)" }}>📎</span>
+                        <span className="text-3xl" style={{ color: "var(--secondary-blue)" }}>{renderNodeWithIcons("📎")}</span>
                       </div>
                       <p className="text-gray-800 font-extrabold mb-1">Click to upload or drag and drop</p>
                       <p className="text-sm text-gray-500">PDF, DOC, XLS, JPG up to 100MB</p>
@@ -656,7 +656,7 @@ export default function SecretaryUploadReport() {
               subtitle="Track your daily tasks, objectives, and next day plans"
               action={
                 <div className="w-10 h-10 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(237,50,55,0.1)" }}>
-                  <span className="text-lg">👤</span>
+                  <span className="text-lg">{renderNodeWithIcons("👤")}</span>
                 </div>
               }
             />
@@ -778,7 +778,7 @@ export default function SecretaryUploadReport() {
                 'Submit before end of workday',
               ].map((tip, index) => (
                 <li key={index} className="flex items-start gap-2 p-2 rounded-xl hover:bg-gray-50 transition">
-                  <span className="text-emerald-500 text-lg">✓</span>
+                  <span className="text-emerald-500 text-lg">{renderNodeWithIcons("✓")}</span>
                   <span className="text-sm text-gray-700">{tip}</span>
                 </li>
               ))}
@@ -811,9 +811,7 @@ export default function SecretaryUploadReport() {
                       <span className="text-sm text-gray-500">• {SECRETARY_NAME}</span>
                     </div>
                     {isClient && getSessionItem(STORAGE_KEYS.REPORT_ENTRIES) && (
-                      <div className="mt-2 inline-flex items-center px-3 py-1.5 bg-amber-50 text-amber-800 rounded-xl text-xs ring-1 ring-amber-200">
-                        ⚡ Draft saved - continue where you left off
-                      </div>
+                      <div className="mt-2 inline-flex items-center px-3 py-1.5 bg-amber-50 text-amber-800 rounded-xl text-xs ring-1 ring-amber-200">{renderNodeWithIcons("\n                        ⚡ Draft saved - continue where you left off\n                      ")}</div>
                     )}
                   </div>
                   <button

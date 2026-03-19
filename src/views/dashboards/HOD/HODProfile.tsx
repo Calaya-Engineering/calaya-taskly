@@ -224,7 +224,7 @@ export default function HODProfile() {
     return (
       <Layout menuItems={HODMenuItems} userRole="HOD">
         <Card className="p-12 text-center">
-          <div className="text-4xl mb-4">⚠️</div>
+          <div className="text-4xl mb-4">{renderNodeWithIcons("⚠️")}</div>
           <h2 className="text-xl font-extrabold text-gray-900 mb-2">Unable to load profile</h2>
           <p className="text-gray-500 mb-6">{error}</p>
           <button
@@ -278,7 +278,7 @@ export default function HODProfile() {
               <div key={stat.label} className="rounded-2xl border border-gray-200/70 p-4">
                 <div className="flex items-center justify-between">
                   <p className="text-sm text-gray-600">{stat.label}</p>
-                  <span style={{ color: stat.color }}>{stat.icon}</span>
+                  <span style={{ color: stat.color }}>{renderNodeWithIcons(stat.icon)}</span>
                 </div>
                 <p className="text-2xl font-extrabold mt-2" style={{ color: stat.color }}>
                   {stat.value}
@@ -319,7 +319,7 @@ export default function HODProfile() {
                     style={{ borderBottomColor: active ? "var(--primary-blue)" : "transparent" }}
                   >
                     <span className="flex items-center gap-2">
-                      <span>{tab.icon}</span>
+                      <span>{renderNodeWithIcons(tab.icon)}</span>
                       <span className="hidden sm:inline">{tab.label}</span>
                     </span>
                   </button>
@@ -783,7 +783,7 @@ export default function HODProfile() {
                   className="w-10 h-10 rounded-2xl flex items-center justify-center text-lg shrink-0"
                   style={{ backgroundColor: getActivityBg(activity.type) }}
                 >
-                  {getActivityIcon(activity.type)}
+                  {renderNodeWithIcons(getActivityIcon(activity.type))}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-4">

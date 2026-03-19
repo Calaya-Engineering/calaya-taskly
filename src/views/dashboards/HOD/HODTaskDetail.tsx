@@ -203,7 +203,7 @@ export default function HODTaskDetail() {
       <Layout menuItems={HODMenuItems} userRole="HOD">
         <div className="space-y-6">
           <Card className="p-12 text-center">
-            <div className="text-6xl mb-4">📋</div>
+            <div className="text-6xl mb-4">{renderNodeWithIcons("📋")}</div>
             <p className="text-gray-600">Loading task…</p>
           </Card>
         </div>
@@ -216,7 +216,7 @@ export default function HODTaskDetail() {
       <Layout menuItems={HODMenuItems} userRole="HOD">
         <div className="space-y-6">
           <Card className="p-12 text-center">
-            <div className="text-6xl mb-4">📋</div>
+            <div className="text-6xl mb-4">{renderNodeWithIcons("📋")}</div>
             <h2 className="text-xl font-extrabold" style={{ color: "var(--primary-blue)" }}>
               Task not found
             </h2>
@@ -346,7 +346,7 @@ export default function HODTaskDetail() {
                       <div key={index} className="rounded-2xl border border-gray-200/70 p-4 hover:bg-gray-50 transition">
                         <div className="flex items-center justify-between">
                           <p className="text-sm text-gray-500">{stat.label}</p>
-                          <span className="text-lg">{stat.icon}</span>
+                          <span className="text-lg">{renderNodeWithIcons(stat.icon)}</span>
                         </div>
                         <p className="text-2xl font-extrabold mt-2" style={{ color: "var(--primary-blue)" }}>
                           {stat.value}
@@ -477,7 +477,7 @@ export default function HODTaskDetail() {
                   className="w-12 h-12 mx-auto rounded-2xl flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition"
                   style={{ backgroundColor: `${action.color}18` }}
                 >
-                  <span style={{ color: action.color }}>{action.icon}</span>
+                  <span style={{ color: action.color }}>{renderNodeWithIcons(action.icon)}</span>
                 </div>
                 <p className="font-extrabold text-sm" style={{ color: action.color }}>
                   {action.label}

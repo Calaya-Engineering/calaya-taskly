@@ -308,7 +308,7 @@ export default function StaffMyTasks() {
           <Card className="border-red-200 bg-red-50/30 overflow-hidden">
             <div className="p-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <span className="text-2xl">🚨</span>
+                <span className="text-2xl">{renderNodeWithIcons("🚨")}</span>
                 <div>
                   <h3 className="font-extrabold text-red-800">Overdue Tasks!</h3>
                   <p className="text-red-600 text-sm">{stats.overdue} task(s) require your immediate attention</p>
@@ -409,7 +409,7 @@ export default function StaffMyTasks() {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🔎</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">{renderNodeWithIcons("🔎")}</span>
               </div>
             </div>
           </div>
@@ -438,9 +438,7 @@ export default function StaffMyTasks() {
                         <div
                           className="w-10 h-10 rounded-2xl flex items-center justify-center text-white font-bold shrink-0"
                           style={{ backgroundColor: "var(--secondary-blue)" }}
-                        >
-                          📋
-                        </div>
+                        >{renderNodeWithIcons("\n                          📋\n                        ")}</div>
                         <div>
                           <Link href={`/staff-dashboard/task/${task.id}`}>
                             <div className="font-extrabold text-gray-900 hover:underline cursor-pointer">
@@ -461,7 +459,7 @@ export default function StaffMyTasks() {
                       <Pill tone={getPriorityTone(task.priority)}>{task.priority}</Pill>
                     </td>
                     <td className="px-5 py-3 whitespace-nowrap">
-                      <Pill tone={getStatusTone(task.status)}>{getStatusLabel(task.status)}</Pill>
+                      <Pill tone={getStatusTone(task.status)}>{renderNodeWithIcons(getStatusLabel(task.status))}</Pill>
                     </td>
                     <td className="px-5 py-3 whitespace-nowrap">
                       <div className="text-sm">
@@ -530,8 +528,8 @@ export default function StaffMyTasks() {
                           )}
                         </div>
                         <div className="flex gap-2 text-[11px] text-gray-500">
-                          <span>📎 {task.attachments}</span>
-                          <span>💬 {task.comments}</span>
+                          <span>{renderNodeWithIcons("📎 ")}{task.attachments}</span>
+                          <span>{renderNodeWithIcons("💬 ")}{task.comments}</span>
                         </div>
                       </div>
                     </td>
@@ -543,7 +541,7 @@ export default function StaffMyTasks() {
 
           {filteredTasks.length === 0 && (
             <div className="p-10 text-center">
-              <div className="text-4xl mb-3">📋</div>
+              <div className="text-4xl mb-3">{renderNodeWithIcons("📋")}</div>
               <div className="font-extrabold" style={{ color: "var(--primary-blue)" }}>
                 No tasks found
               </div>
@@ -563,7 +561,7 @@ export default function StaffMyTasks() {
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl bg-green-100 flex items-center justify-center">
-                <span className="text-green-600 text-xl">✅</span>
+                <span className="text-green-600 text-xl">{renderNodeWithIcons("✅")}</span>
               </div>
             </div>
           </Card>
@@ -591,7 +589,7 @@ export default function StaffMyTasks() {
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl bg-amber-100 flex items-center justify-center">
-                <span className="text-amber-600 text-xl">📊</span>
+                <span className="text-amber-600 text-xl">{renderNodeWithIcons("📊")}</span>
               </div>
             </div>
           </Card>
@@ -605,7 +603,7 @@ export default function StaffMyTasks() {
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl bg-blue-100 flex items-center justify-center">
-                <span className="text-blue-600 text-xl">📎</span>
+                <span className="text-blue-600 text-xl">{renderNodeWithIcons("📎")}</span>
               </div>
             </div>
           </Card>

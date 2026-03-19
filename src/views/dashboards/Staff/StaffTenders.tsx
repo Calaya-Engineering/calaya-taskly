@@ -202,7 +202,7 @@ export default function StaffTenders() {
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
               <div>
                 <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <Pill>📄 Tenders</Pill>
+                  <Pill>{renderNodeWithIcons("📄 Tenders")}</Pill>
                   <Pill tone="success">{openTenders.length} Open</Pill>
                   <Pill tone="warn">{closingSoonCount} Closing Soon</Pill>
                 </div>
@@ -241,7 +241,7 @@ export default function StaffTenders() {
                   placeholder="Search by title, reference, department..."
                   className="w-full pl-11 pr-4 py-3 rounded-2xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100"
                 />
-                <span className="absolute left-4 top-3.5 text-gray-400">🔎</span>
+                <span className="absolute left-4 top-3.5 text-gray-400">{renderNodeWithIcons("🔎")}</span>
               </div>
 
               <div className="flex gap-2">
@@ -371,11 +371,11 @@ export default function StaffTenders() {
 
                 <div className="mt-4 flex flex-wrap items-center justify-between gap-2 pt-4 border-t border-gray-200/70">
                   <div className="flex flex-wrap items-center gap-3 text-xs text-gray-600">
-                    <span>📦 {t.fileSize}</span>
+                    <span>{renderNodeWithIcons("📦 ")}{t.fileSize}</span>
                     <span className="text-gray-300">•</span>
                     <span>⬇️ {t.downloads} downloads</span>
                     <span className="text-gray-300">•</span>
-                    <span>👁️ {t.views} views</span>
+                    <span>{renderNodeWithIcons("👁️ ")}{t.views} views</span>
                   </div>
 
                   <div className="flex gap-2">
@@ -409,7 +409,7 @@ export default function StaffTenders() {
 
         {filteredTenders.length === 0 && (
           <Card className="p-10 text-center">
-            <div className="text-4xl mb-3">📄</div>
+            <div className="text-4xl mb-3">{renderNodeWithIcons("📄")}</div>
             <div className="font-extrabold" style={{ color: "var(--primary-blue)" }}>
               No tenders found
             </div>

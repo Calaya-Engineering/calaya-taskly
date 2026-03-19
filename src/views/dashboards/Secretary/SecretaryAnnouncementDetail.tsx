@@ -198,7 +198,7 @@ export default function SecretaryAnnouncementDetail() {
     return (
       <Layout menuItems={SecretaryMenuItems} userRole="Secretary">
         <div className="flex flex-col items-center justify-center p-12 gap-4">
-          <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center text-3xl">⚠️</div>
+          <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center text-3xl">{renderNodeWithIcons("⚠️")}</div>
           <h2 className="text-xl font-bold text-gray-900">{error || "Announcement not found"}</h2>
           <button onClick={() => router.push("/secretary-dashboard/announcements")} className={btnOutline}>
             Back to Announcements
@@ -319,7 +319,7 @@ export default function SecretaryAnnouncementDetail() {
                         >
                           <div className="flex items-start gap-3 min-w-0">
                             <div className="w-11 h-11 rounded-2xl bg-blue-50 flex items-center justify-center text-xl">
-                              {getFileIcon(doc.name)}
+                              {renderNodeWithIcons(getFileIcon(doc.name))}
                             </div>
                             <div className="min-w-0">
                               <p className="font-extrabold text-gray-900 truncate">{doc.name}</p>
@@ -350,7 +350,7 @@ export default function SecretaryAnnouncementDetail() {
                         >
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-2xl bg-blue-50 flex items-center justify-center text-xl">
-                              {att.type === 'image' ? '🖼️' : '📄'}
+                              {renderNodeWithIcons(att.type === 'image' ? '🖼️' : '📄')}
                             </div>
                             <div>
                               <p className="font-extrabold text-sm text-gray-900">{att.name}</p>

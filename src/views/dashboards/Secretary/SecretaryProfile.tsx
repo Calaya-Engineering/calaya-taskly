@@ -174,7 +174,7 @@ export default function SecretaryProfile() {
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
               <div>
                 <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <Pill>👤 My Profile</Pill>
+                  <Pill>{renderNodeWithIcons("👤 My Profile")}</Pill>
                   <Pill tone="info">{profileData.role}</Pill>
                 </div>
 
@@ -198,7 +198,7 @@ export default function SecretaryProfile() {
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(44,75,155,0.1)" }}>
-                <span style={{ color: "var(--primary-blue)" }} className="text-xl">📊</span>
+                <span style={{ color: "var(--primary-blue)" }} className="text-xl">{renderNodeWithIcons("📊")}</span>
               </div>
             </div>
           </Card>
@@ -212,7 +212,7 @@ export default function SecretaryProfile() {
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(139,92,246,0.1)" }}>
-                <span style={{ color: "#8B5CF6" }} className="text-xl">📄</span>
+                <span style={{ color: "#8B5CF6" }} className="text-xl">{renderNodeWithIcons("📄")}</span>
               </div>
             </div>
           </Card>
@@ -226,7 +226,7 @@ export default function SecretaryProfile() {
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(16,185,129,0.1)" }}>
-                <span style={{ color: "#10B981" }} className="text-xl">📋</span>
+                <span style={{ color: "#10B981" }} className="text-xl">{renderNodeWithIcons("📋")}</span>
               </div>
             </div>
           </Card>
@@ -240,7 +240,7 @@ export default function SecretaryProfile() {
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(245,158,11,0.1)" }}>
-                <span style={{ color: "#F59E0B" }} className="text-xl">✅</span>
+                <span style={{ color: "#F59E0B" }} className="text-xl">{renderNodeWithIcons("✅")}</span>
               </div>
             </div>
           </Card>
@@ -267,7 +267,7 @@ export default function SecretaryProfile() {
                     style={{ borderBottomColor: active ? "var(--primary-blue)" : "transparent" }}
                   >
                     <span className="flex items-center gap-2">
-                      <span>{tab.icon}</span>
+                      <span>{renderNodeWithIcons(tab.icon)}</span>
                       <span className="hidden sm:inline">{tab.label}</span>
                     </span>
                   </button>
@@ -664,7 +664,7 @@ export default function SecretaryProfile() {
                   className="w-10 h-10 rounded-2xl flex items-center justify-center text-lg shrink-0"
                   style={{ backgroundColor: getActivityBg(activity.type) }}
                 >
-                  {getActivityIcon(activity.type)}
+                  {renderNodeWithIcons(getActivityIcon(activity.type))}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-4">
@@ -694,7 +694,7 @@ export default function SecretaryProfile() {
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(44,75,155,0.1)" }}>
-                <span style={{ color: "var(--primary-blue)" }} className="text-xl">📊</span>
+                <span style={{ color: "var(--primary-blue)" }} className="text-xl">{renderNodeWithIcons("📊")}</span>
               </div>
             </div>
           </Card>
@@ -708,7 +708,7 @@ export default function SecretaryProfile() {
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(139,92,246,0.1)" }}>
-                <span style={{ color: "#8B5CF6" }} className="text-xl">📄</span>
+                <span style={{ color: "#8B5CF6" }} className="text-xl">{renderNodeWithIcons("📄")}</span>
               </div>
             </div>
           </Card>
@@ -722,7 +722,7 @@ export default function SecretaryProfile() {
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(16,185,129,0.1)" }}>
-                <span style={{ color: "#10B981" }} className="text-xl">📋</span>
+                <span style={{ color: "#10B981" }} className="text-xl">{renderNodeWithIcons("📋")}</span>
               </div>
             </div>
           </Card>
@@ -736,7 +736,7 @@ export default function SecretaryProfile() {
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(245,158,11,0.1)" }}>
-                <span style={{ color: "#F59E0B" }} className="text-xl">📅</span>
+                <span style={{ color: "#F59E0B" }} className="text-xl">{renderNodeWithIcons("📅")}</span>
               </div>
             </div>
           </Card>

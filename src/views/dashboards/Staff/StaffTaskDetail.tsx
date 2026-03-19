@@ -530,7 +530,7 @@ export default function StaffTaskDetail() {
                               className="w-10 h-10 rounded-2xl flex items-center justify-center text-xl"
                               style={{ backgroundColor: "rgba(109, 198, 223, 0.1)" }}
                             >
-                              {getFileIcon(doc.type)}
+                              {renderNodeWithIcons(getFileIcon(doc.type))}
                             </div>
                             <div>
                               <p className="font-extrabold text-sm text-gray-900">{doc.name}</p>
@@ -566,7 +566,7 @@ export default function StaffTaskDetail() {
                           className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
                           style={{ backgroundColor: "rgba(109, 198, 223, 0.12)" }}
                         >
-                          <span className="text-sm">📋</span>
+                          <span className="text-sm">{renderNodeWithIcons("📋")}</span>
                         </div>
                         <div className="flex-1">
                           <p className="font-semibold text-sm text-gray-900">{item.action}</p>
@@ -637,7 +637,7 @@ export default function StaffTaskDetail() {
                           className="w-8 h-8 rounded-xl flex items-center justify-center"
                           style={{ backgroundColor: "rgba(16, 185, 129, 0.1)" }}
                         >
-                          <span className="text-sm text-green-600">📄</span>
+                          <span className="text-sm text-green-600">{renderNodeWithIcons("📄")}</span>
                         </div>
                         <span className="font-semibold text-sm text-gray-700">Submit Report</span>
                       </div>
@@ -653,7 +653,7 @@ export default function StaffTaskDetail() {
                         className="w-8 h-8 rounded-xl flex items-center justify-center"
                         style={{ backgroundColor: "rgba(245, 158, 11, 0.1)" }}
                       >
-                        <span className="text-sm text-amber-600">📅</span>
+                        <span className="text-sm text-amber-600">{renderNodeWithIcons("📅")}</span>
                       </div>
                       <span className="font-semibold text-sm text-gray-700">Request Extension</span>
                     </div>
@@ -668,7 +668,7 @@ export default function StaffTaskDetail() {
                         className="w-8 h-8 rounded-xl flex items-center justify-center"
                         style={{ backgroundColor: "rgba(139, 92, 246, 0.1)" }}
                       >
-                        <span className="text-sm text-purple-600">💬</span>
+                        <span className="text-sm text-purple-600">{renderNodeWithIcons("💬")}</span>
                       </div>
                       <span className="font-semibold text-sm text-gray-700">Ask for Help</span>
                     </div>
@@ -683,7 +683,7 @@ export default function StaffTaskDetail() {
                         className="w-8 h-8 rounded-xl flex items-center justify-center"
                         style={{ backgroundColor: "rgba(239, 68, 68, 0.1)" }}
                       >
-                        <span className="text-sm text-red-600">⚠️</span>
+                        <span className="text-sm text-red-600">{renderNodeWithIcons("⚠️")}</span>
                       </div>
                       <span className="font-semibold text-sm text-gray-700">Report Issue</span>
                     </div>

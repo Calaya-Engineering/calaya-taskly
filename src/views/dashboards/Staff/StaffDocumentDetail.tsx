@@ -176,7 +176,7 @@ export default function StaffDocumentDetail() {
       <Layout menuItems={StaffMenuItems} userRole="Staff">
         <Card className="p-12 text-center">
           <div className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-4 bg-red-50">
-            <span className="text-2xl text-red-600">⚠️</span>
+            <span className="text-2xl text-red-600">{renderNodeWithIcons("⚠️")}</span>
           </div>
           <h3 className="text-lg font-extrabold text-gray-900 mb-2">Document not found</h3>
           <p className="text-gray-600 mb-6">The document you are looking for might have been removed or renamed.</p>
@@ -472,7 +472,7 @@ export default function StaffDocumentDetail() {
                   style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}
                 >
                   <span className="font-semibold">Preview in Browser</span>
-                  <span>👁️</span>
+                  <span>{renderNodeWithIcons("👁️")}</span>
                 </button>
                 <button
                   onClick={handleShare}
@@ -480,7 +480,7 @@ export default function StaffDocumentDetail() {
                   style={{ borderColor: "rgba(16,185,129,0.35)", color: "#10B981" }}
                 >
                   <span className="font-semibold">Share Document</span>
-                  <span>📤</span>
+                  <span>{renderNodeWithIcons("📤")}</span>
                 </button>
               </div>
             </Card>

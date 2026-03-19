@@ -285,7 +285,7 @@ All reports will be downloaded as a ZIP file.`);
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
               <div>
                 <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <Pill>📊 Daily Reports Archive</Pill>
+                  <Pill>{renderNodeWithIcons("📊 Daily Reports Archive")}</Pill>
                   <Pill tone="info">{dailyReports.length} Reports</Pill>
                   <Pill tone="success">{users.length > 1 ? users.length - 1 : 0} Staff</Pill>
                 </div>
@@ -351,7 +351,7 @@ All reports will be downloaded as a ZIP file.`);
                   placeholder="Search by title, user, department..."
                   className={inputBase}
                 />
-                <span className="absolute left-4 top-3.5 text-gray-400">🔎</span>
+                <span className="absolute left-4 top-3.5 text-gray-400">{renderNodeWithIcons("🔎")}</span>
               </div>
             </div>
 
@@ -434,7 +434,7 @@ All reports will be downloaded as a ZIP file.`);
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(44,75,155,0.1)" }}>
-                <span style={{ color: "var(--primary-blue)" }} className="text-xl">📄</span>
+                <span style={{ color: "var(--primary-blue)" }} className="text-xl">{renderNodeWithIcons("📄")}</span>
               </div>
             </div>
           </Card>
@@ -458,7 +458,7 @@ All reports will be downloaded as a ZIP file.`);
                 <p className="text-3xl font-extrabold mt-2 text-amber-600">{stats.activeReporters}</p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(245,158,11,0.1)" }}>
-                <span style={{ color: "#F59E0B" }} className="text-xl">👥</span>
+                <span style={{ color: "#F59E0B" }} className="text-xl">{renderNodeWithIcons("👥")}</span>
               </div>
             </div>
           </Card>
@@ -470,7 +470,7 @@ All reports will be downloaded as a ZIP file.`);
                 <p className="text-3xl font-extrabold mt-2 text-purple-600">{stats.departmentsCount}</p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(139,92,246,0.1)" }}>
-                <span style={{ color: "#8B5CF6" }} className="text-xl">🏢</span>
+                <span style={{ color: "#8B5CF6" }} className="text-xl">{renderNodeWithIcons("🏢")}</span>
               </div>
             </div>
           </Card>
@@ -482,7 +482,7 @@ All reports will be downloaded as a ZIP file.`);
                 <p className="text-3xl font-extrabold mt-2 text-blue-600">{stats.daysWithReports}</p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(59,130,246,0.1)" }}>
-                <span style={{ color: "#3B82F6" }} className="text-xl">📅</span>
+                <span style={{ color: "#3B82F6" }} className="text-xl">{renderNodeWithIcons("📅")}</span>
               </div>
             </div>
           </Card>
@@ -517,7 +517,7 @@ All reports will be downloaded as a ZIP file.`);
                             className="w-10 h-10 rounded-2xl flex items-center justify-center text-xl"
                             style={{ backgroundColor: "rgba(109, 198, 223, 0.1)" }}
                           >
-                            {getFileIcon(report.fileFormat)}
+                            {renderNodeWithIcons(getFileIcon(report.fileFormat))}
                           </div>
                           <div>
                             <p className="font-extrabold text-gray-900">{report.title}</p>
@@ -638,7 +638,7 @@ All reports will be downloaded as a ZIP file.`);
           {selectedDownloadDate && (
             <div className="mt-6 p-5 rounded-2xl bg-blue-50 border border-blue-200 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-white flex items-center justify-center text-xl">📅</div>
+                <div className="w-10 h-10 rounded-2xl bg-white flex items-center justify-center text-xl">{renderNodeWithIcons("📅")}</div>
                 <div>
                   <p className="font-extrabold text-blue-900">Selected Date: {selectedDownloadDate}</p>
                   <p className="text-sm text-blue-700 mt-1">
@@ -699,7 +699,7 @@ All reports will be downloaded as a ZIP file.`);
                     />
                     {selectedDownloadDate && reportsByDate[selectedDownloadDate] && (
                       <p className="text-xs text-emerald-600 mt-2 flex items-center gap-1">
-                        <span>✓</span> {reportsByDate[selectedDownloadDate].length} reports available
+                        <span>{renderNodeWithIcons("✓")}</span> {reportsByDate[selectedDownloadDate].length} reports available
                       </p>
                     )}
                   </div>
@@ -728,7 +728,7 @@ All reports will be downloaded as a ZIP file.`);
                             borderColor: downloadFormat === format.id ? format.color : '#e5e7eb',
                           }}
                         >
-                          <div className="text-2xl mb-2">{format.icon}</div>
+                          <div className="text-2xl mb-2">{renderNodeWithIcons(format.icon)}</div>
                           <div className="font-extrabold text-sm" style={{ color: format.color }}>
                             {format.label}
                           </div>

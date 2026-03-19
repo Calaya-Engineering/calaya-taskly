@@ -498,9 +498,7 @@ export default function HODEditEvent() {
                       type="button"
                       onClick={() => removeAgendaItem(index)}
                       className="text-red-600 hover:text-red-800 p-2"
-                    >
-                      ✕
-                    </button>
+                    >{renderNodeWithIcons("\n                      ✕\n                    ")}</button>
                   )}
                 </div>
               ))}

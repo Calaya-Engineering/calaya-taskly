@@ -172,7 +172,7 @@ export default function MDCreateAnnouncement() {
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div>
                 <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <Pill>📝 Create Announcement</Pill>
+                  <Pill>{renderNodeWithIcons("📝 Create Announcement")}</Pill>
                   <Pill tone={formData.priority === "URGENT" ? "danger" : formData.priority === "IMPORTANT" ? "warn" : "success"}>
                     Priority: {formData.priority}
                   </Pill>
@@ -344,7 +344,7 @@ export default function MDCreateAnnouncement() {
                             <p className="font-extrabold text-gray-900">{u.name}</p>
                             <p className="text-xs text-gray-500">{u.department}</p>
                           </div>
-                          {active ? <span className="ml-auto font-extrabold text-blue-700">✓</span> : null}
+                          {active ? <span className="ml-auto font-extrabold text-blue-700">{renderNodeWithIcons("✓")}</span> : null}
                         </div>
                       </button>
                     );
@@ -408,7 +408,7 @@ export default function MDCreateAnnouncement() {
               <input type="file" multiple className="hidden" id="announcement-file-upload" onChange={handleFileUpload} />
               <label htmlFor="announcement-file-upload" className="cursor-pointer">
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ backgroundColor: "rgba(109,198,223,0.12)" }}>
-                  <span className="text-3xl">📎</span>
+                  <span className="text-3xl">{renderNodeWithIcons("📎")}</span>
                 </div>
                 <p className="text-gray-800 font-extrabold mb-1">Click to upload</p>
                 <p className="text-sm text-gray-500">Supporting documents, images, or related files</p>
@@ -425,7 +425,7 @@ export default function MDCreateAnnouncement() {
                   {formData.attachments.map((file, index) => (
                     <div key={index} className="p-4 rounded-2xl border border-gray-200/70 bg-white flex items-start justify-between gap-3">
                       <div className="flex items-start gap-3 min-w-0">
-                        <div className="w-11 h-11 rounded-2xl bg-blue-50 flex items-center justify-center text-xl">📄</div>
+                        <div className="w-11 h-11 rounded-2xl bg-blue-50 flex items-center justify-center text-xl">{renderNodeWithIcons("📄")}</div>
                         <div className="min-w-0">
                           <p className="font-extrabold text-gray-900 truncate">{file.name}</p>
                           <p className="text-xs text-gray-500 mt-1">{(file.size / 1024 / 1024).toFixed(2)} MB</p>

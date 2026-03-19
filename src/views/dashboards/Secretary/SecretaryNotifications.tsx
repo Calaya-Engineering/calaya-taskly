@@ -477,7 +477,7 @@ export default function SecretaryNotifications() {
           <Card className="border-red-200 bg-red-50/30 overflow-hidden">
             <div className="p-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <span className="text-2xl">⚠️</span>
+                <span className="text-2xl">{renderNodeWithIcons("⚠️")}</span>
                 <div>
                   <h3 className="font-extrabold text-red-800">Important Notifications!</h3>
                   <p className="text-red-600 text-sm">{importantCount} important notification(s) require your attention</p>
@@ -547,7 +547,7 @@ export default function SecretaryNotifications() {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🔎</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">{renderNodeWithIcons("🔎")}</span>
               </div>
             </div>
           </div>
@@ -557,21 +557,15 @@ export default function SecretaryNotifications() {
             <button
               onClick={() => setFilter("unread")}
               className="px-3.5 py-2 rounded-2xl text-sm font-semibold border bg-amber-50 text-amber-800 hover:bg-amber-100 transition"
-            >
-              🔔 Unread Only
-            </button>
+            >{renderNodeWithIcons("\n              🔔 Unread Only\n            ")}</button>
             <button
               onClick={() => setFilter("important")}
               className="px-3.5 py-2 rounded-2xl text-sm font-semibold border bg-red-50 text-red-700 hover:bg-red-100 transition"
-            >
-              ⚠️ Important Only
-            </button>
+            >{renderNodeWithIcons("\n              ⚠️ Important Only\n            ")}</button>
             <button
               onClick={clearFilters}
               className="px-3.5 py-2 rounded-2xl text-sm font-semibold border bg-white hover:bg-gray-50 transition"
-            >
-              🔄 Clear All
-            </button>
+            >{renderNodeWithIcons("\n              🔄 Clear All\n            ")}</button>
           </div>
         </Card>
 
@@ -590,7 +584,7 @@ export default function SecretaryNotifications() {
               <div className="divide-y divide-gray-200/70 max-h-[600px] overflow-y-auto">
                 {filteredNotifications.length === 0 ? (
                   <div className="p-10 text-center">
-                    <div className="text-4xl mb-3">🔔</div>
+                    <div className="text-4xl mb-3">{renderNodeWithIcons("🔔")}</div>
                     <div className="font-extrabold" style={{ color: "var(--primary-blue)" }}>
                       No notifications found
                     </div>
@@ -617,7 +611,7 @@ export default function SecretaryNotifications() {
                               <div
                                 className={`w-12 h-12 rounded-2xl flex items-center justify-center  shrink-0 ${style.bg}`}
                               >
-                                <span className="text-2xl">{style.icon}</span>
+                                <span className="text-2xl">{renderNodeWithIcons(style.icon)}</span>
                               </div>
 
                               {/* Content */}
@@ -669,7 +663,7 @@ export default function SecretaryNotifications() {
                           onClick={() => deleteNotification(notification.id)}
                           className="absolute top-4 right-4 p-2 bg-white rounded-xl border border-gray-200 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50"
                         >
-                          <span className="text-red-500 text-sm">🗑️</span>
+                          <span className="text-red-500 text-sm">{renderNodeWithIcons("🗑️")}</span>
                         </button>
                       </div>
                     );
@@ -738,7 +732,7 @@ export default function SecretaryNotifications() {
                         className="w-10 h-10 rounded-2xl flex items-center justify-center"
                         style={{ backgroundColor: "rgba(109, 198, 223, 0.18)" }}
                       >
-                        <span className="text-xl">📊</span>
+                        <span className="text-xl">{renderNodeWithIcons("📊")}</span>
                       </div>
                       <div>
                         <p className="font-extrabold" style={{ color: "var(--primary-blue)" }}>
@@ -757,7 +751,7 @@ export default function SecretaryNotifications() {
                         className="w-10 h-10 rounded-2xl flex items-center justify-center"
                         style={{ backgroundColor: "rgba(16, 185, 129, 0.1)" }}
                       >
-                        <span className="text-xl">📋</span>
+                        <span className="text-xl">{renderNodeWithIcons("📋")}</span>
                       </div>
                       <div>
                         <p className="font-extrabold" style={{ color: "var(--primary-blue)" }}>
@@ -776,7 +770,7 @@ export default function SecretaryNotifications() {
                         className="w-10 h-10 rounded-2xl flex items-center justify-center"
                         style={{ backgroundColor: "rgba(139, 92, 246, 0.1)" }}
                       >
-                        <span className="text-xl">📅</span>
+                        <span className="text-xl">{renderNodeWithIcons("📅")}</span>
                       </div>
                       <div>
                         <p className="font-extrabold" style={{ color: "var(--primary-blue)" }}>
@@ -808,7 +802,7 @@ export default function SecretaryNotifications() {
                         style={{ backgroundColor: `${item.color}18` }}
                       >
                         <span className="text-sm" style={{ color: item.color }}>
-                          {item.icon}
+                          {renderNodeWithIcons(item.icon)}
                         </span>
                       </div>
                       <span className="text-sm text-gray-700">{item.label}</span>

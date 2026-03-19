@@ -340,7 +340,7 @@ export default function MDEditTask() {
                           className={`px-3 py-2 rounded-xl text-sm font-semibold border transition ${active ? "text-white" : "bg-white hover:bg-gray-50"}`}
                           style={{ backgroundColor: active ? "var(--primary-blue)" : undefined, borderColor: active ? "transparent" : "rgba(0,0,0,0.08)" }}
                         >
-                          {d} {active ? "✓" : ""}
+                          {d} {renderNodeWithIcons(active ? "✓" : "")}
                         </button>
                       );
                     })}
@@ -360,7 +360,7 @@ export default function MDEditTask() {
                           className={`px-3 py-2 rounded-xl text-sm font-semibold border transition ${active ? "bg-blue-50" : "bg-white hover:bg-gray-50"}`}
                           style={{ borderColor: active ? "rgba(44, 75, 155, 0.35)" : "rgba(0,0,0,0.08)" }}
                         >
-                          {u.name || u.email} {active ? "✓" : ""}
+                          {u.name || u.email} {renderNodeWithIcons(active ? "✓" : "")}
                         </button>
                       );
                     })}
@@ -380,7 +380,7 @@ export default function MDEditTask() {
                           className={`px-3 py-2 rounded-xl text-sm font-semibold border transition ${active ? "bg-emerald-50" : "bg-white hover:bg-gray-50"}`}
                           style={{ borderColor: active ? "rgba(16,185,129,0.25)" : "rgba(0,0,0,0.08)" }}
                         >
-                          {u.name || u.email} {active ? "✓" : ""}
+                          {u.name || u.email} {renderNodeWithIcons(active ? "✓" : "")}
                         </button>
                       );
                     })}

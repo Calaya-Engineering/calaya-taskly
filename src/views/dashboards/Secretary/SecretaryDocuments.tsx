@@ -550,7 +550,7 @@ export default function SecretaryDocuments() {
                   aria-hidden="true"
                 >
                   <span className="text-lg" style={{ color: stat.color }}>
-                    {stat.icon}
+                    {renderNodeWithIcons(stat.icon)}
                   </span>
                 </div>
               </div>
@@ -563,7 +563,7 @@ export default function SecretaryDocuments() {
           <Card className="p-4 border-yellow-200 bg-yellow-50/50">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <span className="text-2xl">📝</span>
+                <span className="text-2xl">{renderNodeWithIcons("📝")}</span>
                 <div>
                   <h3 className="font-semibold text-yellow-800">You have an unsaved document draft</h3>
                   <p className="text-yellow-600 text-sm">
@@ -666,7 +666,7 @@ export default function SecretaryDocuments() {
                     className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shrink-0 "
                     style={{ backgroundColor: "rgba(109, 198, 223, 0.18)" }}
                   >
-                    {getFileTypeIcon(doc.fileType)}
+                    {renderNodeWithIcons(getFileTypeIcon(doc.fileType))}
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-start justify-between gap-2">
@@ -705,7 +705,7 @@ export default function SecretaryDocuments() {
                     </span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="text-sm text-gray-500">📥 {doc.downloads}</span>
+                    <span className="text-sm text-gray-500">{renderNodeWithIcons("📥 ")}{doc.downloads}</span>
                     <span className="text-xs text-gray-400">{doc.fileSize}</span>
                   </div>
                 </div>
@@ -734,9 +734,7 @@ export default function SecretaryDocuments() {
             ))
           ) : (
             <Card className="col-span-2 p-12 text-center">
-              <div className="text-5xl mb-4" style={{ color: "var(--secondary-blue)" }}>
-                📁
-              </div>
+              <div className="text-5xl mb-4" style={{ color: "var(--secondary-blue)" }}>{renderNodeWithIcons("\n                📁\n              ")}</div>
               <h3 className="text-xl font-extrabold mb-2" style={{ color: "var(--primary-blue)" }}>
                 No Documents Found
               </h3>
@@ -771,7 +769,7 @@ export default function SecretaryDocuments() {
                       className="w-10 h-10 rounded-xl flex items-center justify-center "
                       style={{ backgroundColor: "rgba(109, 198, 223, 0.18)" }}
                     >
-                      <span className="text-lg">📁</span>
+                      <span className="text-lg">{renderNodeWithIcons("📁")}</span>
                     </div>
                     <div>
                       <h3 className="font-extrabold" style={{ color: "var(--primary-blue)" }}>{category}</h3>
@@ -804,7 +802,7 @@ export default function SecretaryDocuments() {
           <div className="mt-5 grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Downloads by Category */}
             <div className="p-5 rounded-2xl border border-gray-200/70">
-              <h3 className="font-extrabold mb-4" style={{ color: "var(--primary-blue)" }}>📊 Downloads by Category</h3>
+              <h3 className="font-extrabold mb-4" style={{ color: "var(--primary-blue)" }}>{renderNodeWithIcons("📊 Downloads by Category")}</h3>
               <div className="space-y-3">
                 {categories.slice(0, 5).map(category => {
                   const catDownloads = documents
@@ -836,7 +834,7 @@ export default function SecretaryDocuments() {
 
             {/* Recent Upload Activity */}
             <div className="p-5 rounded-2xl border border-gray-200/70">
-              <h3 className="font-extrabold mb-4" style={{ color: "var(--primary-blue)" }}>📈 Upload Activity</h3>
+              <h3 className="font-extrabold mb-4" style={{ color: "var(--primary-blue)" }}>{renderNodeWithIcons("📈 Upload Activity")}</h3>
               <div className="space-y-3">
                 {['December 2024', 'November 2024', 'October 2024'].map(month => {
                   const monthUploads = documents.filter(d => {
@@ -870,7 +868,7 @@ export default function SecretaryDocuments() {
 
             {/* Access Scope Distribution */}
             <div className="p-5 rounded-2xl border border-gray-200/70">
-              <h3 className="font-extrabold mb-4" style={{ color: "var(--primary-blue)" }}>🔒 Access Distribution</h3>
+              <h3 className="font-extrabold mb-4" style={{ color: "var(--primary-blue)" }}>{renderNodeWithIcons("🔒 Access Distribution")}</h3>
               <div className="space-y-3">
                 {scopes.map(scope => {
                   const scopeDocs = documents.filter(d => d.scope === scope).length;
@@ -915,7 +913,7 @@ export default function SecretaryDocuments() {
                     </div>
                     {isClient && getSessionItem(STORAGE_KEYS.DOCUMENT_UPLOAD) && (
                       <div className="mt-3">
-                        <Pill tone="warn">⚡ Draft saved - continue where you left off</Pill>
+                        <Pill tone="warn">{renderNodeWithIcons("⚡ Draft saved - continue where you left off")}</Pill>
                       </div>
                     )}
                   </div>
@@ -1020,7 +1018,7 @@ export default function SecretaryDocuments() {
                       <label htmlFor="document-file-upload" className="cursor-pointer">
                         <div className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center "
                           style={{ backgroundColor: "rgba(109, 198, 223, 0.18)" }}>
-                          <span className="text-3xl">📎</span>
+                          <span className="text-3xl">{renderNodeWithIcons("📎")}</span>
                         </div>
                         {uploadFormData.file ? (
                           <div>

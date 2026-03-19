@@ -197,7 +197,7 @@ export default function HODDocumentDetail() {
       <Layout menuItems={HODMenuItems} userRole="HOD">
         <Card className="p-12 text-center">
           <div className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-4 bg-red-50">
-            <span className="text-2xl text-red-600">⚠️</span>
+            <span className="text-2xl text-red-600">{renderNodeWithIcons("⚠️")}</span>
           </div>
           <h3 className="text-lg font-extrabold text-gray-900 mb-2">Document not found</h3>
           <p className="text-gray-600 mb-6">The document you are looking for might have been removed or renamed.</p>
@@ -260,17 +260,13 @@ export default function HODDocumentDetail() {
                   onClick={handleDownload}
                   className={btnSolid}
                   style={{ backgroundColor: "var(--secondary-blue)" }}
-                >
-                  📥 Download
-                </button>
+                >{renderNodeWithIcons("\n                  📥 Download\n                ")}</button>
 
                 <button
                   onClick={handleShare}
                   className={btnOutline}
                   style={{ borderColor: "rgba(44, 75, 155, 0.25)", color: "var(--primary-blue)" }}
-                >
-                  🔗 Share
-                </button>
+                >{renderNodeWithIcons("\n                  🔗 Share\n                ")}</button>
               </div>
             </div>
           </div>
@@ -320,7 +316,7 @@ export default function HODDocumentDetail() {
                         className="w-14 h-14 rounded-2xl flex items-center justify-center "
                         style={{ backgroundColor: "rgba(44, 75, 155, 0.10)" }}
                       >
-                        <span className="text-3xl">{fileEmoji(documentData.fileType)}</span>
+                        <span className="text-3xl">{renderNodeWithIcons(fileEmoji(documentData.fileType))}</span>
                       </div>
                       <div className="min-w-0">
                         <p className="font-semibold text-gray-900 truncate">
@@ -372,9 +368,7 @@ export default function HODDocumentDetail() {
                     onClick={handleUploadNewVersion}
                     className={btnOutline}
                     style={{ borderColor: "rgba(44, 75, 155, 0.25)", color: "var(--primary-blue)" }}
-                  >
-                    📤 Upload New Version
-                  </button>
+                  >{renderNodeWithIcons("\n                    📤 Upload New Version\n                  ")}</button>
                 </div>
               </div>
             </Card>
@@ -486,9 +480,7 @@ export default function HODDocumentDetail() {
                   onClick={handleUploadNewVersion}
                   className={btnOutline}
                   style={{ borderColor: "rgba(44, 75, 155, 0.25)", color: "var(--primary-blue)" }}
-                >
-                  📤 Upload New Version
-                </button>
+                >{renderNodeWithIcons("\n                  📤 Upload New Version\n                ")}</button>
               </div>
 
               <div className="overflow-x-auto">
@@ -545,7 +537,7 @@ export default function HODDocumentDetail() {
               </div>
 
               <div className="mt-8 border-2 border-dashed border-gray-200 rounded-2xl p-8 text-center bg-gray-50">
-                <div className="text-4xl mb-2">📤</div>
+                <div className="text-4xl mb-2">{renderNodeWithIcons("📤")}</div>
                 <p className="font-semibold text-lg mb-2">Upload New Version</p>
                 <p className="text-gray-600 mb-4">Upload an updated version of this document</p>
                 <button
@@ -782,7 +774,7 @@ export default function HODDocumentDetail() {
                     className="w-12 h-12 mx-auto rounded-2xl flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition"
                     style={{ backgroundColor: `${a.color}18` }}
                   >
-                    <span style={{ color: a.color }}>{a.icon}</span>
+                    <span style={{ color: a.color }}>{renderNodeWithIcons(a.icon)}</span>
                   </div>
                   <p className="font-extrabold text-sm" style={{ color: a.color }}>
                     {a.label}

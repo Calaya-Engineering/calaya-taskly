@@ -149,7 +149,7 @@ export default function HODAnnouncementDetail() {
     return (
       <Layout menuItems={HODMenuItems} userRole="HOD">
         <div className="flex flex-col items-center justify-center p-12 gap-4">
-          <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center text-3xl">⚠️</div>
+          <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center text-3xl">{renderNodeWithIcons("⚠️")}</div>
           <h2 className="text-xl font-bold text-gray-900">{error || "Announcement not found"}</h2>
           <button onClick={() => router.push("/hod-dashboard/announcements")} className={btnOutline}>
             Back to Announcements
@@ -229,7 +229,7 @@ export default function HODAnnouncementDetail() {
           <Card className="p-5 border-amber-200 bg-amber-50">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
               <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-2xl bg-white/70 flex items-center justify-center text-2xl">⚠️</div>
+                <div className="w-11 h-11 rounded-2xl bg-white/70 flex items-center justify-center text-2xl">{renderNodeWithIcons("⚠️")}</div>
                 <div>
                   <p className="font-extrabold text-amber-800">Acknowledgement Required</p>
                   <p className="text-sm text-amber-700 mt-0.5">Please acknowledge that you have read and understood this announcement</p>
@@ -310,7 +310,7 @@ export default function HODAnnouncementDetail() {
                             className="p-4 rounded-2xl border border-gray-200/70 bg-white flex flex-col md:flex-row md:items-center md:justify-between gap-3 transition"
                           >
                             <div className="flex items-start gap-3 min-w-0">
-                              <div className="w-11 h-11 rounded-2xl bg-blue-50 flex items-center justify-center text-xl">📄</div>
+                              <div className="w-11 h-11 rounded-2xl bg-blue-50 flex items-center justify-center text-xl">{renderNodeWithIcons("📄")}</div>
                               <div className="min-w-0">
                                 <p className="font-extrabold text-gray-900 truncate">{doc.name}</p>
                                 <p className="text-xs text-gray-500 mt-1">
@@ -340,7 +340,7 @@ export default function HODAnnouncementDetail() {
                             className="p-4 rounded-2xl border border-gray-200/70 bg-white flex items-center justify-between transition"
                           >
                             <div className="flex items-center gap-3 min-w-0">
-                              <div className="w-10 h-10 rounded-2xl bg-green-50 flex items-center justify-center text-xl">📎</div>
+                              <div className="w-10 h-10 rounded-2xl bg-green-50 flex items-center justify-center text-xl">{renderNodeWithIcons("📎")}</div>
                               <div className="min-w-0">
                                 <p className="font-semibold text-sm text-gray-900 truncate">{att.name}</p>
                                 <p className="text-xs text-gray-500">{att.size}</p>

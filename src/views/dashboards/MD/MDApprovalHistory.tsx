@@ -155,7 +155,7 @@ export default function MDApprovalHistory() {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🔎</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">{renderNodeWithIcons("🔎")}</span>
               </div>
             </div>
 
@@ -225,7 +225,7 @@ export default function MDApprovalHistory() {
                     </td>
                     <td className="px-5 py-3 whitespace-nowrap">
                       <div className="flex items-center gap-2">
-                        <span>{getTypeIcon(item.type)}</span>
+                        <span>{renderNodeWithIcons(getTypeIcon(item.type))}</span>
                         <Pill>{item.type.replace('_', ' ')}</Pill>
                       </div>
                     </td>
@@ -259,7 +259,7 @@ export default function MDApprovalHistory() {
 
           {filteredHistory.length === 0 && (
             <div className="p-10 text-center">
-              <div className="text-4xl mb-3">📋</div>
+              <div className="text-4xl mb-3">{renderNodeWithIcons("📋")}</div>
               <div className="font-extrabold" style={{ color: 'var(--primary-blue)' }}>
                 No history records found
               </div>
@@ -294,7 +294,7 @@ export default function MDApprovalHistory() {
                 </p>
               </div>
               <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
-                <span className="text-green-800 text-lg">✅</span>
+                <span className="text-green-800 text-lg">{renderNodeWithIcons("✅")}</span>
               </div>
             </div>
           </Card>
@@ -307,7 +307,7 @@ export default function MDApprovalHistory() {
                 </p>
               </div>
               <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
-                <span className="text-red-800 text-lg">❌</span>
+                <span className="text-red-800 text-lg">{renderNodeWithIcons("❌")}</span>
               </div>
             </div>
           </Card>
@@ -320,7 +320,7 @@ export default function MDApprovalHistory() {
                 </p>
               </div>
               <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
-                <span className="text-blue-800 text-lg">📊</span>
+                <span className="text-blue-800 text-lg">{renderNodeWithIcons("📊")}</span>
               </div>
             </div>
           </Card>

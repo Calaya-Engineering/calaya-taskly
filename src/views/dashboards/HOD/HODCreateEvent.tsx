@@ -490,7 +490,7 @@ export default function HODCreateEvent() {
                           <div className="text-xs text-gray-500">{u.department}</div>
                         </div>
 
-                        {active ? <Pill tone="success">✓ Added</Pill> : <Pill>Add</Pill>}
+                        {active ? <Pill tone="success">{renderNodeWithIcons("✓ Added")}</Pill> : <Pill>Add</Pill>}
                       </button>
                     );
                   })}
@@ -635,9 +635,7 @@ export default function HODCreateEvent() {
               "Record important decisions and action items",
             ].map((t) => (
               <li key={t} className="flex items-start gap-2">
-                <span className="mt-0.5" style={{ color: "#10B981" }}>
-                  ✓
-                </span>
+                <span className="mt-0.5" style={{ color: "#10B981" }}>{renderNodeWithIcons("\n                  ✓\n                ")}</span>
                 <span>{t}</span>
               </li>
             ))}

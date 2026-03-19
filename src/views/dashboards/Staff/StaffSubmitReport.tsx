@@ -467,7 +467,7 @@ export default function StaffSubmitReport() {
                       className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center"
                       style={{ backgroundColor: "rgba(109, 198, 223, 0.12)" }}
                     >
-                      <span className="text-3xl">📎</span>
+                      <span className="text-3xl">{renderNodeWithIcons("📎")}</span>
                     </div>
                     <p className="text-gray-800 font-extrabold mb-1">
                       {file ? file.name : 'Click to upload file'}
@@ -482,7 +482,7 @@ export default function StaffSubmitReport() {
                   <div className="mt-3 p-3 rounded-2xl bg-emerald-50 border border-emerald-200">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <span className="text-emerald-600">✅</span>
+                        <span className="text-emerald-600">{renderNodeWithIcons("✅")}</span>
                         <span className="text-sm font-semibold text-emerald-700">{file.name}</span>
                       </div>
                       <span className="text-xs text-emerald-600">
@@ -539,7 +539,7 @@ export default function StaffSubmitReport() {
                       className="w-10 h-10 rounded-2xl flex items-center justify-center text-xl shrink-0"
                       style={{ backgroundColor: "rgba(109, 198, 223, 0.1)" }}
                     >
-                      {getFileIcon(report.file)}
+                      {renderNodeWithIcons(getFileIcon(report.file))}
                     </div>
 
                     <div className="flex-1 min-w-0">
@@ -555,7 +555,7 @@ export default function StaffSubmitReport() {
                         </div>
                         <div className="flex flex-col items-end gap-2">
                           <Pill tone={getStatusTone(report.status)}>
-                            {getStatusLabel(report.status)}
+                            {renderNodeWithIcons(getStatusLabel(report.status))}
                           </Pill>
                           <button
                             onClick={() => handleDownload(report)}
@@ -609,7 +609,7 @@ export default function StaffSubmitReport() {
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(44,75,155,0.1)" }}>
-                <span style={{ color: "var(--primary-blue)" }} className="text-xl">📤</span>
+                <span style={{ color: "var(--primary-blue)" }} className="text-xl">{renderNodeWithIcons("📤")}</span>
               </div>
             </div>
           </Card>
@@ -623,7 +623,7 @@ export default function StaffSubmitReport() {
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(16,185,129,0.1)" }}>
-                <span style={{ color: "#10B981" }} className="text-xl">✅</span>
+                <span style={{ color: "#10B981" }} className="text-xl">{renderNodeWithIcons("✅")}</span>
               </div>
             </div>
           </Card>
@@ -651,7 +651,7 @@ export default function StaffSubmitReport() {
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(109,198,223,0.1)" }}>
-                <span style={{ color: "var(--secondary-blue)" }} className="text-xl">📅</span>
+                <span style={{ color: "var(--secondary-blue)" }} className="text-xl">{renderNodeWithIcons("📅")}</span>
               </div>
             </div>
           </Card>
@@ -669,7 +669,7 @@ export default function StaffSubmitReport() {
                     className="w-10 h-10 rounded-2xl flex items-center justify-center"
                     style={{ backgroundColor: "rgba(109, 198, 223, 0.18)" }}
                   >
-                    <span className="text-xl">📋</span>
+                    <span className="text-xl">{renderNodeWithIcons("📋")}</span>
                   </div>
                   <div>
                     <p className="font-extrabold" style={{ color: "var(--primary-blue)" }}>
@@ -688,7 +688,7 @@ export default function StaffSubmitReport() {
                     className="w-10 h-10 rounded-2xl flex items-center justify-center"
                     style={{ backgroundColor: "rgba(16, 185, 129, 0.1)" }}
                   >
-                    <span className="text-xl">📄</span>
+                    <span className="text-xl">{renderNodeWithIcons("📄")}</span>
                   </div>
                   <div>
                     <p className="font-extrabold" style={{ color: "var(--primary-blue)" }}>
@@ -707,7 +707,7 @@ export default function StaffSubmitReport() {
                     className="w-10 h-10 rounded-2xl flex items-center justify-center"
                     style={{ backgroundColor: "rgba(139, 92, 246, 0.1)" }}
                   >
-                    <span className="text-xl">🔔</span>
+                    <span className="text-xl">{renderNodeWithIcons("🔔")}</span>
                   </div>
                   <div>
                     <p className="font-extrabold" style={{ color: "var(--primary-blue)" }}>

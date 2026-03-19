@@ -334,9 +334,7 @@ export default function MDDailyReports() {
                   onClick={handleOpenDownloadModal}
                   className="px-5 py-3 rounded-2xl font-semibold text-white transition active:scale-[0.99]"
                   style={{ backgroundColor: "var(--accent-red)" }}
-                >
-                  📥 Download Reports
-                </button>
+                >{renderNodeWithIcons("\n                  📥 Download Reports\n                ")}</button>
 
                 <button
                   type="button"
@@ -505,7 +503,7 @@ export default function MDDailyReports() {
                               className="w-10 h-10 rounded-2xl flex items-center justify-center "
                               style={{ backgroundColor: "rgba(44,75,155,0.10)" }}
                             >
-                              <span className="text-lg">{fileEmoji(report.title)}</span>
+                              <span className="text-lg">{renderNodeWithIcons(fileEmoji(report.title))}</span>
                             </div>
                             <div className="min-w-0">
                               <button
@@ -589,7 +587,7 @@ export default function MDDailyReports() {
                         className="w-12 h-12 rounded-2xl flex items-center justify-center  shrink-0"
                         style={{ backgroundColor: "rgba(44,75,155,0.10)" }}
                       >
-                        <span className="text-xl">{fileEmoji(r.title)}</span>
+                        <span className="text-xl">{renderNodeWithIcons(fileEmoji(r.title))}</span>
                       </div>
                       <div className="min-w-0 flex-1">
                         <div className="text-sm text-gray-500">{fmtDate(r.date)}</div>
@@ -750,25 +748,19 @@ export default function MDDailyReports() {
                 onClick={handleOpenDownloadModal}
                 className="w-full p-4 rounded-2xl border bg-white hover:bg-gray-50 transition text-left font-semibold"
                 style={{ borderColor: "rgba(44, 75, 155, 0.25)", color: "var(--primary-blue)" }}
-              >
-                📥 Download Reports
-              </button>
+              >{renderNodeWithIcons("\n                📥 Download Reports\n              ")}</button>
               <button
                 type="button"
                 onClick={() => toast.info("Generating monthly summary (demo)")}
                 className="w-full p-4 rounded-2xl border bg-white hover:bg-gray-50 transition text-left font-semibold"
                 style={{ borderColor: "rgba(44, 75, 155, 0.25)", color: "var(--primary-blue)" }}
-              >
-                📊 Generate Monthly Summary
-              </button>
+              >{renderNodeWithIcons("\n                📊 Generate Monthly Summary\n              ")}</button>
               <button
                 type="button"
                 onClick={() => toast.info("Email digest flow (demo)")}
                 className="w-full p-4 rounded-2xl border bg-white hover:bg-gray-50 transition text-left font-semibold"
                 style={{ borderColor: "rgba(44, 75, 155, 0.25)", color: "var(--primary-blue)" }}
-              >
-                📨 Email Report Digest
-              </button>
+              >{renderNodeWithIcons("\n                📨 Email Report Digest\n              ")}</button>
             </div>
           </Card>
         </div>
@@ -902,7 +894,7 @@ export default function MDDailyReports() {
                               }`}
                           >
                             <div className="flex items-center gap-3 mb-2">
-                              <span className="text-2xl">{source.icon}</span>
+                              <span className="text-2xl">{renderNodeWithIcons(source.icon)}</span>
                               <span className="font-extrabold text-sm">{source.label}</span>
                             </div>
                             <p className="text-xs text-gray-500">{source.desc}</p>
@@ -932,7 +924,7 @@ export default function MDDailyReports() {
                                 : 'hover:bg-gray-50'
                               }`}
                           >
-                            <span className="text-2xl block mb-2">{format.icon}</span>
+                            <span className="text-2xl block mb-2">{renderNodeWithIcons(format.icon)}</span>
                             <span className="font-extrabold text-sm block">{format.label}</span>
                             <span className="text-xs text-gray-500">{format.desc}</span>
                           </button>

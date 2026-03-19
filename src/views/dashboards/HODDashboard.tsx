@@ -402,7 +402,7 @@ export default function HODDashboard() {
                   {loading ? (
                     <Pill>Loading…</Pill>
                   ) : escalatedCount > 0 ? (
-                    <Pill tone="danger">⚠ {escalatedCount} Escalated</Pill>
+                    <Pill tone="danger">{renderNodeWithIcons("⚠ ")}{escalatedCount} Escalated</Pill>
                   ) : (
                     <Pill tone="success">All Clear</Pill>
                   )}
@@ -502,7 +502,7 @@ export default function HODDashboard() {
                     style={{ backgroundColor: `${stat.color}18` }}
                     aria-hidden="true"
                   >
-                    <span style={{ color: stat.color }}>{stat.icon}</span>
+                    <span style={{ color: stat.color }}>{renderNodeWithIcons(stat.icon)}</span>
                   </div>
                 </div>
 
@@ -530,7 +530,7 @@ export default function HODDashboard() {
                       className="w-11 h-11 rounded-2xl flex items-center justify-center"
                       style={{ backgroundColor: "rgba(109,198,223,0.18)", color: "var(--primary-blue)" }}
                     >
-                      {a.icon}
+                      {renderNodeWithIcons(a.icon)}
                     </div>
                     <span className="text-xs text-gray-500 group-hover:text-gray-700 transition">Open →</span>
                   </div>
@@ -664,7 +664,7 @@ export default function HODDashboard() {
                 </div>
               ) : notifications.length === 0 ? (
                 <div className="py-8 text-center">
-                  <div className="text-3xl mb-2">🔔</div>
+                  <div className="text-3xl mb-2">{renderNodeWithIcons("🔔")}</div>
                   <p className="text-sm text-gray-500">No recent notifications</p>
                 </div>
               ) : (
@@ -723,7 +723,7 @@ export default function HODDashboard() {
                 </div>
               ) : pendingApprovals.length === 0 ? (
                 <div className="py-8 text-center">
-                  <div className="text-3xl mb-2">✅</div>
+                  <div className="text-3xl mb-2">{renderNodeWithIcons("✅")}</div>
                   <p className="text-sm text-gray-500">No pending approvals</p>
                 </div>
               ) : (
@@ -794,7 +794,7 @@ export default function HODDashboard() {
                 </div>
               ) : activeTenders.length === 0 ? (
                 <div className="py-8 text-center">
-                  <div className="text-3xl mb-2">📄</div>
+                  <div className="text-3xl mb-2">{renderNodeWithIcons("📄")}</div>
                   <p className="text-sm text-gray-500">No active tenders at the moment</p>
                 </div>
               ) : (

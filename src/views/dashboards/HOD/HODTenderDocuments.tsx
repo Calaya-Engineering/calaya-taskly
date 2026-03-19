@@ -512,7 +512,7 @@ export default function HODTenderDocuments() {
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
               <div>
                 <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <Pill>📁 Tender Workspace</Pill>
+                  <Pill>{renderNodeWithIcons("📁 Tender Workspace")}</Pill>
                   <Pill tone="info">Documents & Submissions</Pill>
                 </div>
 
@@ -555,7 +555,7 @@ export default function HODTenderDocuments() {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full pl-11 pr-4 py-3 rounded-2xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100"
                   />
-                  <span className="absolute left-4 top-3.5 text-gray-400">🔎</span>
+                  <span className="absolute left-4 top-3.5 text-gray-400">{renderNodeWithIcons("🔎")}</span>
                 </div>
 
                 <div>
@@ -622,12 +622,12 @@ export default function HODTenderDocuments() {
 
                       <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-gray-600">
                         <Pill tone={getDepartmentTone(tender.department)}>{tender.department}</Pill>
-                        {isMyDept && <Pill tone="info">📌 Your Dept</Pill>}
+                        {isMyDept && <Pill tone="info">{renderNodeWithIcons("📌 Your Dept")}</Pill>}
                       </div>
 
                       <div className="mt-2 flex items-center justify-between text-xs text-gray-500">
-                        <span>📄 {Array.isArray(tender.documents) ? tender.documents.length : tender.documentsCount || 0} docs</span>
-                        <span>📥 {tender.submissions || 0} bids</span>
+                        <span>{renderNodeWithIcons("📄 ")}{Array.isArray(tender.documents) ? tender.documents.length : tender.documentsCount || 0} docs</span>
+                        <span>{renderNodeWithIcons("📥 ")}{tender.submissions || 0} bids</span>
                         <span>⏰ {tender.closingDate}</span>
                       </div>
                     </button>
@@ -652,11 +652,11 @@ export default function HODTenderDocuments() {
                     <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                       <div className="min-w-0">
                         <div className="flex flex-wrap items-center gap-2 mb-2">
-                          <Pill>📌 Selected</Pill>
+                          <Pill>{renderNodeWithIcons("📌 Selected")}</Pill>
                           <Pill tone={getStatusTone(selectedTender.status)}>{selectedTender.status}</Pill>
                           <Pill tone={getDepartmentTone(selectedTender.department)}>{selectedTender.department}</Pill>
                           {currentUser.managedDepartments.includes(selectedTender.department) && (
-                            <Pill tone="info">📌 Your Department</Pill>
+                            <Pill tone="info">{renderNodeWithIcons("📌 Your Department")}</Pill>
                           )}
                         </div>
                         <h2 className="text-xl md:text-2xl font-extrabold tracking-tight truncate" style={{ color: "var(--primary-blue)" }}>
@@ -665,9 +665,9 @@ export default function HODTenderDocuments() {
                         <p className="text-gray-600 mt-1 truncate">{selectedTender.referenceNo}</p>
 
                         <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600 mt-3">
-                          <span>📄 {documentsForSelectedTender.length} documents</span>
-                          <span>🏢 {sectionGroups.length} sections</span>
-                          <span>📥 {submissionsForSelectedTender.length} submissions</span>
+                          <span>{renderNodeWithIcons("📄 ")}{documentsForSelectedTender.length} documents</span>
+                          <span>{renderNodeWithIcons("🏢 ")}{sectionGroups.length} sections</span>
+                          <span>{renderNodeWithIcons("📥 ")}{submissionsForSelectedTender.length} submissions</span>
                         </div>
                       </div>
 
@@ -749,7 +749,7 @@ export default function HODTenderDocuments() {
                                       className="w-11 h-11 rounded-2xl flex items-center justify-center text-2xl"
                                       style={{ backgroundColor: "rgba(109, 198, 223, 0.12)" }}
                                     >
-                                      {getFileTypeIcon(doc.fileType)}
+                                      {renderNodeWithIcons(getFileTypeIcon(doc.fileType))}
                                     </div>
                                     <div className="min-w-0">
                                       <p className="font-extrabold text-gray-900 truncate">{doc.title}</p>
@@ -769,7 +769,7 @@ export default function HODTenderDocuments() {
 
                                   <div className="text-right shrink-0">
                                     <div className="text-xs text-gray-500">{doc.fileSize}</div>
-                                    <div className="text-xs text-gray-500 mt-1">📥 {doc.downloads}</div>
+                                    <div className="text-xs text-gray-500 mt-1">{renderNodeWithIcons("📥 ")}{doc.downloads}</div>
                                   </div>
                                 </div>
 
@@ -862,9 +862,7 @@ export default function HODTenderDocuments() {
                                   <div
                                     className="w-11 h-11 rounded-2xl flex items-center justify-center text-2xl"
                                     style={{ backgroundColor: "rgba(34,197,94,0.12)" }}
-                                  >
-                                    🏢
-                                  </div>
+                                  >{renderNodeWithIcons("\n                                    🏢\n                                  ")}</div>
                                   <div className="min-w-0">
                                     <p className="font-extrabold text-gray-900 truncate">{doc.title}</p>
                                     <div className="flex flex-wrap items-center gap-2 mt-1 text-xs text-gray-500">
@@ -883,7 +881,7 @@ export default function HODTenderDocuments() {
 
                                 <div className="text-right shrink-0">
                                   <div className="text-xs text-gray-500">{doc.fileSize}</div>
-                                  <div className="text-xs text-gray-500 mt-1">📥 {doc.downloads}</div>
+                                  <div className="text-xs text-gray-500 mt-1">{renderNodeWithIcons("📥 ")}{doc.downloads}</div>
                                 </div>
                               </div>
 
@@ -1003,7 +1001,7 @@ export default function HODTenderDocuments() {
                   className="w-20 h-20 mx-auto rounded-2xl flex items-center justify-center mb-4"
                   style={{ backgroundColor: "rgba(109, 198, 223, 0.12)" }}
                 >
-                  <span className="text-4xl">📋</span>
+                  <span className="text-4xl">{renderNodeWithIcons("📋")}</span>
                 </div>
                 <h3 className="text-xl font-extrabold text-gray-900 mb-2">Select a Tender</h3>
                 <p className="text-gray-600">Choose a tender from the left panel to view documents and submissions.</p>
@@ -1115,7 +1113,7 @@ export default function HODTenderDocuments() {
                           className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center"
                           style={{ backgroundColor: "rgba(109, 198, 223, 0.12)" }}
                         >
-                          <span className="text-3xl">📎</span>
+                          <span className="text-3xl">{renderNodeWithIcons("📎")}</span>
                         </div>
                         {uploadFormData.file ? (
                           <div>

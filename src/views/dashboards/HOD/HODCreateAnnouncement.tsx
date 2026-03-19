@@ -182,7 +182,7 @@ export default function HODCreateAnnouncement() {
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div>
                 <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <Pill>📝 Create Announcement</Pill>
+                  <Pill>{renderNodeWithIcons("📝 Create Announcement")}</Pill>
                   <Pill tone={formData.priority === "URGENT" ? "danger" : formData.priority === "IMPORTANT" ? "warn" : "success"}>
                     Priority: {formData.priority}
                   </Pill>
@@ -357,7 +357,7 @@ export default function HODCreateAnnouncement() {
                             <p className="font-extrabold text-gray-900">{u.name}</p>
                             <p className="text-xs text-gray-500">{u.department}</p>
                           </div>
-                          {active ? <span className="ml-auto font-extrabold text-blue-700">✓</span> : null}
+                          {active ? <span className="ml-auto font-extrabold text-blue-700">{renderNodeWithIcons("✓")}</span> : null}
                         </div>
                       </button>
                     );
@@ -451,7 +451,7 @@ export default function HODCreateAnnouncement() {
               <input type="file" multiple className="hidden" id="hod-announcement-file-upload" onChange={handleFileUpload} />
               <label htmlFor="hod-announcement-file-upload" className="cursor-pointer">
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ backgroundColor: "rgba(109,198,223,0.12)" }}>
-                  <span className="text-3xl">📎</span>
+                  <span className="text-3xl">{renderNodeWithIcons("📎")}</span>
                 </div>
                 <p className="text-gray-800 font-extrabold mb-1">Click to upload</p>
                 <p className="text-sm text-gray-500">PDF, DOC, XLSX, JPG, PNG up to 10MB each</p>
@@ -468,7 +468,7 @@ export default function HODCreateAnnouncement() {
                   {formData.attachments.map((file, index) => (
                     <div key={index} className="p-4 rounded-2xl border border-gray-200/70 bg-white flex items-start justify-between gap-3">
                       <div className="flex items-start gap-3 min-w-0">
-                        <div className="w-11 h-11 rounded-2xl bg-blue-50 flex items-center justify-center text-xl">📄</div>
+                        <div className="w-11 h-11 rounded-2xl bg-blue-50 flex items-center justify-center text-xl">{renderNodeWithIcons("📄")}</div>
                         <div className="min-w-0">
                           <p className="font-extrabold text-gray-900 truncate">{file.name}</p>
                           <p className="text-xs text-gray-500 mt-1">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
@@ -572,9 +572,7 @@ export default function HODCreateAnnouncement() {
                   </div>
                 )}
                 {formData.requireAcknowledgement && (
-                  <div className="mt-2 text-amber-600 font-semibold">
-                    ⚠️ Acknowledgement required
-                  </div>
+                  <div className="mt-2 text-amber-600 font-semibold">{renderNodeWithIcons("\n                    ⚠️ Acknowledgement required\n                  ")}</div>
                 )}
               </div>
             </div>
@@ -604,9 +602,7 @@ export default function HODCreateAnnouncement() {
         {/* TIPS */}
         <Card className="p-6 bg-blue-50 border-blue-100">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-2xl shrink-0">
-              📌
-            </div>
+            <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-2xl shrink-0">{renderNodeWithIcons("\n              📌\n            ")}</div>
             <div>
               <h3 className="font-extrabold mb-2" style={{ color: "var(--primary-blue)" }}>
                 Department Announcement Tips:

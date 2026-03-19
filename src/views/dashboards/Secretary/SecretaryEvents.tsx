@@ -229,9 +229,9 @@ export default function SecretaryEvents() {
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
               <div>
                 <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <Pill>📣 Announcements</Pill>
+                  <Pill>{renderNodeWithIcons("📣 Announcements")}</Pill>
                   <Pill tone="info">{stats.upcoming} Upcoming</Pill>
-                  {stats.today > 0 && <Pill tone="warn">🔴 {stats.today} Today</Pill>}
+                  {stats.today > 0 && <Pill tone="warn">{renderNodeWithIcons("🔴 ")}{stats.today} Today</Pill>}
                 </div>
 
                 <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
@@ -315,7 +315,7 @@ export default function SecretaryEvents() {
                   <div className="p-6">
                     <div className="flex flex-wrap items-center gap-2 mb-3">
                       <Pill tone={typeTone(event.type)}>
-                        {typeEmoji(event.type)} {event.type}
+                        {renderNodeWithIcons(typeEmoji(event.type))} {event.type}
                       </Pill>
                       {isAnn && (
                         <Pill tone={priorityTone(event.priority)}>{event.priority}</Pill>
@@ -327,22 +327,22 @@ export default function SecretaryEvents() {
 
                     <div className="space-y-2 mb-4 text-sm">
                       <div className="flex items-center text-gray-700">
-                        <span className="w-5 h-5 mr-2 text-gray-400">📅</span>
+                        <span className="w-5 h-5 mr-2 text-gray-400">{renderNodeWithIcons("📅")}</span>
                         <span>{fmtDateTime(event.startAt)}</span>
                       </div>
                       <div className="flex items-center text-gray-700">
-                        <span className="w-5 h-5 mr-2 text-gray-400">📍</span>
+                        <span className="w-5 h-5 mr-2 text-gray-400">{renderNodeWithIcons("📍")}</span>
                         <span>{event.location}</span>
                       </div>
                       <div className="flex items-center text-gray-700">
-                        <span className="w-5 h-5 mr-2 text-gray-400">👤</span>
+                        <span className="w-5 h-5 mr-2 text-gray-400">{renderNodeWithIcons("👤")}</span>
                         <span>{event.department} • {event.createdBy}</span>
                       </div>
                     </div>
 
                     <div className="flex items-center justify-between pt-3 border-t border-gray-200/70 mb-4">
                       <div className="flex items-center gap-3 text-xs text-gray-500">
-                        <span>👥 {event.attendees} {isAnn ? "reads" : "attending"}</span>
+                        <span>{renderNodeWithIcons("👥 ")}{event.attendees} {isAnn ? "reads" : "attending"}</span>
                         {!isAnn && <span>⏱ {getDuration(event.startAt, event.endAt)}h</span>}
                       </div>
                       {/* Today badge */}
@@ -370,7 +370,7 @@ export default function SecretaryEvents() {
                   <div className="px-6 py-3" style={{ backgroundColor: isAnn ? "rgba(251, 146, 60, 0.08)" : "rgba(109, 198, 223, 0.08)" }}>
                     <div className="flex items-center justify-between text-xs">
                       <span className="font-semibold" style={{ color: isAnn ? "#EA580C" : "var(--primary-blue)" }}>
-                        {isAnn ? `📣 Announcement` : `Ends: ${fmtTime(event.endAt)}`}
+                        {renderNodeWithIcons(isAnn ? `📣 Announcement` : `Ends: ${fmtTime(event.endAt)}`)}
                       </span>
                       <span className="text-gray-500">{fmtDate(event.startAt)}</span>
                     </div>
@@ -388,7 +388,7 @@ export default function SecretaryEvents() {
               className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-4"
               style={{ backgroundColor: "rgba(109, 198, 223, 0.12)" }}
             >
-              <span className="text-2xl" style={{ color: "var(--secondary-blue)" }}>📅</span>
+              <span className="text-2xl" style={{ color: "var(--secondary-blue)" }}>{renderNodeWithIcons("📅")}</span>
             </div>
             <h3 className="text-lg font-extrabold text-gray-900 mb-2">No upcoming events</h3>
             <p className="text-gray-600">No events or announcements match these filters.</p>
@@ -433,7 +433,7 @@ export default function SecretaryEvents() {
                       />
                       <div>
                         <p className="font-extrabold text-sm text-gray-900">
-                          {typeEmoji(event.type)} {event.title}
+                          {renderNodeWithIcons(typeEmoji(event.type))} {event.title}
                         </p>
                         <p className="text-xs text-gray-500 mt-1">
                           {fmtDateTime(event.startAt)} • {event.department}
@@ -475,7 +475,7 @@ export default function SecretaryEvents() {
                   className="w-12 h-12 rounded-2xl flex items-center justify-center"
                   style={{ backgroundColor: s.bg }}
                 >
-                  <span className="text-xl">{s.icon}</span>
+                  <span className="text-xl">{renderNodeWithIcons(s.icon)}</span>
                 </div>
               </div>
             </Card>

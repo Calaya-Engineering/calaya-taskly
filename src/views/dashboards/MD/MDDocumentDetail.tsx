@@ -177,7 +177,7 @@ export default function MDDocumentDetail() {
       <Layout menuItems={MDMenuItems} userRole="MD">
         <Card className="p-12 text-center">
           <div className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-4 bg-red-50">
-            <span className="text-2xl text-red-600">⚠️</span>
+            <span className="text-2xl text-red-600">{renderNodeWithIcons("⚠️")}</span>
           </div>
           <h3 className="text-lg font-extrabold text-gray-900 mb-2">Document not found</h3>
           <p className="text-gray-600 mb-6">The document you are looking for might have been removed or renamed.</p>
@@ -240,17 +240,13 @@ export default function MDDocumentDetail() {
                   onClick={handleDownload}
                   className="px-5 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition"
                   style={{ backgroundColor: "var(--secondary-blue)" }}
-                >
-                  📥 Download
-                </button>
+                >{renderNodeWithIcons("\n                  📥 Download\n                ")}</button>
 
                 <button
                   onClick={handleShare}
                   className="px-5 py-3 rounded-2xl font-semibold border bg-white hover:bg-gray-50 transition"
                   style={{ borderColor: "rgba(44, 75, 155, 0.25)", color: "var(--primary-blue)" }}
-                >
-                  🔗 Share
-                </button>
+                >{renderNodeWithIcons("\n                  🔗 Share\n                ")}</button>
               </div>
             </div>
           </div>
@@ -300,7 +296,7 @@ export default function MDDocumentDetail() {
                         className="w-14 h-14 rounded-2xl flex items-center justify-center "
                         style={{ backgroundColor: "rgba(44, 75, 155, 0.10)" }}
                       >
-                        <span className="text-3xl">{fileEmoji(doc.fileType)}</span>
+                        <span className="text-3xl">{renderNodeWithIcons(fileEmoji(doc.fileType))}</span>
                       </div>
                       <div className="min-w-0">
                         <p className="font-semibold text-gray-900 truncate">
@@ -352,23 +348,17 @@ export default function MDDocumentDetail() {
                     onClick={handleUploadNewVersion}
                     className="px-5 py-3 rounded-2xl font-semibold border bg-white hover:bg-gray-50 transition"
                     style={{ borderColor: "rgba(44, 75, 155, 0.25)", color: "var(--primary-blue)" }}
-                  >
-                    📤 Upload New Version
-                  </button>
+                  >{renderNodeWithIcons("\n                    📤 Upload New Version\n                  ")}</button>
                   <button
                     onClick={handleEmail}
                     className="px-5 py-3 rounded-2xl font-semibold border bg-white hover:bg-gray-50 transition"
                     style={{ borderColor: "rgba(44, 75, 155, 0.25)", color: "var(--primary-blue)" }}
-                  >
-                    📧 Email Document
-                  </button>
+                  >{renderNodeWithIcons("\n                    📧 Email Document\n                  ")}</button>
                   <button
                     onClick={handleAnalytics}
                     className="px-5 py-3 rounded-2xl font-semibold border bg-white hover:bg-gray-50 transition"
                     style={{ borderColor: "rgba(44, 75, 155, 0.25)", color: "var(--primary-blue)" }}
-                  >
-                    📊 View Analytics
-                  </button>
+                  >{renderNodeWithIcons("\n                    📊 View Analytics\n                  ")}</button>
                 </div>
               </div>
             </Card>
@@ -470,9 +460,7 @@ export default function MDDocumentDetail() {
                   onClick={handleUploadNewVersion}
                   className="px-5 py-3 rounded-2xl font-semibold border bg-white hover:bg-gray-50 transition"
                   style={{ borderColor: "rgba(44, 75, 155, 0.25)", color: "var(--primary-blue)" }}
-                >
-                  📤 Upload New Version
-                </button>
+                >{renderNodeWithIcons("\n                  📤 Upload New Version\n                ")}</button>
               </div>
 
               <div className="overflow-x-auto">
@@ -529,7 +517,7 @@ export default function MDDocumentDetail() {
               </div>
 
               <div className="mt-8 border-2 border-dashed border-gray-200 rounded-2xl p-8 text-center bg-gray-50">
-                <div className="text-4xl mb-2">📤</div>
+                <div className="text-4xl mb-2">{renderNodeWithIcons("📤")}</div>
                 <p className="font-semibold text-lg mb-2">Upload New Version</p>
                 <p className="text-gray-600 mb-4">Upload an updated version of this document</p>
                 <button
@@ -762,7 +750,7 @@ export default function MDDocumentDetail() {
                   onClick={a.onClick}
                   className="p-4 rounded-2xl border border-gray-200/70 bg-white hover:bg-gray-50 transition text-left"
                 >
-                  <div className="text-2xl mb-2">{a.icon}</div>
+                  <div className="text-2xl mb-2">{renderNodeWithIcons(a.icon)}</div>
                   <div className="font-semibold text-gray-900">{a.label}</div>
                   <div className="text-xs text-gray-500 mt-1">Demo action</div>
                 </button>

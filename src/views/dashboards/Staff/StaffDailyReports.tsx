@@ -633,7 +633,7 @@ export default function StaffDailyReports() {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🔎</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">{renderNodeWithIcons("🔎")}</span>
               </div>
             </div>
           </div>
@@ -643,21 +643,15 @@ export default function StaffDailyReports() {
             <button
               onClick={() => setDepartmentFilter(staffDepartment)}
               className="px-3.5 py-2 rounded-2xl text-sm font-semibold border bg-blue-50 text-blue-700 hover:bg-blue-100 transition"
-            >
-              📋 My Department Only
-            </button>
+            >{renderNodeWithIcons("\n              📋 My Department Only\n            ")}</button>
             <button
               onClick={() => setDepartmentFilter('company')}
               className="px-3.5 py-2 rounded-2xl text-sm font-semibold border bg-purple-50 text-purple-700 hover:bg-purple-100 transition"
-            >
-              🏢 Company Reports
-            </button>
+            >{renderNodeWithIcons("\n              🏢 Company Reports\n            ")}</button>
             <button
               onClick={clearFilters}
               className="px-3.5 py-2 rounded-2xl text-sm font-semibold border bg-white hover:bg-gray-50 transition"
-            >
-              🔄 Clear All
-            </button>
+            >{renderNodeWithIcons("\n              🔄 Clear All\n            ")}</button>
           </div>
         </Card>
 
@@ -694,7 +688,7 @@ export default function StaffDailyReports() {
                           className="w-10 h-10 rounded-2xl flex items-center justify-center text-xl shrink-0"
                           style={{ backgroundColor: "rgba(109, 198, 223, 0.1)" }}
                         >
-                          {getFileIcon(report.fileType)}
+                          {renderNodeWithIcons(getFileIcon(report.fileType))}
                         </div>
                         <div>
                           <div className="font-extrabold text-gray-900">
@@ -758,7 +752,7 @@ export default function StaffDailyReports() {
 
           {filteredReports.length === 0 && (
             <div className="p-10 text-center">
-              <div className="text-4xl mb-3">📊</div>
+              <div className="text-4xl mb-3">{renderNodeWithIcons("📊")}</div>
               <div className="font-extrabold" style={{ color: "var(--primary-blue)" }}>
                 No reports found
               </div>
@@ -864,7 +858,7 @@ export default function StaffDailyReports() {
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(44,75,155,0.1)" }}>
-                <span style={{ color: "var(--primary-blue)" }} className="text-xl">📊</span>
+                <span style={{ color: "var(--primary-blue)" }} className="text-xl">{renderNodeWithIcons("📊")}</span>
               </div>
             </div>
           </Card>
@@ -878,7 +872,7 @@ export default function StaffDailyReports() {
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(16,185,129,0.1)" }}>
-                <span style={{ color: "#10B981" }} className="text-xl">📋</span>
+                <span style={{ color: "#10B981" }} className="text-xl">{renderNodeWithIcons("📋")}</span>
               </div>
             </div>
           </Card>
@@ -906,7 +900,7 @@ export default function StaffDailyReports() {
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(16,185,129,0.1)" }}>
-                <span style={{ color: "#10B981" }} className="text-xl">✅</span>
+                <span style={{ color: "#10B981" }} className="text-xl">{renderNodeWithIcons("✅")}</span>
               </div>
             </div>
           </Card>
@@ -933,9 +927,7 @@ export default function StaffDailyReports() {
                         <span className="text-sm text-gray-500">• {staffName}</span>
                       </div>
                       {isClient && getSessionItem(STORAGE_KEYS.REPORT_ENTRIES) && (
-                        <div className="mt-2 inline-flex items-center px-3 py-1.5 bg-amber-50 text-amber-800 rounded-xl text-xs ring-1 ring-amber-200">
-                          ⚡ Draft saved from previous session
-                        </div>
+                        <div className="mt-2 inline-flex items-center px-3 py-1.5 bg-amber-50 text-amber-800 rounded-xl text-xs ring-1 ring-amber-200">{renderNodeWithIcons("\n                          ⚡ Draft saved from previous session\n                        ")}</div>
                       )}
                     </div>
                     <button

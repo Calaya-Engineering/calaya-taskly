@@ -275,19 +275,19 @@ export default function MDEventDetail() {
 
                 <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-gray-700">
                   <span className="inline-flex items-center gap-2 px-3 py-2 rounded-2xl bg-white/70 border border-gray-200/70">
-                    <span className="text-lg">{eventIcon(eventData.eventType)}</span>
+                    <span className="text-lg">{renderNodeWithIcons(eventIcon(eventData.eventType))}</span>
                     <span className="font-semibold">{fmtFullDate(eventData.startAt)}</span>
                   </span>
 
                   <span className="inline-flex items-center gap-2 px-3 py-2 rounded-2xl bg-white/70 border border-gray-200/70">
-                    <span>🕐</span>
+                    <span>{renderNodeWithIcons("🕐")}</span>
                     <span className="font-semibold">
                       {fmtTime(eventData.startAt)} – {fmtTime(eventData.endAt)}
                     </span>
                   </span>
 
                   <span className="inline-flex items-center gap-2 px-3 py-2 rounded-2xl bg-white/70 border border-gray-200/70">
-                    <span>📍</span>
+                    <span>{renderNodeWithIcons("📍")}</span>
                     <span className="font-semibold">{eventData.location}</span>
                   </span>
                 </div>
@@ -554,9 +554,9 @@ export default function MDEventDetail() {
                         {a.attended === null ? (
                           <span className="text-gray-500 text-[11.5px]">—</span>
                         ) : a.attended ? (
-                          <span className="text-emerald-700 font-semibold text-[11.5px]">✓ Present</span>
+                          <span className="text-emerald-700 font-semibold text-[11.5px]">{renderNodeWithIcons("✓ Present")}</span>
                         ) : (
-                          <span className="text-red-700 font-semibold text-[11.5px]">✗ Absent</span>
+                          <span className="text-red-700 font-semibold text-[11.5px]">{renderNodeWithIcons("✗ Absent")}</span>
                         )}
                       </td>
 
@@ -592,7 +592,7 @@ export default function MDEventDetail() {
                     className="w-12 h-12 rounded-2xl flex items-center justify-center "
                     style={{ backgroundColor: "rgba(109, 198, 223, 0.18)" }}
                   >
-                    <span className="text-2xl">📄</span>
+                    <span className="text-2xl">{renderNodeWithIcons("📄")}</span>
                   </div>
 
                   <div className="min-w-0 flex-1">
@@ -628,9 +628,7 @@ export default function MDEventDetail() {
                 className="w-full h-full rounded-2xl border-2 border-dashed border-gray-200/70 hover:border-blue-200 hover:bg-blue-50/20 transition p-6 text-center"
                 onClick={() => toast.warning("Upload document (demo)")}
               >
-                <div className="text-4xl mb-2" style={{ color: "var(--secondary-blue)" }}>
-                  📤
-                </div>
+                <div className="text-4xl mb-2" style={{ color: "var(--secondary-blue)" }}>{renderNodeWithIcons("\n                  📤\n                ")}</div>
                 <div className="font-extrabold" style={{ color: "var(--primary-blue)" }}>
                   Upload Document
                 </div>
@@ -660,7 +658,7 @@ export default function MDEventDetail() {
                   className="w-10 h-10 rounded-2xl flex items-center justify-center text-white font-bold "
                   style={{ backgroundColor: "var(--secondary-blue)" }}
                 >
-                  {currentUser.avatar}
+                  {renderNodeWithIcons(currentUser.avatar)}
                 </div>
 
                 <div className="flex-1">
@@ -769,9 +767,7 @@ export default function MDEventDetail() {
 
               {liveCommentsCount === 0 ? (
                 <div className="text-center py-10">
-                  <div className="text-4xl mb-2" style={{ color: "var(--secondary-blue)" }}>
-                    💬
-                  </div>
+                  <div className="text-4xl mb-2" style={{ color: "var(--secondary-blue)" }}>{renderNodeWithIcons("\n                    💬\n                  ")}</div>
                   <div className="font-extrabold" style={{ color: "var(--primary-blue)" }}>
                     No comments yet
                   </div>

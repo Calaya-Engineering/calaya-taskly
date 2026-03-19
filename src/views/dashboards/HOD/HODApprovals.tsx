@@ -385,7 +385,7 @@ export default function HODApprovals() {
                         <Pill tone="info">
                           {getIconByKey(getTypeIcon(approval.type), "w-4 h-4 inline-block mr-1 align-middle")} {approval.type.replace("_", " ")}
                         </Pill>
-                        {approval.daysPending > 3 && <Pill tone="danger">⚠️ {approval.daysPending} days pending</Pill>}
+                        {approval.daysPending > 3 && <Pill tone="danger">{renderNodeWithIcons("⚠️ ")}{approval.daysPending} days pending</Pill>}
                       </div>
 
                       <h3 className="text-lg font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
@@ -499,15 +499,11 @@ export default function HODApprovals() {
                     <button 
                       onClick={handleApprove}
                       className="flex-1 bg-green-500 text-white font-bold py-3 rounded-xl hover:bg-green-600 transition"
-                    >
-                      ✓ Forward to MD
-                    </button>
+                    >{renderNodeWithIcons("\n                      ✓ Forward to MD\n                    ")}</button>
                     <button 
                       onClick={handleReject}
                       className="flex-1 bg-red-500 text-white font-bold py-3 rounded-xl hover:bg-red-600 transition"
-                    >
-                      ✗ Reject
-                    </button>
+                    >{renderNodeWithIcons("\n                      ✗ Reject\n                    ")}</button>
                   </div>
                 </div>
               </div>

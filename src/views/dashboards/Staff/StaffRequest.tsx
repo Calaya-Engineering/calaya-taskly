@@ -228,7 +228,7 @@ export default function StaffRequest() {
                       backgroundColor: currentStep === step.number ? 'var(--primary-blue)' : undefined,
                     }}
                   >
-                    {currentStep > step.number ? '✓' : step.number}
+                    {renderNodeWithIcons(currentStep > step.number ? '✓' : step.number)}
                   </div>
                   <span
                     className={`ml-3 text-sm font-semibold ${currentStep === step.number
@@ -261,7 +261,7 @@ export default function StaffRequest() {
         {showSuccess && (
           <Card className="p-8 text-center border-green-200 bg-green-50">
             <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-green-100 flex items-center justify-center">
-              <span className="text-4xl">✅</span>
+              <span className="text-4xl">{renderNodeWithIcons("✅")}</span>
             </div>
             <h2 className="text-2xl font-extrabold text-green-700 mb-2">Request Submitted Successfully!</h2>
             <p className="text-green-600 mb-4">
@@ -310,7 +310,7 @@ export default function StaffRequest() {
                                 : 'rgba(0, 0, 0, 0.05)',
                             }}
                           >
-                            {type.icon}
+                            {renderNodeWithIcons(type.icon)}
                           </div>
                           <div>
                             <p className="font-extrabold text-gray-900">{type.label}</p>
@@ -530,7 +530,7 @@ export default function StaffRequest() {
                       htmlFor="file-upload"
                       className="cursor-pointer inline-flex flex-col items-center"
                     >
-                      <span className="text-4xl mb-3">📎</span>
+                      <span className="text-4xl mb-3">{renderNodeWithIcons("📎")}</span>
                       <span className="text-lg font-extrabold text-gray-700 mb-1">
                         Click to upload or drag and drop
                       </span>
@@ -549,7 +549,7 @@ export default function StaffRequest() {
                           className="flex items-center justify-between p-4 rounded-2xl border border-gray-200/70 hover:bg-gray-50"
                         >
                           <div className="flex items-center gap-3">
-                            <span className="text-2xl">{getFileIcon(file.name)}</span>
+                            <span className="text-2xl">{renderNodeWithIcons(getFileIcon(file.name))}</span>
                             <div>
                               <p className="font-semibold">{file.name}</p>
                               <p className="text-xs text-gray-500">
@@ -562,7 +562,7 @@ export default function StaffRequest() {
                             onClick={() => removeFile(index)}
                             className="p-2 hover:bg-red-50 rounded-xl transition"
                           >
-                            <span className="text-red-500">🗑️</span>
+                            <span className="text-red-500">{renderNodeWithIcons("🗑️")}</span>
                           </button>
                         </div>
                       ))}
@@ -612,7 +612,7 @@ export default function StaffRequest() {
                         className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl"
                         style={{ backgroundColor: 'rgba(109, 198, 223, 0.18)' }}
                       >
-                        {requestTypes.find(t => t.value === formData.requestType)?.icon}
+                        {renderNodeWithIcons(requestTypes.find(t => t.value === formData.requestType)?.icon)}
                       </div>
                       <div>
                         <h3 className="text-xl font-extrabold text-gray-900">{formData.title || 'Untitled Request'}</h3>
@@ -694,7 +694,7 @@ export default function StaffRequest() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                           {files.map((file, index) => (
                             <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 rounded-xl">
-                              <span className="text-xl">{getFileIcon(file.name)}</span>
+                              <span className="text-xl">{renderNodeWithIcons(getFileIcon(file.name))}</span>
                               <span className="text-sm truncate flex-1">{file.name}</span>
                               <span className="text-xs text-gray-500">
                                 {(file.size / 1024).toFixed(0)} KB
@@ -736,7 +736,7 @@ export default function StaffRequest() {
                         </>
                       ) : (
                         <>
-                          <span>✓ Submit Request</span>
+                          <span>{renderNodeWithIcons("✓ Submit Request")}</span>
                         </>
                       )}
                     </button>

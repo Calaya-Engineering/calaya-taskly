@@ -298,7 +298,7 @@ Secretary Actions:
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
               <div>
                 <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <Pill>📋 Task Reports Archive</Pill>
+                  <Pill>{renderNodeWithIcons("📋 Task Reports Archive")}</Pill>
                   <Pill tone="info">{stats.total} Total</Pill>
                 </div>
 
@@ -356,7 +356,7 @@ Secretary Actions:
                   placeholder="Search by ID, title, staff..."
                   className={inputBase}
                 />
-                <span className="absolute left-4 top-3.5 text-gray-400">🔎</span>
+                <span className="absolute left-4 top-3.5 text-gray-400">{renderNodeWithIcons("🔎")}</span>
               </div>
             </div>
 
@@ -422,7 +422,7 @@ Secretary Actions:
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(44,75,155,0.1)" }}>
-                <span style={{ color: "var(--primary-blue)" }} className="text-xl">📋</span>
+                <span style={{ color: "var(--primary-blue)" }} className="text-xl">{renderNodeWithIcons("📋")}</span>
               </div>
             </div>
           </Card>
@@ -434,7 +434,7 @@ Secretary Actions:
                 <p className="text-3xl font-extrabold mt-2 text-emerald-600">{stats.approved}</p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(16,185,129,0.1)" }}>
-                <span style={{ color: "#10B981" }} className="text-xl">✅</span>
+                <span style={{ color: "#10B981" }} className="text-xl">{renderNodeWithIcons("✅")}</span>
               </div>
             </div>
           </Card>
@@ -458,7 +458,7 @@ Secretary Actions:
                 <p className="text-3xl font-extrabold mt-2 text-blue-600">{stats.submitted}</p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(59,130,246,0.1)" }}>
-                <span style={{ color: "#3B82F6" }} className="text-xl">📤</span>
+                <span style={{ color: "#3B82F6" }} className="text-xl">{renderNodeWithIcons("📤")}</span>
               </div>
             </div>
           </Card>
@@ -470,7 +470,7 @@ Secretary Actions:
                 <p className="text-3xl font-extrabold mt-2 text-red-600">{stats.rejected}</p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(239,68,68,0.1)" }}>
-                <span style={{ color: "#EF4444" }} className="text-xl">❌</span>
+                <span style={{ color: "#EF4444" }} className="text-xl">{renderNodeWithIcons("❌")}</span>
               </div>
             </div>
           </Card>
@@ -492,18 +492,18 @@ Secretary Actions:
                     <h3 className="text-lg font-extrabold text-gray-900 mb-2">{report.taskTitle}</h3>
                     <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600 mb-3">
                       <span className="flex items-center gap-1">
-                        <span className="text-gray-400">👤</span> {report.submittedBy}
+                        <span className="text-gray-400">{renderNodeWithIcons("👤")}</span> {report.submittedBy}
                       </span>
                       <span className="flex items-center gap-1">
-                        <span className="text-gray-400">🏢</span> {report.department}
+                        <span className="text-gray-400">{renderNodeWithIcons("🏢")}</span> {report.department}
                       </span>
                       <span className="flex items-center gap-1">
-                        <span className="text-gray-400">📅</span> {fmtDate(report.submittedDate)}
+                        <span className="text-gray-400">{renderNodeWithIcons("📅")}</span> {fmtDate(report.submittedDate)}
                       </span>
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-sm text-gray-500">📥 {report.downloadCount}</div>
+                    <div className="text-sm text-gray-500">{renderNodeWithIcons("📥 ")}{report.downloadCount}</div>
                     <div className="text-xs text-gray-400 mt-1">{report.fileSize}</div>
                   </div>
                 </div>
@@ -514,7 +514,7 @@ Secretary Actions:
 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <span className="text-lg">{getFileIcon(report.fileName)}</span>
+                    <span className="text-lg">{renderNodeWithIcons(getFileIcon(report.fileName))}</span>
                     <span className="text-xs truncate max-w-[150px]">{report.fileName}</span>
                   </div>
                   <div className="flex gap-2">
@@ -542,7 +542,7 @@ Secretary Actions:
                 className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-4"
                 style={{ backgroundColor: "rgba(109, 198, 223, 0.12)" }}
               >
-                <span className="text-2xl" style={{ color: "var(--secondary-blue)" }}>📄</span>
+                <span className="text-2xl" style={{ color: "var(--secondary-blue)" }}>{renderNodeWithIcons("📄")}</span>
               </div>
               <h3 className="text-lg font-extrabold text-gray-900 mb-2">No Task Reports Found</h3>
               <p className="text-gray-600">No reports match your current filters. Try adjusting your search criteria.</p>
@@ -607,7 +607,7 @@ Secretary Actions:
                     className="w-10 h-10 rounded-2xl flex items-center justify-center"
                     style={{ backgroundColor: `${item.color}18` }}
                   >
-                    <span style={{ color: item.color }} className="text-xl">{item.icon}</span>
+                    <span style={{ color: item.color }} className="text-xl">{renderNodeWithIcons(item.icon)}</span>
                   </div>
                   <div>
                     <p className="font-extrabold text-sm text-gray-900">{item.title}</p>

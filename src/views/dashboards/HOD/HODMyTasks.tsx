@@ -198,7 +198,7 @@ export default function HODMyTasks() {
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
               <div>
                 <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <Pill>👤 My Tasks</Pill>
+                  <Pill>{renderNodeWithIcons("👤 My Tasks")}</Pill>
                   <Pill tone="success">{summary.completed} Completed</Pill>
                   {summary.dueSoon > 0 ? (
                     <Pill tone="danger">{summary.dueSoon} Due Soon</Pill>
@@ -250,7 +250,7 @@ export default function HODMyTasks() {
                   <p className="text-2xl font-extrabold" style={{ color: "var(--primary-blue)" }}>
                     {s.value}
                   </p>
-                  <span className="text-xl opacity-50">{s.icon}</span>
+                  <span className="text-xl opacity-50">{renderNodeWithIcons(s.icon)}</span>
                 </div>
               </div>
             ))}
@@ -336,7 +336,7 @@ export default function HODMyTasks() {
                           <Pill tone={priorityTone(task.priority)}>{task.priority}</Pill>
                           <Pill tone={statusTone(task.status)}>{task.status.replace('_', ' ')}</Pill>
                           <Pill tone={task.department === 'All' ? 'info' : 'default'}>{task.department}</Pill>
-                          {task.escalated && <Pill tone="danger">🔺 Escalated to MD</Pill>}
+                          {task.escalated && <Pill tone="danger">{renderNodeWithIcons("🔺 Escalated to MD")}</Pill>}
                         </div>
 
                         <h3 className="text-lg font-extrabold text-gray-900 mb-2">{task.title}</h3>
@@ -405,9 +405,7 @@ export default function HODMyTasks() {
                             </button>
                           )}
                           {task.escalated && (
-                            <span className="flex-1 min-w-[100px] px-4 py-2.5 rounded-2xl text-sm font-semibold text-center bg-red-50 text-red-700 ring-1 ring-red-100">
-                              🔺 Escalated
-                            </span>
+                            <span className="flex-1 min-w-[100px] px-4 py-2.5 rounded-2xl text-sm font-semibold text-center bg-red-50 text-red-700 ring-1 ring-red-100">{renderNodeWithIcons("\n                              🔺 Escalated\n                            ")}</span>
                           )}
                         </div>
                       </div>
@@ -428,7 +426,7 @@ export default function HODMyTasks() {
               {filteredTasks.length === 0 && (
                 <Card className="p-12 text-center">
                   <div className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(109, 198, 223, 0.12)" }}>
-                    <span className="text-3xl">📋</span>
+                    <span className="text-3xl">{renderNodeWithIcons("📋")}</span>
                   </div>
                   <h3 className="text-lg font-extrabold text-gray-900 mb-2">No tasks found</h3>
                   <p className="text-gray-600">You don't have any tasks matching your filters.</p>
@@ -456,7 +454,7 @@ export default function HODMyTasks() {
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-green-50">
-                <span className="text-xl">📊</span>
+                <span className="text-xl">{renderNodeWithIcons("📊")}</span>
               </div>
             </div>
           </Card>
@@ -470,7 +468,7 @@ export default function HODMyTasks() {
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-blue-50">
-                <span className="text-xl">📈</span>
+                <span className="text-xl">{renderNodeWithIcons("📈")}</span>
               </div>
             </div>
           </Card>
@@ -484,7 +482,7 @@ export default function HODMyTasks() {
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-red-50">
-                <span className="text-xl">⚠️</span>
+                <span className="text-xl">{renderNodeWithIcons("⚠️")}</span>
               </div>
             </div>
           </Card>
@@ -512,7 +510,7 @@ export default function HODMyTasks() {
           <div className="relative bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full mx-4 z-10">
             <div className="flex items-center gap-3 mb-2">
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-red-50">
-                <span className="text-2xl">🔺</span>
+                <span className="text-2xl">{renderNodeWithIcons("🔺")}</span>
               </div>
               <div>
                 <h2 className="text-lg font-extrabold" style={{ color: "var(--primary-blue)" }}>

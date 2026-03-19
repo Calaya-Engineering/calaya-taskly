@@ -208,16 +208,12 @@ export default function MDApprovalBulk() {
                   onClick={handleBulkApprove}
                   className="px-6 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition"
                   style={{ backgroundColor: '#10B981' }}
-                >
-                  ✓ Approve All
-                </button>
+                >{renderNodeWithIcons("\n                  ✓ Approve All\n                ")}</button>
                 <button
                   onClick={handleBulkReject}
                   className="px-6 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition"
                   style={{ backgroundColor: 'var(--accent-red)' }}
-                >
-                  ✗ Reject All
-                </button>
+                >{renderNodeWithIcons("\n                  ✗ Reject All\n                ")}</button>
               </div>
             </div>
             <div className="mt-4">
@@ -266,7 +262,7 @@ export default function MDApprovalBulk() {
                         {item.id}
                       </span>
                       <Pill tone={getPriorityTone(item.priority)}>{item.priority}</Pill>
-                      <Pill tone="info">{getTypeIcon(item.type)} {item.type.replace('_', ' ')}</Pill>
+                      <Pill tone="info">{renderNodeWithIcons(getTypeIcon(item.type))} {item.type.replace('_', ' ')}</Pill>
                       <Pill>{item.department}</Pill>
                     </div>
                     <h4 className="font-extrabold text-gray-900">{item.title}</h4>

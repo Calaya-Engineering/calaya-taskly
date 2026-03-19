@@ -291,7 +291,7 @@ export default function HODDocuments() {
                     placeholder="Search by ID, title, uploader, department..."
                     className="w-full pl-10 pr-3 py-2.5 rounded-2xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100"
                   />
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🔎</span>
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">{renderNodeWithIcons("🔎")}</span>
                 </div>
                 <div className="text-xs text-gray-500 mt-1">
                   Showing <span className="font-semibold text-gray-800">{filteredDocs.length}</span> document(s)
@@ -562,7 +562,7 @@ export default function HODDocuments() {
                   className="w-12 h-12 mx-auto rounded-2xl flex items-center justify-center [&_svg]:w-6 [&_svg]:h-6 mb-3 group-hover:scale-110 transition"
                   style={{ backgroundColor: `${item.color}18`, color: item.color }}
                 >
-                  {item.icon}
+                  {renderNodeWithIcons(item.icon)}
                 </div>
                 <p className="font-extrabold text-sm" style={{ color: item.color }}>
                   {item.label}
