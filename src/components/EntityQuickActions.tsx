@@ -3,6 +3,7 @@
 import { useMemo, useState, type ReactNode } from "react";
 import { fetchWithAuth } from "@/lib/api";
 import { toast } from "@/lib/toast";
+import { LucideGlyph, renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 
 type EntityType = "announcement" | "event" | "meeting";
 
@@ -372,7 +373,7 @@ export default function EntityQuickActions({
       <div className="rounded-2xl border border-gray-200/70 bg-white p-6 shadow-none">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <h3 className="text-lg font-extrabold tracking-tight text-[color:var(--primary-blue)]">{sectionTitle}</h3>
+            <h3 className="text-lg font-extrabold tracking-tight text-[color:var(--primary-blue)]">{renderNodeWithIcons(sectionTitle)}</h3>
             {sectionSubtitle ? <p className="mt-1 text-sm text-gray-500">{sectionSubtitle}</p> : null}
           </div>
         </div>
@@ -401,13 +402,15 @@ export default function EntityQuickActions({
               >
                 {layout === "grid" ? (
                   <>
-                    <div className="mb-2 text-2xl">{action.icon}</div>
+                    <div className="mb-2">
+                      <LucideGlyph icon={action.icon} className="text-2xl" />
+                    </div>
                     <div>{isBusy ? "Sending..." : action.label}</div>
                   </>
                 ) : (
                   <>
                     <span>{isBusy ? "Sending..." : action.label}</span>
-                    <span>{action.icon}</span>
+                    <LucideGlyph icon={action.icon} />
                   </>
                 )}
               </button>

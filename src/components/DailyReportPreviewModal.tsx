@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { fetchWithAuth } from "@/lib/api";
 import { downloadDailyReport } from "@/lib/daily-report-download";
 import { toast } from "@/lib/toast";
+import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 
 type DailyReportPreviewData = {
   id: string;
@@ -53,7 +54,7 @@ const Pill = ({ children, tone = "default" }: { children: React.ReactNode; tone?
 
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
-      {children}
+      {renderNodeWithIcons(children, "h-[0.875em] w-[0.875em] shrink-0")}
     </span>
   );
 };

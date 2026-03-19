@@ -8,6 +8,7 @@ import EntityQuickActions from "@/components/EntityQuickActions";
 import Layout from "@/components/Layout";
 import { MDMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
+import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 /* ---------------- demo event data ---------------- */
 const eventData = {
   id: "EVT-001",
@@ -114,7 +115,7 @@ const Pill = ({ children, tone = "default" }) => {
 
   return (
     <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold ring-1 ${styles}`}>
-      {children}
+      {renderNodeWithIcons(children, "h-[0.875em] w-[0.875em] shrink-0")}
     </span>
   );
 };

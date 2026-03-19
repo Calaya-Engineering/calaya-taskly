@@ -8,6 +8,7 @@ import { HODMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
 import { fetchWithAuth } from "@/lib/api";
 import { useSSE } from "@/hooks/useSSE";
+import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 
 interface AnnouncementItem {
   id: number;
@@ -52,7 +53,7 @@ const Pill = ({ children, tone = "default" }) => {
 
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
-      {children}
+      {renderNodeWithIcons(children, "h-[0.875em] w-[0.875em] shrink-0")}
     </span>
   );
 };
@@ -60,7 +61,7 @@ const Pill = ({ children, tone = "default" }) => {
 const SectionTitle = ({ title, subtitle, action }) => (
   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
     <div>
-      <h2 className="text-lg md:text-xl font-extrabold text-gray-900 tracking-tight">{title}</h2>
+      <h2 className="text-lg md:text-xl font-extrabold text-gray-900 tracking-tight">{renderNodeWithIcons(title)}</h2>
       {subtitle && <p className="text-sm text-gray-600 mt-1">{subtitle}</p>}
     </div>
     {action && <div>{action}</div>}

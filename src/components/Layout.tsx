@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { useBadges } from "@/contexts/BadgeContext";
 import { MenuIcon, CloseMenuIcon } from "@/lib/icons";
+import { LucideGlyph } from "@/components/ui/lucide-icon-text";
 import { getRouteForRole } from "@/lib/auth-config";
 
 interface MenuItem {
@@ -217,7 +218,7 @@ export default function Layout({
                                     active ? "bg-white/15" : "bg-gray-100 group-hover:bg-gray-200",
                                   ].join(" ")}
                                 >
-                                  {typeof item.icon === "string" ? <span className="text-lg">{item.icon}</span> : item.icon}
+                                  {typeof item.icon === "string" ? <LucideGlyph icon={item.icon} className="text-lg" /> : item.icon}
                                 </span>
                                 <span className="truncate">{item.label}</span>
                                 {(() => {
@@ -250,7 +251,7 @@ export default function Layout({
                                     active ? "bg-white/15" : "bg-gray-100 group-hover:bg-gray-200",
                                   ].join(" ")}
                                 >
-                                  {typeof item.icon === "string" ? <span className="text-lg">{item.icon}</span> : item.icon}
+                                  {typeof item.icon === "string" ? <LucideGlyph icon={item.icon} className="text-lg" /> : item.icon}
                                 </span>
                                 <span className="truncate">{item.label}</span>
                               </span>

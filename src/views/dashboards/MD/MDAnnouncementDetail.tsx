@@ -8,6 +8,7 @@ import EntityQuickActions from "@/components/EntityQuickActions";
 import { MDMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
 import { fetchWithAuth } from "@/lib/api";
+import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -29,7 +30,7 @@ const Pill = ({ children, tone = "default" }) => {
 
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
-      {children}
+      {renderNodeWithIcons(children, "h-[0.875em] w-[0.875em] shrink-0")}
     </span>
   );
 };

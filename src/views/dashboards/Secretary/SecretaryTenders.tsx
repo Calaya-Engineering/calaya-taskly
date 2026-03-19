@@ -8,6 +8,7 @@ import Layout from "@/components/Layout";
 import { SecretaryMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
 import { fetchWithAuth } from "@/lib/api";
+import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -17,7 +18,7 @@ const SectionTitle = ({ title, subtitle, action }) => (
   <div className="flex items-start justify-between gap-3">
     <div>
       <h2 className="text-lg md:text-xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
-        {title}
+        {renderNodeWithIcons(title)}
       </h2>
       {subtitle ? <p className="text-sm text-gray-500 mt-1">{subtitle}</p> : null}
     </div>
@@ -40,7 +41,7 @@ const Pill = ({ children, tone = "default" }) => {
               : "bg-gray-50 text-gray-700 ring-gray-100";
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
-      {children}
+      {renderNodeWithIcons(children, "h-[0.875em] w-[0.875em] shrink-0")}
     </span>
   );
 };

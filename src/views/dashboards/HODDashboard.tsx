@@ -20,6 +20,7 @@ import { fetchWithAuth } from "@/lib/api";
 import { useSSE } from "@/hooks/useSSE";
 import DashboardSkeleton from "@/components/DashboardSkeleton";
 import { TASK_STATUS_PENDING_HOD_APPROVAL } from "@/lib/task-approval";
+import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 
 /* ─── Types ─────────────────────────────────────────────────────── */
 interface TaskItem {
@@ -72,7 +73,7 @@ const SectionTitle = ({ title, subtitle, action }: { title: string; subtitle?: R
         className="text-lg md:text-xl font-extrabold tracking-tight"
         style={{ color: "var(--primary-blue)" }}
       >
-        {title}
+        {renderNodeWithIcons(title)}
       </h2>
       {subtitle ? <p className="text-sm text-gray-500 mt-1">{subtitle}</p> : null}
     </div>

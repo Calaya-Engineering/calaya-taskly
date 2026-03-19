@@ -8,6 +8,7 @@ import EntityQuickActions from "@/components/EntityQuickActions";
 import { SecretaryMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
 import { fetchWithAuth } from "@/lib/api";
+import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 const AnnouncementIcon = () => (
   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
@@ -34,7 +35,7 @@ const Pill = ({ children, tone = "default" }) => {
               : "bg-gray-50 text-gray-700 ring-gray-100";
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 ${styles}`}>
-      {children}
+      {renderNodeWithIcons(children, "h-[0.875em] w-[0.875em] shrink-0")}
     </span>
   );
 };
@@ -43,7 +44,7 @@ const SectionTitle = ({ title, subtitle, action }) => (
   <div className="flex items-start justify-between gap-3">
     <div>
       <h2 className="text-lg md:text-xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
-        {title}
+        {renderNodeWithIcons(title)}
       </h2>
       {subtitle ? <p className="text-sm text-gray-500 mt-1">{subtitle}</p> : null}
     </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import type { ChangeEvent } from "react";
+import { LucideGlyph } from "@/components/ui/lucide-icon-text";
 
 type FileUploadSectionProps = {
   inputId: string;
@@ -55,7 +56,7 @@ export default function FileUploadSection({
             className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center"
             style={{ backgroundColor: "rgba(109, 198, 223, 0.14)" }}
           >
-            <span className="text-3xl">📤</span>
+            <LucideGlyph icon="📤" className="text-3xl" />
           </div>
           <p className="text-gray-700 font-semibold mb-2">Click to upload or drag and drop</p>
           <p className="text-sm text-gray-500">{helperText}</p>
@@ -89,7 +90,7 @@ export default function FileUploadSection({
                     className="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0"
                     style={{ backgroundColor: "rgba(44, 75, 155, 0.08)" }}
                   >
-                    <span className="text-lg">{fileIcon(file.name)}</span>
+                    <LucideGlyph icon={fileIcon(file.name)} className="text-lg" />
                   </div>
                   <div className="min-w-0">
                     <div className="text-sm font-semibold text-gray-900 truncate max-w-[520px]">{file.name}</div>
