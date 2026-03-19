@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { cloneElement, isValidElement, type ReactElement, type ReactNode } from "react";
 import {
   AlarmClock,
   Archive,
@@ -206,6 +206,18 @@ function resolveLegacyIcon(icon?: string | null) {
   return LEGACY_ICON_MAP[normalized] || LEGACY_ICON_MAP[icon] || null;
 }
 
+const DISPLAY_PROP_KEYS = new Set([
+  "title",
+  "subtitle",
+  "label",
+  "description",
+  "sectionTitle",
+  "sectionSubtitle",
+  "helperText",
+  "emptyText",
+  "selectedTitle",
+]);
+
 export function LucideGlyph({
   icon,
   className,
@@ -246,8 +258,42 @@ export function renderNodeWithIcons(node: ReactNode, iconClassName = "h-[1em] w-
   }
 
   if (Array.isArray(node)) {
-    return node.map((child, index) => <span key={`node-${index}`}>{renderNodeWithIcons(child, iconClassName)}</span>);
+    return node.map((child) => renderNodeWithIcons(child, iconClassName));
   }
 
   return node;
+}
+
+export function iconifyTree(node: ReactNode): ReactNode {
+  if (node == null || typeof node === "boolean" || typeof node === "number") return node;
+
+  if (typeof node === "string") {
+    return renderNodeWithIcons(node);
+  }
+
+  if (Array.isArray(node)) {
+    return node.map((child) => iconifyTree(child));
+  }
+
+  if (!isValidElement(node)) {
+    return node;
+  }
+
+  const element = node as ReactElement<Record<string, unknown>>;
+  const nextProps: Record<string, unknown> = {};
+
+  if ("children" in element.props && element.props.children !== undefined) {
+    nextProps.children = iconifyTree(element.props.children as ReactNode);
+  }
+
+  if (typeof element.type !== "string") {
+    for (const key of DISPLAY_PROP_KEYS) {
+      const value = element.props[key];
+      if (typeof value === "string" || Array.isArray(value) || isValidElement(value)) {
+        nextProps[key] = iconifyTree(value as ReactNode);
+      }
+    }
+  }
+
+  return cloneElement(element, nextProps);
 }

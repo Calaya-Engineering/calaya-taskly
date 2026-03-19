@@ -7,7 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { useBadges } from "@/contexts/BadgeContext";
 import { MenuIcon, CloseMenuIcon } from "@/lib/icons";
-import { LucideGlyph } from "@/components/ui/lucide-icon-text";
+import { LucideGlyph, iconifyTree } from "@/components/ui/lucide-icon-text";
 import { getRouteForRole } from "@/lib/auth-config";
 
 interface MenuItem {
@@ -84,6 +84,7 @@ export default function Layout({
     logout();
   };
   const handleCancelLogout = () => setShowLogoutModal(false);
+  const iconifiedChildren = useMemo(() => iconifyTree(children), [children]);
 
   return (
     <LayoutContext.Provider value={true}>
@@ -307,7 +308,7 @@ export default function Layout({
         {/* Content */}
         <main className="pt-16 md:pl-64">
           <div className="p-4 md:p-6">
-            <div className="max-w-[1400px] mx-auto">{children}</div>
+            <div className="max-w-[1400px] mx-auto">{iconifiedChildren}</div>
           </div>
         </main>
 
