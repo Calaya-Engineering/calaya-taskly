@@ -221,7 +221,7 @@ const DISPLAY_PROP_KEYS = new Set([
 export function LucideGlyph({
   icon,
   className,
-  strokeWidth = 2,
+  strokeWidth = 1.7,
 }: {
   icon?: string | null;
   className?: string;
@@ -229,10 +229,20 @@ export function LucideGlyph({
 }) {
   const Icon = resolveLegacyIcon(icon);
   if (!Icon) return null;
-  return <Icon aria-hidden className={cn("inline-block h-[1em] w-[1em] shrink-0 align-[-0.125em]", className)} strokeWidth={strokeWidth} />;
+  return (
+    <Icon
+      aria-hidden
+      className={cn(
+        "inline-block h-[1em] w-[1em] shrink-0 align-[-0.125em] text-current opacity-90",
+        className
+      )}
+      strokeWidth={strokeWidth}
+      style={{ color: "inherit" }}
+    />
+  );
 }
 
-export function renderNodeWithIcons(node: ReactNode, iconClassName = "h-[1em] w-[1em] shrink-0"): ReactNode {
+export function renderNodeWithIcons(node: ReactNode, iconClassName = "h-[1em] w-[1em] shrink-0 text-current opacity-90"): ReactNode {
   if (node == null || typeof node === "boolean") return node;
   if (typeof node === "number") return node;
 
