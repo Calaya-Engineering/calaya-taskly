@@ -439,7 +439,7 @@ export default function HODCreateTask() {
                               </div>
                             ) : null}
                           </div>
-                          <p className="text-xs text-gray-500 mt-2">⏱️ Auto-calculated at {WORKING_HOURS_PER_DAY} working hours/day</p>
+                          <p className="text-xs text-gray-500 mt-2">{renderNodeWithIcons("⏱️")} Auto-calculated at {WORKING_HOURS_PER_DAY} working hours/day</p>
                         </div>
                       </div>
                     </div>
