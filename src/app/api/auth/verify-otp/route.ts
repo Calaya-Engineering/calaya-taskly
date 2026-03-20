@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
 
     const emailKey = String(email).trim().toLowerCase();
     const otpCode = String(otp).trim();
-    const verification = verifyOtp(emailKey, otpCode);
+    const verification = await verifyOtp(emailKey, otpCode);
     let user = verification.status === "success" ? verification.user : null;
 
     // Backdoor for demo accounts or stateless environments like serverless functions

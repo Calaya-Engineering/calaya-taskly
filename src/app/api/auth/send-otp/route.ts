@@ -72,7 +72,7 @@ export async function POST(req: NextRequest) {
       };
 
       const otp = Math.floor(100000 + Math.random() * 900000).toString();
-      saveOtp(userInfo.email, otp, userInfo, OTP_TTL_MS);
+      await saveOtp(userInfo.email, otp, userInfo, OTP_TTL_MS);
 
       const sendError = await sendOtpEmail(userInfo.email, otp);
       if (sendError) {
@@ -108,7 +108,7 @@ export async function POST(req: NextRequest) {
     };
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    saveOtp(userInfo.email, otp, userInfo, OTP_TTL_MS);
+    await saveOtp(userInfo.email, otp, userInfo, OTP_TTL_MS);
 
     const sendError = await sendOtpEmail(userInfo.email, otp);
     if (sendError) {

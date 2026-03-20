@@ -242,3 +242,18 @@ model UserSectionSeen {
   @@index([userId])
   @@index([section])
 }
+
+model OtpToken {
+  id                      Int       @id @default(autoincrement())
+  email                   String
+  otp                     String
+  expiresAt               DateTime
+  verifiedAt              DateTime?
+  invalidAttempts         Int       @default(0)
+  retryAllowanceRemaining Int       @default(1)
+  userRole                String
+  userRoute               String
+  createdAt               DateTime  @default(now())
+
+  @@index([email])
+}
