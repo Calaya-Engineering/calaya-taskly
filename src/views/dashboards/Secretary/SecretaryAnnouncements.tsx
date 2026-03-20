@@ -356,7 +356,7 @@ export default function SecretaryAnnouncements() {
                               {formatDate(a.createdDate)}
                             </span>
                             <span className="inline-flex items-center gap-2">
-                              <span className="w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center">⏳</span>
+                              <span className="w-8 h-8 rounded-2xl bg-blue-50 flex items-center justify-center">{renderNodeWithIcons("⏳")}</span>
                               Expires: {a.expiresAt}
                             </span>
                           </div>

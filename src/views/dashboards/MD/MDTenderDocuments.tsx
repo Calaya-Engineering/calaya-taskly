@@ -601,7 +601,7 @@ export default function MDTenderDocuments() {
                                     className="px-5 py-2.5 rounded-2xl text-sm font-semibold text-white active:scale-[0.99] transition inline-flex items-center gap-2"
                                     style={{ backgroundColor: "var(--secondary-blue)" }}
                                   >
-                                    ⬇️ Download
+                                    {renderNodeWithIcons("⬇️")} Download
                                   </button>
                                 </div>
 
@@ -707,7 +707,7 @@ export default function MDTenderDocuments() {
                                   className="px-5 py-2.5 rounded-2xl text-sm font-semibold text-white active:scale-[0.99] transition inline-flex items-center gap-2"
                                   style={{ backgroundColor: "var(--secondary-blue)" }}
                                 >
-                                  ⬇️ Download Bid
+                                  {renderNodeWithIcons("⬇️")} Download Bid
                                 </button>
                               </div>
 

@@ -187,7 +187,7 @@ export default function StaffAnnouncementDetail() {
         {isExpired && (
           <Card className="p-5 border-gray-200 bg-gray-50">
             <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-2xl bg-white flex items-center justify-center">⏳</div>
+              <div className="w-11 h-11 rounded-2xl bg-white flex items-center justify-center">{renderNodeWithIcons("⏳")}</div>
               <div>
                 <p className="font-extrabold text-gray-800">This announcement has expired</p>
                 <p className="text-sm text-gray-600 mt-0.5">Expired on {formatDateTime(announcement.expiresAt)}</p>
