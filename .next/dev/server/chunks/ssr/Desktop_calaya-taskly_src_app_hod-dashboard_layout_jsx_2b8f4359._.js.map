@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///Users/admin/Desktop/calaya-taskly/src/app/hod-dashboard/layout.jsx"],"sourcesContent":["export default function HODDashboardLayout({ children }) {\n  return children;\n}\n"],"names":[],"mappings":";;;;AAAe,SAAS,mBAAmB,EAAE,QAAQ,EAAE;IACrD,OAAO;AACT"}}]
-}

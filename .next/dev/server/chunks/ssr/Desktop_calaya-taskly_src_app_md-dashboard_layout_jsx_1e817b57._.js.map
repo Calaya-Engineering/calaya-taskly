@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///Users/admin/Desktop/calaya-taskly/src/app/md-dashboard/layout.jsx"],"sourcesContent":["export default function MDDashboardLayout({ children }) {\n  return children;\n}"],"names":[],"mappings":";;;;AAAe,SAAS,kBAAkB,EAAE,QAAQ,EAAE;IACpD,OAAO;AACT"}}]
-}

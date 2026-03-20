@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///Users/admin/Desktop/calaya-taskly/src/app/md-dashboard/tasks/page.jsx"],"sourcesContent":["\"use client\";\nimport MDAllTasks from \"../../../pages/dashboards/MD/MDAllTasks\";\n\nexport default function Page() {\n  return <MDAllTasks />;\n}\n"],"names":[],"mappings":";;;;;;;;;;AAAA;;;AAGe,SAAS;IACtB,qBAAO,4NAAC;;;;;AACV;KAFwB"}}]
-}

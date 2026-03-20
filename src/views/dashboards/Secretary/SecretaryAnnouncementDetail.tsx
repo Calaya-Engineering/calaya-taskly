@@ -281,7 +281,7 @@ export default function SecretaryAnnouncementDetail() {
         {isExpired && (
           <Card className="p-5 border-gray-200 bg-gray-50">
             <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-2xl bg-white flex items-center justify-center">⏳</div>
+              <div className="w-11 h-11 rounded-2xl bg-white flex items-center justify-center">{renderNodeWithIcons("⏳")}</div>
               <div>
                 <p className="font-extrabold text-gray-800">This announcement has expired</p>
                 <p className="text-sm text-gray-600 mt-0.5">Expired on {formatDate(announcement.expiresAt)}</p>
@@ -491,7 +491,7 @@ export default function SecretaryAnnouncementDetail() {
             {/* Secretary Note */}
             <Card className="p-6 bg-blue-50/30">
               <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-blue-100 flex items-center justify-center text-xl">ℹ️</div>
+                <div className="w-10 h-10 rounded-2xl bg-blue-100 flex items-center justify-center text-xl">{renderNodeWithIcons("ℹ️")}</div>
                 <div>
                   <p className="font-extrabold text-gray-900">Read-only Access</p>
                   <p className="text-sm text-gray-600 mt-1">
