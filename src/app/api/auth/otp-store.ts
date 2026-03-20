@@ -1,88 +1,86 @@
 import type { AuthUserInfo } from "@/lib/auth-config";
+import { prisma } from "@/lib/prisma";
 
 const OTP_SUCCESS_RETRY_WINDOW_MS = 30_000;
 const OTP_SUCCESS_RETRY_ALLOWANCE = 1;
 const MAX_INVALID_ATTEMPTS = 5;
 
-export type OtpRecord = {
-  otp: string;
-  expiresAt: number;
-  user: AuthUserInfo;
-  invalidAttempts: number;
-  verifiedAt: number | null;
-  retryAllowanceRemaining: number;
-};
-
 export type OtpVerificationResult =
   | { status: "success"; user: AuthUserInfo }
   | { status: "expired" | "invalid" | "used" };
 
-// In-memory OTP store keyed by email. Suitable for demo/dev environments only.
-const globalForOtp = globalThis as unknown as { __otpStore?: Map<string, OtpRecord> };
+export async function saveOtp(email: string, otp: string, user: AuthUserInfo, ttlMs = 5 * 60 * 1000) {
+  const key = email.toLowerCase();
+  const expiresAt = new Date(Date.now() + ttlMs);
 
-if (!globalForOtp.__otpStore) {
-  globalForOtp.__otpStore = new Map<string, OtpRecord>();
-}
+  // Remove any existing OTP for this email before saving a new one
+  await prisma.otpToken.deleteMany({ where: { email: key } });
 
-const store = globalForOtp.__otpStore;
-
-export function saveOtp(email: string, otp: string, user: AuthUserInfo, ttlMs = 5 * 60 * 1000) {
-  const expiresAt = Date.now() + ttlMs;
-  store.set(email.toLowerCase(), {
-    otp,
-    expiresAt,
-    user,
-    invalidAttempts: 0,
-    verifiedAt: null,
-    retryAllowanceRemaining: OTP_SUCCESS_RETRY_ALLOWANCE,
+  await prisma.otpToken.create({
+    data: {
+      email: key,
+      otp,
+      expiresAt,
+      userRole: user.role,
+      userRoute: user.route,
+      invalidAttempts: 0,
+      retryAllowanceRemaining: OTP_SUCCESS_RETRY_ALLOWANCE,
+    },
   });
 }
 
-export function hasOtp(email: string): boolean {
-  const record = store.get(email.toLowerCase());
-  if (!record) return false;
-  return record.expiresAt >= Date.now();
+export async function hasOtp(email: string): Promise<boolean> {
+  const record = await prisma.otpToken.findFirst({
+    where: { email: email.toLowerCase(), expiresAt: { gte: new Date() } },
+  });
+  return !!record;
 }
 
-export function verifyOtp(email: string, otp: string): OtpVerificationResult {
+export async function verifyOtp(email: string, otp: string): Promise<OtpVerificationResult> {
   const key = email.toLowerCase();
-  const record = store.get(key);
+  const record = await prisma.otpToken.findFirst({ where: { email: key } });
 
   if (!record) {
     return { status: "invalid" };
   }
 
-  const now = Date.now();
+  const now = new Date();
 
   if (record.expiresAt < now) {
-    store.delete(key);
+    await prisma.otpToken.delete({ where: { id: record.id } });
     return { status: "expired" };
   }
 
   if (record.otp !== otp) {
-    record.invalidAttempts += 1;
-    if (record.invalidAttempts >= MAX_INVALID_ATTEMPTS) {
-      store.delete(key);
+    const newAttempts = record.invalidAttempts + 1;
+    if (newAttempts >= MAX_INVALID_ATTEMPTS) {
+      await prisma.otpToken.delete({ where: { id: record.id } });
     } else {
-      store.set(key, record);
+      await prisma.otpToken.update({
+        where: { id: record.id },
+        data: { invalidAttempts: newAttempts },
+      });
     }
     return { status: "invalid" };
   }
 
   if (record.verifiedAt) {
-    const withinRetryWindow = now - record.verifiedAt <= OTP_SUCCESS_RETRY_WINDOW_MS;
+    const withinRetryWindow = now.getTime() - record.verifiedAt.getTime() <= OTP_SUCCESS_RETRY_WINDOW_MS;
     if (withinRetryWindow && record.retryAllowanceRemaining > 0) {
-      record.retryAllowanceRemaining -= 1;
-      store.set(key, record);
-      return { status: "success", user: record.user };
+      await prisma.otpToken.update({
+        where: { id: record.id },
+        data: { retryAllowanceRemaining: record.retryAllowanceRemaining - 1 },
+      });
+      return { status: "success", user: { email: record.email, role: record.userRole, route: record.userRoute } };
     }
 
-    store.delete(key);
+    await prisma.otpToken.delete({ where: { id: record.id } });
     return { status: "used" };
   }
 
-  record.verifiedAt = now;
-  store.set(key, record);
-  return { status: "success", user: record.user };
+  await prisma.otpToken.update({
+    where: { id: record.id },
+    data: { verifiedAt: now },
+  });
+  return { status: "success", user: { email: record.email, role: record.userRole, route: record.userRoute } };
 }
-
