@@ -146,10 +146,6 @@ export default function HODNotifications() {
     }
   });
 
-  if (loading && notifications.length === 0) {
-    return <DashboardSkeleton />;
-  }
-
   const filteredNotifications = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
     return notifications.filter((notification) => {
@@ -255,6 +251,10 @@ export default function HODNotifications() {
     setSelectedType("all");
     setSearchTerm("");
   };
+
+  if (loading && notifications.length === 0) {
+    return <DashboardSkeleton />;
+  }
 
   return (
     <div className="space-y-6">
