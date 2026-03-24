@@ -170,19 +170,13 @@ export default function StaffTenderDocuments() {
   const tenderId = params.tenderId;
   const router = useRouter();
   const [selectedTender, setSelectedTender] = useState<Tender | null>(null);
-  const [comment, setComment] = useState("");
   const [activeTab, setActiveTab] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadFormData, setUploadFormData] = useState({
-    title: '',
-    category: 'Staff Document',
-    file: null as File | null,
-    description: '',
-    fileType: '',
-    fileSize: ''
+    files: [] as File[],
   });
 
   const [tenders, setTenders] = useState<Tender[]>([]);
@@ -284,21 +278,6 @@ export default function StaffTenderDocuments() {
     setTenders(prev => prev.map(t => t.id === selectedTender?.id ? { ...t, documents: newDocs } : t));
   };
 
-  const [allComments, setAllComments] = useState<Comment[]>([]);
-
-  // Load saved comment draft from sessionStorage
-  useEffect(() => {
-    const savedComment = sessionStorage.getItem(STORAGE_KEYS.COMMENT_DRAFT);
-    if (savedComment) setComment(savedComment);
-  }, []);
-
-  // Save comment draft to sessionStorage
-  useEffect(() => {
-    if (comment) sessionStorage.setItem(STORAGE_KEYS.COMMENT_DRAFT, comment);
-    else sessionStorage.removeItem(STORAGE_KEYS.COMMENT_DRAFT);
-  }, [comment]);
-
-
   const filteredTenders = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
     return tenders.filter((tender) => {
@@ -359,96 +338,65 @@ export default function StaffTenderDocuments() {
     }
   };
 
-  const handleAddComment = (documentId) => {
-    if (!comment.trim()) return toast.warning('Please enter a comment');
-
-    const newComment = {
-      id: allComments.length + 1,
-      tenderId: String(selectedTender?.id || ""),
-      documentId,
-      user: currentUser.name,
-      role: 'Staff',
-      comment: comment.trim(),
-      date: new Date().toISOString().split('T')[0] + ' ' +
-        new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
-    };
-
-    setAllComments([...allComments, newComment]);
-    const newDocs = tenderDocuments.map((doc) =>
-      doc.id === documentId
-        ? { ...doc, comments: [...(doc.comments || []), newComment] }
-        : doc
-    );
-    updateTenderDocuments(newDocs);
-    setComment('');
-  };
-
   // Document Upload Handlers
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    if (file.size > 50 * 1024 * 1024) {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    const oversized = files.find((file) => file.size > 50 * 1024 * 1024);
+    if (oversized) {
       toast.error('File size exceeds 50MB limit');
       return;
     }
     setUploadFormData({
       ...uploadFormData,
-      file,
-      fileType: file.name.split('.').pop().toUpperCase(),
-      fileSize: (file.size / (1024 * 1024)).toFixed(1) + ' MB',
+      files,
     });
-  };
-
-  const handleUploadInputChange = (e) => {
-    const { name, value } = e.target;
-    setUploadFormData({ ...uploadFormData, [name]: value });
   };
 
   const resetUploadForm = () => {
     setUploadFormData({
-      title: '',
-      category: 'Staff Document',
-      file: null,
-      description: '',
-      fileType: '',
-      fileSize: ''
+      files: [],
     });
   };
 
   const handleUploadDocument = async (e) => {
     e.preventDefault();
-    if (!uploadFormData.title.trim()) return toast.warning('Please enter document title');
-    if (!uploadFormData.file) return toast.warning('Please select a file');
+    if (!uploadFormData.files.length) return toast.warning('Please select at least one file');
     if (!selectedTender) return toast.warning("Please select a tender first");
 
     setIsUploading(true);
     setUploadProgress(0);
 
     try {
-      setUploadProgress(25);
-      const uploadPayload = new FormData();
-      uploadPayload.append("file", uploadFormData.file);
+      const uploadedDocuments = [];
+      for (const [index, file] of uploadFormData.files.entries()) {
+        setUploadProgress(Math.round((index / uploadFormData.files.length) * 70));
+        const uploadPayload = new FormData();
+        uploadPayload.append("file", file);
 
-      const uploadRes = await fetchWithAuth("/api/upload/cloudinary", {
-        method: "POST",
-        body: uploadPayload,
-      });
-      const uploadData = await uploadRes.json().catch(() => null);
+        const uploadRes = await fetchWithAuth("/api/upload/cloudinary", {
+          method: "POST",
+          body: uploadPayload,
+        });
+        const uploadData = await uploadRes.json().catch(() => null);
 
-      if (!uploadRes.ok || !(uploadData?.secureUrl || uploadData?.url)) {
-        throw new Error(uploadData?.error || "Failed to upload document file");
+        if (!uploadRes.ok || !(uploadData?.secureUrl || uploadData?.url)) {
+          throw new Error(uploadData?.error || `Failed to upload ${file.name}`);
+        }
+
+        uploadedDocuments.push({
+          title: file.name,
+          type: "Tender Document",
+          fileUrl: uploadData.secureUrl || uploadData.url,
+          fileSize: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
+        });
       }
-
-      setUploadProgress(70);
 
       const createRes = await fetchWithAuth(`/api/tenders/${selectedTender.id}/documents`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          title: uploadFormData.title.trim(),
-          type: uploadFormData.category,
-          fileUrl: uploadData.secureUrl || uploadData.url,
-          fileSize: uploadFormData.fileSize,
+          documents: uploadedDocuments,
         }),
       });
       const createdDocument = await createRes.json().catch(() => null);
@@ -459,7 +407,7 @@ export default function StaffTenderDocuments() {
 
       setUploadProgress(100);
       await fetchTenders();
-      toast.success("Document uploaded to your section successfully");
+      toast.success(`${uploadFormData.files.length} document(s) uploaded successfully`);
       setIsUploadModalOpen(false);
       resetUploadForm();
     } catch (error) {
@@ -711,8 +659,7 @@ export default function StaffTenderDocuments() {
                             </div>
                           </div>
 
-                          <div className="mt-4 flex items-center justify-between gap-3">
-                            <div className="text-xs text-gray-500">Comments: {doc.comments?.length || 0}</div>
+                          <div className="mt-4 flex items-center justify-end gap-3">
                             <div className="flex gap-2">
                               <button
                                 onClick={() => handleDownload(doc)}
@@ -721,63 +668,6 @@ export default function StaffTenderDocuments() {
                               >
                                 ⬇️ Download
                               </button>
-                            </div>
-                          </div>
-
-                          {/* Comments */}
-                          <div className="mt-5 pt-4 border-t border-gray-200/70">
-                            <p className="text-sm font-extrabold mb-3" style={{ color: "var(--primary-blue)" }}>
-                              Comments
-                            </p>
-
-                            <div className="space-y-3">
-                              {(doc.comments || []).slice(0, 2).map((c) => (
-                                <div key={c.id} className="flex items-start gap-3">
-                                  <div
-                                    className="w-8 h-8 rounded-xl flex items-center justify-center text-white text-xs font-extrabold"
-                                    style={{ backgroundColor: c.role === "MD" ? "#7c3aed" : "var(--primary-blue)" }}
-                                  >
-                                    {c.user?.charAt(0) || "U"}
-                                  </div>
-                                  <div className="flex-1">
-                                    <div className="flex flex-wrap items-center gap-2">
-                                      <span className="text-xs font-extrabold text-gray-900">{c.user}</span>
-                                      <Pill tone={getRoleTone(c.role)}>{c.role}</Pill>
-                                      <span className="text-xs text-gray-500">{c.date}</span>
-                                    </div>
-                                    <p className="text-xs text-gray-700 mt-1">{c.comment}</p>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-
-                            {/* Add comment */}
-                            <div className="mt-4 flex items-start gap-3">
-                              <div
-                                className="w-8 h-8 rounded-xl flex items-center justify-center text-white text-xs font-extrabold"
-                                style={{ backgroundColor: "var(--warn)" }}
-                              >
-                                {currentUser.name.charAt(0)}
-                              </div>
-                              <div className="flex-1">
-                                <textarea
-                                  value={comment}
-                                  onChange={(e) => setComment(e.target.value)}
-                                  placeholder="Add your comment or feedback..."
-                                  rows={2}
-                                  className="w-full px-4 py-3 rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-100"
-                                />
-                                <div className="flex justify-end mt-2">
-                                  <button
-                                    type="button"
-                                    onClick={() => handleAddComment(doc.id)}
-                                    className="px-5 py-2.5 rounded-2xl text-sm font-semibold text-white active:scale-[0.99] transition"
-                                    style={{ backgroundColor: "var(--primary-blue)" }}
-                                  >
-                                    Post Comment
-                                  </button>
-                                </div>
-                              </div>
                             </div>
                           </div>
                         </div>
@@ -819,9 +709,9 @@ export default function StaffTenderDocuments() {
                 <div className="flex justify-between items-start mb-6">
                   <div>
                     <h3 className="text-2xl font-extrabold" style={{ color: "var(--primary-blue)" }}>
-                      Upload Document
+                      Upload Documents
                     </h3>
-                    <p className="text-gray-600 mt-2">Add a document to {selectedTender.title}</p>
+                    <p className="text-gray-600 mt-2">Add one or more documents to {selectedTender.title}</p>
                     <div className="mt-2 flex items-center gap-2">
                       <Pill tone="warn">Staff</Pill>
                       <Pill tone={getDepartmentTone(currentUser.department)}>{currentUser.department}</Pill>
@@ -838,21 +728,6 @@ export default function StaffTenderDocuments() {
 
                 <form onSubmit={handleUploadDocument} className="space-y-6">
                   <div>
-                    <label className="block text-sm font-extrabold text-gray-700 mb-2">
-                      Document Title <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      name="title"
-                      value={uploadFormData.title}
-                      onChange={handleUploadInputChange}
-                      required
-                      className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-100"
-                      placeholder="e.g., Technical Question"
-                    />
-                  </div>
-
-                  <div>
                     <label className="block text-sm font-extrabold text-gray-700 mb-2">Section</label>
                     <div className="w-full px-4 py-3 border border-gray-200 rounded-2xl bg-gray-50 text-gray-700">
                       {currentUser.department}
@@ -860,41 +735,14 @@ export default function StaffTenderDocuments() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-extrabold text-gray-700 mb-2">Category</label>
-                    <select
-                      name="category"
-                      value={uploadFormData.category}
-                      onChange={handleUploadInputChange}
-                      className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-100"
-                    >
-                      <option value="Staff Document">Staff Document</option>
-                      <option value="Technical Question">Technical Question</option>
-                      <option value="Clarification Request">Clarification Request</option>
-                      <option value="Feedback">Feedback</option>
-                      <option value="Other">Other</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-extrabold text-gray-700 mb-2">Description (Optional)</label>
-                    <textarea
-                      name="description"
-                      value={uploadFormData.description}
-                      onChange={handleUploadInputChange}
-                      rows={3}
-                      className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-100"
-                      placeholder="Brief description of the document..."
-                    />
-                  </div>
-
-                  <div>
                     <label className="block text-sm font-extrabold text-gray-700 mb-2">
-                      File <span className="text-red-500">*</span>
+                      Files <span className="text-red-500">*</span>
                     </label>
                     <div className="rounded-2xl border-2 border-dashed border-gray-300 p-8 text-center hover:border-blue-400 transition">
                       <input
                         type="file"
                         id="staff-document-upload"
+                        multiple
                         onChange={handleFileChange}
                         className="hidden"
                       />
@@ -905,12 +753,15 @@ export default function StaffTenderDocuments() {
                         >
                           <span className="text-3xl">{renderNodeWithIcons("📎")}</span>
                         </div>
-                        {uploadFormData.file ? (
+                        {uploadFormData.files.length ? (
                           <div>
-                            <p className="font-extrabold text-gray-900">{uploadFormData.file.name}</p>
-                            <p className="text-sm text-gray-500 mt-1">
-                              {uploadFormData.fileSize} • {uploadFormData.fileType}
-                            </p>
+                            <p className="font-extrabold text-gray-900">{uploadFormData.files.length} file(s) selected</p>
+                            <div className="mt-2 space-y-1 text-sm text-gray-500">
+                              {uploadFormData.files.slice(0, 4).map((file) => (
+                                <p key={`${file.name}-${file.size}`}>{file.name}</p>
+                              ))}
+                              {uploadFormData.files.length > 4 ? <p>and {uploadFormData.files.length - 4} more...</p> : null}
+                            </div>
                           </div>
                         ) : (
                           <div>
@@ -918,7 +769,7 @@ export default function StaffTenderDocuments() {
                               Click to upload or drag and drop
                             </p>
                             <p className="text-sm text-gray-500">
-                              PDF, DOC, XLSX up to 50MB. Your upload will appear in the {currentUser.department} section.
+                              PDF, DOC, XLSX up to 50MB each. Your upload will appear in the {currentUser.department} section.
                             </p>
                           </div>
                         )}
@@ -929,7 +780,7 @@ export default function StaffTenderDocuments() {
                   {isUploading && (
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
-                        <span>Uploading document...</span>
+                        <span>Uploading documents...</span>
                         <span>{uploadProgress}%</span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
@@ -957,7 +808,7 @@ export default function StaffTenderDocuments() {
                         }`}
                       style={{ backgroundColor: "var(--accent-red)" }}
                     >
-                      {isUploading ? "Uploading..." : "Upload Document"}
+                      {isUploading ? "Uploading..." : "Upload Documents"}
                     </button>
                   </div>
                 </form>

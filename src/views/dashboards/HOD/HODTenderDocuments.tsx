@@ -3,27 +3,13 @@
 // pages/dashboards/HOD/HODTenderDocuments.jsx
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Layout from "@/components/Layout";
 import { HODMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
 import { fetchWithAuth, getAuthToken } from "@/lib/api";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 const MANAGED_DEPARTMENTS = ["Technical", "Workshop", "HSE"];
-
-const STORAGE_KEYS = {
-  COMMENT_DRAFT: "hodTenderComment_draft",
-};
-
-interface Comment {
-  id: number;
-  tenderId: string;
-  documentId: number;
-  user: string;
-  role: string;
-  comment: string;
-  date: string;
-}
 
 interface Document {
   id: number;
@@ -39,7 +25,7 @@ interface Document {
   downloads: number;
   status: string;
   department: string;
-  comments: Comment[];
+  comments: Array<Record<string, unknown>>;
   type?: string;
   fileUrl?: string | null;
 }
@@ -118,9 +104,7 @@ const getTenderDocuments = (tender?: Tender | null) =>
 export default function HODTenderDocuments() {
   const params = useParams() || {};
   const tenderId = params.tenderId;
-  const router = useRouter();
   const [selectedTender, setSelectedTender] = useState<Tender | null>(null);
-  const [comment, setComment] = useState("");
   const [activeTab, setActiveTab] = useState("documents");
   const [statusFilter, setStatusFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
@@ -129,12 +113,7 @@ export default function HODTenderDocuments() {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadFormData, setUploadFormData] = useState({
-    title: "",
-    category: "Tender Document",
-    file: null as File | null,
-    description: "",
-    fileType: "",
-    fileSize: "",
+    files: [] as File[],
   });
 
   const [tenders, setTenders] = useState<Tender[]>([]);
@@ -267,19 +246,6 @@ export default function HODTenderDocuments() {
     setTenders(prev => prev.map(t => t.id === selectedTender?.id ? { ...t, documents: newDocs } : t));
   };
 
-  const [allComments, setAllComments] = useState<Comment[]>([]);
-
-  useEffect(() => {
-    const saved = sessionStorage.getItem(STORAGE_KEYS.COMMENT_DRAFT);
-    if (saved) setComment(saved);
-  }, []);
-
-  useEffect(() => {
-    if (comment) sessionStorage.setItem(STORAGE_KEYS.COMMENT_DRAFT, comment);
-    else sessionStorage.removeItem(STORAGE_KEYS.COMMENT_DRAFT);
-  }, [comment]);
-
-
   const departments = useMemo(() => ["all", ...Array.from(new Set([...departmentsList.map(d => d.name), ...tenders.map((t) => t.department)]))], [departmentsList, tenders]);
 
   const filteredTenders = useMemo(() => {
@@ -341,65 +307,29 @@ export default function HODTenderDocuments() {
     }
   };
 
-  const handleAddComment = (documentId: number) => {
-    if (!selectedTender) return;
-    if (!comment.trim()) return toast.warning("Please enter a comment");
-
-    const hodName = currentUser.name || `HOD - ${selectedTender.department || "Department"}`;
-    const now = new Date();
-    const newComment: Comment = {
-      id: allComments.length + 1,
-      tenderId: selectedTender.id,
-      documentId,
-      user: hodName,
-      role: "HOD",
-      comment: comment.trim(),
-      date:
-        now.toISOString().split("T")[0] +
-        " " +
-        now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
-    };
-
-    setAllComments((p) => [...p, newComment]);
-    const newDocs = tenderDocuments.map((doc) =>
-      doc.id === documentId
-        ? { ...doc, comments: [...(doc.comments || []), newComment] }
-        : doc
-    );
-    updateTenderDocuments(newDocs);
-    setComment("");
-  };
-
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    if (file.size > 100 * 1024 * 1024) {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    const oversized = files.find((file) => file.size > 100 * 1024 * 1024);
+    if (oversized) {
       toast.error("File size exceeds 100MB limit");
       return;
     }
     setUploadFormData({
       ...uploadFormData,
-      file,
-      fileType: file.name.split(".").pop().toUpperCase(),
-      fileSize: (file.size / (1024 * 1024)).toFixed(1) + " MB",
+      files,
     });
   };
 
   const resetUploadForm = () => {
     setUploadFormData({
-      title: "",
-      category: "Tender Document",
-      file: null,
-      description: "",
-      fileType: "",
-      fileSize: "",
+      files: [],
     });
   };
 
   const handleUploadDocument = async (e) => {
     e.preventDefault();
-    if (!uploadFormData.title.trim()) return toast.warning("Please enter document title");
-    if (!uploadFormData.file) return toast.warning("Please select a file");
+    if (!uploadFormData.files.length) return toast.warning("Please select at least one file");
     if (!selectedTender) return toast.warning("Please select a tender first");
     if (!selectedUploadDepartment) return toast.warning("Please choose a department section");
 
@@ -407,31 +337,39 @@ export default function HODTenderDocuments() {
     setUploadProgress(0);
 
     try {
-      setUploadProgress(25);
-      const uploadPayload = new FormData();
-      uploadPayload.append("file", uploadFormData.file);
+      const uploadedDocuments = [];
 
-      const uploadRes = await fetchWithAuth("/api/upload/cloudinary", {
-        method: "POST",
-        body: uploadPayload,
-      });
-      const uploadData = await uploadRes.json().catch(() => null);
+      for (const [index, file] of uploadFormData.files.entries()) {
+        setUploadProgress(Math.round((index / uploadFormData.files.length) * 70));
 
-      if (!uploadRes.ok || !(uploadData?.secureUrl || uploadData?.url)) {
-        throw new Error(uploadData?.error || "Failed to upload document file");
+        const uploadPayload = new FormData();
+        uploadPayload.append("file", file);
+
+        const uploadRes = await fetchWithAuth("/api/upload/cloudinary", {
+          method: "POST",
+          body: uploadPayload,
+        });
+        const uploadData = await uploadRes.json().catch(() => null);
+
+        if (!uploadRes.ok || !(uploadData?.secureUrl || uploadData?.url)) {
+          throw new Error(uploadData?.error || `Failed to upload ${file.name}`);
+        }
+
+        uploadedDocuments.push({
+          title: file.name,
+          type: "Tender Document",
+          fileUrl: uploadData.secureUrl || uploadData.url,
+          fileSize: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
+          department: selectedUploadDepartment,
+        });
       }
-
-      setUploadProgress(70);
 
       const createRes = await fetchWithAuth(`/api/tenders/${selectedTender.id}/documents`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          title: uploadFormData.title.trim(),
-          type: uploadFormData.category,
-          fileUrl: uploadData.secureUrl || uploadData.url,
-          fileSize: uploadFormData.fileSize,
           department: selectedUploadDepartment,
+          documents: uploadedDocuments,
         }),
       });
       const createdDocument = await createRes.json().catch(() => null);
@@ -442,7 +380,7 @@ export default function HODTenderDocuments() {
 
       setUploadProgress(100);
       await fetchTenders();
-      toast.success(`Document uploaded to the ${selectedUploadDepartment} section`);
+      toast.success(`${uploadFormData.files.length} document(s) uploaded to the ${selectedUploadDepartment} section`);
       setIsUploadModalOpen(false);
       resetUploadForm();
     } catch (error) {
@@ -519,7 +457,7 @@ export default function HODTenderDocuments() {
                 <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
                   Tender Documents & Submissions
                 </h1>
-                <p className="text-gray-600 mt-2">Review tender documents, vendor submissions, and add HOD feedback.</p>
+                <p className="text-gray-600 mt-2">Review tender documents and vendor submissions across your managed sections.</p>
                 <div className="mt-2 flex items-center gap-2">
                   <span className="text-xs text-gray-500">Your Departments:</span>
                   {currentUser.managedDepartments.map((dept) => (
@@ -773,8 +711,7 @@ export default function HODTenderDocuments() {
                                   </div>
                                 </div>
 
-                                <div className="mt-4 flex items-center justify-between gap-3">
-                                  <div className="text-xs text-gray-500">Comments: {doc.comments?.length || 0}</div>
+                                <div className="mt-4 flex items-center justify-end gap-3">
                                   <div className="flex gap-2">
                                     <button
                                       onClick={() => handleDownload(doc)}
@@ -783,63 +720,6 @@ export default function HODTenderDocuments() {
                                     >
                                       {renderNodeWithIcons("⬇️")} Download
                                     </button>
-                                  </div>
-                                </div>
-
-                                {/* Comments */}
-                                <div className="mt-5 pt-4 border-t border-gray-200/70">
-                                  <p className="text-sm font-extrabold mb-3" style={{ color: "var(--primary-blue)" }}>
-                                    Comments
-                                  </p>
-
-                                  <div className="space-y-3">
-                                    {(doc.comments || []).slice(0, 2).map((c) => (
-                                      <div key={c.id} className="flex items-start gap-3">
-                                        <div
-                                          className="w-9 h-9 rounded-2xl flex items-center justify-center text-white text-xs font-extrabold"
-                                          style={{ backgroundColor: c.role === "MD" ? "#7c3aed" : "var(--primary-blue)" }}
-                                        >
-                                          {c.user?.charAt(0) || "U"}
-                                        </div>
-                                        <div className="flex-1">
-                                          <div className="flex flex-wrap items-center gap-2">
-                                            <span className="text-xs font-extrabold text-gray-900">{c.user}</span>
-                                            <Pill tone={getRoleTone(c.role)}>{c.role}</Pill>
-                                            <span className="text-xs text-gray-500">{c.date}</span>
-                                          </div>
-                                          <p className="text-sm text-gray-700 mt-1">{c.comment}</p>
-                                        </div>
-                                      </div>
-                                    ))}
-                                  </div>
-
-                                  {/* Add comment */}
-                                  <div className="mt-4 flex items-start gap-3">
-                                    <div
-                                      className="w-9 h-9 rounded-2xl flex items-center justify-center text-white text-xs font-extrabold"
-                                      style={{ backgroundColor: "var(--primary-blue)" }}
-                                    >
-                                      H
-                                    </div>
-                                    <div className="flex-1">
-                                      <textarea
-                                        value={comment}
-                                        onChange={(e) => setComment(e.target.value)}
-                                        placeholder="Add your comment or feedback..."
-                                        rows={2}
-                                        className="w-full px-4 py-3 rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-100"
-                                      />
-                                      <div className="flex justify-end mt-2">
-                                        <button
-                                          type="button"
-                                          onClick={() => handleAddComment(doc.id)}
-                                          className="px-5 py-2.5 rounded-2xl text-sm font-semibold text-white active:scale-[0.99] transition"
-                                          style={{ backgroundColor: "var(--primary-blue)" }}
-                                        >
-                                          Post Comment
-                                        </button>
-                                      </div>
-                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -895,65 +775,6 @@ export default function HODTenderDocuments() {
                                 </button>
                               </div>
 
-                              {/* Comments for submissions */}
-                              <div className="mt-5 pt-4 border-t border-gray-200/70">
-                                <p className="text-sm font-extrabold mb-3" style={{ color: "var(--primary-blue)" }}>
-                                  Evaluation Comments ({doc.comments?.length || 0})
-                                </p>
-
-                                {doc.comments?.length ? (
-                                  <div className="space-y-3">
-                                    {doc.comments.map((c) => (
-                                      <div key={c.id} className="flex items-start gap-3">
-                                        <div
-                                          className="w-9 h-9 rounded-2xl flex items-center justify-center text-white text-xs font-extrabold"
-                                          style={{ backgroundColor: c.role === "MD" ? "#7c3aed" : "var(--primary-blue)" }}
-                                        >
-                                          {c.user?.charAt(0) || "U"}
-                                        </div>
-                                        <div className="flex-1">
-                                          <div className="flex flex-wrap items-center gap-2">
-                                            <span className="text-xs font-extrabold text-gray-900">{c.user}</span>
-                                            <Pill tone={getRoleTone(c.role)}>{c.role}</Pill>
-                                            <span className="text-xs text-gray-500">{c.date}</span>
-                                          </div>
-                                          <p className="text-sm text-gray-700 mt-1">{c.comment}</p>
-                                        </div>
-                                      </div>
-                                    ))}
-                                  </div>
-                                ) : (
-                                  <p className="text-sm text-gray-500 mt-2">No evaluation comments yet.</p>
-                                )}
-
-                                <div className="mt-4 flex items-start gap-3">
-                                  <div
-                                    className="w-9 h-9 rounded-2xl flex items-center justify-center text-white text-xs font-extrabold"
-                                    style={{ backgroundColor: "var(--primary-blue)" }}
-                                  >
-                                    H
-                                  </div>
-                                  <div className="flex-1">
-                                    <textarea
-                                      value={comment}
-                                      onChange={(e) => setComment(e.target.value)}
-                                      placeholder="Add evaluation comment on this bid..."
-                                      rows={2}
-                                      className="w-full px-4 py-3 rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-100"
-                                    />
-                                    <div className="flex justify-end mt-2">
-                                      <button
-                                        type="button"
-                                        onClick={() => handleAddComment(doc.id)}
-                                        className="px-5 py-2.5 rounded-2xl text-sm font-semibold text-white active:scale-[0.99] transition"
-                                        style={{ backgroundColor: "var(--primary-blue)" }}
-                                      >
-                                        Post Comment
-                                      </button>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
                             </div>
                           ))
                         ) : (
@@ -964,36 +785,6 @@ export default function HODTenderDocuments() {
                   )}
                 </Card>
 
-                {/* Recent Activity */}
-                <Card className="p-6">
-                  <SectionTitle title="Event Statistics" subtitle="Quick insights and averages" action={null} />
-
-                  <div className="mt-5 space-y-3">
-                    {allComments
-                      .filter((c) => c.tenderId === selectedTender.id)
-                      .slice(0, 3)
-                      .map((c) => (
-                        <div key={c.id} className="p-4 rounded-2xl border border-gray-200/70 hover:bg-gray-50 transition">
-                          <div className="flex items-start gap-3">
-                            <div
-                              className="w-10 h-10 rounded-2xl flex items-center justify-center text-white text-xs font-extrabold"
-                              style={{ backgroundColor: c.role === "MD" ? "#7c3aed" : "var(--primary-blue)" }}
-                            >
-                              {c.user?.charAt(0) || "U"}
-                            </div>
-                            <div className="flex-1">
-                              <div className="flex flex-wrap items-center gap-2">
-                                <span className="font-extrabold text-sm text-gray-900">{c.user}</span>
-                                <Pill tone={getRoleTone(c.role)}>{c.role}</Pill>
-                                <span className="text-xs text-gray-500">{c.date}</span>
-                              </div>
-                              <p className="text-sm text-gray-700 mt-1">{c.comment}</p>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                  </div>
-                </Card>
               </>
             ) : (
               <Card className="p-12 text-center">
@@ -1022,9 +813,9 @@ export default function HODTenderDocuments() {
                 <div className="flex justify-between items-start mb-6">
                   <div>
                     <h3 className="text-2xl font-extrabold" style={{ color: "var(--primary-blue)" }}>
-                      Upload Tender Document
+                      Upload Tender Documents
                     </h3>
-                    <p className="text-gray-600 mt-2">Add a document to {selectedTender.title}</p>
+                    <p className="text-gray-600 mt-2">Add one or more documents to {selectedTender.title}</p>
                     <div className="mt-2 flex items-center gap-2">
                       <Pill tone={getDepartmentTone(selectedUploadDepartment || currentUser.department)}>{selectedUploadDepartment || currentUser.department}</Pill>
                       <Pill tone="info">Department Section</Pill>
@@ -1039,21 +830,6 @@ export default function HODTenderDocuments() {
                 </div>
 
                 <form onSubmit={handleUploadDocument} className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-extrabold text-gray-700 mb-2">
-                      Document Title <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      name="title"
-                      value={uploadFormData.title}
-                      onChange={(e) => setUploadFormData({ ...uploadFormData, title: e.target.value })}
-                      required
-                      className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-100"
-                      placeholder="e.g., Technical Specifications"
-                    />
-                  </div>
-
                   <div>
                     <label className="block text-sm font-extrabold text-gray-700 mb-2">Section</label>
                     <select
@@ -1070,41 +846,14 @@ export default function HODTenderDocuments() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-extrabold text-gray-700 mb-2">Category</label>
-                    <select
-                      name="category"
-                      value={uploadFormData.category}
-                      onChange={(e) => setUploadFormData({ ...uploadFormData, category: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-100"
-                    >
-                      <option value="Tender Document">Tender Document</option>
-                      <option value="Specification">Specification</option>
-                      <option value="Addendum">Addendum</option>
-                      <option value="Clarification">Clarification</option>
-                      <option value="Other">Other</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-extrabold text-gray-700 mb-2">Description (Optional)</label>
-                    <textarea
-                      name="description"
-                      value={uploadFormData.description}
-                      onChange={(e) => setUploadFormData({ ...uploadFormData, description: e.target.value })}
-                      rows={3}
-                      className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-100"
-                      placeholder="Brief description of the document..."
-                    />
-                  </div>
-
-                  <div>
                     <label className="block text-sm font-extrabold text-gray-700 mb-2">
-                      File <span className="text-red-500">*</span>
+                      Files <span className="text-red-500">*</span>
                     </label>
                     <div className="rounded-2xl border-2 border-dashed border-gray-300 p-8 text-center hover:border-blue-400 transition">
                       <input
                         type="file"
                         id="hod-document-upload"
+                        multiple
                         onChange={handleFileChange}
                         className="hidden"
                       />
@@ -1115,12 +864,15 @@ export default function HODTenderDocuments() {
                         >
                           <span className="text-3xl">{renderNodeWithIcons("📎")}</span>
                         </div>
-                        {uploadFormData.file ? (
+                        {uploadFormData.files.length ? (
                           <div>
-                            <p className="font-extrabold text-gray-900">{uploadFormData.file.name}</p>
-                            <p className="text-sm text-gray-500 mt-1">
-                              {uploadFormData.fileSize} • {uploadFormData.fileType}
-                            </p>
+                            <p className="font-extrabold text-gray-900">{uploadFormData.files.length} file(s) selected</p>
+                            <div className="mt-2 space-y-1 text-sm text-gray-500">
+                              {uploadFormData.files.slice(0, 4).map((file) => (
+                                <p key={`${file.name}-${file.size}`}>{file.name}</p>
+                              ))}
+                              {uploadFormData.files.length > 4 ? <p>and {uploadFormData.files.length - 4} more...</p> : null}
+                            </div>
                           </div>
                         ) : (
                           <div>
@@ -1128,7 +880,7 @@ export default function HODTenderDocuments() {
                               Click to upload or drag and drop
                             </p>
                             <p className="text-sm text-gray-500">
-                              PDF, DOC, XLSX up to 100MB
+                              PDF, DOC, XLSX up to 100MB each
                             </p>
                           </div>
                         )}
@@ -1139,7 +891,7 @@ export default function HODTenderDocuments() {
                   {isUploading && (
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
-                        <span>Uploading document...</span>
+                        <span>Uploading documents...</span>
                         <span>{uploadProgress}%</span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
@@ -1167,7 +919,7 @@ export default function HODTenderDocuments() {
                         }`}
                       style={{ backgroundColor: "var(--accent-red)" }}
                     >
-                      {isUploading ? "Uploading..." : "Upload Document"}
+                      {isUploading ? "Uploading..." : "Upload Documents"}
                     </button>
                   </div>
                 </form>

@@ -367,7 +367,7 @@ export default function MDTenderDocuments() {
                 <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
                   Tender Documents & Submissions
                 </h1>
-                <p className="text-gray-600 mt-2">Review tender documents, vendor submissions, and leave MD feedback.</p>
+                <p className="text-gray-600 mt-2">Review tender documents and vendor submissions across all departments.</p>
               </div>
 
               <Link href="/md-dashboard/tenders">
@@ -594,8 +594,7 @@ export default function MDTenderDocuments() {
                                   </div>
                                 </div>
 
-                                <div className="mt-4 flex items-center justify-between gap-3">
-                                  <div className="text-xs text-gray-500">Comments: {doc.comments?.length || 0}</div>
+                                <div className="mt-4 flex items-center justify-end gap-3">
                                   <button
                                     onClick={() => handleDownload(doc)}
                                     className="px-5 py-2.5 rounded-2xl text-sm font-semibold text-white active:scale-[0.99] transition inline-flex items-center gap-2"
@@ -603,63 +602,6 @@ export default function MDTenderDocuments() {
                                   >
                                     {renderNodeWithIcons("⬇️")} Download
                                   </button>
-                                </div>
-
-                                {/* Comments */}
-                                <div className="mt-5 pt-4 border-t border-gray-200/70">
-                                  <div className="flex items-center justify-between mb-3">
-                                    <p className="text-sm font-extrabold" style={{ color: "var(--primary-blue)" }}>
-                                      Comments
-                                    </p>
-                                    <span className="text-xs text-gray-500">Latest 2</span>
-                                  </div>
-
-                                  <div className="space-y-3">
-                                    {(doc.comments || []).slice(0, 2).map((c) => (
-                                      <div key={c.id} className="flex items-start gap-3">
-                                        <div
-                                          className="w-9 h-9 rounded-2xl flex items-center justify-center text-white text-xs font-extrabold"
-                                          style={{ backgroundColor: c.role === "MD" ? "#7c3aed" : "var(--primary-blue)" }}
-                                        >
-                                          {c.user?.charAt(0) || "U"}
-                                        </div>
-                                        <div className="flex-1">
-                                          <div className="flex flex-wrap items-center gap-2">
-                                            <span className="text-xs font-extrabold text-gray-900">{c.user}</span>
-                                            <Pill tone={getRoleTone(c.role)}>{c.role}</Pill>
-                                            <span className="text-xs text-gray-500">{c.date}</span>
-                                          </div>
-                                          <p className="text-sm text-gray-700 mt-1">{c.comment}</p>
-                                        </div>
-                                      </div>
-                                    ))}
-                                  </div>
-
-                                  {/* Add comment */}
-                                  <div className="mt-4 flex items-start gap-3">
-                                    <div className="w-9 h-9 rounded-2xl flex items-center justify-center text-white text-xs font-extrabold bg-purple-600">
-                                      MD
-                                    </div>
-                                    <div className="flex-1">
-                                      <textarea
-                                        value={comment}
-                                        onChange={(e) => setComment(e.target.value)}
-                                        placeholder="Add your comment or feedback..."
-                                        rows={2}
-                                        className="w-full px-4 py-3 rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-100"
-                                      />
-                                      <div className="flex justify-end mt-2">
-                                        <button
-                                          type="button"
-                                          onClick={() => handleAddComment(doc.id)}
-                                          className="px-5 py-2.5 rounded-2xl text-sm font-semibold text-white active:scale-[0.99] transition"
-                                          style={{ backgroundColor: "var(--primary-blue)" }}
-                                        >
-                                          Post Comment
-                                        </button>
-                                      </div>
-                                    </div>
-                                  </div>
                                 </div>
                               </div>
                             ))
@@ -711,62 +653,6 @@ export default function MDTenderDocuments() {
                                 </button>
                               </div>
 
-                              {/* Comments */}
-                              <div className="mt-5 pt-4 border-t border-gray-200/70">
-                                <p className="text-sm font-extrabold" style={{ color: "var(--primary-blue)" }}>
-                                  Evaluation Comments ({doc.comments?.length || 0})
-                                </p>
-
-                                {doc.comments?.length ? (
-                                  <div className="mt-3 space-y-3">
-                                    {doc.comments.map((c) => (
-                                      <div key={c.id} className="flex items-start gap-3">
-                                        <div
-                                          className="w-9 h-9 rounded-2xl flex items-center justify-center text-white text-xs font-extrabold"
-                                          style={{ backgroundColor: c.role === "MD" ? "#7c3aed" : "var(--primary-blue)" }}
-                                        >
-                                          {c.user?.charAt(0) || "U"}
-                                        </div>
-                                        <div className="flex-1">
-                                          <div className="flex flex-wrap items-center gap-2">
-                                            <span className="text-xs font-extrabold text-gray-900">{c.user}</span>
-                                            <Pill tone={getRoleTone(c.role)}>{c.role}</Pill>
-                                            <span className="text-xs text-gray-500">{c.date}</span>
-                                          </div>
-                                          <p className="text-sm text-gray-700 mt-1">{c.comment}</p>
-                                        </div>
-                                      </div>
-                                    ))}
-                                  </div>
-                                ) : (
-                                  <p className="text-sm text-gray-500 mt-2">No evaluation comments yet.</p>
-                                )}
-
-                                <div className="mt-4 flex items-start gap-3">
-                                  <div className="w-9 h-9 rounded-2xl flex items-center justify-center text-white text-xs font-extrabold bg-purple-600">
-                                    MD
-                                  </div>
-                                  <div className="flex-1">
-                                    <textarea
-                                      value={comment}
-                                      onChange={(e) => setComment(e.target.value)}
-                                      placeholder="Add evaluation comment or feedback on this bid..."
-                                      rows={2}
-                                      className="w-full px-4 py-3 rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-100"
-                                    />
-                                    <div className="flex justify-end mt-2">
-                                      <button
-                                        type="button"
-                                        onClick={() => handleAddComment(doc.id)}
-                                        className="px-5 py-2.5 rounded-2xl text-sm font-semibold text-white active:scale-[0.99] transition"
-                                        style={{ backgroundColor: "var(--primary-blue)" }}
-                                      >
-                                        Post Comment
-                                      </button>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
                             </div>
                           ))
                         ) : (
@@ -777,36 +663,6 @@ export default function MDTenderDocuments() {
                   )}
                 </Card>
 
-                {/* Activity */}
-                <Card className="p-6">
-                  <SectionTitle title="Recent Activity" subtitle="Latest comments on this tender" />
-
-                  <div className="mt-5 space-y-3">
-                    {allComments
-                      .filter((c) => c.tenderId === selectedTender.id)
-                      .slice(0, 3)
-                      .map((c) => (
-                        <div key={c.id} className="p-4 rounded-2xl border border-gray-200/70 hover:bg-gray-50 transition">
-                          <div className="flex items-start gap-3">
-                            <div
-                              className="w-10 h-10 rounded-2xl flex items-center justify-center text-white text-xs font-extrabold"
-                              style={{ backgroundColor: c.role === "MD" ? "#7c3aed" : "var(--primary-blue)" }}
-                            >
-                              {c.user?.charAt(0) || "U"}
-                            </div>
-                            <div className="flex-1">
-                              <div className="flex flex-wrap items-center gap-2">
-                                <span className="font-extrabold text-sm text-gray-900">{c.user}</span>
-                                <Pill tone={getRoleTone(c.role)}>{c.role}</Pill>
-                                <span className="text-xs text-gray-500">{c.date}</span>
-                              </div>
-                              <p className="text-sm text-gray-700 mt-1">{c.comment}</p>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                  </div>
-                </Card>
               </>
             ) : (
               <Card className="p-12 text-center">
