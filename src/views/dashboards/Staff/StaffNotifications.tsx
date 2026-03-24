@@ -53,6 +53,11 @@ const NOTIFICATIONS_TABLE_VIEWPORT_HEIGHT = 600;
 const NOTIFICATIONS_ROW_HEIGHT = 144;
 const NOTIFICATIONS_OVERSCAN = 6;
 const safeLower = (value) => String(value ?? "").toLowerCase();
+const safeText = (value, fallback = "") => (typeof value === "string" && value.trim() ? value : fallback);
+const safeLink = (value) => {
+  const link = safeText(value, "#");
+  return link.startsWith("/") ? link : "#";
+};
 
 export default function StaffNotifications() {
   const router = useRouter();
@@ -104,22 +109,22 @@ export default function StaffNotifications() {
 
       const mapped = data.map((n) => ({
         id: n.id,
-        type: n.actionType || "SYSTEM_ALERT",
-        title: (n.actionType || "System Alert").replace(/_/g, " "),
-        message: n.message,
+        type: safeText(n.actionType, "SYSTEM_ALERT"),
+        title: safeText(n.actionType, "System Alert").replace(/_/g, " "),
+        message: safeText(n.message, "No notification details available."),
         time: (() => {
           const d = new Date(n.createdAt);
           if (isNaN(d.getTime())) return "Invalid Date";
           return d.toLocaleString("en-US", { timeZone: "UTC" });
         })(),
         timestamp: n.createdAt,
-        read: n.read,
-        link: "#",
+        read: Boolean(n.read),
+        link: safeLink(n.linkPath),
         priority: "NORMAL",
         sender: {
-          name: n.actor?.name || n.actorRole || "System",
+          name: safeText(n.actor?.name, safeText(n.actorRole, "System")),
           avatar: "👤",
-          department: n.actor?.department || "General",
+          department: safeText(n.actor?.department, "General"),
         },
       }));
       setNotifications(mapped);
@@ -550,7 +555,9 @@ export default function StaffNotifications() {
                         <div
                           onClick={() => {
                             markAsRead(notification.id);
-                            router.push(notification.link);
+                            if (notification.link !== "#") {
+                              router.push(notification.link);
+                            }
                           }}
                           className="cursor-pointer"
                         >
