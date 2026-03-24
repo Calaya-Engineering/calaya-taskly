@@ -54,7 +54,8 @@ export async function GET(req: NextRequest) {
             // XREAD with a short block; REST API doesn't support blocking so we
             // poll manually instead.
             const results = await redis.xread(
-              [{ key: REALTIME_STREAM_KEY, id: cursor }],
+              [REALTIME_STREAM_KEY],
+              [cursor],
               { count: 50 }
             );
 

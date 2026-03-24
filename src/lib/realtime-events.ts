@@ -42,7 +42,7 @@ export function emitRealtimeEvent(event: RealtimeEvent): void {
         REALTIME_STREAM_KEY,
         "*",
         { data: JSON.stringify(normalized) },
-        { trim: { type: "MAXLEN", strategy: "~", count: STREAM_MAXLEN } }
+        { trim: { type: "MAXLEN", comparison: "~", threshold: STREAM_MAXLEN } }
       )
       .catch((e) => console.error("[realtime] Redis XADD error:", e));
     return;
