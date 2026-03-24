@@ -42,6 +42,13 @@ const Pill = ({ children, tone = "default" }) => {
   );
 };
 
+const safeText = (value, fallback = "") => (typeof value === "string" && value.trim() ? value : fallback);
+const safeLower = (value) => safeText(value).toLowerCase();
+const safeLink = (value) => {
+  const link = safeText(value, "#");
+  return link.startsWith("/") ? link : "#";
+};
+
 const notificationsData = [
   {
     id: 1,
@@ -192,18 +199,21 @@ export default function MDNotifications() {
 
         const mapped = data.map(n => ({
           id: n.id,
-          type: n.actionType || "SYSTEM_ALERT",
-          title: (n.actionType || "System Alert").replace(/_/g, " "),
-          message: n.message,
-          time: new Date(n.createdAt).toLocaleString('en-US', { timeZone: 'UTC' }),
+          type: safeText(n.actionType, "SYSTEM_ALERT"),
+          title: safeText(n.actionType, "System Alert").replace(/_/g, " "),
+          message: safeText(n.message, "No notification details available."),
+          time: (() => {
+            const date = new Date(n.createdAt);
+            return Number.isNaN(date.getTime()) ? "Invalid Date" : date.toLocaleString("en-US", { timeZone: "UTC" });
+          })(),
           timestamp: n.createdAt,
-          read: n.read,
-          link: "#",
+          read: Boolean(n.read),
+          link: safeLink(n.linkPath),
           priority: "NORMAL",
           sender: {
-            name: n.actor?.name || n.actorRole || "System",
+            name: safeText(n.actor?.name, safeText(n.actorRole, "System")),
             avatar: "👤",
-            department: n.actor?.department || "General",
+            department: safeText(n.actor?.department, "General"),
           }
         }));
         setNotifications(mapped);
@@ -225,9 +235,9 @@ export default function MDNotifications() {
       const matchesType = selectedType === "all" || notification.type === selectedType;
       const matchesSearch =
         !query ||
-        notification.title.toLowerCase().includes(query) ||
-        notification.message.toLowerCase().includes(query) ||
-        notification.sender.name.toLowerCase().includes(query);
+        safeLower(notification.title).includes(query) ||
+        safeLower(notification.message).includes(query) ||
+        safeLower(notification.sender?.name).includes(query);
       return matchesRead && matchesPriority && matchesType && matchesSearch;
     });
   }, [notifications, filter, selectedPriority, selectedType, searchTerm]);
