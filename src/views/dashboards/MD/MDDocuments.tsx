@@ -8,6 +8,7 @@ import { DocumentIcon } from "@/lib/icons";
 import { MDMenuItems } from "@/utils/menus";
 import { getDocIconComponent } from "@/lib/icons";
 import { fetchWithAuth, getAuthToken } from "@/lib/api";
+import { formatFileSize, parseFileSize } from "@/lib/file-size";
 import { toast } from "@/lib/toast";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 
@@ -69,11 +70,6 @@ const getDocIcon = (type) => getDocIconComponent(type);
 
 const fmtDate = (iso) => new Date(iso).toLocaleDateString('en-US', { year: "numeric", month: "short", day: "numeric" });
 const formatScope = (scope) => scope.replace(/_/g, " ");
-
-const toMB = (sizeStr) => {
-  const n = parseFloat(String(sizeStr).replace(/[^\d.]/g, ""));
-  return Number.isFinite(n) ? n : 0;
-};
 
 const SCOPE_OPTIONS = ["PUBLIC", "PRIVATE", "ALL_HODS", "SPECIFIC_HODS", "SPECIFIC_DEPARTMENTS"];
 const TYPE_OPTIONS = ["Report", "Procedure", "Policy", "Certificate", "Financial", "Log", "Security", "Map", "Manual", "Checklist", "Form", "Presentation"];
@@ -148,7 +144,9 @@ export default function MDDocuments() {
     const publicCount = documents.filter((d) => d.scope === "PUBLIC").length;
     const privateCount = documents.filter((d) => d.scope === "PRIVATE").length;
     const totalDownloads = documents.reduce((sum, d) => sum + (d.downloads || 0), 0);
-    const avgSize = total ? (documents.reduce((sum, d) => sum + toMB(d.size || "0"), 0) / total).toFixed(1) : "0.0";
+    const avgSize = total
+      ? formatFileSize(documents.reduce((sum, d) => sum + parseFileSize(d.size || "0"), 0) / total)
+      : "0 KB";
     return { total, publicCount, privateCount, totalDownloads, avgSize };
   }, [documents]);
 
@@ -310,7 +308,7 @@ export default function MDDocuments() {
               { label: "Total Documents", value: stats.total, color: "var(--primary-blue)" },
               { label: "Public Documents", value: stats.publicCount, color: "#10B981" },
               { label: "Total Downloads", value: stats.totalDownloads.toLocaleString(), color: "var(--secondary-blue)" },
-              { label: "Avg Size", value: `${stats.avgSize} MB`, color: "#8B5CF6" },
+              { label: "Avg Size", value: stats.avgSize, color: "#8B5CF6" },
             ].map((s) => (
               <Card key={s.label} className="p-5">
                 <p className="text-sm text-gray-500">{s.label}</p>
@@ -556,7 +554,7 @@ export default function MDDocuments() {
                 .filter((d) => d !== "all")
                 .map((dept) => {
                   const deptDocs = documents.filter((d) => d.department === dept);
-                  const totalSize = deptDocs.reduce((sum, doc) => sum + toMB(doc.size), 0).toFixed(1);
+                  const totalSize = formatFileSize(deptDocs.reduce((sum, doc) => sum + parseFileSize(doc.size), 0));
                   const publicCount = deptDocs.filter((d) => d.scope === "PUBLIC").length;
                   const privateCount = deptDocs.filter((d) => d.scope === "PRIVATE").length;
 
@@ -575,7 +573,7 @@ export default function MDDocuments() {
                               {dept}
                             </div>
                             <div className="text-sm text-gray-500">
-                              {deptDocs.length} documents · {totalSize} MB total
+                              {deptDocs.length} documents · {totalSize} total
                             </div>
                           </div>
                         </div>

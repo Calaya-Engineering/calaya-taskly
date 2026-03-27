@@ -9,6 +9,7 @@ import { UserIcon } from "@/lib/icons";
 import { MDMenuItems } from "@/utils/menus";
 import { BuildingIcon, UsersIcon, TeamIcon, TaskIcon as TaskIconLib } from "@/lib/icons";
 import { fetchWithAuth } from "@/lib/api";
+import { formatFileSize } from "@/lib/file-size";
 import { toast } from "@/lib/toast";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 
@@ -852,7 +853,7 @@ export default function MDCreateTask() {
                               <span className="text-3xl">{renderNodeWithIcons("📎")}</span>
                             </div>
                             <p className="text-gray-700 font-semibold mb-2">Click to upload or drag and drop</p>
-                            <p className="text-sm text-gray-500">PDF, DOCX, XLSX, JPG, PNG up to 100MB each</p>
+                            <p className="text-sm text-gray-500">PDF, DOCX, XLSX, JPG, PNG and other large files</p>
                           </label>
                         </div>
 
@@ -883,7 +884,7 @@ export default function MDCreateTask() {
                                         {file.name}
                                       </div>
                                       <div className="text-xs text-gray-500">
-                                        {(file.size / 1024 / 1024).toFixed(2)} MB
+                                        {formatFileSize(file.size)}
                                       </div>
                                     </div>
                                   </div>

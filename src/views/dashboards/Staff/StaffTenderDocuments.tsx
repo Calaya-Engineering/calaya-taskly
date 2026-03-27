@@ -8,6 +8,7 @@ import Layout from "@/components/Layout";
 import { StaffMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
 import { fetchWithAuth, getAuthToken } from "@/lib/api";
+import { formatFileSize } from "@/lib/file-size";
 import { useSSE } from "@/hooks/useSSE";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 /* ---------- UI helpers ---------- */
@@ -342,11 +343,6 @@ export default function StaffTenderDocuments() {
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files || []);
     if (!files.length) return;
-    const oversized = files.find((file) => file.size > 50 * 1024 * 1024);
-    if (oversized) {
-      toast.error('File size exceeds 50MB limit');
-      return;
-    }
     setUploadFormData({
       ...uploadFormData,
       files,
@@ -388,7 +384,7 @@ export default function StaffTenderDocuments() {
           title: file.name,
           type: "Tender Document",
           fileUrl: uploadData.secureUrl || uploadData.url,
-          fileSize: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
+          fileSize: formatFileSize(file.size),
         });
       }
 
@@ -769,7 +765,7 @@ export default function StaffTenderDocuments() {
                               Click to upload or drag and drop
                             </p>
                             <p className="text-sm text-gray-500">
-                              PDF, DOC, XLSX up to 50MB each. Your upload will appear in the {currentUser.department} section.
+                              PDF, DOC, XLSX and other large files. Your upload will appear in the {currentUser.department} section.
                             </p>
                           </div>
                         )}

@@ -5,6 +5,7 @@ import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import { SecretaryMenuItems } from "@/utils/menus";
+import { formatFileSize } from "@/lib/file-size";
 import { toast } from "@/lib/toast";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 /* ---------- UI helpers ---------- */
@@ -258,11 +259,6 @@ export default function SecretaryUploadReport() {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      if (file.size > 100 * 1024 * 1024) {
-        toast.error('File size exceeds 100MB limit. Please choose a smaller file.');
-        return;
-      }
-
       const allowedTypes = [
         'application/pdf',
         'application/msword',
@@ -591,7 +587,7 @@ export default function SecretaryUploadReport() {
                         <p className="font-extrabold text-gray-900 text-sm">{reportFile.name}</p>
                       </div>
                       <p className="text-xs text-gray-500 mb-3">
-                        {(reportFile.size / (1024 * 1024)).toFixed(2)} MB
+                        {formatFileSize(reportFile.size)}
                       </p>
                       <button
                         type="button"
@@ -611,7 +607,7 @@ export default function SecretaryUploadReport() {
                         <span className="text-3xl" style={{ color: "var(--secondary-blue)" }}>{renderNodeWithIcons("📎")}</span>
                       </div>
                       <p className="text-gray-800 font-extrabold mb-1">Click to upload or drag and drop</p>
-                      <p className="text-sm text-gray-500">PDF, DOC, XLS, JPG up to 100MB</p>
+                      <p className="text-sm text-gray-500">PDF, DOC, XLS, JPG, PNG and small or large files</p>
                       <input
                         type="file"
                         className="hidden"

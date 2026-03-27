@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { StaffMenuItems } from "@/utils/menus";
 import { fetchWithAuth } from "@/lib/api";
+import { formatFileSize } from "@/lib/file-size";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children, ...props }) => (
@@ -535,7 +536,7 @@ export default function StaffRequest() {
                         Click to upload or drag and drop
                       </span>
                       <span className="text-sm text-gray-500">
-                        PDF, DOC, XLS, PPT, Images, ZIP (Max 10MB each)
+                        PDF, DOC, XLS, PPT, Images, ZIP
                       </span>
                     </label>
                   </div>
@@ -553,7 +554,7 @@ export default function StaffRequest() {
                             <div>
                               <p className="font-semibold">{file.name}</p>
                               <p className="text-xs text-gray-500">
-                                {(file.size / 1024).toFixed(1)} KB
+                                {formatFileSize(file.size)}
                               </p>
                             </div>
                           </div>
@@ -697,7 +698,7 @@ export default function StaffRequest() {
                               <span className="text-xl">{renderNodeWithIcons(getFileIcon(file.name))}</span>
                               <span className="text-sm truncate flex-1">{file.name}</span>
                               <span className="text-xs text-gray-500">
-                                {(file.size / 1024).toFixed(0)} KB
+                                {formatFileSize(file.size)}
                               </span>
                             </div>
                           ))}

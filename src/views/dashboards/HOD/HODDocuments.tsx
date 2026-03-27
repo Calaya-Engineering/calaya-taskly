@@ -7,6 +7,7 @@ import Layout from "@/components/Layout";
 import { TaskIcon, DocumentIcon, LockIcon, DownloadIcon, ClockIcon, getDocIconComponent } from "@/lib/icons";
 import { HODMenuItems } from "@/utils/menus";
 import { fetchWithAuth, getAuthToken } from "@/lib/api";
+import { formatFileSize, parseFileSize } from "@/lib/file-size";
 import { toast } from "@/lib/toast";
 import { useSSE } from "@/hooks/useSSE";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
@@ -70,11 +71,6 @@ const getDocIcon = (type) => getDocIconComponent(type);
 
 const fmtDate = (iso) => new Date(iso).toLocaleDateString("en-GB", { year: "numeric", month: "short", day: "numeric" });
 const formatScope = (scope) => scope.replace(/_/g, " ");
-
-const toMB = (sizeStr) => {
-  const n = parseFloat(String(sizeStr).replace(/[^\d.]/g, ""));
-  return Number.isFinite(n) ? n : 0;
-};
 
 export default function HODDocuments() {
   const [filters, setFilters] = useState({
@@ -150,7 +146,9 @@ export default function HODDocuments() {
     const publicCount = documentsData.filter((d) => d.scope === "PUBLIC").length;
     const privateCount = documentsData.filter((d) => d.scope === "PRIVATE").length;
     const totalDownloads = documentsData.reduce((sum, d) => sum + (d.downloads || 0), 0);
-    const avgSize = total ? (documentsData.reduce((sum, d) => sum + toMB(d.fileSize), 0) / total).toFixed(1) : "0.0";
+    const avgSize = total
+      ? formatFileSize(documentsData.reduce((sum, d) => sum + parseFileSize(d.fileSize), 0) / total)
+      : "0 KB";
     return { total, publicCount, privateCount, totalDownloads, avgSize };
   }, [documentsData]);
 
@@ -307,7 +305,7 @@ export default function HODDocuments() {
             { label: "Total Documents", value: stats.total, color: "var(--primary-blue)" },
             { label: "Public Documents", value: stats.publicCount, color: "#10B981" },
             { label: "Total Downloads", value: stats.totalDownloads.toLocaleString(), color: "var(--secondary-blue)" },
-            { label: "Avg Size", value: `${stats.avgSize} MB`, color: "#8B5CF6" },
+            { label: "Avg Size", value: stats.avgSize, color: "#8B5CF6" },
           ].map((s) => (
             <Card key={s.label} className="p-5">
               <p className="text-sm text-gray-500">{s.label}</p>

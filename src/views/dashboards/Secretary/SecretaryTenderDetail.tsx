@@ -7,7 +7,8 @@ import { useParams, useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { SecretaryMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
-import { fetchWithAuth } from "@/lib/api";
+import { fetchWithAuth, getAuthToken } from "@/lib/api";
+import { formatFileSize, parseFileSize } from "@/lib/file-size";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
@@ -144,14 +145,24 @@ export default function SecretaryTenderDetail() {
   }, [tender]);
 
   const docStats = useMemo(() => {
-    if (!tender || !tender.documents) return { totalDocs: 0, totalPages: 0, totalSize: "0 MB" };
+    if (!tender || !tender.documents) return { totalDocs: 0, totalPages: 0, totalSize: "0 KB" };
     const totalDocs = tender.documents.length;
     const totalPages = tender.documents.reduce((sum, d) => sum + (Number(d.pages) || 0), 0);
-    const totalSize = tender.documents.reduce((sum, d) => sum + parseFloat(d.size || 0), 0).toFixed(1);
-    return { totalDocs, totalPages, totalSize: `${totalSize} MB` };
+    const totalSize = tender.documents.reduce((sum, d) => sum + parseFileSize(d.size || d.fileSize), 0);
+    return { totalDocs, totalPages, totalSize: formatFileSize(totalSize) };
   }, [tender]);
 
-  const handleDownload = (doc) => toast.info(`Downloading ${doc.name} (${doc.size})`);
+  const handleDownload = (doc) => {
+    const docId = doc?.dbId || doc?.id;
+    if (!docId) {
+      toast.info("No file is available for this document");
+      return;
+    }
+
+    const token = getAuthToken();
+    const url = `/api/documents/${docId}/download${token ? `?token=${token}` : ""}`;
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
   const handleDownloadAll = () => toast.info('Downloading all tender documents as ZIP file');
   const handleCopyLink = () => {
     navigator.clipboard.writeText(window.location.href);
