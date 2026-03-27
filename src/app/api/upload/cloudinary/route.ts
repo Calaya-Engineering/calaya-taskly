@@ -32,13 +32,6 @@ export async function POST(req: NextRequest) {
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());
-    const maxSize = 50 * 1024 * 1024; // 50MB
-    if (buffer.length > maxSize) {
-      return NextResponse.json(
-        { error: "File too large. Maximum size is 50MB" },
-        { status: 400 }
-      );
-    }
 
     const result = await new Promise<{ secure_url: string }>((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(

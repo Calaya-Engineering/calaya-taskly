@@ -10,6 +10,7 @@ import { MDMenuItems } from "@/utils/menus";
 import { PasswordInput } from "@/components/ui/password-input";
 import { toast } from "@/lib/toast";
 import { fetchWithAuth } from "@/lib/api";
+import { formatFileSize } from "@/lib/file-size";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 
 
@@ -89,8 +90,6 @@ const fileIcon = (name = "") => {
   return "📎";
 };
 
-const bytesToMB = (bytes) => (bytes / 1024 / 1024).toFixed(2);
-
 const safeSplitTags = (text) =>
   text
     .split(",")
@@ -165,7 +164,7 @@ export default function MDCreateDocument() {
     setDocId(`DOC-${year}-${rnd}`);
   }, []);
 
-  const totalSizeMB = useMemo(() => files.reduce((sum, f) => sum + f.size, 0) / 1024 / 1024, [files]);
+  const totalSizeBytes = useMemo(() => files.reduce((sum, f) => sum + f.size, 0), [files]);
 
   const clearScopedSelections = (scope) => {
     setFormData((p) => ({
@@ -235,7 +234,7 @@ export default function MDCreateDocument() {
         fileUrl = url;
       }
 
-      const fileSizeMB = files.length ? (files.reduce((s, f) => s + f.size, 0) / 1024 / 1024).toFixed(2) + " MB" : null;
+      const fileSizeText = files.length ? formatFileSize(files.reduce((sum, file) => sum + file.size, 0)) : null;
       const res = await fetchWithAuth("/api/documents", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -244,7 +243,7 @@ export default function MDCreateDocument() {
           type: formData.documentType,
           department: formData.department,
           scope: formData.scope,
-          fileSize: fileSizeMB,
+          fileSize: fileSizeText,
           fileUrl,
           uploadedBy: null,
         }),
@@ -532,7 +531,7 @@ export default function MDCreateDocument() {
                         </div>
                         <div className="flex items-center justify-between">
                           <span className="text-gray-500">Total size</span>
-                          <span className="font-semibold">{files.length ? `${totalSizeMB.toFixed(2)} MB` : "-"}</span>
+                          <span className="font-semibold">{files.length ? formatFileSize(totalSizeBytes) : "-"}</span>
                         </div>
                       </div>
 
@@ -557,7 +556,7 @@ export default function MDCreateDocument() {
                       </p>
                       <ul className="mt-3 text-sm text-gray-600 space-y-2">
                         <li className="flex gap-2">
-                          <span className="text-emerald-600 font-bold">{renderNodeWithIcons("✓")}</span> Maximum file size: 100MB per file
+                          <span className="text-emerald-600 font-bold">{renderNodeWithIcons("✓")}</span> Large files supported per upload
                         </li>
                         <li className="flex gap-2">
                           <span className="text-emerald-600 font-bold">{renderNodeWithIcons("✓")}</span> Use descriptive titles for searchability
@@ -960,7 +959,7 @@ export default function MDCreateDocument() {
                         <div className="p-3 bg-white rounded-2xl border border-gray-200/70">
                           <div className="text-xs text-gray-500">Files</div>
                           <div className="text-sm font-semibold text-gray-900 mt-1">
-                            {files.length ? `${files.length} file(s) • ${totalSizeMB.toFixed(2)} MB` : "-"}
+                            {files.length ? `${files.length} file(s) • ${formatFileSize(totalSizeBytes)}` : "-"}
                           </div>
                         </div>
                       </div>
@@ -987,7 +986,7 @@ export default function MDCreateDocument() {
                                 </div>
                                 <div className="min-w-0">
                                   <div className="text-sm font-semibold text-gray-900 truncate max-w-[520px]">{f.name}</div>
-                                  <div className="text-xs text-gray-500">{bytesToMB(f.size)} MB</div>
+                                  <div className="text-xs text-gray-500">{formatFileSize(f.size)}</div>
                                 </div>
                               </div>
                               <button

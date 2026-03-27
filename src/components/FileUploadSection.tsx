@@ -2,6 +2,7 @@
 
 import type { ChangeEvent } from "react";
 import { LucideGlyph } from "@/components/ui/lucide-icon-text";
+import { formatFileSize } from "@/lib/file-size";
 
 type FileUploadSectionProps = {
   inputId: string;
@@ -27,8 +28,6 @@ const fileIcon = (name = "") => {
   return "📎";
 };
 
-const bytesToMB = (bytes: number) => (bytes / 1024 / 1024).toFixed(2);
-
 export default function FileUploadSection({
   inputId,
   files,
@@ -37,11 +36,11 @@ export default function FileUploadSection({
   title = "Upload Files",
   required = false,
   accept,
-  helperText = "Max 100MB per file • PDF, DOCX, XLSX, JPG, PNG, PPTX",
+  helperText = "Large files supported • PDF, DOCX, XLSX, JPG, PNG, PPTX",
   emptyText = "No files selected yet.",
   selectedTitle = "Selected Files",
 }: FileUploadSectionProps) {
-  const totalSizeMB = files.reduce((sum, file) => sum + file.size, 0) / 1024 / 1024;
+  const totalSizeBytes = files.reduce((sum, file) => sum + file.size, 0);
 
   return (
     <div className="rounded-2xl border border-gray-200/70 p-5">
@@ -74,7 +73,7 @@ export default function FileUploadSection({
                 {files.length} file(s)
               </span>
               <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold ring-1 bg-blue-50 text-blue-700 ring-blue-100">
-                {totalSizeMB.toFixed(2)} MB
+                {formatFileSize(totalSizeBytes)}
               </span>
             </div>
           </div>
@@ -95,7 +94,7 @@ export default function FileUploadSection({
                   <div className="min-w-0">
                     <div className="text-sm font-semibold text-gray-900 truncate max-w-[520px]">{file.name}</div>
                     <div className="text-xs text-gray-500">
-                      {bytesToMB(file.size)} MB {file.type ? `• ${file.type}` : ""}
+                      {formatFileSize(file.size)} {file.type ? `• ${file.type}` : ""}
                     </div>
                   </div>
                 </div>

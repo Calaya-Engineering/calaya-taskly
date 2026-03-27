@@ -7,6 +7,7 @@ import FileUploadSection from "@/components/FileUploadSection";
 import { MDMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
 import { fetchWithAuth } from "@/lib/api";
+import { formatFileSize } from "@/lib/file-size";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 
 const Card = ({ className = "", children }) => (
@@ -165,7 +166,7 @@ export default function MDCreateTender() {
       uploadedDocuments.push({
         title: file.name,
         fileUrl: uploadedUrl,
-        fileSize: `${(file.size / 1024 / 1024).toFixed(2)} MB`,
+        fileSize: formatFileSize(file.size),
         fileType: extension ? `${extension} Document` : "Tender Document",
       });
     }

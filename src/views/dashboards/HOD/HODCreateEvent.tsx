@@ -7,6 +7,7 @@ import Layout from "@/components/Layout";
 import { HODMenuItems } from "@/utils/menus";
 import { getIconByKey } from "@/lib/icons";
 import { fetchWithAuth } from "@/lib/api";
+import { formatFileSize } from "@/lib/file-size";
 import { toast } from "@/lib/toast";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 /* ---------- UI helpers ---------- */
@@ -570,7 +571,7 @@ export default function HODCreateEvent() {
                         {getIconByKey("document", "w-5 h-5")}
                         <div className="min-w-0">
                           <div className="font-semibold text-gray-900 truncate">{file.name}</div>
-                          <div className="text-xs text-gray-500">{(file.size / 1024 / 1024).toFixed(2)} MB</div>
+                          <div className="text-xs text-gray-500">{formatFileSize(file.size)}</div>
                         </div>
                       </div>
 

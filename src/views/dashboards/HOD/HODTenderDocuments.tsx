@@ -8,6 +8,7 @@ import Layout from "@/components/Layout";
 import { HODMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
 import { fetchWithAuth, getAuthToken } from "@/lib/api";
+import { formatFileSize } from "@/lib/file-size";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 const MANAGED_DEPARTMENTS = ["Technical", "Workshop", "HSE"];
 
@@ -310,11 +311,6 @@ export default function HODTenderDocuments() {
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files || []);
     if (!files.length) return;
-    const oversized = files.find((file) => file.size > 100 * 1024 * 1024);
-    if (oversized) {
-      toast.error("File size exceeds 100MB limit");
-      return;
-    }
     setUploadFormData({
       ...uploadFormData,
       files,
@@ -359,7 +355,7 @@ export default function HODTenderDocuments() {
           title: file.name,
           type: "Tender Document",
           fileUrl: uploadData.secureUrl || uploadData.url,
-          fileSize: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
+          fileSize: formatFileSize(file.size),
           department: selectedUploadDepartment,
         });
       }
@@ -880,7 +876,7 @@ export default function HODTenderDocuments() {
                               Click to upload or drag and drop
                             </p>
                             <p className="text-sm text-gray-500">
-                              PDF, DOC, XLSX up to 100MB each
+                              PDF, DOC, XLSX and other large files
                             </p>
                           </div>
                         )}

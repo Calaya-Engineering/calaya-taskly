@@ -6,6 +6,7 @@ import Link from "next/link";
 import Layout from "@/components/Layout";
 import { StaffMenuItems } from "@/utils/menus";
 import { fetchWithAuth } from "@/lib/api";
+import { formatFileSize } from "@/lib/file-size";
 import { toast } from "@/lib/toast";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 /* ---------- UI helpers ---------- */
@@ -218,10 +219,6 @@ export default function StaffSubmitReport() {
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
-      if (selectedFile.size > 50 * 1024 * 1024) {
-        toast.error('File size exceeds 50MB limit');
-        return;
-      }
       setFile(selectedFile);
     }
   };
@@ -293,7 +290,7 @@ export default function StaffSubmitReport() {
         normalizeSubmittedReport(reportData, {
           taskId: reportType === "task" ? selectedTask || "N/A" : "N/A",
           fileName: file.name,
-          fileSize: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
+          fileSize: formatFileSize(file.size),
           fileUrl: uploadData.url,
         }),
         ...prev,
@@ -473,7 +470,7 @@ export default function StaffSubmitReport() {
                       {file ? file.name : 'Click to upload file'}
                     </p>
                     <p className="text-sm text-gray-500">
-                      PDF, DOC, XLS, PPT, JPG, PNG (Max 50MB)
+                      PDF, DOC, XLS, PPT, JPG, PNG and other large files
                     </p>
                   </label>
                 </div>
@@ -486,7 +483,7 @@ export default function StaffSubmitReport() {
                         <span className="text-sm font-semibold text-emerald-700">{file.name}</span>
                       </div>
                       <span className="text-xs text-emerald-600">
-                        {(file.size / (1024 * 1024)).toFixed(2)} MB
+                        {formatFileSize(file.size)}
                       </span>
                     </div>
                   </div>
@@ -587,7 +584,7 @@ export default function StaffSubmitReport() {
                   </p>
                   <ul className="text-xs text-gray-600 mt-2 space-y-1.5">
                     <li>• Submit reports in any format (PDF, DOC, XLS, etc.)</li>
-                    <li>• Maximum file size: 50MB</li>
+                    <li>• Large files are supported</li>
                     <li>• Include clear titles for easy identification</li>
                     <li>• Task reports are linked to specific tasks</li>
                     <li>• All reports are reviewed by your HOD</li>

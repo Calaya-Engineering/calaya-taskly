@@ -7,6 +7,7 @@ import Layout from "@/components/Layout";
 import { SecretaryMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
 import { getAuthToken } from "@/lib/api";
+import { formatFileSize, parseFileSize } from "@/lib/file-size";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -289,7 +290,7 @@ export default function SecretaryDocuments() {
       case 'downloads':
         return b.downloads - a.downloads;
       case 'size':
-        return parseFloat(b.fileSize) - parseFloat(a.fileSize);
+        return parseFileSize(b.fileSize) - parseFileSize(a.fileSize);
       default:
         return 0;
     }
@@ -336,17 +337,12 @@ export default function SecretaryDocuments() {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      if (file.size > 100 * 1024 * 1024) {
-        toast.error('File size exceeds 100MB limit. Please choose a smaller file.');
-        return;
-      }
-
       const fileType = file.name.split('.').pop().toUpperCase();
       setUploadFormData({
         ...uploadFormData,
         file,
         fileType: fileType,
-        fileSize: (file.size / (1024 * 1024)).toFixed(1) + ' MB'
+        fileSize: formatFileSize(file.size)
       });
     }
   };
@@ -755,7 +751,7 @@ export default function SecretaryDocuments() {
           <div className="mt-5 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {categories.map(category => {
               const catDocs = documents.filter(d => d.category === category);
-              const totalSize = catDocs.reduce((sum, doc) => sum + parseFloat(doc.fileSize), 0).toFixed(1);
+              const totalSize = formatFileSize(catDocs.reduce((sum, doc) => sum + parseFileSize(doc.fileSize), 0));
               const totalDownloads = catDocs.reduce((sum, doc) => sum + doc.downloads, 0);
 
               return (
@@ -783,7 +779,7 @@ export default function SecretaryDocuments() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Total Size:</span>
-                      <span className="font-semibold">{totalSize} MB</span>
+                      <span className="font-semibold">{totalSize}</span>
                     </div>
                   </div>
                 </div>
@@ -1033,7 +1029,7 @@ export default function SecretaryDocuments() {
                               Click to upload or drag and drop
                             </p>
                             <p className="text-sm text-gray-500">
-                              PDF, DOC, XLSX, PPT, ZIP up to 100MB
+                              PDF, DOC, XLSX, PPT, ZIP and other large files
                             </p>
                           </div>
                         )}

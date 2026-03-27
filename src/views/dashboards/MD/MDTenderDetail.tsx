@@ -6,7 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { MDMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
-import { fetchWithAuth } from "@/lib/api";
+import { fetchWithAuth, getAuthToken } from "@/lib/api";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 
 const Card = ({ className = "", children }) => (
@@ -113,19 +113,15 @@ export default function MDTenderDetail() {
   }, [tenderData]);
 
   const handleDownload = (doc) => {
-    if (!doc?.fileUrl) {
+    const docId = doc?.dbId || doc?.id;
+    if (!docId) {
       toast.info("No file is available for this document");
       return;
     }
 
-    const link = document.createElement("a");
-    link.href = doc.fileUrl;
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-    link.download = doc.name || "tender-document";
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+    const token = getAuthToken();
+    const url = `/api/documents/${docId}/download${token ? `?token=${token}` : ""}`;
+    window.open(url, "_blank", "noopener,noreferrer");
   };
 
   return (

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { MDMenuItems } from "@/utils/menus";
 import { fetchWithAuth } from "@/lib/api";
+import { formatFileSize } from "@/lib/file-size";
 import { toast } from "@/lib/toast";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 
@@ -428,7 +429,7 @@ export default function MDCreateAnnouncement() {
                         <div className="w-11 h-11 rounded-2xl bg-blue-50 flex items-center justify-center text-xl">{renderNodeWithIcons("📄")}</div>
                         <div className="min-w-0">
                           <p className="font-extrabold text-gray-900 truncate">{file.name}</p>
-                          <p className="text-xs text-gray-500 mt-1">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                          <p className="text-xs text-gray-500 mt-1">{formatFileSize(file.size)}</p>
                         </div>
                       </div>
 

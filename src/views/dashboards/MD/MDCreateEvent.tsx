@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { MDMenuItems } from "@/utils/menus";
 import { fetchWithAuth } from "@/lib/api";
+import { formatFileSize } from "@/lib/file-size";
 import { toast } from "@/lib/toast";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 
@@ -545,7 +546,7 @@ export default function MDCreateEvent() {
                         <div className="text-xl">{renderNodeWithIcons("📄")}</div>
                         <div className="min-w-0">
                           <div className="font-semibold text-gray-900 truncate">{file.name}</div>
-                          <div className="text-xs text-gray-500">{(file.size / 1024 / 1024).toFixed(2)} MB</div>
+                          <div className="text-xs text-gray-500">{formatFileSize(file.size)}</div>
                         </div>
                       </div>
 

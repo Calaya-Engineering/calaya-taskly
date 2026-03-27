@@ -10,6 +10,7 @@ import { toast } from "@/lib/toast";
 import { useSSE } from "@/hooks/useSSE";
 import DailyReportPreviewModal from "@/components/DailyReportPreviewModal";
 import { downloadDailyReport } from "@/lib/daily-report-download";
+import { formatFileSize } from "@/lib/file-size";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 /* ---------- Types ---------- */
 interface ReportEntry {
@@ -158,8 +159,6 @@ const fileIcon = (name = '') => {
   if (n.endsWith('.png') || n.endsWith('.jpg') || n.endsWith('.jpeg')) return '🖼️';
   return '📎';
 };
-
-const bytesToMB = (bytes: number) => (bytes / 1024 / 1024).toFixed(2);
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);
@@ -1254,7 +1253,7 @@ export default function HODDailyReports() {
                                 <span className="text-2xl">{renderNodeWithIcons("📤")}</span>
                               </div>
                               <p className="text-sm text-gray-700 font-semibold mb-1">Click to upload or drag and drop</p>
-                              <p className="text-xs text-gray-500">PDF, DOCX, XLSX, PNG, JPG — max 50MB</p>
+                              <p className="text-xs text-gray-500">PDF, DOCX, XLSX, PNG, JPG and other large files</p>
                             </label>
                           </div>
                         ) : (
@@ -1273,7 +1272,7 @@ export default function HODDailyReports() {
                                   </div>
                                   <div className="min-w-0">
                                     <div className="text-sm font-semibold text-gray-900 truncate max-w-xs">{file.name}</div>
-                                    <div className="text-xs text-gray-500">{bytesToMB(file.size)} MB</div>
+                                    <div className="text-xs text-gray-500">{formatFileSize(file.size)}</div>
                                   </div>
                                 </div>
                                 <button
