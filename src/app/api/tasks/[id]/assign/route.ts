@@ -3,6 +3,12 @@ import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { emitTaskEvent } from "@/lib/task-events";
 import { notifyTaskAssignments, notifyTaskUnassigned } from "@/lib/task-notifications";
+import {
+  assertHodAssigneeAccess,
+  canUserModifyTask,
+  getTaskAccessUserByEmail,
+  isStaffLikeRole,
+} from "@/lib/task-access";
 
 /**
  * POST /api/tasks/[id]/assign - Assign user(s) to a task.
@@ -15,6 +21,11 @@ export async function POST(
   const auth = await getAuthFromRequest(req);
   if (!auth) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const currentUser = await getTaskAccessUserByEmail(auth.email);
+  if (!currentUser) {
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
 
   const assigner = await prisma.user.findUnique({
@@ -53,6 +64,19 @@ export async function POST(
     });
     if (!task) {
       return NextResponse.json({ error: "Task not found" }, { status: 404 });
+    }
+
+    if (!canUserModifyTask(currentUser, task) || isStaffLikeRole(currentUser.role)) {
+      return NextResponse.json({ error: "You do not have permission to reassign this task" }, { status: 403 });
+    }
+
+    try {
+      await assertHodAssigneeAccess(currentUser, userIds);
+    } catch (error) {
+      return NextResponse.json(
+        { error: error instanceof Error ? error.message : "Invalid task assignment scope" },
+        { status: 403 }
+      );
     }
 
     const created = await prisma.taskAssignment.createMany({
@@ -109,6 +133,11 @@ export async function DELETE(
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const currentUser = await getTaskAccessUserByEmail(auth.email);
+  if (!currentUser) {
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
+  }
+
   const { id } = await params;
   const taskId = parseInt(id, 10);
   if (Number.isNaN(taskId)) {
@@ -125,10 +154,29 @@ export async function DELETE(
   try {
     const existingTask = await prisma.task.findUnique({
       where: { id: taskId },
-      select: { id: true, title: true },
+      include: {
+        assignments: {
+          select: {
+            userId: true,
+          },
+        },
+      },
     });
     if (!existingTask) {
       return NextResponse.json({ error: "Task not found" }, { status: 404 });
+    }
+
+    if (!canUserModifyTask(currentUser, existingTask) || isStaffLikeRole(currentUser.role)) {
+      return NextResponse.json({ error: "You do not have permission to reassign this task" }, { status: 403 });
+    }
+
+    try {
+      await assertHodAssigneeAccess(currentUser, [userId]);
+    } catch (error) {
+      return NextResponse.json(
+        { error: error instanceof Error ? error.message : "Invalid task assignment scope" },
+        { status: 403 }
+      );
     }
 
     const deleted = await prisma.taskAssignment.deleteMany({

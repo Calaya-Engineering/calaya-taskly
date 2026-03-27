@@ -94,6 +94,7 @@ model Task {
   dueDate          DateTime?
   estimatedHours   Int?
   visibility       String           @default("ASSIGNED_ONLY")
+  assignmentType   String?
   escalated        Boolean          @default(false)
   escalatedAt      DateTime?
   escalationReason String?          @db.Text

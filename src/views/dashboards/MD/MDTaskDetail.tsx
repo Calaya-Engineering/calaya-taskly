@@ -10,6 +10,13 @@ import { toast } from "@/lib/toast";
 import { fetchWithAuth } from "@/lib/api";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 /* ---------- UI helpers ---------- */
+interface AssignmentUser {
+  name?: string;
+  email?: string;
+  role?: string;
+  department?: string;
+}
+
 interface TaskData {
   id: string;
   title: string;
@@ -19,11 +26,12 @@ interface TaskData {
   type?: string;
   department?: string;
   visibility?: string;
+  assignmentType?: string;
   estimatedHours?: number;
   startDate?: string;
   dueDate?: string;
   createdAt?: string;
-  assignments?: { user?: { name?: string; email?: string } }[];
+  assignments?: { user?: AssignmentUser }[];
   createdBy?: { role?: string; name?: string };
 }
 
@@ -119,6 +127,83 @@ const StatusChangingModal = ({ status }: { status: string }) => {
         </p>
         <p style={{ fontSize: "13px", color: "#6b7280", margin: 0 }}>Please wait…</p>
       </div>
+    </div>
+  );
+};
+
+const AssignmentDisplay = ({ task }: { task: TaskData }) => {
+  const assignments = task?.assignments || [];
+  const assignmentType = task?.assignmentType;
+
+  if (task?.visibility === "PUBLIC" && !assignmentType) {
+    return (
+      <div className="flex items-center gap-3">
+        <div
+          className="w-10 h-10 rounded-2xl flex items-center justify-center text-white font-bold"
+          style={{ backgroundColor: "var(--secondary-blue)" }}
+        >
+          C
+        </div>
+        <p className="font-extrabold text-gray-900">Company-Wide</p>
+      </div>
+    );
+  }
+
+  if (assignmentType === "DEPARTMENT") {
+    const deptNames = [...new Set(assignments.map((a) => a.user?.department).filter(Boolean))];
+    return (
+      <div className="space-y-2">
+        {deptNames.length > 0 ? (
+          deptNames.map((dept) => (
+            <div key={dept} className="flex items-center gap-3">
+              <div
+                className="w-10 h-10 rounded-2xl flex items-center justify-center text-white font-bold text-sm"
+                style={{ backgroundColor: "var(--secondary-blue)" }}
+              >
+                {dept!.charAt(0)}
+              </div>
+              <p className="font-extrabold text-gray-900">{dept}</p>
+            </div>
+          ))
+        ) : (
+          <p className="font-extrabold text-gray-900">{task.department || "Unassigned"}</p>
+        )}
+      </div>
+    );
+  }
+
+  if (assignments.length === 0) {
+    return (
+      <div className="flex items-center gap-3">
+        <div
+          className="w-10 h-10 rounded-2xl flex items-center justify-center text-white font-bold"
+          style={{ backgroundColor: "var(--secondary-blue)" }}
+        >
+          U
+        </div>
+        <p className="font-extrabold text-gray-900">Unassigned</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-2">
+      {assignments.map((a, i) => (
+        <div key={i} className="flex items-center gap-3">
+          <div
+            className="w-10 h-10 rounded-2xl flex items-center justify-center text-white font-bold text-sm"
+            style={{ backgroundColor: "var(--secondary-blue)" }}
+          >
+            {(a.user?.name || a.user?.email || "?").charAt(0)}
+          </div>
+          <div>
+            <p className="font-extrabold text-gray-900">{a.user?.name || a.user?.email || "—"}</p>
+            {a.user?.department && (
+              <p className="text-xs text-gray-500">{a.user.department}</p>
+            )}
+          </div>
+        </div>
+      ))}
     </div>
   );
 };
@@ -384,17 +469,7 @@ export default function MDTaskDetail() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-500 mb-2">Assigned To</label>
-                    <div className="flex items-center gap-3">
-                      <div
-                        className="w-10 h-10 rounded-2xl flex items-center justify-center text-white font-bold"
-                        style={{ backgroundColor: "var(--secondary-blue)" }}
-                      >
-                        {taskAssigneeLabel(taskData).charAt(0)}
-                      </div>
-                      <div>
-                        <p className="font-extrabold text-gray-900">{taskAssigneeLabel(taskData)}</p>
-                      </div>
-                    </div>
+                    <AssignmentDisplay task={taskData} />
                   </div>
 
                   <InfoRow label="Start Date" value={fmtDate(taskData.startDate)} />

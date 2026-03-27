@@ -253,6 +253,7 @@ export default function HODCreateTask() {
           dueDate: formData.dueDate || null,
           estimatedHours: formData.estimatedHours ? parseInt(formData.estimatedHours, 10) : null,
           visibility: formData.visibility,
+          assignmentType: "STAFF",
           assigneeIds,
         }),
       });

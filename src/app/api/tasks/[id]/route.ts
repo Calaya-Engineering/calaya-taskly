@@ -7,6 +7,16 @@ import { getTaskSubmissionStatusForRole } from "@/lib/task-approval";
 import { createNotification } from "@/lib/notifications";
 import { getEventAudience } from "@/lib/notification-audiences";
 import {
+  assertHodAssigneeAccess,
+  assertHodDepartmentAccess,
+  canUserModifyTask,
+  canUserViewTask,
+  getRestrictedTaskUpdateKeys,
+  getTaskAccessUserByEmail,
+  isHodRole,
+  isStaffLikeRole,
+} from "@/lib/task-access";
+import {
   ensureMidpointRemindersForTasks,
   notifyTaskApprovalTransition,
   notifyTaskAssignments,
@@ -41,6 +51,11 @@ export async function GET(
   }
 
   try {
+    const currentUser = await getTaskAccessUserByEmail(auth.email);
+    if (!currentUser) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
     const task = await prisma.task.findUnique({
       where: { id: taskId },
       include: taskInclude,
@@ -48,6 +63,10 @@ export async function GET(
 
     if (!task) {
       return NextResponse.json({ error: "Task not found" }, { status: 404 });
+    }
+
+    if (!canUserViewTask(currentUser, task)) {
+      return NextResponse.json({ error: "You do not have permission to view this task" }, { status: 403 });
     }
 
     await ensureMidpointRemindersForTasks([task]);
@@ -70,6 +89,11 @@ export async function PATCH(
   const auth = await getAuthFromRequest(req);
   if (!auth) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const currentUser = await getTaskAccessUserByEmail(auth.email);
+  if (!currentUser) {
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
 
   const assigner = await prisma.user.findUnique({
@@ -96,6 +120,10 @@ export async function PATCH(
       return NextResponse.json({ error: "Task not found" }, { status: 404 });
     }
 
+    if (!canUserModifyTask(currentUser, existing)) {
+      return NextResponse.json({ error: "You do not have permission to update this task" }, { status: 403 });
+    }
+
     const body = await req.json();
     const {
       title,
@@ -109,6 +137,7 @@ export async function PATCH(
       estimatedHours,
       visibility,
       assigneeIds,
+      assignmentType,
       comment,
     } = body as {
       title?: string;
@@ -122,8 +151,35 @@ export async function PATCH(
       estimatedHours?: number;
       visibility?: string;
       assigneeIds?: number[];
+      assignmentType?: string;
       comment?: string;
     };
+
+    if (isStaffLikeRole(currentUser.role)) {
+      const restrictedKeys = getRestrictedTaskUpdateKeys(body as Record<string, unknown>, ["status", "comment"]);
+      if (restrictedKeys.length > 0) {
+        return NextResponse.json(
+          { error: "Staff can only update task status" },
+          { status: 403 }
+        );
+      }
+    }
+
+    if (isHodRole(currentUser.role)) {
+      try {
+        if (department !== undefined) {
+          assertHodDepartmentAccess(currentUser, department);
+        }
+        if (Array.isArray(assigneeIds)) {
+          await assertHodAssigneeAccess(currentUser, assigneeIds);
+        }
+      } catch (error) {
+        return NextResponse.json(
+          { error: error instanceof Error ? error.message : "Invalid task assignment scope" },
+          { status: 403 }
+        );
+      }
+    }
 
     const data: Record<string, unknown> = {};
     if (title != null && typeof title === "string" && title.trim()) data.title = title.trim();
@@ -138,6 +194,7 @@ export async function PATCH(
     if (dueDate !== undefined) data.dueDate = dueDate ? new Date(dueDate) : null;
     if (estimatedHours !== undefined) data.estimatedHours = estimatedHours ?? null;
     if (visibility) data.visibility = visibility;
+    if (assignmentType !== undefined) data.assignmentType = assignmentType || null;
 
     const updateData: Record<string, unknown> = { ...data };
 

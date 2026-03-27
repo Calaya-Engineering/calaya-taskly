@@ -3,10 +3,17 @@ import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { emitTaskEvent } from "@/lib/task-events";
 import { emitAnnouncementEvent } from "@/lib/announcement-events";
-import { getManagedDepartmentNamesByUserId } from "@/lib/hod-departments";
 import { createNotification } from "@/lib/notifications";
 import { getEventAudience } from "@/lib/notification-audiences";
 import { ensureMidpointRemindersForTasks, notifyTaskAssignments } from "@/lib/task-notifications";
+import {
+  assertHodAssigneeAccess,
+  assertHodDepartmentAccess,
+  getTaskAccessUserByEmail,
+  hasFullTaskAccess,
+  isHodRole,
+  isStaffLikeRole,
+} from "@/lib/task-access";
 
 /**
  * GET /api/tasks - List tasks with optional filters.
@@ -27,10 +34,10 @@ export async function GET(req: NextRequest) {
   const limit = Math.min(parseInt(searchParams.get("limit") ?? "50", 10) || 50, 100);
 
   try {
-    const currentUser = await prisma.user.findUnique({
-      where: { email: auth.email },
-      select: { id: true, role: true, department: true }
-    });
+    const currentUser = await getTaskAccessUserByEmail(auth.email);
+    if (!currentUser) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
 
     const where: any = {};
     if (status) where.status = status;
@@ -44,10 +51,9 @@ export async function GET(req: NextRequest) {
       where.type = { not: "EVENT" };
     }
 
-    if (currentUser?.role === "HOD") {
-      const managedDepartments = await getManagedDepartmentNamesByUserId(currentUser.id);
-      const scopedDepartments = managedDepartments.length > 0
-        ? managedDepartments
+    if (currentUser && isHodRole(currentUser.role)) {
+      const scopedDepartments = currentUser.managedDepartments.length > 0
+        ? currentUser.managedDepartments
         : currentUser.department
           ? [currentUser.department]
           : [];
@@ -71,6 +77,15 @@ export async function GET(req: NextRequest) {
       } else {
         where.OR = hodOrConditions;
       }
+    } else if (currentUser && isStaffLikeRole(currentUser.role)) {
+      where.assignments = { some: { userId: currentUser.id } };
+      if (department) where.department = department;
+      if (assigneeId) {
+        const uid = parseInt(assigneeId, 10);
+        if (!Number.isNaN(uid) && uid !== currentUser.id) {
+          return NextResponse.json([]);
+        }
+      }
     } else {
       if (department) where.department = department;
       if (assigneeId) {
@@ -85,8 +100,8 @@ export async function GET(req: NextRequest) {
       orderBy: { createdAt: "desc" as const },
     };
 
-    const tasks = compact
-      ? await prisma.task.findMany({
+    if (compact) {
+      const tasks = await prisma.task.findMany({
         ...baseQuery,
         select: {
           id: true,
@@ -96,20 +111,24 @@ export async function GET(req: NextRequest) {
           escalated: true,
           escalatedAt: true,
         },
-      })
-      : await prisma.task.findMany({
-        ...baseQuery,
-        include: {
-          createdBy: { select: { id: true, email: true, name: true, role: true } },
-          assignments: {
-            include: {
-              user: { select: { id: true, email: true, name: true, role: true, department: true } },
-            },
-          },
-        },
       });
 
-    if (!compact && Array.isArray(tasks) && tasks.length > 0) {
+      return NextResponse.json(tasks);
+    }
+
+    const tasks = await prisma.task.findMany({
+      ...baseQuery,
+      include: {
+        createdBy: { select: { id: true, email: true, name: true, role: true } },
+        assignments: {
+          include: {
+            user: { select: { id: true, email: true, name: true, role: true, department: true } },
+          },
+        },
+      },
+    });
+
+    if (tasks.length > 0) {
       await ensureMidpointRemindersForTasks(tasks);
     }
 
@@ -153,6 +172,7 @@ export async function POST(req: NextRequest) {
       dueDate,
       estimatedHours,
       visibility = "ASSIGNED_ONLY",
+      assignmentType,
       assigneeIds = [],
     } = body as {
       title?: string;
@@ -164,11 +184,35 @@ export async function POST(req: NextRequest) {
       dueDate?: string;
       estimatedHours?: number;
       visibility?: string;
+      assignmentType?: string;
       assigneeIds?: number[];
     };
 
     if (!title || typeof title !== "string" || title.trim().length === 0) {
       return NextResponse.json({ error: "Title is required" }, { status: 400 });
+    }
+
+    const currentUser = await getTaskAccessUserByEmail(auth.email);
+    if (!currentUser) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    if (isStaffLikeRole(currentUser.role)) {
+      return NextResponse.json({ error: "You do not have permission to create tasks" }, { status: 403 });
+    }
+
+    if (!hasFullTaskAccess(currentUser.role) && !isHodRole(currentUser.role)) {
+      return NextResponse.json({ error: "You do not have permission to create tasks" }, { status: 403 });
+    }
+
+    try {
+      assertHodDepartmentAccess(currentUser, department);
+      await assertHodAssigneeAccess(currentUser, Array.isArray(assigneeIds) ? assigneeIds : []);
+    } catch (error) {
+      return NextResponse.json(
+        { error: error instanceof Error ? error.message : "Invalid task assignment scope" },
+        { status: 403 }
+      );
     }
 
     const task = await prisma.task.create({
@@ -183,6 +227,7 @@ export async function POST(req: NextRequest) {
         dueDate: dueDate ? new Date(dueDate) : null,
         estimatedHours: estimatedHours ?? null,
         visibility: visibility || "ASSIGNED_ONLY",
+        assignmentType: assignmentType || null,
         assignments:
           Array.isArray(assigneeIds) && assigneeIds.length > 0
             ? {

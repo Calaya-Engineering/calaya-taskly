@@ -12,6 +12,8 @@ import { fetchWithAuth } from "@/lib/api";
 import { toast } from "@/lib/toast";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 
+const EMPLOYEE_ROLES = new Set(["Staff", "Personnel", "Corp Member"]);
+
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
 );
@@ -73,8 +75,9 @@ export default function MDEditTask() {
         const data = await res.json();
         setTask(data);
         const hodIds = data.assignments?.filter((a) => a.user?.role === "HOD").map((a) => a.userId) ?? [];
-        const staffIds = data.assignments?.filter((a) => a.user?.role === "Staff").map((a) => a.userId) ?? [];
-        const deptSet = new Set(data.assignments?.map((a) => a.user?.department).filter(Boolean) ?? []);
+        const staffIds = data.assignments
+          ?.filter((a) => EMPLOYEE_ROLES.has(a.user?.role))
+          .map((a) => a.userId) ?? [];
         setFormData({
           title: data.title ?? "",
           description: data.description ?? "",
@@ -86,7 +89,7 @@ export default function MDEditTask() {
           dueDate: data.dueDate ? data.dueDate.slice(0, 10) : "",
           estimatedHours: data.estimatedHours ? String(data.estimatedHours) : "",
           visibility: data.visibility ?? "ASSIGNED_ONLY",
-          departments: [...deptSet],
+          departments: [],
           hods: hodIds,
           staff: staffIds,
         });
@@ -107,14 +110,16 @@ export default function MDEditTask() {
   useEffect(() => {
     async function loadOptions() {
       try {
-        const [deptRes, hodRes, staffRes] = await Promise.all([
+        const [deptRes, usersRes] = await Promise.all([
           fetchWithAuth("/api/departments"),
-          fetchWithAuth("/api/users?role=HOD"),
-          fetchWithAuth("/api/users?role=Staff"),
+          fetchWithAuth("/api/users"),
         ]);
         if (deptRes.ok) setDepartments((await deptRes.json()).map((d) => d.name));
-        if (hodRes.ok) setHodUsers(await hodRes.json());
-        if (staffRes.ok) setStaffUsers(await staffRes.json());
+        if (usersRes.ok) {
+          const users = await usersRes.json();
+          setHodUsers(users.filter((u) => u.role === "HOD"));
+          setStaffUsers(users.filter((u) => EMPLOYEE_ROLES.has(u.role)));
+        }
       } catch (e) {
         console.error("Failed to load options:", e);
       }
@@ -160,6 +165,16 @@ export default function MDEditTask() {
           dueDate: formData.dueDate || null,
           estimatedHours: formData.estimatedHours ? parseInt(formData.estimatedHours, 10) : null,
           visibility: formData.visibility,
+          assignmentType:
+            formData.departments.length > 0 && formData.hods.length === 0 && formData.staff.length === 0
+              ? "DEPARTMENT"
+              : formData.departments.length > 0
+              ? "MIXED"
+              : formData.hods.length > 0 && formData.staff.length === 0
+              ? "HODS"
+              : formData.staff.length > 0 && formData.hods.length === 0
+              ? "STAFF"
+              : "MIXED",
           assigneeIds: finalAssigneeIds,
         }),
       });
@@ -324,7 +339,7 @@ export default function MDEditTask() {
 
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">Assignees (Departments or Users)</label>
-              <p className="text-xs text-gray-500 mb-3">Select departments to assign all users in that department, or select individual HODs/Staff.</p>
+              <p className="text-xs text-gray-500 mb-3">Select departments to assign everyone there, or keep the task limited to chosen HODs and employees.</p>
 
               <div className="space-y-4">
                 <div>
@@ -368,7 +383,7 @@ export default function MDEditTask() {
                 </div>
 
                 <div>
-                  <p className="text-sm font-medium text-gray-700 mb-2">Staff</p>
+                  <p className="text-sm font-medium text-gray-700 mb-2">Employees</p>
                   <div className="flex flex-wrap gap-2 max-h-40 overflow-y-auto">
                     {staffUsers.map((u) => {
                       const active = formData.staff.includes(u.id);
