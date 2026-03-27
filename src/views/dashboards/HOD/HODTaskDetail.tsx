@@ -141,6 +141,19 @@ const getUserDepartment = (user?: AssignmentUser): string | undefined => {
   return undefined;
 };
 
+const getTaskDepartmentDisplay = (task: TaskData): string => {
+  if (task.department) return task.department;
+  // Derive from assigned HODs' departments when task department is not set
+  const depts = [
+    ...new Set(
+      (task.assignments || [])
+        .map((a) => getUserDepartment(a.user))
+        .filter(Boolean)
+    ),
+  ];
+  return depts.length > 0 ? depts.join(", ") : "—";
+};
+
 const AssignmentDisplay = ({ task }: { task: TaskData }) => {
   const assignments = task?.assignments || [];
   const assignmentType = task?.assignmentType;
@@ -465,7 +478,7 @@ export default function HODTaskDetail() {
                 <SectionTitle title="Task Information" />
 
                 <div className="mt-6 space-y-4">
-                  <InfoRow label="Department" value={taskData.department || "—"} />
+                  <InfoRow label="Department" value={getTaskDepartmentDisplay(taskData)} />
 
                   <div>
                     <label className="block text-sm font-medium text-gray-500 mb-2">Created By</label>
