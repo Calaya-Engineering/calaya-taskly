@@ -43,8 +43,9 @@ export async function GET(req: NextRequest) {
           .split(",")
           .map((d) => d.trim())
           .filter(Boolean);
-        if (list.length === 1) where.department = list[0];
-        if (list.length > 1) where.department = { in: list };
+        const deptCondition = list.length === 1 ? { department: list[0] } : { department: { in: list } };
+        if (!where.AND) where.AND = [];
+        where.AND.push({ OR: [deptCondition, { scope: "PUBLIC" }] });
       }
 
       if (search) {
@@ -119,8 +120,8 @@ export async function POST(req: NextRequest) {
     if (!auth) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    if (auth.role !== "MD") {
-      return NextResponse.json({ error: "MD access required" }, { status: 403 });
+    if (auth.role !== "MD" && auth.role !== "HOD") {
+      return NextResponse.json({ error: "MD or HOD access required" }, { status: 403 });
     }
 
     try {
