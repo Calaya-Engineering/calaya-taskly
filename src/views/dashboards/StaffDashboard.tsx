@@ -474,7 +474,7 @@ export default function StaffDashboard() {
                 <div className="p-4 rounded-2xl border border-gray-200/70 text-sm text-gray-500">No active tasks assigned yet.</div>
               ) : (
                 activeTasks.map((task) => (
-                  <Link key={task.id} href={`/staff-dashboard/task/${task.id}`} className="block">
+                  <Link key={task.id} href={`/staff-dashboard/${task.type === "JOB" ? "job" : "task"}/${task.id}`} className="block">
                     <div className="p-4 rounded-2xl border border-gray-200/70 hover:bg-gray-50 transition">
                       <div className="flex items-start justify-between gap-4">
                         <div className="min-w-0 flex-1">

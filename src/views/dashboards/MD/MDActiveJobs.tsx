@@ -321,7 +321,7 @@ export default function MDActiveJobs() {
         {view === "cards" ? (
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
             {filteredJobs.map((job) => (
-              <Link key={job.id} href={`/md-dashboard/task/${job.id}`} className="group">
+              <Link key={job.id} href={`/md-dashboard/job/${job.id}`} className="group">
                 <Card className="p-6 hover:-translate-y-0.5 transition-all">
                   <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0">
@@ -465,7 +465,7 @@ export default function MDActiveJobs() {
                         </div>
                       </td>
                       <td className="px-5 py-3 text-right whitespace-nowrap">
-                        <Link href={`/md-dashboard/task/${job.id}`}>
+                        <Link href={`/md-dashboard/job/${job.id}`}>
                           <button
                             className="px-3 py-1.5 rounded-xl text-[12px] font-semibold text-white active:scale-[0.99] transition"
                             style={{ backgroundColor: "var(--secondary-blue)" }}

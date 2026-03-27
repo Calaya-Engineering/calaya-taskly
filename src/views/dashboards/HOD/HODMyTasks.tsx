@@ -387,7 +387,7 @@ export default function HODMyTasks() {
 
                         {/* Actions */}
                         <div className="flex gap-2 flex-wrap">
-                          <Link href={`/hod-dashboard/task/${task.id}`} className="flex-1 min-w-[120px]">
+                          <Link href={`/hod-dashboard/${task.type === "JOB" ? "job" : "task"}/${task.id}`} className="flex-1 min-w-[120px]">
                             <button
                               className="w-full px-4 py-2.5 rounded-2xl text-sm font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
                               style={{ borderColor: "rgba(44, 75, 155, 0.35)", color: "var(--primary-blue)" }}

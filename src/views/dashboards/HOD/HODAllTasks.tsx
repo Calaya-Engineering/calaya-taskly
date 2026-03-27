@@ -406,7 +406,7 @@ export default function HODAllTasks() {
 
                         <td className="px-5 py-3">
                           <div className="flex items-center justify-end gap-2">
-                            <Link href={`/hod-dashboard/task/${task.id}`}>
+                            <Link href={`/hod-dashboard/${task.type === "JOB" ? "job" : "task"}/${task.id}`}>
                               <button
                                 className="px-3 py-1.5 rounded-xl text-[12px] font-semibold text-white active:scale-[0.99] transition"
                                 style={{ backgroundColor: "var(--secondary-blue)" }}
@@ -467,7 +467,7 @@ export default function HODAllTasks() {
                         <span className="font-semibold">{task.dueDate ? fmtDate(task.dueDate) : "—"}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Link href={`/hod-dashboard/task/${task.id}`}>
+                        <Link href={`/hod-dashboard/${task.type === "JOB" ? "job" : "task"}/${task.id}`}>
                           <button
                             className="px-3.5 py-2 rounded-xl text-sm font-semibold text-white active:scale-[0.99] transition"
                             style={{ backgroundColor: "var(--secondary-blue)" }}

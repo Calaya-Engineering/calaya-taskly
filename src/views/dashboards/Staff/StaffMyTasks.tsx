@@ -440,7 +440,7 @@ export default function StaffMyTasks() {
                           style={{ backgroundColor: "var(--secondary-blue)" }}
                         >{renderNodeWithIcons("\n                          📋\n                        ")}</div>
                         <div>
-                          <Link href={`/staff-dashboard/task/${task.id}`}>
+                          <Link href={`/staff-dashboard/${task.type === "JOB" ? "job" : "task"}/${task.id}`}>
                             <div className="font-extrabold text-gray-900 hover:underline cursor-pointer">
                               {task.title}
                             </div>
@@ -489,7 +489,7 @@ export default function StaffMyTasks() {
                     <td className="px-5 py-3">
                       <div className="space-y-2">
                         <div className="flex gap-2">
-                          <Link href={`/staff-dashboard/task/${task.id}`}>
+                          <Link href={`/staff-dashboard/${task.type === "JOB" ? "job" : "task"}/${task.id}`}>
                             <button
                               className="px-3 py-1.5 rounded-xl text-[11px] font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
                               style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}

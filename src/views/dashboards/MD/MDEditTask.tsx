@@ -183,7 +183,7 @@ export default function MDEditTask() {
         throw new Error(err.error || "Failed to update task");
       }
       toast.success("Task updated successfully!");
-      router.push(`/md-dashboard/task/${taskId}`);
+      router.push(`/md-dashboard/${task?.type === "JOB" ? "job" : "task"}/${taskId}`);
     } catch (err) {
       toast.error(err.message || "Failed to update task");
     } finally {
@@ -235,7 +235,7 @@ export default function MDEditTask() {
       <div className="max-w-4xl mx-auto space-y-6">
         <Card className="overflow-hidden">
           <div className="p-6 md:p-8" style={{ background: "linear-gradient(135deg, rgba(44,75,155,0.10) 0%, rgba(109,198,223,0.18) 50%, rgba(237,50,55,0.06) 100%)" }}>
-            <Link href={`/md-dashboard/task/${taskId}`} className="text-sm text-gray-600 hover:text-gray-800 mb-4 inline-block">
+            <Link href={`/md-dashboard/${task?.type === "JOB" ? "job" : "task"}/${taskId}`} className="text-sm text-gray-600 hover:text-gray-800 mb-4 inline-block">
               ← Back to Task
             </Link>
             <h1 className="text-2xl font-extrabold" style={{ color: "var(--primary-blue)" }}>
@@ -414,7 +414,7 @@ export default function MDEditTask() {
                 {saving ? "Saving…" : "Save Changes"}
               </button>
               <Link
-                href={`/md-dashboard/task/${taskId}`}
+                href={`/md-dashboard/${task?.type === "JOB" ? "job" : "task"}/${taskId}`}
                 className="px-6 py-3 rounded-2xl font-semibold border bg-white hover:bg-gray-50 transition"
                 style={{ borderColor: "rgba(44, 75, 155, 0.35)", color: "var(--primary-blue)" }}
               >
