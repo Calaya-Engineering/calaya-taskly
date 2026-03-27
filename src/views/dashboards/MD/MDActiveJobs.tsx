@@ -329,7 +329,6 @@ export default function MDActiveJobs() {
                         <span className="text-sm font-extrabold" style={{ color: "var(--primary-blue)" }}>
                           {job.id}
                         </span>
-                        <Pill>{job.department}</Pill>
                         <Pill tone={priorityTone(job.priority)}>{job.priority}</Pill>
                         <Pill tone={statusTone(job.status)}>{job.status}</Pill>
                       </div>
@@ -504,7 +503,7 @@ export default function MDActiveJobs() {
           </Card>
         ) : null}
 
-        {/* Department Performance */}
+        {/* Department Performance — commented out
         <Card className="p-6">
           <SectionTitle title="Department Performance" subtitle="Average progress by department" />
           <div className="mt-5 space-y-3">
@@ -562,6 +561,7 @@ export default function MDActiveJobs() {
               })}
           </div>
         </Card>
+        */}
       </div>
     </Layout>
   );
