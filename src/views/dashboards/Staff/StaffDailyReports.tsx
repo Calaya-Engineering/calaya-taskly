@@ -439,7 +439,6 @@ export default function StaffDailyReports() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          title: `${staffDepartment} Department Daily Report`,
           department: staffDepartment,
           date: new Date().toISOString().split("T")[0],
           entries: validEntries,
