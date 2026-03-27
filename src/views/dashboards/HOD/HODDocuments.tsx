@@ -120,8 +120,8 @@ export default function HODDocuments() {
   useEffect(() => { fetchDocs(); }, [fetchDocs]);
 
   // Re-fetch on any document-related SSE event
-  useSSE("/api/tasks/events", (ev) => {
-    if (ev.type?.startsWith("task:")) fetchDocs();
+  useSSE("/api/realtime/events", (ev) => {
+    if (ev.type?.startsWith("document:")) fetchDocs();
   });
 
   const documentTypes = useMemo(() => ["All Types", ...new Set(documentsData.map((d) => d.type))], [documentsData]);

@@ -116,11 +116,45 @@ export default function HODCreateEvent() {
   const now = useMemo(() => new Date(), []);
   const currentDate = useMemo(() => now.toISOString().split("T")[0], [now]);
 
-  const handleSubmit = (e) => {
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Creating event:', formData);
-    toast.success('Event created successfully!');
-    router.push('/hod-dashboard/events');
+    if (!formData.title.trim()) { toast.error('Title is required'); return; }
+    if (!formData.description.trim()) { toast.error('Description is required'); return; }
+    if (!formData.startDate) { toast.error('Start date is required'); return; }
+
+    setSubmitting(true);
+    try {
+      const startDateTime = formData.startTime
+        ? `${formData.startDate}T${formData.startTime}:00`
+        : `${formData.startDate}T00:00:00`;
+      const expiresAt = formData.endDate
+        ? (formData.endTime ? `${formData.endDate}T${formData.endTime}:00` : `${formData.endDate}T23:59:59`)
+        : null;
+
+      const res = await fetchWithAuth('/api/announcements', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: `${formData.eventType === 'MEETING' ? '📅' : formData.eventType === 'TRAINING' ? '🎓' : '🗓️'} ${formData.title.trim()}`,
+          description: formData.description.trim(),
+          priority: formData.eventType === 'MEETING' || formData.eventType === 'EVENT' ? 'HIGH' : 'NORMAL',
+          scopeType: formData.scopeType === 'ALL_COMPANY' ? 'ALL_COMPANY' : 'DEPARTMENT',
+          selectedDepartments: formData.selectedDepartments,
+          date: startDateTime,
+          expiresAt,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) { toast.error(data?.error || 'Failed to create event'); return; }
+      toast.success('Event created successfully!');
+      router.push('/hod-dashboard/events');
+    } catch {
+      toast.error('Failed to create event');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleFileUpload = (e) => {
@@ -614,10 +648,11 @@ export default function HODCreateEvent() {
             </button>
             <button
               type="submit"
+              disabled={submitting}
               className={btnSolid}
-              style={{ backgroundColor: "var(--accent-red)" }}
+              style={{ backgroundColor: "var(--accent-red)", opacity: submitting ? 0.6 : 1 }}
             >
-              Schedule Event
+              {submitting ? 'Scheduling...' : 'Schedule Event'}
             </button>
           </div>
         </form>
