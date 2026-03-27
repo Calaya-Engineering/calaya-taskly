@@ -97,11 +97,7 @@ export default function StaffTenders() {
   const fetchTenders = useCallback(async () => {
     try {
       setLoading(true);
-      const meRes = await fetchWithAuth("/api/me");
-      const me = meRes.ok ? await meRes.json() : null;
-      
-      const deptFilter = me?.department ? encodeURIComponent(`${me.department},All Company,Staff`) : "All Company,Staff";
-      const res = await fetchWithAuth(`/api/tenders?departments=${deptFilter}&limit=100`);
+      const res = await fetchWithAuth(`/api/tenders?limit=100`);
       if (res.ok) {
         const data = await res.json();
         setTendersData(Array.isArray(data) ? data : []);
