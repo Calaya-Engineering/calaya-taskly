@@ -27,7 +27,18 @@ const taskInclude = {
   createdBy: { select: { id: true, email: true, name: true, role: true } },
   assignments: {
     include: {
-      user: { select: { id: true, email: true, name: true, role: true, department: true } },
+      user: {
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          role: true,
+          department: true,
+          managedDepartmentRelations: {
+            include: { department: { select: { name: true } } },
+          },
+        },
+      },
     },
   },
 };

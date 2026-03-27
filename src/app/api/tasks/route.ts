@@ -122,7 +122,18 @@ export async function GET(req: NextRequest) {
         createdBy: { select: { id: true, email: true, name: true, role: true } },
         assignments: {
           include: {
-            user: { select: { id: true, email: true, name: true, role: true, department: true } },
+            user: {
+              select: {
+                id: true,
+                email: true,
+                name: true,
+                role: true,
+                department: true,
+                managedDepartmentRelations: {
+                  include: { department: { select: { name: true } } },
+                },
+              },
+            },
           },
         },
       },
@@ -242,7 +253,18 @@ export async function POST(req: NextRequest) {
         createdBy: { select: { id: true, email: true, name: true, role: true } },
         assignments: {
           include: {
-            user: { select: { id: true, email: true, name: true, role: true, department: true } },
+            user: {
+              select: {
+                id: true,
+                email: true,
+                name: true,
+                role: true,
+                department: true,
+                managedDepartmentRelations: {
+                  include: { department: { select: { name: true } } },
+                },
+              },
+            },
           },
         },
       },

@@ -14,6 +14,7 @@ interface AssignmentUser {
   email?: string | null;
   role?: string | null;
   department?: string | null;
+  managedDepartmentRelations?: { department: { name: string } }[];
 }
 
 interface TaskData {
@@ -176,6 +177,15 @@ const StatusChangingModal = ({ status }: { status: string }) => {
   );
 };
 
+const getUserDepartment = (user?: AssignmentUser | null): string | undefined => {
+  if (user?.department) return user.department;
+  const managed = user?.managedDepartmentRelations;
+  if (managed && managed.length > 0) {
+    return managed.map((r) => r.department.name).join(", ");
+  }
+  return undefined;
+};
+
 const AssignmentDisplay = ({ task }: { task: TaskData }) => {
   const assignments = task?.assignments || [];
   const assignmentType = task?.assignmentType;
@@ -195,7 +205,7 @@ const AssignmentDisplay = ({ task }: { task: TaskData }) => {
   }
 
   if (assignmentType === "DEPARTMENT") {
-    const deptNames = [...new Set(assignments.map((a) => a.user?.department).filter(Boolean))];
+    const deptNames = [...new Set(assignments.map((a) => getUserDepartment(a.user)).filter(Boolean))];
     return (
       <div className="space-y-2">
         {deptNames.length > 0 ? (
@@ -233,22 +243,25 @@ const AssignmentDisplay = ({ task }: { task: TaskData }) => {
 
   return (
     <div className="space-y-2">
-      {assignments.map((a, i) => (
-        <div key={i} className="flex items-center gap-3">
-          <div
-            className="w-10 h-10 rounded-2xl flex items-center justify-center text-white font-bold text-sm"
-            style={{ backgroundColor: "var(--secondary-blue)" }}
-          >
-            {(a.user?.name || a.user?.email || "?").charAt(0)}
+      {assignments.map((a, i) => {
+        const dept = getUserDepartment(a.user);
+        return (
+          <div key={i} className="flex items-center gap-3">
+            <div
+              className="w-10 h-10 rounded-2xl flex items-center justify-center text-white font-bold text-sm"
+              style={{ backgroundColor: "var(--secondary-blue)" }}
+            >
+              {(a.user?.name || a.user?.email || "?").charAt(0)}
+            </div>
+            <div>
+              <p className="font-extrabold text-gray-900">{a.user?.name || a.user?.email || "—"}</p>
+              {dept && (
+                <p className="text-xs text-gray-500">{dept}</p>
+              )}
+            </div>
           </div>
-          <div>
-            <p className="font-extrabold text-gray-900">{a.user?.name || a.user?.email || "—"}</p>
-            {a.user?.department && (
-              <p className="text-xs text-gray-500">{a.user.department}</p>
-            )}
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 };
