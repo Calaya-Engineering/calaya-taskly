@@ -11,6 +11,44 @@ function parseDocId(id: string): number | null {
     return null;
 }
 
+function extractExtension(value: string | null | undefined): string | null {
+    if (!value) return null;
+    const withoutQuery = value.split("?")[0].split("#")[0];
+    const segment = withoutQuery.split("/").pop() || withoutQuery;
+    const match = segment.match(/\.([a-zA-Z0-9]{1,12})$/);
+    return match ? match[1].toLowerCase() : null;
+}
+
+function stripExtension(value: string | null | undefined): string {
+    if (!value) return "document";
+    return value.replace(/\.[^.]+$/, "");
+}
+
+function sanitizeFilename(value: string | null | undefined): string {
+    const cleaned = String(value || "document")
+        .replace(/[\r\n]/g, " ")
+        .replace(/[\/\\?%*:|"<>]/g, "_")
+        .trim();
+
+    return cleaned || "document";
+}
+
+function extractFilenameFromContentDisposition(header: string | null): string | null {
+    if (!header) return null;
+
+    const utfMatch = header.match(/filename\*\s*=\s*UTF-8''([^;]+)/i);
+    if (utfMatch?.[1]) {
+        try {
+            return decodeURIComponent(utfMatch[1]);
+        } catch {
+            return utfMatch[1];
+        }
+    }
+
+    const basicMatch = header.match(/filename\s*=\s*"([^"]+)"/i) || header.match(/filename\s*=\s*([^;]+)/i);
+    return basicMatch?.[1]?.trim() || null;
+}
+
 /**
  * GET /api/documents/[id]/download - Securely download a document
  */
@@ -107,16 +145,17 @@ export async function GET(
             entityId: docId,
         });
 
-        // Determine filename and extension — preserve the original file format exactly.
-        const sanitizedTitle = (doc.title || "document").replace(/[^a-z0-9]/gi, "_").toLowerCase();
+        // Determine filename and extension — prefer the original stored title/filename
+        // so users download `invoice.pdf` instead of a generic `.bin`.
+        const originalTitle = sanitizeFilename(doc.title || "document");
+        const upstreamDisposition = cloudinaryResponse.headers.get("Content-Disposition");
+        const upstreamFilenameRaw = extractFilenameFromContentDisposition(upstreamDisposition);
+        const upstreamFilename = upstreamFilenameRaw ? sanitizeFilename(upstreamFilenameRaw) : null;
 
-        // 1. Extract extension from URL: strip query string, take last path segment, then match extension.
-        const urlWithoutQuery = doc.fileUrl.split("?")[0];
-        const urlFilename = urlWithoutQuery.split("/").pop() || "";
-        const urlExtMatch = urlFilename.match(/\.([a-zA-Z0-9]+)$/);
-        const extFromUrl = urlExtMatch ? urlExtMatch[1].toLowerCase() : null;
+        const extFromTitle = extractExtension(originalTitle);
+        const extFromUpstreamFilename = extractExtension(upstreamFilename);
+        const extFromUrl = extractExtension(doc.fileUrl);
 
-        // 2. Derive extension from the Content-Type Cloudinary returns (covers edge cases).
         const MIME_TO_EXT: Record<string, string> = {
             "application/pdf": "pdf",
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
@@ -139,9 +178,13 @@ export async function GET(
         const contentTypeHeader = cloudinaryResponse.headers.get("Content-Type")?.split(";")[0].trim() || "";
         const extFromMime = MIME_TO_EXT[contentTypeHeader] ?? null;
 
-        // Priority: URL extension > MIME-derived extension > generic fallback (no format assumed)
-        const extension = extFromUrl ?? extFromMime ?? "bin";
-        const filename = `${sanitizedTitle}.${extension}`;
+        const extension = extFromTitle ?? extFromUpstreamFilename ?? extFromUrl ?? extFromMime ?? null;
+
+        let filename = originalTitle;
+        if (!extFromTitle && extension) {
+            const baseName = stripExtension(upstreamFilename || originalTitle);
+            filename = `${sanitizeFilename(baseName)}.${extension}`;
+        }
 
         // Stream the response back to the user
         try {
