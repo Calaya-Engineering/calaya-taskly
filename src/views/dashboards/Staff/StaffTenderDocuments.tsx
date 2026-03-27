@@ -290,7 +290,7 @@ export default function StaffTenderDocuments() {
       }
       return true;
     });
-  }, [searchTerm]);
+  }, [searchTerm, tenders]);
 
   const documentsForSelectedTender = useMemo(() => {
     return getTenderDocuments(selectedTender);

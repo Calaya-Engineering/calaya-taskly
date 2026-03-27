@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
       const limit = Number.isFinite(parsedLimit) ? Math.min(Math.max(parsedLimit, 1), 500) : undefined;
       const offset = Number.isFinite(parsedOffset) ? Math.max(parsedOffset, 0) : 0;
 
-      const where: any = { NOT: { type: "Report" } };
+      const where: any = { NOT: [{ type: "Report" }, { scope: "TENDER" }] };
       if (type && type !== "All Types") where.type = type;
       if (scope && scope !== "All Scopes") where.scope = scope;
       if (department && department !== "all") {
@@ -45,7 +45,7 @@ export async function GET(req: NextRequest) {
           .filter(Boolean);
         const deptCondition = list.length === 1 ? { department: list[0] } : { department: { in: list } };
         if (!where.AND) where.AND = [];
-        where.AND.push({ OR: [deptCondition, { scope: "PUBLIC" }] });
+        where.AND.push({ OR: [deptCondition, { scope: { in: ["PUBLIC", "ALL_COMPANY", "ALL_DEPARTMENTS"] } }] });
       }
 
       if (search) {
