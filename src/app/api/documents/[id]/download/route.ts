@@ -107,28 +107,48 @@ export async function GET(
             entityId: docId,
         });
 
-        // Determine filename and extension
-        // We try to use the stored title and derive extension from the URL if possible, or default to .pdf
+        // Determine filename and extension — preserve the original file format exactly.
         const sanitizedTitle = (doc.title || "document").replace(/[^a-z0-9]/gi, "_").toLowerCase();
-        let extension = "pdf";
 
-        // Check original URL for extension
-        const urlParts = doc.fileUrl.split(".");
-        if (urlParts.length > 1) {
-            const urlExt = urlParts.pop()?.toLowerCase();
-            if (urlExt && ["pdf", "docx", "doc", "xlsx", "xls", "zip", "png", "jpg", "jpeg"].includes(urlExt)) {
-                extension = urlExt;
-            }
-        }
+        // 1. Extract extension from URL: strip query string, take last path segment, then match extension.
+        const urlWithoutQuery = doc.fileUrl.split("?")[0];
+        const urlFilename = urlWithoutQuery.split("/").pop() || "";
+        const urlExtMatch = urlFilename.match(/\.([a-zA-Z0-9]+)$/);
+        const extFromUrl = urlExtMatch ? urlExtMatch[1].toLowerCase() : null;
 
+        // 2. Derive extension from the Content-Type Cloudinary returns (covers edge cases).
+        const MIME_TO_EXT: Record<string, string> = {
+            "application/pdf": "pdf",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
+            "application/msword": "doc",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": "xlsx",
+            "application/vnd.ms-excel": "xls",
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation": "pptx",
+            "application/vnd.ms-powerpoint": "ppt",
+            "application/zip": "zip",
+            "application/x-zip-compressed": "zip",
+            "image/png": "png",
+            "image/jpeg": "jpg",
+            "image/gif": "gif",
+            "image/webp": "webp",
+            "text/plain": "txt",
+            "text/csv": "csv",
+            "video/mp4": "mp4",
+            "audio/mpeg": "mp3",
+        };
+        const contentTypeHeader = cloudinaryResponse.headers.get("Content-Type")?.split(";")[0].trim() || "";
+        const extFromMime = MIME_TO_EXT[contentTypeHeader] ?? null;
+
+        // Priority: URL extension > MIME-derived extension > generic fallback (no format assumed)
+        const extension = extFromUrl ?? extFromMime ?? "bin";
         const filename = `${sanitizedTitle}.${extension}`;
 
         // Stream the response back to the user
         try {
             return new Response(cloudinaryResponse.body as any, {
                 headers: {
-                    "Content-Type": cloudinaryResponse.headers.get("Content-Type") || "application/octet-stream",
-                    "Content-Disposition": `attachment; filename="${filename}"`,
+                    "Content-Type": contentTypeHeader || "application/octet-stream",
+                    "Content-Disposition": `attachment; filename="${filename}"; filename*=UTF-8''${encodeURIComponent(filename)}`,
                     "Cache-Control": "no-cache",
                 },
             });
