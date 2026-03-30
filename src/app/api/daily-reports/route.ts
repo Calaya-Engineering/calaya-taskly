@@ -1,25 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
-import { v2 as cloudinary } from "cloudinary";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { createNotification } from "@/lib/notifications";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
 import { getManagedDepartmentNamesByEmail } from "@/lib/hod-departments";
-import { buildUserDisplayLookup, getDisplayNameForUserValue } from "@/lib/user-display";
+import { buildDailyReportSummary, normalizeDailyReportStatus } from "@/lib/daily-reports";
 
-// Configure Cloudinary from env (CLOUDINARY_URL)
-cloudinary.config();
+function toUtcDayBounds(date: string) {
+  const start = new Date(`${date}T00:00:00.000Z`);
+  const end = new Date(`${date}T23:59:59.999Z`);
+  return { start, end };
+}
 
-/**
- * GET /api/daily-reports
- * Returns Document records where type = "Report", optionally filtered by
- * department or departments (comma-separated) and date range.
- *
- * The fileUrl column stores a Cloudinary URL pointing to a JSON file that has:
- *   { entries: [...], status: string, attachmentUrl: string|null }
- * For legacy records it may hold an inline JSON array or a compact "RPT:..." string.
- * The scope column stores the report status (PENDING | APPROVED | REVIEW_URGENTLY).
- */
 export async function GET(req: NextRequest) {
   const auth = await getAuthFromRequest(req);
   if (!auth) {
@@ -39,7 +31,7 @@ export async function GET(req: NextRequest) {
     const offset = Number.isFinite(parsedOffset) ? Math.max(parsedOffset, 0) : 0;
     const managedDepartments = auth.role === "HOD" ? await getManagedDepartmentNamesByEmail(auth.email) : [];
 
-    const where: any = { type: "Report" };
+    const where: any = {};
 
     if (auth.role === "HOD") {
       if (managedDepartments.length === 0) {
@@ -48,76 +40,78 @@ export async function GET(req: NextRequest) {
       where.department = { in: managedDepartments };
     }
 
-    if (department && department !== "All") {
+    if (department && department.toLowerCase() !== "all") {
       if (auth.role === "HOD" && !managedDepartments.includes(department)) {
         return NextResponse.json([]);
       }
       where.department = department;
     } else if (departments) {
-      const list = departments
+      const requestedDepartments = departments
         .split(",")
-        .map((d) => d.trim())
+        .map((value) => value.trim())
         .filter(Boolean);
-      const filteredList = auth.role === "HOD"
-        ? list.filter((deptName) => managedDepartments.includes(deptName))
-        : list;
-      if (filteredList.length === 1) where.department = filteredList[0];
-      else if (filteredList.length > 1) where.department = { in: filteredList };
-      else if (auth.role === "HOD") return NextResponse.json([]);
+      const filteredDepartments = auth.role === "HOD"
+        ? requestedDepartments.filter((value) => managedDepartments.includes(value))
+        : requestedDepartments;
+
+      if (filteredDepartments.length === 0 && auth.role === "HOD") {
+        return NextResponse.json([]);
+      }
+
+      if (filteredDepartments.length === 1) {
+        where.department = filteredDepartments[0];
+      } else if (filteredDepartments.length > 1) {
+        where.department = { in: filteredDepartments };
+      }
     }
 
     if (date) {
-      const start = new Date(`${date}T00:00:00.000Z`);
-      const end = new Date(`${date}T23:59:59.999Z`);
-      where.createdAt = { gte: start, lte: end };
+      const { start, end } = toUtcDayBounds(date);
+      where.reportDate = { gte: start, lte: end };
     }
 
-    const documents = await prisma.document.findMany({
+    const reports = await prisma.dailyReport.findMany({
       where,
-      orderBy: { createdAt: "desc" },
+      orderBy: [{ reportDate: "desc" }, { submittedAt: "desc" }, { id: "desc" }],
       skip: offset,
       take: limit,
       select: {
         id: true,
         title: true,
-        type: true,
         department: true,
-        uploadedBy: true,
-        scope: true,
-        fileSize: true,
-        fileUrl: true,
+        submittedBy: true,
+        status: true,
+        summary: true,
+        payloadSource: true,
+        attachmentUrl: true,
+        attachmentName: true,
         downloads: true,
-        createdAt: true,
+        reportDate: true,
+        submittedAt: true,
+        entries: {
+          select: { id: true },
+        },
       },
     });
 
-    const uploaderLookup = await buildUserDisplayLookup(documents.map((document) => document.uploadedBy));
-
-    const formatted = documents.map((d) => {
-      // scope stores the report status for new records
-      const status = d.scope === "REVIEW_URGENTLY" || d.scope === "APPROVED" || d.scope === "PENDING"
-        ? d.scope
-        : "APPROVED";
-
-      // fileUrl is a Cloudinary URL; entries are fetched client-side when needed.
-      // For the list view we just need the count from fileSize.
-      return {
-        id: `RPT-${String(d.id).padStart(4, "0")}`,
-        dbId: d.id,
-        title: d.title,
-        date: d.createdAt.toISOString().split("T")[0],
-        department: d.department,
-        submittedBy: getDisplayNameForUserValue(d.uploadedBy, uploaderLookup),
-        submittedAt: d.createdAt.toISOString(),
-        entries: [], // entries loaded separately via fileUrl
-        entriesUrl: d.fileUrl,  // client can fetch this URL to get full entries
-        fileSize: d.fileSize || "—",
-        fileType: "Report",
-        status,
-        downloads: d.downloads,
-        fileUrl: d.fileUrl,
-      };
-    });
+    const formatted = reports.map((report) => ({
+      id: `RPT-${String(report.id).padStart(4, "0")}`,
+      dbId: report.id,
+      title: report.title,
+      date: report.reportDate.toISOString().split("T")[0],
+      department: report.department,
+      submittedBy: report.submittedBy,
+      submittedAt: report.submittedAt.toISOString(),
+      entries: [],
+      entriesUrl: report.payloadSource,
+      fileSize: buildDailyReportSummary(report.entries.length, report.summary),
+      fileType: "Report",
+      status: normalizeDailyReportStatus(report.status),
+      downloads: report.downloads,
+      fileUrl: report.attachmentUrl || report.payloadSource || null,
+      attachmentUrl: report.attachmentUrl,
+      attachmentName: report.attachmentName,
+    }));
 
     return NextResponse.json(formatted, {
       headers: { "Cache-Control": "no-store, max-age=0" },
@@ -131,15 +125,6 @@ export async function GET(req: NextRequest) {
   }
 }
 
-/**
- * POST /api/daily-reports
- * Creates a new daily report stored as a Document record.
- * Body: { department, date, entries, urgentReview?, attachmentUrl?, attachmentName?, title? }
- *
- * Entries are uploaded as a JSON file to Cloudinary so that fileUrl stores
- * a short URL (≤190 chars) — safely within the VARCHAR column limit.
- * The report status is stored in the scope field.
- */
 export async function POST(req: NextRequest) {
   const auth = await getAuthFromRequest(req);
   if (!auth) {
@@ -173,22 +158,31 @@ export async function POST(req: NextRequest) {
     }
 
     const validEntries = entries
-      .filter((e) => e?.taskName?.trim())
-      .map((e) => ({
-        taskName: String(e.taskName).trim(),
-        objective: e.objective ? String(e.objective).trim() : "",
-        target: e.target ? String(e.target).trim() : "",
-        nextDayTask: e.nextDayTask ? String(e.nextDayTask).trim() : "",
+      .filter((entry) => entry?.taskName?.trim())
+      .map((entry) => ({
+        taskName: String(entry.taskName).trim(),
+        objective: entry.objective ? String(entry.objective).trim() : "",
+        target: entry.target ? String(entry.target).trim() : "",
+        nextDayTask: entry.nextDayTask ? String(entry.nextDayTask).trim() : "",
       }));
 
     if (validEntries.length === 0) {
       return NextResponse.json({ error: "At least one task entry with a name is required" }, { status: 400 });
     }
 
-    const reportDate = date || new Date().toISOString().split("T")[0];
-    const submitterName: string =
-      typeof auth.name === "string" && auth.name
-        ? auth.name
+    const user = await prisma.user.findUnique({
+      where: { email: auth.email.trim().toLowerCase() },
+      select: { id: true, name: true },
+    });
+
+    const reportDateString =
+      typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(date)
+        ? date
+        : new Date().toISOString().split("T")[0];
+    const reportDate = new Date(`${reportDateString}T00:00:00.000Z`);
+    const submitterName =
+      typeof user?.name === "string" && user.name.trim()
+        ? user.name.trim()
         : auth.email.split("@")[0] || "Unknown";
     const normalizedRole = String(auth.role || "").toUpperCase();
     const reportStatus =
@@ -200,119 +194,83 @@ export async function POST(req: NextRequest) {
     const reportTitle =
       typeof title === "string" && title.trim()
         ? title.trim()
-        : `Daily Report — ${department.trim()} — ${reportDate}`;
+        : `Daily Report — ${department.trim()} — ${reportDateString}`;
+    const summary = buildDailyReportSummary(validEntries.length);
 
-    // ── Upload entries as a JSON file to Cloudinary ───────────────────────────
-    // This stores a short Cloudinary URL in fileUrl (well within VARCHAR(191))
-    // instead of a raw JSON blob that overflows the column.
-    let entriesFileUrl: string | null = null;
-    try {
-      const jsonPayload = JSON.stringify({
-        entries: validEntries,
+    const report = await prisma.dailyReport.create({
+      data: {
+        title: reportTitle,
+        department: department.trim(),
+        submittedBy: submitterName,
+        submittedByRole: normalizedRole || null,
+        submittedByUserId: user?.id ?? null,
+        reportDate,
+        submittedAt: new Date(),
         status: reportStatus,
-        attachmentUrl: attachmentUrl || null,
+        summary,
+        attachmentUrl: attachmentUrl ? String(attachmentUrl).trim() : null,
         attachmentName: attachmentName ? String(attachmentName).trim() : null,
-      });
-
-      const buffer = Buffer.from(jsonPayload, "utf-8");
-      const deptSlug = department.trim().replace(/\s+/g, "_");
-
-      const uploadResult = await new Promise<{ secure_url: string }>((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
-          {
-            resource_type: "raw",
-            folder: "calaya-reports",
-            public_id: `report_${deptSlug}_${reportDate}_${Date.now()}`,
-            format: "json",
-          },
-          (error, result) => {
-            if (error) reject(error);
-            else if (result) resolve(result);
-            else reject(new Error("Empty upload result from Cloudinary"));
-          }
-        );
-        stream.end(buffer);
-      });
-
-      entriesFileUrl = uploadResult.secure_url;
-    } catch (uploadErr: any) {
-      // Fallback: compact inline summary that fits in VARCHAR(191)
-      console.warn("Cloudinary JSON upload failed, using compact fallback:", uploadErr?.message);
-      const names = validEntries.map((e) => e.taskName).join("|");
-      entriesFileUrl = `RPT:${reportStatus}|${names}`.slice(0, 100);
-    }
-
-    let doc: any;
-    try {
-      doc = await prisma.document.create({
-        data: {
-          title: reportTitle,
-          type: "Report",
-          department: department.trim(),
-          uploadedBy: submitterName,
-          scope: reportStatus, // scope encodes report status (PENDING | APPROVED | REVIEW_URGENTLY)
-          fileSize: `${validEntries.length} task${validEntries.length !== 1 ? "s" : ""}`,
-          fileUrl: entriesFileUrl,
+        entries: {
+          create: validEntries.map((entry, index) => ({
+            orderIndex: index,
+            taskName: entry.taskName,
+            objective: entry.objective,
+            target: entry.target,
+            nextDayTask: entry.nextDayTask,
+          })),
         },
-      });
-    } catch (dbErr: any) {
-      console.error("DB error creating daily report:", dbErr?.message ?? dbErr);
-      if (dbErr?.message?.includes("too long")) {
-        // Second fallback attempt with minimal URL
-        doc = await prisma.document.create({
-          data: {
-            title: reportTitle,
-            type: "Report",
-            department: department.trim(),
-            uploadedBy: submitterName,
-            scope: reportStatus,
-            fileSize: `${validEntries.length} task${validEntries.length !== 1 ? "s" : ""}`,
-            fileUrl: "SHORT_FALLBACK",
-          },
-        });
-      } else {
-        throw dbErr;
-      }
+      },
+      include: {
+        entries: {
+          orderBy: { orderIndex: "asc" },
+        },
+      },
+    });
+
+    try {
+      emitRealtimeEvent({ type: "document:created", entity: "document", action: "created", entityId: report.id });
+    } catch {
+      // Non-critical realtime failure.
     }
 
-    // Fire-and-forget: realtime event
-    try {
-      emitRealtimeEvent({ type: "document:created", entity: "document", action: "created", entityId: doc.id });
-    } catch { /* non-critical */ }
-
-    // Fire-and-forget: notification
     createNotification({
       actorEmail: auth.email,
       actionType: "REPORT_SUBMITTED",
-      targetId: doc.id,
+      targetId: report.id,
       message: urgentReview
-        ? `🚨 URGENT: ${submitterName} (${auth.role}) submitted a daily report for ${department} on ${reportDate} — requires urgent review`
-        : `${submitterName} (${auth.role}) submitted a daily report for ${department} on ${reportDate}`,
+        ? `🚨 URGENT: ${submitterName} (${auth.role}) submitted a daily report for ${department} on ${reportDateString} — requires urgent review`
+        : `${submitterName} (${auth.role}) submitted a daily report for ${department} on ${reportDateString}`,
       recipients: {
         roles: ["HOD", "MD"],
         departments: [department.trim()],
         includeActor: false,
       },
       sendEmail: true,
-      emailSubject: `Daily Report Submitted — ${submitterName} | ${department.trim()} | ${reportDate}`,
-      linkPath: `/open/item?type=report&id=${doc.id}`,
-    }).catch((e) => console.error("Notification error (non-fatal):", e));
+      emailSubject: `Daily Report Submitted — ${submitterName} | ${department.trim()} | ${reportDateString}`,
+      linkPath: `/open/item?type=report&id=${report.id}`,
+    }).catch((error) => console.error("Notification error (non-fatal):", error));
 
     return NextResponse.json(
       {
-        id: `RPT-${String(doc.id).padStart(4, "0")}`,
-        dbId: doc.id,
-        title: doc.title,
-        date: reportDate,
-        department: doc.department,
-        submittedBy: doc.uploadedBy,
-        submittedAt: doc.createdAt.toISOString(),
-        entries: validEntries,
-        fileSize: doc.fileSize,
-        status: reportStatus,
-        fileUrl: doc.fileUrl,
-        attachmentUrl: attachmentUrl || null,
-        attachmentName: attachmentName ? String(attachmentName).trim() : null,
+        id: `RPT-${String(report.id).padStart(4, "0")}`,
+        dbId: report.id,
+        title: report.title,
+        date: report.reportDate.toISOString().split("T")[0],
+        department: report.department,
+        submittedBy: report.submittedBy,
+        submittedAt: report.submittedAt.toISOString(),
+        entries: report.entries.map((entry) => ({
+          taskName: entry.taskName,
+          objective: entry.objective ?? "",
+          target: entry.target ?? "",
+          nextDayTask: entry.nextDayTask ?? "",
+        })),
+        fileSize: summary,
+        status: normalizeDailyReportStatus(report.status),
+        fileUrl: report.attachmentUrl || null,
+        entriesUrl: report.payloadSource,
+        attachmentUrl: report.attachmentUrl,
+        attachmentName: report.attachmentName,
       },
       { status: 201 }
     );

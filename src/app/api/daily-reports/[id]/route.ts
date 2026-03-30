@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
-import { resolveDailyReportPayload } from "@/lib/daily-reports";
+import {
+  buildDailyReportSummary,
+  normalizeDailyReportStatus,
+  normalizeStoredDailyReportEntries,
+  resolveDailyReportPayload,
+} from "@/lib/daily-reports";
 import { getManagedDepartmentNamesByEmail } from "@/lib/hod-departments";
-import { buildUserDisplayLookup, getDisplayNameForUserValue } from "@/lib/user-display";
 
 function parseDailyReportId(value: string) {
   const normalized = value.trim();
@@ -28,21 +32,36 @@ export async function GET(
   }
 
   try {
-    const report = await prisma.document.findFirst({
+    const report = await prisma.dailyReport.findFirst({
       where: {
         id: reportId,
-        type: "Report",
       },
       select: {
         id: true,
         title: true,
         department: true,
-        uploadedBy: true,
-        scope: true,
-        fileSize: true,
-        fileUrl: true,
+        submittedBy: true,
+        status: true,
+        summary: true,
+        payloadSource: true,
+        attachmentUrl: true,
+        attachmentName: true,
         downloads: true,
+        reportDate: true,
+        submittedAt: true,
         createdAt: true,
+        entries: {
+          select: {
+            orderIndex: true,
+            taskName: true,
+            objective: true,
+            target: true,
+            nextDayTask: true,
+          },
+          orderBy: {
+            orderIndex: "asc",
+          },
+        },
       },
     });
 
@@ -57,29 +76,36 @@ export async function GET(
       }
     }
 
-    const payload = await resolveDailyReportPayload(report.fileUrl);
-    const uploaderLookup = await buildUserDisplayLookup([report.uploadedBy]);
-    const status =
-      report.scope === "REVIEW_URGENTLY" || report.scope === "APPROVED" || report.scope === "PENDING"
-        ? report.scope
-        : "APPROVED";
+    const storedEntries = normalizeStoredDailyReportEntries(report.entries);
+    const payload = storedEntries.length > 0
+      ? {
+          entries: storedEntries,
+          attachmentUrl: report.attachmentUrl ?? null,
+          attachmentName: report.attachmentName ?? null,
+          previewAvailability: "full" as const,
+          previewNote: null,
+        }
+      : await resolveDailyReportPayload(report.payloadSource);
+    const status = normalizeDailyReportStatus(report.status);
+    const attachmentUrl = report.attachmentUrl ?? payload.attachmentUrl;
+    const attachmentName = report.attachmentName ?? payload.attachmentName;
 
     return NextResponse.json({
       id: `RPT-${String(report.id).padStart(4, "0")}`,
       dbId: report.id,
       title: report.title,
-      date: report.createdAt.toISOString().split("T")[0],
+      date: report.reportDate.toISOString().split("T")[0],
       department: report.department,
-      submittedBy: getDisplayNameForUserValue(report.uploadedBy, uploaderLookup),
-      submittedAt: report.createdAt.toISOString(),
+      submittedBy: report.submittedBy,
+      submittedAt: report.submittedAt.toISOString(),
       status,
-      fileSize: report.fileSize || "—",
-      fileUrl: report.fileUrl,
-      entriesUrl: report.fileUrl,
+      fileSize: buildDailyReportSummary(storedEntries.length, report.summary),
+      fileUrl: attachmentUrl || report.payloadSource || null,
+      entriesUrl: report.payloadSource,
       downloads: report.downloads,
       entries: payload.entries,
-      attachmentUrl: payload.attachmentUrl,
-      attachmentName: payload.attachmentName,
+      attachmentUrl,
+      attachmentName,
       previewAvailability: payload.previewAvailability,
       previewNote: payload.previewNote,
     });

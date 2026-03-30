@@ -5,6 +5,14 @@ export type DailyReportEntry = {
   nextDayTask: string;
 };
 
+type StoredDailyReportEntry = {
+  taskName?: string | null;
+  objective?: string | null;
+  target?: string | null;
+  nextDayTask?: string | null;
+  orderIndex?: number | null;
+};
+
 export type DailyReportPayload = {
   entries: DailyReportEntry[];
   attachmentUrl: string | null;
@@ -12,6 +20,41 @@ export type DailyReportPayload = {
   previewAvailability: "full" | "limited" | "unavailable";
   previewNote: string | null;
 };
+
+export function normalizeDailyReportStatus(value: string | null | undefined) {
+  const normalized = String(value ?? "").trim().toUpperCase();
+  if (normalized === "PENDING" || normalized === "APPROVED" || normalized === "REVIEW_URGENTLY" || normalized === "REJECTED") {
+    return normalized;
+  }
+  return "APPROVED";
+}
+
+export function buildDailyReportSummary(entryCount: number, fallbackSummary?: string | null) {
+  const normalizedFallback = String(fallbackSummary ?? "").trim();
+  if (normalizedFallback) {
+    return normalizedFallback;
+  }
+  if (!Number.isFinite(entryCount) || entryCount <= 0) {
+    return "—";
+  }
+  return `${entryCount} task${entryCount === 1 ? "" : "s"}`;
+}
+
+export function normalizeStoredDailyReportEntries(entries: StoredDailyReportEntry[] | null | undefined): DailyReportEntry[] {
+  if (!Array.isArray(entries)) return [];
+
+  return [...entries]
+    .sort((left, right) => Number(left?.orderIndex ?? 0) - Number(right?.orderIndex ?? 0))
+    .map((entry) =>
+      normalizeEntry({
+        taskName: entry?.taskName ?? "",
+        objective: entry?.objective ?? "",
+        target: entry?.target ?? "",
+        nextDayTask: entry?.nextDayTask ?? "",
+      })
+    )
+    .filter((entry) => entry.taskName);
+}
 
 type RawEntry = {
   taskName?: unknown;

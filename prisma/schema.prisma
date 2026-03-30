@@ -39,6 +39,7 @@ model User {
   assignmentsMade            TaskAssignment[]   @relation("AssignedBy")
   tasksAssigned              TaskAssignment[]   @relation("AssignedTo")
   managedDepartmentRelations DepartmentHod[]    @relation("HodAssignments")
+  dailyReportsSubmitted      DailyReport[]      @relation("SubmittedDailyReports")
   sectionSeen                UserSectionSeen[]
 }
 
@@ -150,6 +151,50 @@ model Document {
   @@index([scope])
   @@index([createdAt])
   @@index([tenderId])
+}
+
+model DailyReport {
+  id               Int                @id @default(autoincrement())
+  title            String
+  department       String
+  submittedBy      String
+  submittedByRole  String?
+  submittedByUserId Int?
+  reportDate       DateTime
+  submittedAt      DateTime           @default(now())
+  status           String             @default("PENDING")
+  summary          String?
+  payloadSource    String?            @db.Text
+  attachmentUrl    String?            @db.Text
+  attachmentName   String?
+  downloads        Int                @default(0)
+  legacyDocumentId Int?               @unique
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  entries          DailyReportEntry[]
+  submittedByUser  User?              @relation("SubmittedDailyReports", fields: [submittedByUserId], references: [id], onDelete: SetNull)
+
+  @@index([department])
+  @@index([status])
+  @@index([reportDate])
+  @@index([submittedAt])
+  @@index([submittedByUserId])
+}
+
+model DailyReportEntry {
+  id            Int         @id @default(autoincrement())
+  dailyReportId Int
+  orderIndex    Int         @default(0)
+  taskName      String
+  objective     String?     @db.Text
+  target        String?     @db.Text
+  nextDayTask   String?     @db.Text
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  dailyReport   DailyReport @relation(fields: [dailyReportId], references: [id], onDelete: Cascade)
+
+  @@index([dailyReportId])
+  @@index([dailyReportId, orderIndex])
 }
 
 model TaskAssignment {

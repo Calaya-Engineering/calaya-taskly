@@ -56,6 +56,8 @@ if (!globalForPrisma.adapter) {
 const useCached =
   globalForPrisma.prisma &&
   (globalForPrisma.prisma as any).document &&
+  (globalForPrisma.prisma as any).dailyReport &&
+  (globalForPrisma.prisma as any).dailyReportEntry &&
   (globalForPrisma.prisma as any).announcementRead &&
   (globalForPrisma.prisma as any).notification &&
   (globalForPrisma.prisma as any).departmentHod &&
