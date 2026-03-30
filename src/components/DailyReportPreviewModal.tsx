@@ -264,7 +264,7 @@ export default function DailyReportPreviewModal({ open, reportId, onClose }: Pro
 
             <div className="px-6 py-4 border-t border-gray-200/70 bg-gray-50 flex flex-wrap justify-between items-center gap-3">
               <div className="text-sm text-gray-600">
-                {report?.attachmentUrl ? "Attachment available for download." : "Download will use the report JSON when no attachment exists."}
+                Download will export this report preview as a PDF.
               </div>
               <div className="flex gap-3">
                 <button

@@ -125,21 +125,6 @@ const getDepartmentTone = (department) => {
   }
 };
 
-const getStatusTone = (status) => {
-  switch (status) {
-    case 'APPROVED': return 'success';
-    case 'PENDING': return 'warn';
-    case 'REJECTED': return 'danger';
-    case 'REVIEW_URGENTLY': return 'danger';
-    default: return 'default';
-  }
-};
-
-const getStatusLabel = (status: string) => {
-  if (status === 'REVIEW_URGENTLY') return '🚨 Review Urgently';
-  return status;
-};
-
 /* Normalize entry keys: handles both camelCase and UPPERCASE from legacy data */
 const normalizeEntry = (e: any): ReportEntry => ({
   taskName:   e.taskName   ?? e.TASKNAME   ?? e.task_name   ?? '',
@@ -727,7 +712,6 @@ export default function HODDailyReports() {
                     <th className="px-6 py-4 text-left">Department</th>
                     <th className="px-6 py-4 text-left">Submitted By</th>
                     <th className="px-6 py-4 text-left">Tasks</th>
-                    <th className="px-6 py-4 text-left">Status</th>
                     <th className="px-6 py-4 text-left">File</th>
                     <th className="px-6 py-4 text-right">Actions</th>
                   </tr>
@@ -735,7 +719,7 @@ export default function HODDailyReports() {
                 <tbody className="divide-y divide-gray-200/70 text-[13px]">
                   {virtualReportsWindow.topSpacer > 0 && (
                     <tr aria-hidden="true">
-                      <td colSpan={7} style={{ height: `${virtualReportsWindow.topSpacer}px` }} />
+                      <td colSpan={6} style={{ height: `${virtualReportsWindow.topSpacer}px` }} />
                     </tr>
                   )}
                   {virtualReportsWindow.rows.map((report) => (
@@ -766,9 +750,6 @@ export default function HODDailyReports() {
                         <div className="font-semibold text-gray-900">{report.fileSize || '—'}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <Pill tone={getStatusTone(report.status)}>{renderNodeWithIcons(getStatusLabel(report.status))}</Pill>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
                         <span className="text-[12px] text-gray-500">
                           {getReportUrl(report) ? "Available" : "—"}
                         </span>
@@ -795,7 +776,7 @@ export default function HODDailyReports() {
                   ))}
                   {virtualReportsWindow.bottomSpacer > 0 && (
                     <tr aria-hidden="true">
-                      <td colSpan={7} style={{ height: `${virtualReportsWindow.bottomSpacer}px` }} />
+                      <td colSpan={6} style={{ height: `${virtualReportsWindow.bottomSpacer}px` }} />
                     </tr>
                   )}
                 </tbody>

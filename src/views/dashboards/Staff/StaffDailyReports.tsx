@@ -135,15 +135,6 @@ const normalizeDailyReport = (report: any): DailyReportItem => ({
 });
 
 
-const getStatusTone = (status) => {
-  switch (status) {
-    case 'APPROVED': return 'success';
-    case 'PENDING': return 'warn';
-    case 'REJECTED': return 'danger';
-    default: return 'default';
-  }
-};
-
 const getDepartmentTone = (dept) => {
   switch (dept) {
     case 'All Company': return 'purple';
@@ -669,14 +660,13 @@ export default function StaffDailyReports() {
                   <th className="px-5 py-3 text-left">Date</th>
                   <th className="px-5 py-3 text-left">Department</th>
                   <th className="px-5 py-3 text-left">Submitted By</th>
-                  <th className="px-5 py-3 text-left">Status</th>
                   <th className="px-5 py-3 text-left">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200/70 text-[13px]">
                 {virtualReportsWindow.topSpacer > 0 && (
                   <tr aria-hidden="true">
-                    <td colSpan={6} style={{ height: `${virtualReportsWindow.topSpacer}px` }} />
+                    <td colSpan={5} style={{ height: `${virtualReportsWindow.topSpacer}px` }} />
                   </tr>
                 )}
                 {virtualReportsWindow.rows.map((report) => (
@@ -717,9 +707,6 @@ export default function StaffDailyReports() {
                         <div className="text-[11px] text-gray-500">{fmtDateTime(report.submittedAt)}</div>
                       </div>
                     </td>
-                    <td className="px-5 py-3 whitespace-nowrap">
-                      <Pill tone={getStatusTone(report.status)}>{report.status}</Pill>
-                    </td>
                     <td className="px-5 py-3">
                       <div className="flex gap-2">
                         <button
@@ -742,7 +729,7 @@ export default function StaffDailyReports() {
                 ))}
                 {virtualReportsWindow.bottomSpacer > 0 && (
                   <tr aria-hidden="true">
-                    <td colSpan={6} style={{ height: `${virtualReportsWindow.bottomSpacer}px` }} />
+                    <td colSpan={5} style={{ height: `${virtualReportsWindow.bottomSpacer}px` }} />
                   </tr>
                 )}
               </tbody>
