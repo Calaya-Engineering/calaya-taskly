@@ -51,7 +51,7 @@ const Pill = ({ children, tone = "default" }) => {
   );
 };
 
-const deptTone = (dept) => (dept === "All" ? "purple" : "info");
+const deptTone = (dept) => (dept === "All" || dept === "All Company" ? "purple" : "info");
 
 const fileEmoji = (title) => {
   const t = (title || "").toLowerCase();
@@ -201,25 +201,31 @@ export default function MDDailyReports() {
     format: "pdf" // pdf, excel, csv, word
   });
 
+  const allReports = useMemo(
+    () => [...reportsData].sort((a, b) => (a.date < b.date ? 1 : -1)),
+    [reportsData]
+  );
+
   const departments = useMemo(
-    () => ["All", ...new Set(reportsData.map((r) => r.department).filter((d) => d !== "All"))],
+    () => [...new Set(reportsData.map((r) => String(r.department || "").trim()).filter(Boolean))],
     [reportsData]
   );
 
   const filteredReports = useMemo(() => {
-    return reportsData
+    const normalizedDepartment = String(selectedDepartment || "").toLowerCase() === "all" ? "all" : selectedDepartment;
+
+    return allReports
       .filter((r) => {
         const matchesDate = !selectedDate || r.date === selectedDate;
-        const matchesDept = selectedDepartment === "all" || r.department === selectedDepartment;
+        const matchesDept = normalizedDepartment === "all" || r.department === normalizedDepartment;
         const matchesSearch =
           !search ||
           String(r.title || "").toLowerCase().includes(search.toLowerCase()) ||
           String(r.id || "").toLowerCase().includes(search.toLowerCase()) ||
           String(r.uploadedBy || "").toLowerCase().includes(search.toLowerCase());
         return matchesDate && matchesDept && matchesSearch;
-      })
-      .sort((a, b) => (a.date < b.date ? 1 : -1));
-  }, [reportsData, selectedDate, selectedDepartment, search]);
+      });
+  }, [allReports, selectedDate, selectedDepartment, search]);
 
   const totals = useMemo(() => {
     const totalReports = filteredReports.length;
@@ -373,7 +379,7 @@ export default function MDDailyReports() {
                   <option value="all">All Departments</option>
                   {departments.map((dept) => (
                     <option key={dept} value={dept}>
-                      {dept === "All" ? "All" : dept}
+                      {dept}
                     </option>
                   ))}
                 </select>
