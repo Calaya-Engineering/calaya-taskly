@@ -29,7 +29,8 @@ export async function fetchWithAuth(
     input.toString().endsWith("/events");
   const method = (init?.method || "GET").toUpperCase();
   // Reads fail fast; writes get a longer budget to avoid false timeouts on cold DB connections.
-  const defaultTimeoutMs = isEventStream ? 0 : method === "GET" ? 15000 : 45000;
+  // Generous GET budget: cold Prisma + badge aggregation + Cloudinary-backed APIs often exceed 15s on first hit.
+  const defaultTimeoutMs = isEventStream ? 0 : method === "GET" ? 45000 : 45000;
   const timeoutMs = Math.max(0, init?.timeoutMs ?? defaultTimeoutMs);
 
   const controller = new AbortController();

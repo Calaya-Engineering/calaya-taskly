@@ -148,34 +148,77 @@ function parseJsonPayload(payload: unknown): DailyReportPayload {
   };
 }
 
+const MAX_JSON_PAYLOAD_BYTES = 2_000_000;
+const REMOTE_PAYLOAD_FETCH_MS = 12_000;
+
 async function fetchJsonPayloadFromUrl(url: string): Promise<DailyReportPayload> {
-  const response = await fetch(url, {
-    cache: "no-store",
-  });
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), REMOTE_PAYLOAD_FETCH_MS);
 
-  if (!response.ok) {
+  try {
+    const response = await fetch(url, {
+      cache: "no-store",
+      signal: controller.signal,
+    });
+
+    if (!response.ok) {
+      return {
+        entries: [],
+        attachmentUrl: null,
+        attachmentName: null,
+        previewAvailability: "unavailable",
+        previewNote: "The report file could not be fetched for preview.",
+      };
+    }
+
+    const lengthHeader = response.headers.get("content-length");
+    if (lengthHeader) {
+      const n = Number.parseInt(lengthHeader, 10);
+      if (Number.isFinite(n) && n > MAX_JSON_PAYLOAD_BYTES) {
+        return {
+          entries: [],
+          attachmentUrl: null,
+          attachmentName: null,
+          previewAvailability: "unavailable",
+          previewNote: "The report payload file is too large to load for preview.",
+        };
+      }
+    }
+
+    const text = await response.text();
+    if (text.length > MAX_JSON_PAYLOAD_BYTES) {
+      return {
+        entries: [],
+        attachmentUrl: null,
+        attachmentName: null,
+        previewAvailability: "unavailable",
+        previewNote: "The report payload file is too large to load for preview.",
+      };
+    }
+
+    const parsed = tryParseJsonValue(text);
+    if (parsed === null) {
+      return {
+        entries: [],
+        attachmentUrl: null,
+        attachmentName: null,
+        previewAvailability: "unavailable",
+        previewNote: "The report file is not valid JSON.",
+      };
+    }
+
+    return parseJsonPayload(parsed);
+  } catch {
     return {
       entries: [],
       attachmentUrl: null,
       attachmentName: null,
       previewAvailability: "unavailable",
-      previewNote: "The report file could not be fetched for preview.",
+      previewNote: "The report file could not be reached for preview.",
     };
+  } finally {
+    clearTimeout(timeoutId);
   }
-
-  const text = await response.text();
-  const parsed = tryParseJsonValue(text);
-  if (parsed === null) {
-    return {
-      entries: [],
-      attachmentUrl: null,
-      attachmentName: null,
-      previewAvailability: "unavailable",
-      previewNote: "The report file is not valid JSON.",
-    };
-  }
-
-  return parseJsonPayload(parsed);
 }
 
 export async function resolveDailyReportPayload(fileUrl: string | null | undefined): Promise<DailyReportPayload> {

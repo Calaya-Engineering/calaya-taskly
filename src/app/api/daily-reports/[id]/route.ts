@@ -77,15 +77,42 @@ export async function GET(
     }
 
     const storedEntries = normalizeStoredDailyReportEntries(report.entries);
-    const payload = storedEntries.length > 0
-      ? {
-          entries: storedEntries,
-          attachmentUrl: report.attachmentUrl ?? null,
-          attachmentName: report.attachmentName ?? null,
-          previewAvailability: "full" as const,
-          previewNote: null,
-        }
-      : await resolveDailyReportPayload(report.payloadSource);
+    const dbEntryRowCount = Array.isArray(report.entries) ? report.entries.length : 0;
+    const payloadSourceNorm = String(report.payloadSource ?? "").trim();
+    const attachmentNorm = String(report.attachmentUrl ?? "").trim();
+    /** Same URL often means a raw upload was stored as payloadSource — never pull it in as JSON text. */
+    const payloadUrlIsOnlyAttachment =
+      Boolean(payloadSourceNorm && attachmentNorm && payloadSourceNorm === attachmentNorm);
+
+    let payload: Awaited<ReturnType<typeof resolveDailyReportPayload>>;
+
+    if (storedEntries.length > 0) {
+      payload = {
+        entries: storedEntries,
+        attachmentUrl: report.attachmentUrl ?? null,
+        attachmentName: report.attachmentName ?? null,
+        previewAvailability: "full",
+        previewNote: null,
+      };
+    } else if (dbEntryRowCount > 0) {
+      payload = {
+        entries: [],
+        attachmentUrl: report.attachmentUrl ?? null,
+        attachmentName: report.attachmentName ?? null,
+        previewAvailability: "unavailable",
+        previewNote: "This report has no task names to display.",
+      };
+    } else if (payloadUrlIsOnlyAttachment) {
+      payload = {
+        entries: [],
+        attachmentUrl: report.attachmentUrl ?? null,
+        attachmentName: report.attachmentName ?? null,
+        previewAvailability: "unavailable",
+        previewNote: null,
+      };
+    } else {
+      payload = await resolveDailyReportPayload(report.payloadSource);
+    }
     const status = normalizeDailyReportStatus(report.status);
     const attachmentUrl = report.attachmentUrl ?? payload.attachmentUrl;
     const attachmentName = report.attachmentName ?? payload.attachmentName;
