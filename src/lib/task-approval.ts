@@ -26,12 +26,14 @@ export function isTaskClosed(status?: string | null) {
   return status === "COMPLETED" || status === "CANCELLED";
 }
 
+/** Next status when a user marks a task complete (submit for approval / finalize). */
 export function getTaskSubmissionStatusForRole(role?: string | null) {
   switch ((role || "").toUpperCase()) {
     case "MD":
       return "COMPLETED";
     case "HOD":
-      return TASK_STATUS_PENDING_MD_APPROVAL;
+      // HOD sign-off is final; staff submissions do not wait for MD.
+      return "COMPLETED";
     default:
       return TASK_STATUS_PENDING_HOD_APPROVAL;
   }
