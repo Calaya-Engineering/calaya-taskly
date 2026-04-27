@@ -8,6 +8,7 @@ import { MDMenuItems } from "@/utils/menus";
 import { SearchIcon, getIconByKey, FolderIcon } from "@/lib/icons";
 import { NativeSelect } from "@/components/ui/native-select";
 import { fetchWithAuth } from "@/lib/api";
+import { taskDepartmentLabel } from "@/lib/task-display";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 
 /* ---------- UI helpers ---------- */
@@ -68,14 +69,21 @@ const taskCreatedByLabel = (task) =>
 interface Task {
   id: number;
   title: string;
-  department: string;
+  department?: string | null;
   status: string;
   priority: string;
   type: string;
   dueDate?: string;
   createdAt: string;
   createdBy?: { name?: string; email?: string; role?: string };
-  assignments?: { user?: { name?: string; email?: string } }[];
+  assignments?: {
+    user?: {
+      name?: string;
+      email?: string;
+      department?: string | null;
+      managedDepartmentRelations?: { department?: { name?: string } }[];
+    };
+  }[];
 }
 
 export default function MDAllTasks() {
@@ -390,7 +398,7 @@ export default function MDAllTasks() {
                     </td>
 
                     <td className="px-5 py-3">
-                      <Pill>{task.department || "—"}</Pill>
+                      <Pill>{taskDepartmentLabel(task)}</Pill>
                     </td>
 
                     <td className="px-5 py-3">
@@ -473,7 +481,7 @@ export default function MDAllTasks() {
                 </div>
 
                 <div className="mt-3 flex flex-wrap gap-2">
-                  <Pill>{task.department || "—"}</Pill>
+                  <Pill>{taskDepartmentLabel(task)}</Pill>
                   <Pill tone={priorityTone(task.priority)}>{task.priority}</Pill>
                   <Pill tone={statusTone(task.status)}>{task.status.replace("_", " ")}</Pill>
                 </div>

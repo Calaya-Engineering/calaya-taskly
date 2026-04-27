@@ -20,6 +20,7 @@ import { fetchWithAuth } from "@/lib/api";
 import { useSSE } from "@/hooks/useSSE";
 import DashboardSkeleton from "@/components/DashboardSkeleton";
 import { TASK_STATUS_PENDING_HOD_APPROVAL } from "@/lib/task-approval";
+import { taskDepartmentLabel } from "@/lib/task-display";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 
 /* ─── Types ─────────────────────────────────────────────────────── */
@@ -32,7 +33,13 @@ interface TaskItem {
   priority?: string;
   dueDate?: string;
   escalated?: boolean;
-  assignments?: { userId?: string }[];
+  assignments?: {
+    userId?: string;
+    user?: {
+      department?: string | null;
+      managedDepartmentRelations?: { department?: { name?: string } }[];
+    };
+  }[];
 }
 
 interface TenderItem {
@@ -733,7 +740,7 @@ export default function HODDashboard() {
                       <div className="flex items-start justify-between gap-4">
                         <div className="min-w-0">
                           <p className="font-semibold truncate">{task.title}</p>
-                          <p className="text-sm text-gray-500 mt-1">{task.department || "—"}</p>
+                          <p className="text-sm text-gray-500 mt-1">{taskDepartmentLabel(task)}</p>
                         </div>
                         <div className="text-right shrink-0">
                           {task.dueDate && (

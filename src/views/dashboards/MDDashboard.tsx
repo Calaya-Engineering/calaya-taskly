@@ -62,9 +62,9 @@ export default function MDDashboard() {
   const [loading, setLoading] = useState(true);
   const lastRefetchRef = useRef(0);
 
-  const fetchData = useCallback(async () => {
+  const fetchData = useCallback(async (soft = false) => {
+    if (!soft) setLoading(true);
     try {
-      setLoading(true);
       const [tRes, aRes, tenRes, nRes] = await Promise.all([
         fetchWithAuth("/api/tasks?limit=1000"),
         fetchWithAuth("/api/announcements?limit=5"),
@@ -79,12 +79,12 @@ export default function MDDashboard() {
     } catch (err) {
       console.error("Failed to fetch MD dashboard data:", err);
     } finally {
-      setLoading(false);
+      if (!soft) setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchData();
+    fetchData(false);
   }, [fetchData]);
 
   useSSE("/api/realtime/events", (ev) => {
@@ -92,7 +92,7 @@ export default function MDDashboard() {
     const now = Date.now();
     if (now - lastRefetchRef.current < 1500) return;
     lastRefetchRef.current = now;
-    fetchData();
+    fetchData(true);
   });
 
   const summary = useMemo(() => {
