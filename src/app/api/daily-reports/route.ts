@@ -29,19 +29,33 @@ export async function GET(req: NextRequest) {
     const parsedOffset = offsetParam ? parseInt(offsetParam, 10) : Number.NaN;
     const limit = Number.isFinite(parsedLimit) ? Math.min(Math.max(parsedLimit, 1), 500) : 200;
     const offset = Number.isFinite(parsedOffset) ? Math.max(parsedOffset, 0) : 0;
-    const managedDepartments = auth.role === "HOD" ? await getManagedDepartmentNamesByEmail(auth.email) : [];
+    const linkedTaskOnly = searchParams.get("linkedTask") === "true";
+
+    let managedDepartmentNames =
+      auth.role === "HOD" ? await getManagedDepartmentNamesByEmail(auth.email) : [];
+
+    if (auth.role === "HOD" && managedDepartmentNames.length === 0) {
+      const hodUser = await prisma.user.findUnique({
+        where: { email: auth.email.trim().toLowerCase() },
+        select: { department: true },
+      });
+      const fallback = hodUser?.department?.trim();
+      if (fallback) {
+        managedDepartmentNames = [fallback];
+      }
+    }
 
     const where: any = {};
 
     if (auth.role === "HOD") {
-      if (managedDepartments.length === 0) {
+      if (managedDepartmentNames.length === 0) {
         return NextResponse.json([]);
       }
-      where.department = { in: managedDepartments };
+      where.department = { in: managedDepartmentNames };
     }
 
     if (department && department.toLowerCase() !== "all") {
-      if (auth.role === "HOD" && !managedDepartments.includes(department)) {
+      if (auth.role === "HOD" && !managedDepartmentNames.includes(department)) {
         return NextResponse.json([]);
       }
       where.department = department;
@@ -51,7 +65,7 @@ export async function GET(req: NextRequest) {
         .map((value) => value.trim())
         .filter(Boolean);
       const filteredDepartments = auth.role === "HOD"
-        ? requestedDepartments.filter((value) => managedDepartments.includes(value))
+        ? requestedDepartments.filter((value) => managedDepartmentNames.includes(value))
         : requestedDepartments;
 
       if (filteredDepartments.length === 0 && auth.role === "HOD") {
@@ -68,6 +82,14 @@ export async function GET(req: NextRequest) {
     if (date) {
       const { start, end } = toUtcDayBounds(date);
       where.reportDate = { gte: start, lte: end };
+    }
+
+    if (linkedTaskOnly) {
+      where.entries = {
+        some: {
+          target: { contains: "Task ID:" },
+        },
+      };
     }
 
     const reports = await prisma.dailyReport.findMany({

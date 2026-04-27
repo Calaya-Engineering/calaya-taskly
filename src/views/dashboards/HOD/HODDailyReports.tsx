@@ -562,7 +562,11 @@ export default function HODDailyReports() {
                   Daily Reports
                 </h1>
                 <p className="text-gray-600 mt-2 max-w-2xl">
-                  View and manage daily reports from your departments.
+                  View and manage daily reports from your departments. Staff submissions tied to tasks are listed under{" "}
+                  <Link href="/hod-dashboard/task-reports" className="font-semibold underline-offset-2 hover:underline" style={{ color: "var(--primary-blue)" }}>
+                    Task reports
+                  </Link>
+                  .
                 </p>
 
                 <div className="mt-4 flex flex-wrap items-center gap-2">

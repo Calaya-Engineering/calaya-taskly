@@ -29,7 +29,15 @@ export const HODMenuItems = [
   { label: "Department Tasks", path: "/hod-dashboard/tasks", icon: <TaskIcon />, group: "Tasks" },
   { label: "My Tasks", path: "/hod-dashboard/my-tasks", icon: <TaskIcon />, group: "Tasks" },
   { label: "Documents", path: "/hod-dashboard/documents", icon: <DocumentIcon />, group: "Documents & Reports" },
-  { label: "Daily Reports", path: "/hod-dashboard/reports", icon: <ReportIcon />, group: "Documents & Reports" },
+  {
+    label: "Reports",
+    icon: <ReportIcon />,
+    group: "Documents & Reports",
+    children: [
+      { label: "Daily reports", path: "/hod-dashboard/reports", icon: <ReportIcon /> },
+      { label: "Task reports", path: "/hod-dashboard/task-reports", icon: <TaskIcon /> },
+    ],
+  },
   { label: "Meetings/Events", path: "/hod-dashboard/events", icon: <CalendarIcon />, group: "Calendar" },
   { label: "Tenders", path: "/hod-dashboard/tenders", icon: <TenderIcon />, group: "Tenders" },
   { label: "Tender Documents", path: "/hod-dashboard/tender-documents", icon: <DocumentIcon />, group: "Tenders" },

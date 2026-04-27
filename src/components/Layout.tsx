@@ -14,6 +14,7 @@ export interface MenuItem {
   icon?: string | React.ReactNode;
   label: string;
   group?: string;
+  children?: MenuItem[];
 }
 
 const LayoutContext = createContext<boolean>(false);
