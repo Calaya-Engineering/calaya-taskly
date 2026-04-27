@@ -206,6 +206,15 @@ export default function SecretaryReportsArchive() {
     }
   };
 
+  const handleDownloadPdf = async (report) => {
+    try {
+      await downloadDailyReport(report, { format: "pdf" });
+    } catch (error) {
+      console.error("Failed to download report PDF:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to download PDF");
+    }
+  };
+
   const handlePreview = (report) => {
     if (!report.dbId) {
       toast.info("This report does not have a previewable record.");
@@ -549,8 +558,9 @@ All reports will be downloaded as a ZIP file.`);
                         <Pill tone={getStatusTone(report.status)}>{report.status}</Pill>
                       </td>
                       <td className="px-5 py-3">
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 flex-wrap">
                           <button
+                            type="button"
                             onClick={() => handleDownload(report)}
                             className="px-3 py-1.5 rounded-xl text-[11px] font-semibold text-white active:scale-[0.99] transition"
                             style={{ backgroundColor: "var(--secondary-blue)" }}
@@ -558,6 +568,15 @@ All reports will be downloaded as a ZIP file.`);
                             Download
                           </button>
                           <button
+                            type="button"
+                            onClick={() => handleDownloadPdf(report)}
+                            className="px-3 py-1.5 rounded-xl text-[11px] font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
+                            style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}
+                          >
+                            PDF
+                          </button>
+                          <button
+                            type="button"
                             onClick={() => handlePreview(report)}
                             className="px-3 py-1.5 rounded-xl text-[11px] font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
                             style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}

@@ -514,6 +514,15 @@ export default function HODDailyReports() {
     }
   };
 
+  const handleDownloadReportPdf = async (report: DailyReport) => {
+    try {
+      await downloadDailyReport(report, { format: "pdf" });
+    } catch (error) {
+      console.error("Failed to download report PDF:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to download PDF");
+    }
+  };
+
   // Initialize textarea heights on mount and when entries change
   useEffect(() => {
     if (isModalOpen) {
@@ -759,7 +768,7 @@ export default function HODDailyReports() {
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right">
-                        <div className="flex items-center justify-end gap-2">
+                        <div className="flex items-center justify-end gap-2 flex-wrap">
                           <button
                             onClick={() => handleViewReport(report)}
                             className="px-3 py-1.5 rounded-xl text-[12px] font-semibold text-white active:scale-[0.99] transition"
@@ -773,6 +782,14 @@ export default function HODDailyReports() {
                             style={{ borderColor: "rgba(44, 75, 155, 0.35)", color: "var(--primary-blue)" }}
                           >
                             Download
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDownloadReportPdf(report)}
+                            className="px-3 py-1.5 rounded-xl text-[12px] font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
+                            style={{ borderColor: "rgba(44, 75, 155, 0.35)", color: "var(--primary-blue)" }}
+                          >
+                            PDF
                           </button>
                         </div>
                       </td>

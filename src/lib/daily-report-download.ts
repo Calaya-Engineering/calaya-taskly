@@ -10,6 +10,9 @@ type DailyReportDownloadRef = {
   title?: string | null;
   fileUrl?: string | null;
   entriesUrl?: string | null;
+  /** When set (e.g. from list API), used even if detail hydration omits attachment */
+  attachmentUrl?: string | null;
+  attachmentName?: string | null;
   date?: string | null;
   department?: string | null;
   submittedBy?: string | null;
@@ -59,6 +62,39 @@ function withExtension(filename: string, fallbackExtension: string) {
 function derivePdfFilename(report: DailyReportDownloadRef | DailyReportDetail) {
   const baseName = sanitizeFilenamePart(String(report.title || report.id || "daily-report")) || "daily-report";
   return withExtension(baseName, ".pdf");
+}
+
+function deriveAttachmentDownloadFilename(detail: DailyReportDetail, attachmentUrl: string) {
+  const fromName = String(detail.attachmentName || "").trim();
+  if (fromName) {
+    const safe = sanitizeFilenamePart(fromName);
+    if (safe) return safe;
+  }
+  try {
+    const path = new URL(attachmentUrl).pathname;
+    const last = path.split("/").filter(Boolean).pop() || "";
+    const decoded = decodeURIComponent(last);
+    const safe = sanitizeFilenamePart(decoded);
+    if (safe) return safe;
+  } catch {
+    // ignore
+  }
+  const base = sanitizeFilenamePart(String(detail.title || detail.id || "report-attachment")) || "report-attachment";
+  return withExtension(base, "");
+}
+
+/** Download the original uploaded file when present; avoids replacing it with a generated PDF. */
+async function downloadAttachmentFromUrl(attachmentUrl: string, filename: string) {
+  try {
+    const response = await fetch(attachmentUrl, { mode: "cors" });
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+    const blob = await response.blob();
+    await downloadBlob(blob, filename);
+  } catch {
+    triggerBrowserDownload(attachmentUrl, filename);
+  }
 }
 
 function triggerBrowserDownload(url: string, filename?: string) {
@@ -126,20 +162,28 @@ async function hydrateDailyReportDetail(report: DailyReportDownloadRef): Promise
   const baseDetail = await fetchDailyReportDetail(report);
   const currentEntries = normalizeEntries(baseDetail);
   if (currentEntries.length > 0) {
-    return baseDetail;
+    return {
+      ...baseDetail,
+      attachmentUrl: baseDetail.attachmentUrl ?? report.attachmentUrl ?? null,
+      attachmentName: baseDetail.attachmentName ?? report.attachmentName ?? null,
+    };
   }
 
   const payloadSource = String(baseDetail.entriesUrl || baseDetail.fileUrl || report.entriesUrl || report.fileUrl || "").trim();
   if (!payloadSource) {
-    return baseDetail;
+    return {
+      ...baseDetail,
+      attachmentUrl: baseDetail.attachmentUrl ?? report.attachmentUrl ?? null,
+      attachmentName: baseDetail.attachmentName ?? report.attachmentName ?? null,
+    };
   }
 
   const payload = await resolveDailyReportPayload(payloadSource);
   return {
     ...baseDetail,
     entries: payload.entries,
-    attachmentUrl: baseDetail.attachmentUrl ?? payload.attachmentUrl,
-    attachmentName: baseDetail.attachmentName ?? payload.attachmentName,
+    attachmentUrl: baseDetail.attachmentUrl ?? payload.attachmentUrl ?? report.attachmentUrl ?? null,
+    attachmentName: baseDetail.attachmentName ?? payload.attachmentName ?? report.attachmentName ?? null,
     previewAvailability: baseDetail.previewAvailability ?? payload.previewAvailability,
     previewNote: baseDetail.previewNote ?? payload.previewNote,
   };
@@ -220,8 +264,8 @@ async function fetchDailyReportDetail(report: DailyReportDownloadRef): Promise<D
       fileSize: report.fileSize ?? null,
       fileUrl: report.fileUrl ?? null,
       entriesUrl: report.entriesUrl ?? report.fileUrl ?? null,
-      attachmentUrl: payload?.attachmentUrl ?? null,
-      attachmentName: payload?.attachmentName ?? null,
+      attachmentUrl: String(report.attachmentUrl || "").trim() || payload?.attachmentUrl || null,
+      attachmentName: String(report.attachmentName || "").trim() || payload?.attachmentName || null,
       previewAvailability: payload?.previewAvailability ?? null,
       previewNote: payload?.previewNote ?? null,
       entries: payload?.entries ?? report.entries ?? [],
@@ -237,8 +281,55 @@ async function fetchDailyReportDetail(report: DailyReportDownloadRef): Promise<D
   return data ?? {};
 }
 
-export async function downloadDailyReport(report: DailyReportDownloadRef) {
+export type DailyReportDownloadFormat = "auto" | "pdf" | "attachment";
+
+/**
+ * @param format
+ * - `auto` — download the uploaded file when present, otherwise a generated summary PDF
+ * - `pdf` — always download the generated summary PDF (task text, metadata, attachment note)
+ * - `attachment` — only the uploaded file; throws if there is none
+ */
+export async function downloadDailyReport(
+  report: DailyReportDownloadRef,
+  options?: { format?: DailyReportDownloadFormat }
+) {
+  const format = options?.format ?? "auto";
   const detail = await hydrateDailyReportDetail(report);
+  const attachmentUrl = String(detail.attachmentUrl || report.attachmentUrl || "").trim();
+
+  if (format === "pdf") {
+    const pdfBlob = buildDailyReportPdf(detail);
+    await downloadBlob(pdfBlob, derivePdfFilename(detail));
+    return;
+  }
+
+  if (format === "attachment") {
+    if (!attachmentUrl) {
+      throw new Error("No file attachment is available for this report.");
+    }
+    const filename = deriveAttachmentDownloadFilename(
+      {
+        ...detail,
+        attachmentName: detail.attachmentName || report.attachmentName || null,
+      },
+      attachmentUrl
+    );
+    await downloadAttachmentFromUrl(attachmentUrl, filename);
+    return;
+  }
+
+  if (attachmentUrl) {
+    const filename = deriveAttachmentDownloadFilename(
+      {
+        ...detail,
+        attachmentName: detail.attachmentName || report.attachmentName || null,
+      },
+      attachmentUrl
+    );
+    await downloadAttachmentFromUrl(attachmentUrl, filename);
+    return;
+  }
+
   const pdfBlob = buildDailyReportPdf(detail);
   await downloadBlob(pdfBlob, derivePdfFilename(detail));
 }

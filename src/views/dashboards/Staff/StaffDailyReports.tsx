@@ -493,6 +493,15 @@ export default function StaffDailyReports() {
     }
   };
 
+  const handleDownloadPdf = async (report: DailyReportItem) => {
+    try {
+      await downloadDailyReport(report, { format: "pdf" });
+    } catch (error) {
+      console.error("Failed to download daily report PDF:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to download PDF");
+    }
+  };
+
   const clearFilters = () => {
     setDateFilter('all');
     setDepartmentFilter('all');
@@ -708,8 +717,9 @@ export default function StaffDailyReports() {
                       </div>
                     </td>
                     <td className="px-5 py-3">
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 flex-wrap">
                         <button
+                          type="button"
                           onClick={() => handleDownload(report)}
                           className="px-3 py-1.5 rounded-xl text-[11px] font-semibold text-white active:scale-[0.99] transition"
                           style={{ backgroundColor: "var(--secondary-blue)" }}
@@ -717,6 +727,15 @@ export default function StaffDailyReports() {
                           Download
                         </button>
                         <button
+                          type="button"
+                          onClick={() => handleDownloadPdf(report)}
+                          className="px-3 py-1.5 rounded-xl text-[11px] font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
+                          style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}
+                        >
+                          PDF
+                        </button>
+                        <button
+                          type="button"
                           onClick={() => handlePreview(report)}
                           className="px-3 py-1.5 rounded-xl text-[11px] font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
                           style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}

@@ -7,6 +7,7 @@ import Layout from "@/components/Layout";
 import { StaffMenuItems } from "@/utils/menus";
 import { fetchWithAuth } from "@/lib/api";
 import { formatFileSize } from "@/lib/file-size";
+import { downloadDailyReport } from "@/lib/daily-report-download";
 import { toast } from "@/lib/toast";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 /* ---------- UI helpers ---------- */
@@ -59,6 +60,7 @@ const DEFAULT_STAFF_PROFILE = {
 
 type SubmittedReport = {
   id: string;
+  dbId?: number;
   title: string;
   taskId: string;
   submittedDate: string;
@@ -66,6 +68,8 @@ type SubmittedReport = {
   file: string;
   fileSize: string;
   fileUrl: string | null;
+  attachmentUrl: string | null;
+  attachmentName: string | null;
 };
 
 type SubmittedReportFallback = {
@@ -81,16 +85,30 @@ type TaskSummary = {
   dueDate?: string | null;
 };
 
-const normalizeSubmittedReport = (report: any, fallback: SubmittedReportFallback = {}): SubmittedReport => ({
-  id: String(report?.id ?? ""),
-  title: String(report?.title ?? "Untitled Report"),
-  taskId: String(fallback.taskId ?? report?.taskId ?? "N/A"),
-  submittedDate: String(report?.submittedAt ?? report?.date ?? new Date().toISOString()),
-  status: String(report?.status ?? "PENDING"),
-  file: String(fallback.fileName ?? report?.attachmentName ?? report?.title ?? "Report attachment"),
-  fileSize: String(fallback.fileSize ?? report?.fileSize ?? "—"),
-  fileUrl: fallback.fileUrl ?? report?.attachmentUrl ?? report?.fileUrl ?? report?.entriesUrl ?? null,
-});
+const normalizeSubmittedReport = (report: any, fallback: SubmittedReportFallback = {}): SubmittedReport => {
+  const fromApiAttachment =
+    typeof report?.attachmentUrl === "string" && report.attachmentUrl.trim() ? report.attachmentUrl.trim() : null;
+  const fallbackUploadUrl =
+    typeof fallback.fileUrl === "string" && fallback.fileUrl.trim() ? fallback.fileUrl.trim() : null;
+  const resolvedAttachmentUrl = fromApiAttachment || fallbackUploadUrl;
+
+  return {
+    id: String(report?.id ?? ""),
+    dbId: typeof report?.dbId === "number" ? report.dbId : undefined,
+    title: String(report?.title ?? "Untitled Report"),
+    taskId: String(fallback.taskId ?? report?.taskId ?? "N/A"),
+    submittedDate: String(report?.submittedAt ?? report?.date ?? new Date().toISOString()),
+    status: String(report?.status ?? "PENDING"),
+    file: String(fallback.fileName ?? report?.attachmentName ?? report?.title ?? "Report attachment"),
+    fileSize: String(fallback.fileSize ?? report?.fileSize ?? "—"),
+    fileUrl: fallback.fileUrl ?? report?.attachmentUrl ?? report?.fileUrl ?? report?.entriesUrl ?? null,
+    attachmentUrl: resolvedAttachmentUrl,
+    attachmentName:
+      (typeof report?.attachmentName === "string" && report.attachmentName.trim()) ||
+      (typeof fallback.fileName === "string" && fallback.fileName.trim()) ||
+      null,
+  };
+};
 
 const getStatusTone = (status) => {
   switch (status) {
@@ -309,12 +327,44 @@ export default function StaffSubmitReport() {
     }
   };
 
-  const handleDownload = (report) => {
-    if (!report.fileUrl) {
+  const reportDownloadRef = (report: SubmittedReport) => ({
+    id: report.id,
+    dbId: report.dbId ?? null,
+    title: report.title,
+    fileUrl: report.fileUrl,
+    attachmentUrl: report.attachmentUrl,
+    attachmentName: report.attachmentName,
+    date: report.submittedDate,
+    submittedBy: staffName,
+    submittedAt: report.submittedDate,
+    status: report.status,
+    fileSize: report.fileSize,
+  });
+
+  const handleDownload = async (report: SubmittedReport) => {
+    if (!report.dbId && !report.attachmentUrl && !report.fileUrl) {
       toast.info(`No attachment available for ${report.file}`);
       return;
     }
-    window.open(report.fileUrl, "_blank", "noopener,noreferrer");
+    try {
+      await downloadDailyReport(reportDownloadRef(report));
+    } catch (err) {
+      console.error("Download report failed:", err);
+      toast.error(err instanceof Error ? err.message : "Failed to download report");
+    }
+  };
+
+  const handleDownloadPdf = async (report: SubmittedReport) => {
+    if (!report.dbId && !report.fileUrl && !report.attachmentUrl) {
+      toast.info("No report data available to build a PDF.");
+      return;
+    }
+    try {
+      await downloadDailyReport(reportDownloadRef(report), { format: "pdf" });
+    } catch (err) {
+      console.error("Download PDF failed:", err);
+      toast.error(err instanceof Error ? err.message : "Failed to download PDF");
+    }
   };
 
   return (
@@ -554,13 +604,24 @@ export default function StaffSubmitReport() {
                           <Pill tone={getStatusTone(report.status)}>
                             {renderNodeWithIcons(getStatusLabel(report.status))}
                           </Pill>
-                          <button
-                            onClick={() => handleDownload(report)}
-                            className="px-3 py-1.5 rounded-xl text-[11px] font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
-                            style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}
-                          >
-                            Download
-                          </button>
+                          <div className="flex flex-wrap gap-1.5 justify-end">
+                            <button
+                              type="button"
+                              onClick={() => handleDownload(report)}
+                              className="px-3 py-1.5 rounded-xl text-[11px] font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
+                              style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}
+                            >
+                              Download
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleDownloadPdf(report)}
+                              className="px-3 py-1.5 rounded-xl text-[11px] font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
+                              style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}
+                            >
+                              PDF
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>

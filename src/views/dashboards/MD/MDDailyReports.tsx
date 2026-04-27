@@ -298,6 +298,15 @@ export default function MDDailyReports() {
     }
   };
 
+  const handleDownloadReportPdf = async (report) => {
+    try {
+      await downloadDailyReport(report, { format: "pdf" });
+    } catch (error) {
+      console.error("Failed to download report PDF:", error);
+      toast.error(error instanceof Error ? error.message : `Failed to download PDF for ${report.title || "report"}`);
+    }
+  };
+
   if (loading) {
     return (
       <Layout menuItems={MDMenuItems} userRole="MD">
@@ -558,6 +567,14 @@ export default function MDDailyReports() {
                           </button>
                           <button
                             type="button"
+                            onClick={() => handleDownloadReportPdf(report)}
+                            className="px-4 py-2 rounded-2xl border bg-white hover:bg-gray-50 mr-2 transition active:scale-[0.99]"
+                            style={{ borderColor: "rgba(44, 75, 155, 0.25)", color: "var(--primary-blue)" }}
+                          >
+                            PDF
+                          </button>
+                          <button
+                            type="button"
                             onClick={() => handleOpenPreview(report)}
                             className="px-4 py-2 rounded-2xl border bg-white hover:bg-gray-50 transition"
                             style={{ borderColor: "rgba(44, 75, 155, 0.25)", color: "var(--primary-blue)" }}
@@ -623,19 +640,27 @@ export default function MDDailyReports() {
                     </div>
                   </div>
 
-                  <div className="mt-5 flex gap-3">
+                  <div className="mt-5 flex gap-3 flex-wrap">
                     <button
                       type="button"
                       onClick={() => handleDownloadReport(r)}
-                      className="flex-1 px-4 py-2.5 rounded-2xl font-semibold text-white transition active:scale-[0.99]"
+                      className="flex-1 min-w-[100px] px-4 py-2.5 rounded-2xl font-semibold text-white transition active:scale-[0.99]"
                       style={{ backgroundColor: "var(--secondary-blue)" }}
                     >
                       Download
                     </button>
                     <button
                       type="button"
+                      onClick={() => handleDownloadReportPdf(r)}
+                      className="flex-1 min-w-[100px] px-4 py-2.5 rounded-2xl font-semibold border bg-white hover:bg-gray-50 transition active:scale-[0.99]"
+                      style={{ borderColor: "rgba(44, 75, 155, 0.25)", color: "var(--primary-blue)" }}
+                    >
+                      PDF
+                    </button>
+                    <button
+                      type="button"
                       onClick={() => handleOpenPreview(r)}
-                      className="flex-1 px-4 py-2.5 rounded-2xl font-semibold border bg-white hover:bg-gray-50 transition"
+                      className="flex-1 min-w-[100px] px-4 py-2.5 rounded-2xl font-semibold border bg-white hover:bg-gray-50 transition"
                       style={{ borderColor: "rgba(44, 75, 155, 0.25)", color: "var(--primary-blue)" }}
                     >
                       Preview

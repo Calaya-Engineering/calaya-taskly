@@ -135,17 +135,31 @@ export default function DailyReportPreviewModal({ open, reportId, onClose }: Pro
     };
   }, [open, reportId]);
 
-  const handleDownload = async () => {
+  const handleDownloadAttachment = async () => {
     if (!report) {
       toast.info("No report is available to download");
       return;
     }
 
     try {
-      await downloadDailyReport(report);
+      await downloadDailyReport(report, { format: "attachment" });
     } catch (error) {
-      console.error("Failed to download report from preview modal:", error);
-      toast.error(error instanceof Error ? error.message : "Failed to download report");
+      console.error("Failed to download report attachment:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to download file");
+    }
+  };
+
+  const handleDownloadPdf = async () => {
+    if (!report) {
+      toast.info("No report is available to download");
+      return;
+    }
+
+    try {
+      await downloadDailyReport(report, { format: "pdf" });
+    } catch (error) {
+      console.error("Failed to download report PDF:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to download PDF");
     }
   };
 
@@ -263,18 +277,32 @@ export default function DailyReportPreviewModal({ open, reportId, onClose }: Pro
             </div>
 
             <div className="px-6 py-4 border-t border-gray-200/70 bg-gray-50 flex flex-wrap justify-between items-center gap-3">
-              <div className="text-sm text-gray-600">
-                Download will export this report preview as a PDF.
+              <div className="text-sm text-gray-600 max-w-xl">
+                {report?.attachmentUrl
+                  ? "Download the original upload, or a PDF summary of this report (metadata and task entries)."
+                  : "Download a PDF summary of this report (metadata and task entries)."}
               </div>
-              <div className="flex gap-3">
+              <div className="flex flex-wrap gap-3 justify-end">
+                {report?.attachmentUrl ? (
+                  <button
+                    type="button"
+                    onClick={handleDownloadAttachment}
+                    className="px-5 py-3 rounded-2xl font-semibold text-white transition"
+                    style={{ backgroundColor: "var(--secondary-blue)" }}
+                  >
+                    Download file
+                  </button>
+                ) : null}
                 <button
-                  onClick={handleDownload}
-                  className="px-5 py-3 rounded-2xl font-semibold text-white transition"
-                  style={{ backgroundColor: "var(--secondary-blue)" }}
+                  type="button"
+                  onClick={handleDownloadPdf}
+                  className="px-5 py-3 rounded-2xl font-semibold border bg-white hover:bg-gray-50 transition"
+                  style={{ borderColor: "rgba(44, 75, 155, 0.35)", color: "var(--primary-blue)" }}
                 >
-                  Download Report
+                  Download PDF
                 </button>
                 <button
+                  type="button"
                   onClick={onClose}
                   className="px-5 py-3 rounded-2xl font-semibold border bg-white hover:bg-gray-50 transition"
                   style={{ borderColor: "rgba(44, 75, 155, 0.35)", color: "var(--primary-blue)" }}
