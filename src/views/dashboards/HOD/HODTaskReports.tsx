@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import { HODMenuItems } from "@/utils/menus";
@@ -22,6 +22,9 @@ interface ReportRow {
   attachmentName?: string | null;
 }
 
+const TASK_REPORTS_LIMIT = 120;
+const REFRESH_THROTTLE_MS = 2000;
+
 const Card = ({ className = "", children }: { className?: string; children: React.ReactNode }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
 );
@@ -40,64 +43,95 @@ const Pill = ({ children, tone = "default" }: { children: React.ReactNode; tone?
   );
 };
 
+function TableSkeleton() {
+  return (
+    <div className="overflow-x-auto animate-pulse" aria-hidden>
+      <table className="min-w-full text-sm">
+        <thead>
+          <tr className="text-left text-[11px] font-semibold text-gray-500 uppercase border-b border-gray-200">
+            {["Title", "Department", "Submitted by", "Date", "Status", ""].map((h) => (
+              <th key={h} className="py-3 pr-4">
+                {h}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-100">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <tr key={i}>
+              <td className="py-3 pr-4">
+                <div className="h-4 w-40 rounded bg-gray-200" />
+              </td>
+              <td className="py-3 pr-4">
+                <div className="h-4 w-24 rounded bg-gray-100" />
+              </td>
+              <td className="py-3 pr-4">
+                <div className="h-4 w-28 rounded bg-gray-100" />
+              </td>
+              <td className="py-3 pr-4">
+                <div className="h-4 w-20 rounded bg-gray-100" />
+              </td>
+              <td className="py-3 pr-4">
+                <div className="h-6 w-16 rounded-full bg-gray-100" />
+              </td>
+              <td className="py-3 text-right">
+                <div className="ml-auto h-4 w-10 rounded bg-gray-100" />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 export default function HODTaskReports() {
-  const [managedDepartments, setManagedDepartments] = useState<string[]>([]);
   const [reports, setReports] = useState<ReportRow[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [initialLoad, setInitialLoad] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [previewReportId, setPreviewReportId] = useState<number | null>(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
-  const lastRefreshAtRef = { current: 0 };
+  const lastRefreshAtRef = useRef(0);
+  const prefetchedIdsRef = useRef<Set<number>>(new Set());
 
-  useEffect(() => {
-    async function loadMe() {
-      try {
-        const res = await fetchWithAuth("/api/me");
-        if (!res.ok) return;
-        const me = await res.json();
-        const departments =
-          Array.isArray(me?.managedDepartments) && me.managedDepartments.length > 0
-            ? me.managedDepartments
-            : String(me?.department ?? "").trim()
-              ? [String(me.department).trim()]
-              : [];
-        setManagedDepartments(departments);
-      } catch (e) {
-        console.error(e);
-      }
-    }
-    loadMe();
-  }, []);
-
-  const loadReports = useCallback(async () => {
-    if (managedDepartments.length === 0) {
-      setReports([]);
-      setLoading(false);
-      return;
+  const loadReports = useCallback(async (mode: "initial" | "refresh") => {
+    if (mode === "initial") {
+      setInitialLoad(true);
+    } else {
+      setRefreshing(true);
     }
     try {
-      const q = encodeURIComponent(managedDepartments.join(","));
-      const resp = await fetchWithAuth(`/api/daily-reports?departments=${q}&linkedTask=true&limit=500`);
+      const resp = await fetchWithAuth(
+        `/api/daily-reports?linkedTask=true&limit=${TASK_REPORTS_LIMIT}`
+      );
       if (resp.ok) {
         const data = await resp.json();
         setReports(Array.isArray(data) ? data : []);
+      } else {
+        setReports([]);
       }
     } catch (e) {
       console.error(e);
+      setReports([]);
     } finally {
-      setLoading(false);
+      if (mode === "initial") {
+        setInitialLoad(false);
+      } else {
+        setRefreshing(false);
+      }
     }
-  }, [managedDepartments]);
+  }, []);
 
   useEffect(() => {
-    void loadReports();
+    void loadReports("initial");
   }, [loadReports]);
 
   useSSE("/api/realtime/events", (ev) => {
     if (ev.type?.startsWith("document:") || ev.type?.startsWith("task:")) {
       const now = Date.now();
-      if (now - lastRefreshAtRef.current < 1500) return;
+      if (now - lastRefreshAtRef.current < REFRESH_THROTTLE_MS) return;
       lastRefreshAtRef.current = now;
-      void loadReports();
+      void loadReports("refresh");
     }
   });
 
@@ -107,9 +141,18 @@ export default function HODTaskReports() {
     setIsPreviewOpen(true);
   };
 
+  const prefetchPreview = (dbId?: number) => {
+    if (!dbId) return;
+    if (prefetchedIdsRef.current.has(dbId)) return;
+    prefetchedIdsRef.current.add(dbId);
+    void fetchWithAuth(`/api/daily-reports/${dbId}`);
+  };
+
   return (
     <Layout menuItems={HODMenuItems} userRole="HOD">
-      <div className="space-y-6">
+      <div
+        className={`space-y-6 transition-opacity duration-200 ${refreshing && !initialLoad ? "opacity-80" : "opacity-100"}`}
+      >
         <Card className="overflow-hidden">
           <div
             className="p-6 md:p-8"
@@ -127,10 +170,13 @@ export default function HODTaskReports() {
                 <p className="text-gray-600 mt-2 max-w-2xl">
                   File-based reports your staff submitted from <strong>Submit Reports</strong> when linked to a task.
                 </p>
+                {refreshing && !initialLoad ? (
+                  <p className="text-xs text-gray-500 mt-2">Updating list…</p>
+                ) : null}
               </div>
               <Link
                 href="/hod-dashboard/reports"
-                className="px-5 py-3 rounded-2xl font-semibold border bg-white hover:bg-gray-50 transition text-center"
+                className="px-5 py-3 rounded-2xl font-semibold border bg-white hover:bg-gray-50 transition text-center shrink-0"
                 style={{ borderColor: "var(--secondary-blue)", color: "var(--primary-blue)" }}
               >
                 Open daily reports
@@ -140,12 +186,8 @@ export default function HODTaskReports() {
         </Card>
 
         <Card className="p-6">
-          {loading ? (
-            <div className="flex justify-center py-16">
-              <div className="h-10 w-10 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin" />
-            </div>
-          ) : managedDepartments.length === 0 ? (
-            <p className="text-center text-gray-500 py-10">No department scope found for your account.</p>
+          {initialLoad ? (
+            <TableSkeleton />
           ) : reports.length === 0 ? (
             <p className="text-center text-gray-500 py-10">
               No task-linked reports yet. Staff submit these from{" "}
@@ -178,6 +220,7 @@ export default function HODTaskReports() {
                         <button
                           type="button"
                           onClick={() => openPreview(r.dbId)}
+                          onMouseEnter={() => prefetchPreview(r.dbId)}
                           className="text-sm font-semibold hover:underline"
                           style={{ color: "var(--primary-blue)" }}
                         >

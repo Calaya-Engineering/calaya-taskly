@@ -97,15 +97,17 @@ export default function DailyReportPreviewModal({ open, reportId, onClose }: Pro
     if (!open || !reportId) {
       setReport(null);
       setError(null);
+      setLoading(false);
       return;
     }
+
+    setReport(null);
+    setError(null);
+    setLoading(true);
 
     let cancelled = false;
 
     async function loadReport() {
-      setLoading(true);
-      setError(null);
-
       try {
         const response = await fetchWithAuth(`/api/daily-reports/${reportId}`);
         const data = await response.json().catch(() => null);
@@ -174,9 +176,15 @@ export default function DailyReportPreviewModal({ open, reportId, onClose }: Pro
           <Card className="overflow-hidden">
             <div className="px-6 pt-6 pb-4 border-b border-gray-200/70">
               <div className="flex justify-between items-start gap-4">
-                <div>
+                <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2 mb-2">
-                    {report ? (
+                    {loading ? (
+                      <>
+                        <div className="h-6 w-20 rounded-full bg-gray-200 animate-pulse" />
+                        <div className="h-6 w-16 rounded-full bg-gray-200 animate-pulse" />
+                        <div className="h-6 w-24 rounded-full bg-gray-200 animate-pulse" />
+                      </>
+                    ) : report ? (
                       <>
                         <Pill tone="info">{report.department}</Pill>
                         <Pill tone={getStatusTone(report.status)}>{report.status}</Pill>
@@ -185,9 +193,15 @@ export default function DailyReportPreviewModal({ open, reportId, onClose }: Pro
                     ) : null}
                   </div>
                   <h3 className="text-2xl font-extrabold" style={{ color: "var(--primary-blue)" }}>
-                    {report?.title || "Daily Report Preview"}
+                    {loading ? (
+                      <span className="block h-8 max-w-md rounded-lg bg-gray-200 animate-pulse" />
+                    ) : (
+                      report?.title || "Daily Report Preview"
+                    )}
                   </h3>
-                  {report ? (
+                  {loading ? (
+                    <p className="text-sm mt-2 h-4 max-w-xs rounded bg-gray-100 animate-pulse" />
+                  ) : report ? (
                     <p className="text-sm text-gray-500 mt-1">
                       Submitted by {report.submittedBy} on {fmtDate(report.date)}
                     </p>
@@ -278,16 +292,19 @@ export default function DailyReportPreviewModal({ open, reportId, onClose }: Pro
 
             <div className="px-6 py-4 border-t border-gray-200/70 bg-gray-50 flex flex-wrap justify-between items-center gap-3">
               <div className="text-sm text-gray-600 max-w-xl">
-                {report?.attachmentUrl
-                  ? "Download the original upload, or a PDF summary of this report (metadata and task entries)."
-                  : "Download a PDF summary of this report (metadata and task entries)."}
+                {loading
+                  ? "Loading report details…"
+                  : report?.attachmentUrl
+                    ? "Download the original upload, or a PDF summary of this report (metadata and task entries)."
+                    : "Download a PDF summary of this report (metadata and task entries)."}
               </div>
               <div className="flex flex-wrap gap-3 justify-end">
                 {report?.attachmentUrl ? (
                   <button
                     type="button"
                     onClick={handleDownloadAttachment}
-                    className="px-5 py-3 rounded-2xl font-semibold text-white transition"
+                    disabled={loading || !report}
+                    className="px-5 py-3 rounded-2xl font-semibold text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
                     style={{ backgroundColor: "var(--secondary-blue)" }}
                   >
                     Download file
@@ -296,7 +313,8 @@ export default function DailyReportPreviewModal({ open, reportId, onClose }: Pro
                 <button
                   type="button"
                   onClick={handleDownloadPdf}
-                  className="px-5 py-3 rounded-2xl font-semibold border bg-white hover:bg-gray-50 transition"
+                  disabled={loading || !report}
+                  className="px-5 py-3 rounded-2xl font-semibold border bg-white hover:bg-gray-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{ borderColor: "rgba(44, 75, 155, 0.35)", color: "var(--primary-blue)" }}
                 >
                   Download PDF
