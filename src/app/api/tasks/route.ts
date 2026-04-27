@@ -59,7 +59,16 @@ export async function GET(req: NextRequest) {
           : [];
       const hodOrConditions = [
         ...(scopedDepartments.length > 0 ? [{ department: { in: scopedDepartments } }] : []),
-        { assignments: { some: { userId: currentUser.id } } }
+        ...(scopedDepartments.length > 0
+          ? [
+              {
+                assignments: {
+                  some: { user: { department: { in: scopedDepartments } } },
+                },
+              },
+            ]
+          : []),
+        { assignments: { some: { userId: currentUser.id } } },
       ];
 
       const additionalAnds: any[] = [];

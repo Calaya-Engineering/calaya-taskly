@@ -167,6 +167,23 @@ export async function getBadgeCountsForUser(email: string): Promise<BadgeCounts>
           department: buildDepartmentInScope(userDepartments),
         };
 
+  /** HOD: include tasks owned by dept OR assigned to staff in that dept (task.department may be null). */
+  const hodScopedDepartments =
+    prefix === "/hod-dashboard" && userDepartments.length > 0
+      ? {
+          OR: [
+            { department: buildDepartmentInScope(userDepartments) },
+            {
+              assignments: {
+                some: {
+                  user: { department: buildDepartmentInScope(userDepartments) },
+                },
+              },
+            },
+          ],
+        }
+      : departmentScope;
+
   const tasksSection = `${prefix}/tasks`;
   const tasksSeenAt = seenBySection.get(tasksSection);
   setBadge(
@@ -178,7 +195,16 @@ export async function getBadgeCountsForUser(email: string): Promise<BadgeCounts>
           ? {
               OR: [
                 ...(userDepartments.length > 0
-                  ? [{ department: buildDepartmentInScope(userDepartments) }]
+                  ? [
+                      { department: buildDepartmentInScope(userDepartments) },
+                      {
+                        assignments: {
+                          some: {
+                            user: { department: buildDepartmentInScope(userDepartments) },
+                          },
+                        },
+                      },
+                    ]
                   : []),
                 { assignments: { some: { userId: user.id } } },
               ],
@@ -240,7 +266,7 @@ export async function getBadgeCountsForUser(email: string): Promise<BadgeCounts>
         type: {
           not: "EVENT",
         },
-        ...departmentScope,
+        ...hodScopedDepartments,
         ...(approvalsSeenAt
           ? {
               updatedAt: {
@@ -260,7 +286,7 @@ export async function getBadgeCountsForUser(email: string): Promise<BadgeCounts>
     await prisma.task.count({
       where: {
         escalated: true,
-        ...departmentScope,
+        ...hodScopedDepartments,
         ...(escalationsSeenAt
           ? {
               escalatedAt: {

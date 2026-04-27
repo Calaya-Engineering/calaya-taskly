@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { emitTaskEvent } from "@/lib/task-events";
 import { emitAnnouncementEvent } from "@/lib/announcement-events";
-import { getTaskSubmissionStatusForRole } from "@/lib/task-approval";
+import { getTaskSubmissionStatusForRole, TASK_STATUS_PENDING_HOD_APPROVAL } from "@/lib/task-approval";
 import { createNotification } from "@/lib/notifications";
 import { getEventAudience } from "@/lib/notification-audiences";
 import {
@@ -198,7 +198,17 @@ export async function PATCH(
     if (department !== undefined) data.department = department?.trim() || null;
     if (priority) data.priority = priority;
     if (status) {
-      data.status = status === "COMPLETED" ? getTaskSubmissionStatusForRole(auth.role) : status;
+      if (
+        status === "COMPLETED" &&
+        isHodRole(currentUser.role) &&
+        existing.status === TASK_STATUS_PENDING_HOD_APPROVAL
+      ) {
+        data.status = "COMPLETED";
+      } else if (status === "COMPLETED") {
+        data.status = getTaskSubmissionStatusForRole(auth.role);
+      } else {
+        data.status = status;
+      }
     }
     if (type) data.type = type;
     if (startDate !== undefined) data.startDate = startDate ? new Date(startDate) : null;

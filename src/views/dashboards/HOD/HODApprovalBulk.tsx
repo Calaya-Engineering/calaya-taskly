@@ -111,7 +111,7 @@ export default function HODApprovalBulk() {
         })
       );
       await Promise.all(promises);
-      toast.success(`Forwarded ${selectedItems.length} items to MD`);
+      toast.success(`Approved ${selectedItems.length} task(s) — marked complete`);
       setSelectedItems([]);
       fetchApprovals();
     } catch {

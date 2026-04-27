@@ -16,6 +16,7 @@ import {
   getTaskApprovalNextStep,
   getTaskStatusLabel,
 } from "@/lib/task-approval";
+import { taskDepartmentLabel } from "@/lib/task-display";
 
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children, ...props }: any) => (
@@ -81,7 +82,7 @@ export default function HODApprovals() {
           title: t.title,
           type: t.type === "JOB" ? "TASK_COMPLETION" : "DOCUMENT",
           submittedBy: t.assignments?.[0]?.user?.name || t.assignments?.[0]?.user?.email || "Unassigned",
-          department: t.department || "—",
+          department: taskDepartmentLabel(t),
           submittedDate: t.createdAt?.split("T")[0] || "",
           dueDate: t.dueDate || "",
           priority: t.priority || "MEDIUM",
@@ -203,7 +204,7 @@ export default function HODApprovals() {
         body: JSON.stringify({ status: "COMPLETED" }),
       });
       if (res.ok) {
-        toast.success(`Task ${sel.id} reviewed and forwarded to MD`);
+        toast.success(`Task ${sel.id} approved and marked complete`);
         fetchApprovals();
       } else {
         toast.error("Failed to approve task");
@@ -283,7 +284,7 @@ export default function HODApprovals() {
                 <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
                   HOD Approvals Dashboard
                 </h1>
-                <p className="text-gray-600 mt-2 max-w-2xl">Review staff submissions, approve them, and forward them to MD for final sign-off.</p>
+                <p className="text-gray-600 mt-2 max-w-2xl">Review work submitted by your staff and approve it to mark tasks complete.</p>
               </div>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link href="/hod-dashboard/approvals/bulk">
@@ -352,7 +353,7 @@ export default function HODApprovals() {
         <div className="space-y-4">
           <SectionTitle
             title="Approvals Queue"
-            subtitle="Requests awaiting your review before they move up to MD"
+            subtitle="Staff submissions waiting for your approval"
             action={<span className="text-sm text-gray-500">{filteredApprovals.length} results found</span>}
           />
 
@@ -499,7 +500,7 @@ export default function HODApprovals() {
                     <button 
                       onClick={handleApprove}
                       className="flex-1 bg-green-500 text-white font-bold py-3 rounded-xl hover:bg-green-600 transition"
-                    >{renderNodeWithIcons("\n                      ✓ Forward to MD\n                    ")}</button>
+                    >{renderNodeWithIcons("\n                      ✓ Approve & complete\n                    ")}</button>
                     <button 
                       onClick={handleReject}
                       className="flex-1 bg-red-500 text-white font-bold py-3 rounded-xl hover:bg-red-600 transition"

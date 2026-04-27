@@ -1,5 +1,6 @@
 import { getManagedDepartmentNamesByUserId } from "@/lib/hod-departments";
 import { prisma } from "@/lib/prisma";
+import { collectTaskDepartmentKeys } from "@/lib/task-display";
 
 const FULL_TASK_ACCESS_ROLES = new Set(["ADMIN", "MD", "SECRETARY"]);
 const STAFF_LIKE_ROLES = new Set(["STAFF", "PERSONNEL", "CORP MEMBER"]);
@@ -17,7 +18,10 @@ export type TaskAccessTask = {
   id: number;
   department: string | null;
   createdById: number;
-  assignments?: Array<{ userId: number }>;
+  assignments?: Array<{
+    userId: number;
+    user?: { department?: string | null; managedDepartmentRelations?: { department?: { name?: string | null } | null }[] | null } | null;
+  }>;
 };
 
 function normalizeRole(role?: string | null) {
@@ -27,11 +31,6 @@ function normalizeRole(role?: string | null) {
 function normalizeDepartment(department?: string | null) {
   const value = department?.trim();
   return value ? value : null;
-}
-
-function getTaskDepartmentSet(task: TaskAccessTask) {
-  const taskDepartment = normalizeDepartment(task.department);
-  return new Set(taskDepartment ? [taskDepartment] : []);
 }
 
 function getAssignmentUserIdSet(task: TaskAccessTask) {
@@ -88,7 +87,10 @@ export function canUserViewTask(user: TaskAccessUser, task: TaskAccessTask) {
   }
 
   if (isHodRole(user.role)) {
-    const taskDepartments = getTaskDepartmentSet(task);
+    const taskDepartments = collectTaskDepartmentKeys(task);
+    if (taskDepartments.size === 0) {
+      return false;
+    }
     return user.managedDepartments.some((department) => taskDepartments.has(department));
   }
 

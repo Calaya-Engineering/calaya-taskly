@@ -20,7 +20,7 @@ import { fetchWithAuth } from "@/lib/api";
 import { useSSE } from "@/hooks/useSSE";
 import DashboardSkeleton from "@/components/DashboardSkeleton";
 import { TASK_STATUS_PENDING_HOD_APPROVAL } from "@/lib/task-approval";
-import { taskDepartmentLabel } from "@/lib/task-display";
+import { collectTaskDepartmentKeys, taskDepartmentLabel } from "@/lib/task-display";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 
 /* ─── Types ─────────────────────────────────────────────────────── */
@@ -64,6 +64,13 @@ interface MeData {
   department?: string;
   primaryDepartment?: string;
   managedDepartments?: string[];
+}
+
+function taskMatchesActiveDepartments(task: TaskItem, activeDepartments: string[]) {
+  if (activeDepartments.length === 0) return true;
+  const keys = collectTaskDepartmentKeys(task);
+  if (keys.size === 0) return false;
+  return activeDepartments.some((d) => keys.has(d));
 }
 
 /* ─── UI helpers ─────────────────────────────────────────────────── */
@@ -224,10 +231,8 @@ export default function HODDashboard() {
         (t) =>
           t.status !== "COMPLETED" &&
           t.type !== "EVENT" &&
-          (
-            activeDepartments.includes(t.department || "") ||
-            t.assignments?.some((a) => String(a.userId) === String(myId))
-          )
+          (taskMatchesActiveDepartments(t, activeDepartments) ||
+            t.assignments?.some((a) => String(a.userId) === String(myId)))
       ),
     [tasks, activeDepartments, myId]
   );
@@ -261,8 +266,7 @@ export default function HODDashboard() {
     () =>
       tasks.filter(
         (t) =>
-          t.status === TASK_STATUS_PENDING_HOD_APPROVAL &&
-          (activeDepartments.length === 0 || activeDepartments.includes(t.department || ""))
+          t.status === TASK_STATUS_PENDING_HOD_APPROVAL && taskMatchesActiveDepartments(t, activeDepartments)
       ),
     [tasks, activeDepartments]
   );
@@ -289,10 +293,8 @@ export default function HODDashboard() {
         (t) =>
           t.status === "COMPLETED" &&
           t.type !== "EVENT" &&
-          (
-            activeDepartments.includes(t.department || "") ||
-            t.assignments?.some((a) => String(a.userId) === String(myId))
-          )
+          (taskMatchesActiveDepartments(t, activeDepartments) ||
+            t.assignments?.some((a) => String(a.userId) === String(myId)))
       ),
     [tasks, activeDepartments, myId]
   );
