@@ -214,6 +214,7 @@ export function LayoutSidebar({
             );
           })()}
 
+          {/* Quick stats sidebar card intentionally hidden for now.
           <div className="mt-6 px-1">
             <div
               className="rounded-2xl p-4 border border-gray-200"
@@ -246,6 +247,7 @@ export function LayoutSidebar({
               </div>
             </div>
           </div>
+          */}
         </div>
 
         <div className="mt-auto p-4 border-t border-gray-200">
