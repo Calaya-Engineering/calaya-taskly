@@ -34,7 +34,8 @@ export const HODMenuItems = [
     icon: <ReportIcon />,
     group: "Documents & Reports",
     children: [
-      { label: "Daily reports", path: "/hod-dashboard/reports", icon: <ReportIcon /> },
+      { label: "General reports", path: "/hod-dashboard/reports", icon: <ReportIcon /> },
+      { label: "Daily reports", path: "/hod-dashboard/daily-reports", icon: <ReportIcon /> },
       { label: "Task reports", path: "/hod-dashboard/task-reports", icon: <TaskIcon /> },
     ],
   },
@@ -53,7 +54,15 @@ export const MDMenuItems = [
   { label: "All Tasks", path: "/md-dashboard/tasks", icon: <TaskIcon />, group: "Tasks" },
   { label: "Active Jobs", path: "/md-dashboard/jobs", icon: <TaskIcon />, group: "Tasks" },
   { label: "Documents", path: "/md-dashboard/documents", icon: <DocumentIcon />, group: "Documents & Reports" },
-  { label: "Daily Reports", path: "/md-dashboard/reports", icon: <ReportIcon />, group: "Documents & Reports" },
+  {
+    label: "Reports",
+    icon: <ReportIcon />,
+    group: "Documents & Reports",
+    children: [
+      { label: "General reports", path: "/md-dashboard/reports", icon: <ReportIcon /> },
+      { label: "Daily reports", path: "/md-dashboard/daily-reports", icon: <ReportIcon /> },
+    ],
+  },
   { label: "Meetings/Events", path: "/md-dashboard/events", icon: <CalendarIcon />, group: "Calendar" },
   { label: "Tenders", path: "/md-dashboard/tenders", icon: <DocumentIcon />, group: "Tenders" },
   { label: "Tender Documents", path: "/md-dashboard/tender-documents", icon: <DocumentIcon />, group: "Tenders" },
