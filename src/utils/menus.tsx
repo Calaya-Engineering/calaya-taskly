@@ -61,6 +61,7 @@ export const MDMenuItems = [
     children: [
       { label: "General reports", path: "/md-dashboard/reports", icon: <ReportIcon /> },
       { label: "Daily reports", path: "/md-dashboard/daily-reports", icon: <ReportIcon /> },
+      { label: "Task reports", path: "/md-dashboard/task-reports", icon: <TaskIcon /> },
     ],
   },
   { label: "Meetings/Events", path: "/md-dashboard/events", icon: <CalendarIcon />, group: "Calendar" },

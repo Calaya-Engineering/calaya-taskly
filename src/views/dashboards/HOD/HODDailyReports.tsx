@@ -168,10 +168,11 @@ const formatDateTime = (dateTime) => {
   });
 };
 
-export default function HODDailyReports() {
+export default function HODDailyReports({ reportKind = "daily" }: { reportKind?: "general" | "daily" }) {
   const [isClient, setIsClient] = useState(false);
   const [dailyReports, setDailyReports] = useState<DailyReport[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [selectedDate, setSelectedDate] = useState('');
   const [departmentFilter, setDepartmentFilter] = useState('All');
   const [viewMode, setViewMode] = useState('list');
@@ -227,16 +228,25 @@ export default function HODDailyReports() {
     loadManagedDepartments();
   }, []);
 
-  const getReports = useCallback(async () => {
+  const getReports = useCallback(async (mode: "initial" | "refresh" = "initial") => {
+    if (mode === "refresh") {
+      setRefreshing(true);
+    } else {
+      setLoading(true);
+    }
+
     if (managedDepartments.length === 0) {
       setDailyReports([]);
       setLoading(false);
+      setRefreshing(false);
       return;
     }
 
     try {
       const departments = encodeURIComponent(managedDepartments.join(','));
-      const resp = await fetchWithAuth(`/api/daily-reports?departments=${departments}&limit=500`);
+      const resp = await fetchWithAuth(
+        `/api/daily-reports?departments=${departments}&reportType=${reportKind}&limit=500`
+      );
       if (resp.ok) {
         const data = await resp.json();
         setDailyReports(Array.isArray(data) ? data : []);
@@ -245,18 +255,23 @@ export default function HODDailyReports() {
       console.error("Failed to fetch reports:", err);
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
-  }, [managedDepartments]);
+  }, [managedDepartments, reportKind]);
 
-  useEffect(() => { getReports(); }, [getReports]);
+  useEffect(() => { getReports("initial"); }, [getReports]);
 
-  // Real-time: re-fetch when documents or tasks change
+  // Real-time: re-fetch when report/task/document events occur
   useSSE("/api/realtime/events", (ev) => {
-    if (ev.type?.startsWith("task:") || ev.type?.startsWith("document:")) {
+    if (
+      ev.type?.startsWith("task:") ||
+      ev.type?.startsWith("document:") ||
+      ev.type?.startsWith("daily-report:")
+    ) {
       const now = Date.now();
       if (now - lastRefreshAtRef.current < 1500) return;
       lastRefreshAtRef.current = now;
-      getReports();
+      getReports("refresh");
     }
   });
 
@@ -571,17 +586,20 @@ export default function HODDailyReports() {
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
               <div>
                 <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <Pill>{renderNodeWithIcons("📊 Daily Reports")}</Pill>
+                  <Pill>{renderNodeWithIcons(reportKind === "general" ? "📊 General Reports" : "📊 Daily Reports")}</Pill>
                   <Pill tone="info">{stats.total} Total</Pill>
                   <Pill tone="warn">{stats.pending} Pending</Pill>
                   <Pill tone="success">{stats.approved} Approved</Pill>
                 </div>
 
                 <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
-                  Daily Reports
+                  {reportKind === "general" ? "General Reports" : "Daily Reports"}
                 </h1>
                 <p className="text-gray-600 mt-2 max-w-2xl">
-                  View and manage daily reports from your departments. Staff submissions tied to tasks are listed under{" "}
+                  {reportKind === "general"
+                    ? "View and manage general reports from your departments."
+                    : "View and manage daily reports from your departments."}{" "}
+                  Staff submissions tied to tasks are listed under{" "}
                   <Link href="/hod-dashboard/task-reports" className="font-semibold underline-offset-2 hover:underline" style={{ color: "var(--primary-blue)" }}>
                     Task reports
                   </Link>
@@ -593,6 +611,7 @@ export default function HODDailyReports() {
                   {managedDepartments.map(dept => (
                     <Pill key={dept} tone={getDepartmentTone(dept)}>{dept}</Pill>
                   ))}
+                  {refreshing ? <Pill tone="info">Refreshing...</Pill> : null}
                 </div>
               </div>
 
@@ -612,21 +631,23 @@ export default function HODDailyReports() {
                   >{renderNodeWithIcons("\n                    📅\n                  ")}</button>
                 </div>
 
-                <button
-                  onClick={() => {
-                    const savedEntries = getSessionItem(STORAGE_KEYS.REPORT_ENTRIES);
-                    if (savedEntries) {
-                      setIsModalOpen(true);
-                    } else {
-                      resetForm();
-                      setIsModalOpen(true);
-                    }
-                  }}
-                  className={btnSolid}
-                  style={{ backgroundColor: "var(--accent-red)" }}
-                >
-                  + Create Daily Report
-                </button>
+                {reportKind === "daily" ? (
+                  <button
+                    onClick={() => {
+                      const savedEntries = getSessionItem(STORAGE_KEYS.REPORT_ENTRIES);
+                      if (savedEntries) {
+                        setIsModalOpen(true);
+                      } else {
+                        resetForm();
+                        setIsModalOpen(true);
+                      }
+                    }}
+                    className={btnSolid}
+                    style={{ backgroundColor: "var(--accent-red)" }}
+                  >
+                    + Create Daily Report
+                  </button>
+                ) : null}
               </div>
             </div>
           </div>
@@ -995,7 +1016,7 @@ export default function HODDailyReports() {
       </div>
 
       {/* Create Daily Report Modal */}
-      {isModalOpen && (
+      {reportKind === "daily" && isModalOpen && (
         <div className="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
           <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onClick={handleModalClose}></div>

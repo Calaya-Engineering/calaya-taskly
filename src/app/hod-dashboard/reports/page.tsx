@@ -10,5 +10,5 @@ const HODDailyReports = dynamic(() => import("../../../views/dashboards/HOD/HODD
 });
 
 export default function Page() {
-  return <HODDailyReports />;
+  return <HODDailyReports reportKind="general" />;
 }

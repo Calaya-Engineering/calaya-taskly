@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Layout from "@/components/Layout";
-import { HODMenuItems } from "@/utils/menus";
+import { MDMenuItems } from "@/utils/menus";
 import { fetchWithAuth } from "@/lib/api";
 import { useSSE } from "@/hooks/useSSE";
 import DailyReportPreviewModal from "@/components/DailyReportPreviewModal";
@@ -18,11 +18,9 @@ interface ReportRow {
   submittedBy: string;
   submittedAt: string;
   status: string;
-  fileUrl?: string | null;
-  attachmentName?: string | null;
 }
 
-const TASK_REPORTS_LIMIT = 120;
+const TASK_REPORTS_LIMIT = 150;
 const REFRESH_THROTTLE_MS = 2000;
 
 const Card = ({ className = "", children }: { className?: string; children: React.ReactNode }) => (
@@ -59,24 +57,12 @@ function TableSkeleton() {
         <tbody className="divide-y divide-gray-100">
           {Array.from({ length: 6 }).map((_, i) => (
             <tr key={i}>
-              <td className="py-3 pr-4">
-                <div className="h-4 w-40 rounded bg-gray-200" />
-              </td>
-              <td className="py-3 pr-4">
-                <div className="h-4 w-24 rounded bg-gray-100" />
-              </td>
-              <td className="py-3 pr-4">
-                <div className="h-4 w-28 rounded bg-gray-100" />
-              </td>
-              <td className="py-3 pr-4">
-                <div className="h-4 w-20 rounded bg-gray-100" />
-              </td>
-              <td className="py-3 pr-4">
-                <div className="h-6 w-16 rounded-full bg-gray-100" />
-              </td>
-              <td className="py-3 text-right">
-                <div className="ml-auto h-4 w-10 rounded bg-gray-100" />
-              </td>
+              <td className="py-3 pr-4"><div className="h-4 w-40 rounded bg-gray-200" /></td>
+              <td className="py-3 pr-4"><div className="h-4 w-24 rounded bg-gray-100" /></td>
+              <td className="py-3 pr-4"><div className="h-4 w-28 rounded bg-gray-100" /></td>
+              <td className="py-3 pr-4"><div className="h-4 w-20 rounded bg-gray-100" /></td>
+              <td className="py-3 pr-4"><div className="h-6 w-16 rounded-full bg-gray-100" /></td>
+              <td className="py-3 text-right"><div className="ml-auto h-4 w-10 rounded bg-gray-100" /></td>
             </tr>
           ))}
         </tbody>
@@ -85,7 +71,7 @@ function TableSkeleton() {
   );
 }
 
-export default function HODTaskReports() {
+export default function MDTaskReports() {
   const [reports, setReports] = useState<ReportRow[]>([]);
   const [initialLoad, setInitialLoad] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -95,30 +81,21 @@ export default function HODTaskReports() {
   const prefetchedIdsRef = useRef<Set<number>>(new Set());
 
   const loadReports = useCallback(async (mode: "initial" | "refresh") => {
-    if (mode === "initial") {
-      setInitialLoad(true);
-    } else {
-      setRefreshing(true);
-    }
+    if (mode === "initial") setInitialLoad(true);
+    else setRefreshing(true);
     try {
-      const resp = await fetchWithAuth(
-        `/api/daily-reports?linkedTask=true&limit=${TASK_REPORTS_LIMIT}`
-      );
+      const resp = await fetchWithAuth(`/api/daily-reports?linkedTask=true&limit=${TASK_REPORTS_LIMIT}`);
       if (resp.ok) {
         const data = await resp.json();
         setReports(Array.isArray(data) ? data : []);
       } else {
         setReports([]);
       }
-    } catch (e) {
-      console.error(e);
+    } catch {
       setReports([]);
     } finally {
-      if (mode === "initial") {
-        setInitialLoad(false);
-      } else {
-        setRefreshing(false);
-      }
+      if (mode === "initial") setInitialLoad(false);
+      else setRefreshing(false);
     }
   }, []);
 
@@ -127,7 +104,11 @@ export default function HODTaskReports() {
   }, [loadReports]);
 
   useSSE("/api/realtime/events", (ev) => {
-    if (ev.type?.startsWith("document:") || ev.type?.startsWith("task:")) {
+    if (
+      ev.type?.startsWith("document:") ||
+      ev.type?.startsWith("task:") ||
+      ev.type?.startsWith("daily-report:")
+    ) {
       const now = Date.now();
       if (now - lastRefreshAtRef.current < REFRESH_THROTTLE_MS) return;
       lastRefreshAtRef.current = now;
@@ -149,36 +130,20 @@ export default function HODTaskReports() {
   };
 
   return (
-    <Layout menuItems={HODMenuItems} userRole="HOD">
-      <div
-        className={`space-y-6 transition-opacity duration-200 ${refreshing && !initialLoad ? "opacity-80" : "opacity-100"}`}
-      >
+    <Layout menuItems={MDMenuItems} userRole="MD">
+      <div className={`space-y-6 transition-opacity duration-200 ${refreshing && !initialLoad ? "opacity-80" : "opacity-100"}`}>
         <Card className="overflow-hidden">
-          <div
-            className="p-6 md:p-8"
-            style={{
-              background:
-                "linear-gradient(135deg, rgba(44,75,155,0.10) 0%, rgba(109,198,223,0.18) 50%, rgba(237,50,55,0.06) 100%)",
-            }}
-          >
+          <div className="p-6 md:p-8" style={{ background: "linear-gradient(135deg, rgba(44,75,155,0.10) 0%, rgba(109,198,223,0.18) 50%, rgba(237,50,55,0.06) 100%)" }}>
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
               <div>
                 <Pill>Reports</Pill>
                 <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight mt-2" style={{ color: "var(--primary-blue)" }}>
                   Task reports
                 </h1>
-                <p className="text-gray-600 mt-2 max-w-2xl">
-                  File-based reports your staff submitted from <strong>Submit Reports</strong> when linked to a task.
-                </p>
-                {refreshing && !initialLoad ? (
-                  <p className="text-xs text-gray-500 mt-2">Updating list…</p>
-                ) : null}
+                <p className="text-gray-600 mt-2 max-w-2xl">File-based reports submitted when staff links report submissions to tasks.</p>
+                {refreshing && !initialLoad ? <p className="text-xs text-gray-500 mt-2">Updating list…</p> : null}
               </div>
-              <Link
-                href="/hod-dashboard/daily-reports"
-                className="px-5 py-3 rounded-2xl font-semibold border bg-white hover:bg-gray-50 transition text-center shrink-0"
-                style={{ borderColor: "var(--secondary-blue)", color: "var(--primary-blue)" }}
-              >
+              <Link href="/md-dashboard/daily-reports" className="px-5 py-3 rounded-2xl font-semibold border bg-white hover:bg-gray-50 transition text-center shrink-0" style={{ borderColor: "var(--secondary-blue)", color: "var(--primary-blue)" }}>
                 Open daily reports
               </Link>
             </div>
@@ -189,10 +154,7 @@ export default function HODTaskReports() {
           {initialLoad ? (
             <TableSkeleton />
           ) : reports.length === 0 ? (
-            <p className="text-center text-gray-500 py-10">
-              No task-linked reports yet. Staff submit these from{" "}
-              <span className="font-semibold text-gray-700">Documents &amp; Reports → Submit Reports</span> (task type).
-            </p>
+            <p className="text-center text-gray-500 py-10">No task-linked reports yet.</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="min-w-full text-sm">

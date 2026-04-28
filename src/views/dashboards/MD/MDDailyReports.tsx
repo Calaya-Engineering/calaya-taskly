@@ -2,7 +2,7 @@
 "use client";
 
 // pages/dashboards/MD/MDDailyReports.jsx
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import { MDMenuItems } from "@/utils/menus";
@@ -11,6 +11,7 @@ import { toast } from "@/lib/toast";
 import DailyReportPreviewModal from "@/components/DailyReportPreviewModal";
 import { downloadDailyReport } from "@/lib/daily-report-download";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
+import { useSSE } from "@/hooks/useSSE";
 
 
 /* ---------------- UI helpers ---------------- */
@@ -110,21 +111,33 @@ const normalizeReportRecord = (report) => ({
   submittedAt: report?.submittedAt ?? null,
 });
 
-export default function MDDailyReports() {
+export default function MDDailyReports({ reportKind = "daily" }: { reportKind?: "general" | "daily" }) {
   const [reportsData, setReportsData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [refreshTick, setRefreshTick] = useState(0);
+  const lastRefreshAtRef = useRef(0);
 
   useEffect(() => {
     let cancelled = false;
 
-    async function getReports() {
+    async function getReports(mode = "initial") {
+      if (!cancelled) {
+        if (mode === "refresh") {
+          setRefreshing(true);
+        } else {
+          setLoading(true);
+        }
+      }
       try {
         const allReports = [];
         let offset = 0;
         let hasMore = true;
 
         while (hasMore) {
-          const resp = await fetchWithAuth(`/api/daily-reports?limit=${REPORT_BATCH_SIZE}&offset=${offset}`);
+          const resp = await fetchWithAuth(
+            `/api/daily-reports?reportType=${reportKind}&limit=${REPORT_BATCH_SIZE}&offset=${offset}`
+          );
           if (!resp.ok) {
             throw new Error("Failed to fetch reports");
           }
@@ -152,16 +165,30 @@ export default function MDDailyReports() {
       } finally {
         if (!cancelled) {
           setLoading(false);
+          setRefreshing(false);
         }
       }
     }
 
-    getReports();
+    getReports(refreshTick === 0 ? "initial" : "refresh");
 
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [refreshTick]);
+
+  useSSE("/api/realtime/events", (ev) => {
+    if (
+      ev.type?.startsWith("task:") ||
+      ev.type?.startsWith("document:") ||
+      ev.type?.startsWith("daily-report:")
+    ) {
+      const now = Date.now();
+      if (now - lastRefreshAtRef.current < 1500) return;
+      lastRefreshAtRef.current = now;
+      setRefreshTick((prev) => prev + 1);
+    }
+  });
 
   const latestDate = useMemo(() => {
     const sorted = [...reportsData].sort((a, b) => (a.date < b.date ? 1 : -1));
@@ -342,15 +369,20 @@ export default function MDDailyReports() {
             <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
               <div className="min-w-0">
                 <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900">
-                  Daily Reports Archive
+                  {reportKind === "general" ? "General Reports Archive" : "Daily Reports Archive"}
                 </h1>
-                <p className="text-gray-700 mt-2">Access daily reports from all departments (filter, search, download).</p>
+                <p className="text-gray-700 mt-2">
+                  {reportKind === "general"
+                    ? "Access general reports from all departments (filter, search, download)."
+                    : "Access daily reports from all departments (filter, search, download)."}
+                </p>
 
                 <div className="mt-4 flex flex-wrap gap-2">
                   <Pill tone="info">{totals.totalReports} reports</Pill>
                   <Pill tone="success">{totals.totalDownloads} downloads</Pill>
                   <Pill tone="warn">{totals.uniqueDepts} departments</Pill>
                   {selectedDate ? <Pill>{fmtDate(selectedDate)}</Pill> : <Pill>All dates</Pill>}
+                  {refreshing ? <Pill tone="info">Refreshing...</Pill> : null}
                 </div>
               </div>
 

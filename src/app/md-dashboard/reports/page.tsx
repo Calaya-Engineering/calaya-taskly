@@ -10,5 +10,5 @@ const MDDailyReports = dynamic(() => import("../../../views/dashboards/MD/MDDail
 });
 
 export default function Page() {
-  return <MDDailyReports />;
+  return <MDDailyReports reportKind="general" />;
 }

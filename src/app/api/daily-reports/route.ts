@@ -30,6 +30,7 @@ export async function GET(req: NextRequest) {
     const limit = Number.isFinite(parsedLimit) ? Math.min(Math.max(parsedLimit, 1), 500) : 200;
     const offset = Number.isFinite(parsedOffset) ? Math.max(parsedOffset, 0) : 0;
     const linkedTaskOnly = searchParams.get("linkedTask") === "true";
+    const reportType = String(searchParams.get("reportType") || "").toLowerCase();
 
     let managedDepartmentNames =
       auth.role === "HOD" ? await getManagedDepartmentNamesByEmail(auth.email) : [];
@@ -85,6 +86,26 @@ export async function GET(req: NextRequest) {
     }
 
     if (linkedTaskOnly) {
+      where.entries = {
+        some: {
+          target: { contains: "Task ID:" },
+        },
+      };
+    } else if (reportType === "general") {
+      where.entries = {
+        none: {
+          target: { contains: "Task ID:" },
+        },
+      };
+      where.submittedByRole = "STAFF";
+    } else if (reportType === "daily") {
+      where.entries = {
+        none: {
+          target: { contains: "Task ID:" },
+        },
+      };
+      where.submittedByRole = { not: "STAFF" };
+    } else if (reportType === "task") {
       where.entries = {
         some: {
           target: { contains: "Task ID:" },
@@ -251,6 +272,7 @@ export async function POST(req: NextRequest) {
 
     try {
       emitRealtimeEvent({ type: "document:created", entity: "document", action: "created", entityId: report.id });
+      emitRealtimeEvent({ type: "daily-report:created", entity: "daily-report", action: "created", entityId: report.id });
     } catch {
       // Non-critical realtime failure.
     }
