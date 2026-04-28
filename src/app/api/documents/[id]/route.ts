@@ -68,7 +68,7 @@ export async function GET(
 }
 
 /**
- * PATCH /api/documents/[id] - Update document or increment downloads (MD only for update)
+ * PATCH /api/documents/[id] - Update document or increment downloads
  */
 export async function PATCH(
   req: NextRequest,
@@ -115,8 +115,8 @@ export async function PATCH(
       });
     }
 
-    if (auth.role !== "MD") {
-      return NextResponse.json({ error: "MD access required" }, { status: 403 });
+    if (auth.role !== "MD" && auth.role !== "HOD") {
+      return NextResponse.json({ error: "MD or HOD access required" }, { status: 403 });
     }
 
     const updateData: Record<string, unknown> = {};
@@ -173,6 +173,7 @@ export async function PATCH(
       size: doc.fileSize || "—",
       scope: doc.scope,
       downloads: doc.downloads,
+      fileUrl: doc.fileUrl ?? null,
     });
   } catch (error: unknown) {
     const prismaErr = error as { code?: string };

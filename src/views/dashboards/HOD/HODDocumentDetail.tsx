@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { HODMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
 import { fetchWithAuth, getAuthToken } from "@/lib/api";
+import { formatFileSize } from "@/lib/file-size";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
@@ -111,6 +112,8 @@ export default function HODDocumentDetail() {
   const [activeTab, setActiveTab] = useState("details");
   const [doc, setDoc] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [uploadingVersion, setUploadingVersion] = useState(false);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     if (!docId) return;
@@ -178,7 +181,86 @@ export default function HODDocumentDetail() {
     window.open(url, "_blank");
   };
   const handleShare = () => toast.info("Share modal would open here");
-  const handleUploadNewVersion = () => toast.warning("Upload new version flow would open here");
+  const getNextVersionLabel = (currentLabel) => {
+    const normalized = String(currentLabel || "v1.0").replace(/^v/i, "");
+    const numeric = Number.parseFloat(normalized);
+    if (!Number.isFinite(numeric)) return "v1.1";
+    const next = Math.round((numeric + 0.1) * 10) / 10;
+    return `v${next.toFixed(1)}`;
+  };
+
+  const uploadNewVersion = async (file) => {
+    if (!file || !documentData) return;
+    setUploadingVersion(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const uploadRes = await fetchWithAuth("/api/upload/cloudinary", {
+        method: "POST",
+        body: formData,
+      });
+      const uploadData = await uploadRes.json().catch(() => null);
+      if (!uploadRes.ok || !uploadData?.url) {
+        throw new Error(uploadData?.error || "Failed to upload file");
+      }
+
+      const patchRes = await fetchWithAuth(`/api/documents/${documentData.dbId || documentData.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fileUrl: uploadData.url,
+          fileSize: formatFileSize(file.size),
+          uploadedBy: documentData.uploadedBy,
+        }),
+      });
+      const patchData = await patchRes.json().catch(() => null);
+      if (!patchRes.ok) {
+        throw new Error(patchData?.error || "Failed to update document");
+      }
+
+      const nextVersion = getNextVersionLabel(documentData.versionLabel);
+      setDoc((prev) =>
+        prev
+          ? {
+              ...prev,
+              fileUrl: patchData?.fileUrl ?? uploadData.url,
+              fileSize: patchData?.size ?? formatFileSize(file.size),
+              uploadedAt: new Date().toISOString(),
+              fileType: file.name.split(".").pop()?.toUpperCase() || prev.fileType,
+              versionLabel: nextVersion,
+              versions: [
+                {
+                  version: nextVersion,
+                  date: new Date().toISOString(),
+                  uploadedBy: patchData?.uploadedBy || prev.uploadedBy || "Unknown",
+                  changes: `Uploaded new version (${file.name})`,
+                },
+                ...(prev.versions || []),
+              ],
+            }
+          : prev
+      );
+      toast.success("New document version uploaded");
+    } catch (error) {
+      console.error(error);
+      toast.error(error instanceof Error ? error.message : "Failed to upload new version");
+    } finally {
+      setUploadingVersion(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
+
+  const handleUploadNewVersion = () => {
+    if (uploadingVersion) return;
+    if (!documentData?.dbId && !documentData?.id) {
+      toast.info("Document record is unavailable");
+      return;
+    }
+    fileInputRef.current?.click();
+  };
   const handleArchive = () => toast.info("Archive document flow would open here");
 
   if (loading) {
@@ -366,9 +448,10 @@ export default function HODDocumentDetail() {
                 <div className="mt-6 flex flex-col sm:flex-row gap-3">
                   <button
                     onClick={handleUploadNewVersion}
+                  disabled={uploadingVersion}
                     className={btnOutline}
                     style={{ borderColor: "rgba(44, 75, 155, 0.25)", color: "var(--primary-blue)" }}
-                  >{renderNodeWithIcons("\n                    📤 Upload New Version\n                  ")}</button>
+                >{uploadingVersion ? "Uploading..." : renderNodeWithIcons("\n                    📤 Upload New Version\n                  ")}</button>
                 </div>
               </div>
             </Card>
@@ -543,11 +626,21 @@ export default function HODDocumentDetail() {
                 <button
                   type="button"
                   onClick={handleUploadNewVersion}
+                  disabled={uploadingVersion}
                   className={btnOutline}
                   style={{ borderColor: "rgba(44, 75, 155, 0.25)", color: "var(--primary-blue)" }}
                 >
-                  Choose File
+                  {uploadingVersion ? "Uploading..." : "Choose File"}
                 </button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  className="hidden"
+                  onChange={(e) => {
+                    const selected = e.target.files?.[0];
+                    if (selected) void uploadNewVersion(selected);
+                  }}
+                />
               </div>
             </div>
           </Card>
