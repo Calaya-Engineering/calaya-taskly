@@ -19,6 +19,24 @@ function extractExtension(value: string | null | undefined): string | null {
     return match ? match[1].toLowerCase() : null;
 }
 
+function stripQueryAndHash(value: string): string {
+    return value.split("?")[0].split("#")[0];
+}
+
+function extractFilenameFromUrl(urlValue: string | null | undefined): string | null {
+    if (!urlValue) return null;
+    try {
+        const pathname = new URL(urlValue).pathname;
+        const last = pathname.split("/").filter(Boolean).pop();
+        if (!last) return null;
+        return decodeURIComponent(last);
+    } catch {
+        const cleaned = stripQueryAndHash(String(urlValue));
+        const last = cleaned.split("/").filter(Boolean).pop();
+        return last ? decodeURIComponent(last) : null;
+    }
+}
+
 function stripExtension(value: string | null | undefined): string {
     if (!value) return "document";
     return value.replace(/\.[^.]+$/, "");
@@ -151,15 +169,17 @@ export async function GET(
             entityId: docId,
         });
 
-        // Determine filename and extension — prefer the original stored title/filename
-        // so users download `invoice.pdf` instead of a generic `.bin`.
+        // Determine filename and extension. Prefer upstream-provided or URL-derived filename.
         const originalTitle = sanitizeFilename(doc.title || "document");
         const upstreamDisposition = cloudinaryResponse.headers.get("Content-Disposition");
         const upstreamFilenameRaw = extractFilenameFromContentDisposition(upstreamDisposition);
         const upstreamFilename = upstreamFilenameRaw ? sanitizeFilename(upstreamFilenameRaw) : null;
+        const urlFilenameRaw = extractFilenameFromUrl(doc.fileUrl);
+        const urlFilename = urlFilenameRaw ? sanitizeFilename(urlFilenameRaw) : null;
 
-        const extFromTitle = extractExtension(originalTitle);
         const extFromUpstreamFilename = extractExtension(upstreamFilename);
+        const extFromUrlFilename = extractExtension(urlFilename);
+        const extFromTitle = extractExtension(originalTitle);
         const extFromUrl = extractExtension(doc.fileUrl);
 
         const MIME_TO_EXT: Record<string, string> = {
@@ -184,13 +204,10 @@ export async function GET(
         const contentTypeHeader = cloudinaryResponse.headers.get("Content-Type")?.split(";")[0].trim() || "";
         const extFromMime = MIME_TO_EXT[contentTypeHeader] ?? null;
 
-        const extension = extFromTitle ?? extFromUpstreamFilename ?? extFromUrl ?? extFromMime ?? null;
-
-        let filename = originalTitle;
-        if (!extFromTitle && extension) {
-            const baseName = stripExtension(upstreamFilename || originalTitle);
-            filename = `${sanitizeFilename(baseName)}.${extension}`;
-        }
+        const extension = extFromUpstreamFilename ?? extFromUrlFilename ?? extFromTitle ?? extFromUrl ?? extFromMime ?? null;
+        const baseCandidate = upstreamFilename || urlFilename || originalTitle;
+        const baseName = sanitizeFilename(stripExtension(baseCandidate));
+        const filename = extension ? `${baseName}.${extension}` : baseName;
 
         // Stream the response back to the user
         try {

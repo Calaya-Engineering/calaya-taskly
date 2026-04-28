@@ -405,7 +405,7 @@ export default function StaffDocuments() {
           </Card>
         )}
 
-        {/* Document Categories */}
+        {/* Document categories hidden by request.
         <Card className="p-6">
           <SectionTitle title="Document Categories" subtitle="Browse by category" />
 
@@ -428,6 +428,7 @@ export default function StaffDocuments() {
             ))}
           </div>
         </Card>
+        */}
 
         {/* QUICK STATS */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">

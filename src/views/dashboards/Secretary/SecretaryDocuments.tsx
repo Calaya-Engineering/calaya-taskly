@@ -741,7 +741,7 @@ export default function SecretaryDocuments() {
           )}
         </div>
 
-        {/* Document Categories */}
+        {/* Document categories hidden by request.
         <Card className="p-6">
           <SectionTitle
             title="Document Categories"
@@ -787,6 +787,7 @@ export default function SecretaryDocuments() {
             })}
           </div>
         </Card>
+        */}
 
         {/* Document Statistics */}
         <Card className="p-6">
