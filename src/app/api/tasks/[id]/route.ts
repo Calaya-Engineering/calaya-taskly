@@ -17,7 +17,6 @@ import {
   isStaffLikeRole,
 } from "@/lib/task-access";
 import {
-  ensureMidpointRemindersForTasks,
   notifyTaskApprovalTransition,
   notifyTaskAssignments,
   notifyTaskUpdated,
@@ -79,8 +78,6 @@ export async function GET(
     if (!canUserViewTask(currentUser, task)) {
       return NextResponse.json({ error: "You do not have permission to view this task" }, { status: 403 });
     }
-
-    await ensureMidpointRemindersForTasks([task]);
 
     return NextResponse.json(task);
   } catch (error) {

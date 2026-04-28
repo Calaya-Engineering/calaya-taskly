@@ -49,6 +49,8 @@ function extractFilenameFromContentDisposition(header: string | null): string | 
     return basicMatch?.[1]?.trim() || null;
 }
 
+const STORAGE_FETCH_TIMEOUT_MS = 15000;
+
 /**
  * GET /api/documents/[id]/download - Securely download a document
  */
@@ -105,14 +107,18 @@ export async function GET(
         // Fetch the file from Cloudinary (or original storage)
         console.log(`[DEBUG] Attempting fetch from: ${finalUrl}`);
         let cloudinaryResponse: Response;
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), STORAGE_FETCH_TIMEOUT_MS);
         try {
-            cloudinaryResponse = await fetch(finalUrl);
+            cloudinaryResponse = await fetch(finalUrl, { signal: controller.signal });
         } catch (fetchErr: any) {
             console.error("ERROR: fetch(doc.fileUrl) threw:", fetchErr);
             return NextResponse.json({
                 error: "Failed to reach document storage",
                 details: fetchErr?.message || String(fetchErr)
             }, { status: 502 });
+        } finally {
+            clearTimeout(timeoutId);
         }
 
         if (!cloudinaryResponse.ok || !cloudinaryResponse.body) {

@@ -5,7 +5,7 @@ import { emitTaskEvent } from "@/lib/task-events";
 import { emitAnnouncementEvent } from "@/lib/announcement-events";
 import { createNotification } from "@/lib/notifications";
 import { getEventAudience } from "@/lib/notification-audiences";
-import { ensureMidpointRemindersForTasks, notifyTaskAssignments } from "@/lib/task-notifications";
+import { notifyTaskAssignments } from "@/lib/task-notifications";
 import {
   assertHodAssigneeAccess,
   assertHodDepartmentAccess,
@@ -147,10 +147,6 @@ export async function GET(req: NextRequest) {
         },
       },
     });
-
-    if (tasks.length > 0) {
-      await ensureMidpointRemindersForTasks(tasks);
-    }
 
     return NextResponse.json(tasks);
   } catch (error) {

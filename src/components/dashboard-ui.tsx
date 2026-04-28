@@ -40,3 +40,23 @@ export const Pill = ({ children, tone = "default" }) => {
     </span>
   );
 };
+
+export const SectionLoadingState = ({ rows = 3 }: { rows?: number }) => (
+  <div className="space-y-3 animate-pulse" aria-hidden>
+    {Array.from({ length: rows }).map((_, idx) => (
+      <div key={idx} className="h-12 rounded-2xl border border-gray-100 bg-gray-100/80" />
+    ))}
+  </div>
+);
+
+export const SectionEmptyState = ({ message }: { message: string }) => (
+  <div className="rounded-2xl border border-dashed border-gray-200 p-8 text-center text-sm text-gray-500">
+    {message}
+  </div>
+);
+
+export const SectionErrorState = ({ message }: { message: string }) => (
+  <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm font-semibold text-red-700">
+    {message}
+  </div>
+);

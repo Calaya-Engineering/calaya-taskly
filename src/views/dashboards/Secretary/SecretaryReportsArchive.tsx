@@ -110,6 +110,8 @@ export default function SecretaryReportsArchive() {
   const [selectedDownloadDate, setSelectedDownloadDate] = useState('');
   const [downloadFormat, setDownloadFormat] = useState('pdf');
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
+  const [activeDownloadId, setActiveDownloadId] = useState<string | null>(null);
+  const [activePdfId, setActivePdfId] = useState<string | null>(null);
   const [userFilter, setUserFilter] = useState('all');
   const [departmentFilter, setDepartmentFilter] = useState('all');
   const [previewReportId, setPreviewReportId] = useState<number | null>(null);
@@ -198,20 +200,28 @@ export default function SecretaryReportsArchive() {
   const months = Array.from({ length: 12 }, (_, i) => ({ index: i, name: getMonthName(i) }));
 
   const handleDownload = async (report) => {
+    if (activeDownloadId || activePdfId) return;
+    setActiveDownloadId(report.id);
     try {
       await downloadDailyReport(report);
     } catch (error) {
       console.error("Failed to download report:", error);
       toast.error(error instanceof Error ? error.message : "Failed to download report");
+    } finally {
+      setActiveDownloadId(null);
     }
   };
 
   const handleDownloadPdf = async (report) => {
+    if (activeDownloadId || activePdfId) return;
+    setActivePdfId(report.id);
     try {
       await downloadDailyReport(report, { format: "pdf" });
     } catch (error) {
       console.error("Failed to download report PDF:", error);
       toast.error(error instanceof Error ? error.message : "Failed to download PDF");
+    } finally {
+      setActivePdfId(null);
     }
   };
 
@@ -562,18 +572,20 @@ All reports will be downloaded as a ZIP file.`);
                           <button
                             type="button"
                             onClick={() => handleDownload(report)}
+                            disabled={Boolean(activeDownloadId || activePdfId)}
                             className="px-3 py-1.5 rounded-xl text-[11px] font-semibold text-white active:scale-[0.99] transition"
                             style={{ backgroundColor: "var(--secondary-blue)" }}
                           >
-                            Download
+                            {activeDownloadId === report.id ? "Downloading..." : "Download"}
                           </button>
                           <button
                             type="button"
                             onClick={() => handleDownloadPdf(report)}
+                            disabled={Boolean(activeDownloadId || activePdfId)}
                             className="px-3 py-1.5 rounded-xl text-[11px] font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
                             style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}
                           >
-                            PDF
+                            {activePdfId === report.id ? "Generating..." : "PDF"}
                           </button>
                           <button
                             type="button"

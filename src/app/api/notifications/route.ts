@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
-import { ensureMidpointRemindersForTasks } from "@/lib/task-notifications";
-import { processQueuedNotificationEmails } from "@/lib/notifications";
 
 export async function GET(req: NextRequest) {
     const auth = await getAuthFromRequest(req);
@@ -12,10 +10,6 @@ export async function GET(req: NextRequest) {
     }
 
     try {
-        void processQueuedNotificationEmails().catch((error) => {
-            console.error("Failed to process notification email queue during fetch:", error);
-        });
-
         const user = await prisma.user.findUnique({
             where: { email: auth.email },
             select: { id: true },
@@ -23,30 +17,6 @@ export async function GET(req: NextRequest) {
 
         if (!user) {
             return NextResponse.json({ error: "User not found" }, { status: 404 });
-        }
-
-        const reminderTasks = await prisma.task.findMany({
-            where: {
-                assignments: {
-                    some: {
-                        userId: user.id,
-                    },
-                },
-            },
-            include: {
-                createdBy: { select: { id: true, email: true, name: true, role: true } },
-                assignments: {
-                    include: {
-                        user: { select: { id: true, email: true, name: true, role: true, department: true } },
-                    },
-                },
-            },
-            orderBy: { createdAt: "desc" },
-            take: 100,
-        });
-
-        if (reminderTasks.length > 0) {
-            await ensureMidpointRemindersForTasks(reminderTasks);
         }
 
         const unreadOnly = req.nextUrl.searchParams.get("unread") === "true";

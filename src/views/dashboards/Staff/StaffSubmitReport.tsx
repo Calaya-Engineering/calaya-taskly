@@ -167,6 +167,8 @@ export default function StaffSubmitReport() {
   const [tasks, setTasks] = useState<TaskSummary[]>([]);
   const [staffProfile, setStaffProfile] = useState(DEFAULT_STAFF_PROFILE);
   const [loading, setLoading] = useState(true);
+  const [activeDownloadId, setActiveDownloadId] = useState<string | null>(null);
+  const [activePdfId, setActivePdfId] = useState<string | null>(null);
 
   const staffName = staffProfile.name || DEFAULT_STAFF_PROFILE.name;
   const staffDepartment = staffProfile.department || DEFAULT_STAFF_PROFILE.department;
@@ -342,28 +344,36 @@ export default function StaffSubmitReport() {
   });
 
   const handleDownload = async (report: SubmittedReport) => {
+    if (activeDownloadId || activePdfId) return;
     if (!report.dbId && !report.attachmentUrl && !report.fileUrl) {
       toast.info(`No attachment available for ${report.file}`);
       return;
     }
+    setActiveDownloadId(report.id);
     try {
       await downloadDailyReport(reportDownloadRef(report));
     } catch (err) {
       console.error("Download report failed:", err);
       toast.error(err instanceof Error ? err.message : "Failed to download report");
+    } finally {
+      setActiveDownloadId(null);
     }
   };
 
   const handleDownloadPdf = async (report: SubmittedReport) => {
+    if (activeDownloadId || activePdfId) return;
     if (!report.dbId && !report.fileUrl && !report.attachmentUrl) {
       toast.info("No report data available to build a PDF.");
       return;
     }
+    setActivePdfId(report.id);
     try {
       await downloadDailyReport(reportDownloadRef(report), { format: "pdf" });
     } catch (err) {
       console.error("Download PDF failed:", err);
       toast.error(err instanceof Error ? err.message : "Failed to download PDF");
+    } finally {
+      setActivePdfId(null);
     }
   };
 
@@ -608,18 +618,20 @@ export default function StaffSubmitReport() {
                             <button
                               type="button"
                               onClick={() => handleDownload(report)}
+                              disabled={Boolean(activeDownloadId || activePdfId)}
                               className="px-3 py-1.5 rounded-xl text-[11px] font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
                               style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}
                             >
-                              Download
+                              {activeDownloadId === report.id ? "Downloading..." : "Download"}
                             </button>
                             <button
                               type="button"
                               onClick={() => handleDownloadPdf(report)}
+                              disabled={Boolean(activeDownloadId || activePdfId)}
                               className="px-3 py-1.5 rounded-xl text-[11px] font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
                               style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}
                             >
-                              PDF
+                              {activePdfId === report.id ? "Generating..." : "PDF"}
                             </button>
                           </div>
                         </div>

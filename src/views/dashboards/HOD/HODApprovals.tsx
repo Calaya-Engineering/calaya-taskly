@@ -17,6 +17,7 @@ import {
   getTaskStatusLabel,
 } from "@/lib/task-approval";
 import { taskDepartmentLabel } from "@/lib/task-display";
+import { LoadingButton } from "@/components/ui/loading-button";
 
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children, ...props }: any) => (
@@ -69,6 +70,7 @@ export default function HODApprovals() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeDocTab, setActiveDocTab] = useState("details");
   const [reviewedDocs, setReviewedDocs] = useState<any>({});
+  const [decisionAction, setDecisionAction] = useState<"approve" | "reject" | null>(null);
 
   const fetchApprovals = useCallback(async () => {
     try {
@@ -195,8 +197,9 @@ export default function HODApprovals() {
   };
 
   const handleApprove = async () => {
-    if (!selectedApproval) return;
+    if (!selectedApproval || decisionAction) return;
     const sel = selectedApproval as any;
+    setDecisionAction("approve");
     try {
       const res = await fetchWithAuth(`/api/tasks/${sel.dbId}`, {
         method: "PATCH",
@@ -212,13 +215,15 @@ export default function HODApprovals() {
     } catch {
       toast.error("An error occurred");
     }
+    setDecisionAction(null);
     closeModal();
   };
 
   const handleReject = async () => {
-    if (!selectedApproval) return;
+    if (!selectedApproval || decisionAction) return;
     const sel = selectedApproval as any;
     const reason = comment.trim() || "No reason provided";
+    setDecisionAction("reject");
     try {
       const res = await fetchWithAuth(`/api/tasks/${sel.dbId}`, {
         method: "PATCH",
@@ -234,6 +239,7 @@ export default function HODApprovals() {
     } catch {
       toast.error("An error occurred");
     }
+    setDecisionAction(null);
     closeModal();
   };
 
@@ -497,14 +503,26 @@ export default function HODApprovals() {
                     placeholder="Add your comments or reasons for decision..."
                   />
                   <div className="flex gap-3">
-                    <button 
+                    <LoadingButton
+                      type="button"
                       onClick={handleApprove}
+                      isLoading={decisionAction === "approve"}
+                      loadingText="Approving..."
+                      disabled={decisionAction !== null}
                       className="flex-1 bg-green-500 text-white font-bold py-3 rounded-xl hover:bg-green-600 transition"
-                    >{renderNodeWithIcons("\n                      ✓ Approve & complete\n                    ")}</button>
-                    <button 
+                    >
+                      {renderNodeWithIcons("\n                      ✓ Approve & complete\n                    ")}
+                    </LoadingButton>
+                    <LoadingButton
+                      type="button"
                       onClick={handleReject}
+                      isLoading={decisionAction === "reject"}
+                      loadingText="Rejecting..."
+                      disabled={decisionAction !== null}
                       className="flex-1 bg-red-500 text-white font-bold py-3 rounded-xl hover:bg-red-600 transition"
-                    >{renderNodeWithIcons("\n                      ✗ Reject\n                    ")}</button>
+                    >
+                      {renderNodeWithIcons("\n                      ✗ Reject\n                    ")}
+                    </LoadingButton>
                   </div>
                 </div>
               </div>

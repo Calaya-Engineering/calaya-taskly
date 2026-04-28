@@ -3,7 +3,6 @@ import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { hashPassword } from "@/lib/password";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
-import { createNotification } from "@/lib/notifications";
 import { getManagedDepartmentNamesByEmail, getValidatedDepartmentRecords } from "@/lib/hod-departments";
 
 const HOD_ALLOWED_ROLES = ["Staff", "Personnel", "Corp Member"];
@@ -69,6 +68,10 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const role = searchParams.get("role");
     const requestedDepartments = searchParams.getAll("department").map((value) => value.trim()).filter(Boolean);
+    const parsedLimit = Number.parseInt(searchParams.get("limit") || "100", 10);
+    const parsedOffset = Number.parseInt(searchParams.get("offset") || "0", 10);
+    const limit = Number.isFinite(parsedLimit) ? Math.min(Math.max(parsedLimit, 1), 300) : 100;
+    const offset = Number.isFinite(parsedOffset) ? Math.max(parsedOffset, 0) : 0;
     const isHod = auth.role === "HOD";
     const hodManagedDepartments = isHod ? await getManagedDepartmentNamesByEmail(auth.email) : [];
 
@@ -99,6 +102,8 @@ export async function GET(req: NextRequest) {
 
     const users = await prisma.user.findMany({
       where,
+      take: limit,
+      skip: offset,
       select: {
         id: true,
         email: true,
@@ -122,12 +127,6 @@ export async function GET(req: NextRequest) {
         },
       },
       orderBy: [{ role: "asc" }, { email: "asc" }],
-    });
-
-    createNotification({
-      actorEmail: auth.email,
-      actionType: "VIEW_USERS",
-      message: `${auth.name || auth.email.split("@")[0]} (${auth.role}) viewed the users list.`,
     });
 
     return NextResponse.json(users.map(serializeUser));

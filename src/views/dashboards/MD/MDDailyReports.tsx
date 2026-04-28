@@ -190,6 +190,8 @@ export default function MDDailyReports() {
 
   // Modal states
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
+  const [activeDownloadId, setActiveDownloadId] = useState<string | null>(null);
+  const [activePdfId, setActivePdfId] = useState<string | null>(null);
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
   const [selectedReport, setSelectedReport] = useState(null);
 
@@ -290,20 +292,28 @@ export default function MDDailyReports() {
   };
 
   const handleDownloadReport = async (report) => {
+    if (activeDownloadId || activePdfId) return;
+    setActiveDownloadId(report.id);
     try {
       await downloadDailyReport(report);
     } catch (error) {
       console.error("Failed to download report:", error);
       toast.error(error instanceof Error ? error.message : `Failed to download ${report.title || "report"}`);
+    } finally {
+      setActiveDownloadId(null);
     }
   };
 
   const handleDownloadReportPdf = async (report) => {
+    if (activeDownloadId || activePdfId) return;
+    setActivePdfId(report.id);
     try {
       await downloadDailyReport(report, { format: "pdf" });
     } catch (error) {
       console.error("Failed to download report PDF:", error);
       toast.error(error instanceof Error ? error.message : `Failed to download PDF for ${report.title || "report"}`);
+    } finally {
+      setActivePdfId(null);
     }
   };
 
@@ -560,18 +570,20 @@ export default function MDDailyReports() {
                           <button
                             type="button"
                             onClick={() => handleDownloadReport(report)}
+                            disabled={Boolean(activeDownloadId || activePdfId)}
                             className="px-4 py-2 rounded-2xl text-white mr-2 transition active:scale-[0.99]"
                             style={{ backgroundColor: "var(--secondary-blue)" }}
                           >
-                            Download
+                            {activeDownloadId === report.id ? "Downloading..." : "Download"}
                           </button>
                           <button
                             type="button"
                             onClick={() => handleDownloadReportPdf(report)}
+                            disabled={Boolean(activeDownloadId || activePdfId)}
                             className="px-4 py-2 rounded-2xl border bg-white hover:bg-gray-50 mr-2 transition active:scale-[0.99]"
                             style={{ borderColor: "rgba(44, 75, 155, 0.25)", color: "var(--primary-blue)" }}
                           >
-                            PDF
+                            {activePdfId === report.id ? "Generating..." : "PDF"}
                           </button>
                           <button
                             type="button"
@@ -644,18 +656,20 @@ export default function MDDailyReports() {
                     <button
                       type="button"
                       onClick={() => handleDownloadReport(r)}
+                      disabled={Boolean(activeDownloadId || activePdfId)}
                       className="flex-1 min-w-[100px] px-4 py-2.5 rounded-2xl font-semibold text-white transition active:scale-[0.99]"
                       style={{ backgroundColor: "var(--secondary-blue)" }}
                     >
-                      Download
+                      {activeDownloadId === r.id ? "Downloading..." : "Download"}
                     </button>
                     <button
                       type="button"
                       onClick={() => handleDownloadReportPdf(r)}
+                      disabled={Boolean(activeDownloadId || activePdfId)}
                       className="flex-1 min-w-[100px] px-4 py-2.5 rounded-2xl font-semibold border bg-white hover:bg-gray-50 transition active:scale-[0.99]"
                       style={{ borderColor: "rgba(44, 75, 155, 0.25)", color: "var(--primary-blue)" }}
                     >
-                      PDF
+                      {activePdfId === r.id ? "Generating..." : "PDF"}
                     </button>
                     <button
                       type="button"

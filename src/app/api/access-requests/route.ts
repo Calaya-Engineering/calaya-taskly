@@ -26,9 +26,15 @@ export async function GET(req: NextRequest) {
 
   try {
     const statusFilter = req.nextUrl.searchParams.get("status")?.trim().toUpperCase();
+    const parsedLimit = Number.parseInt(req.nextUrl.searchParams.get("limit") || "100", 10);
+    const parsedOffset = Number.parseInt(req.nextUrl.searchParams.get("offset") || "0", 10);
+    const limit = Number.isFinite(parsedLimit) ? Math.min(Math.max(parsedLimit, 1), 300) : 100;
+    const offset = Number.isFinite(parsedOffset) ? Math.max(parsedOffset, 0) : 0;
     const requests = await prisma.accessRequest.findMany({
       where: statusFilter && statusFilter !== "ALL" ? { status: statusFilter } : undefined,
       orderBy: [{ status: "asc" }, { createdAt: "desc" }],
+      take: limit,
+      skip: offset,
     });
 
     const emails = Array.from(new Set(requests.map((request) => request.email)));

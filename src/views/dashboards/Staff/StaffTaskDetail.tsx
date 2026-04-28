@@ -128,55 +128,6 @@ const getStatusTone = (status?: string | null) => {
   }
 };
 
-const StatusChangingModal = ({ status }: { status: string }) => {
-  const label = status.replace(/_/g, " ");
-  const labelFormatted = label.charAt(0).toUpperCase() + label.slice(1).toLowerCase();
-  return (
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 9999,
-        backgroundColor: "rgba(0, 0, 0, 0.45)",
-        backdropFilter: "blur(4px)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <div
-        style={{
-          background: "#fff",
-          borderRadius: "20px",
-          padding: "40px 48px",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "20px",
-          boxShadow: "0 24px 64px rgba(0,0,0,0.18)",
-          minWidth: "280px",
-        }}
-      >
-        <div
-          style={{
-            width: "52px",
-            height: "52px",
-            borderRadius: "50%",
-            border: "4px solid rgba(44, 75, 155, 0.15)",
-            borderTopColor: "var(--primary-blue)",
-            animation: "staff-task-spin 0.75s linear infinite",
-          }}
-        />
-        <style>{`@keyframes staff-task-spin { to { transform: rotate(360deg); } }`}</style>
-        <p style={{ fontWeight: 700, fontSize: "16px", color: "var(--primary-blue)", margin: 0, textAlign: "center" }}>
-          Changing task to <span style={{ color: "var(--secondary-blue)" }}>{labelFormatted}</span>
-        </p>
-        <p style={{ fontSize: "13px", color: "#6b7280", margin: 0 }}>Please wait...</p>
-      </div>
-    </div>
-  );
-};
-
 const getUserDepartment = (user?: AssignmentUser | null): string | undefined => {
   if (user?.department) return user.department;
   const managed = user?.managedDepartmentRelations;
@@ -309,7 +260,7 @@ export default function StaffTaskDetail() {
   }, [fetchTask]);
 
   const handleStatusChange = async (newStatus: string) => {
-    if (!taskData) return;
+    if (!taskData || statusChangingTo) return;
     setStatusChangingTo(newStatus);
     try {
       const res = await fetchWithAuth(`/api/tasks/${taskId}`, {
@@ -371,7 +322,6 @@ export default function StaffTaskDetail() {
 
   return (
     <Layout menuItems={StaffMenuItems} userRole="Staff">
-      {statusChangingTo && <StatusChangingModal status={statusChangingTo} />}
       <div className="space-y-6">
         <Card className="overflow-hidden">
           <div
@@ -408,10 +358,11 @@ export default function StaffTaskDetail() {
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   onClick={() => handleStatusChange("COMPLETED")}
+                  disabled={Boolean(statusChangingTo)}
                   className="px-5 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition"
                   style={{ backgroundColor: "var(--secondary-blue)" }}
                 >
-                  Mark Complete
+                  {statusChangingTo === "COMPLETED" ? "Marking complete..." : "Mark Complete"}
                 </button>
               </div>
             </div>
@@ -540,9 +491,10 @@ export default function StaffTaskDetail() {
                         backgroundColor: taskData.status === status ? "var(--secondary-blue)" : undefined,
                         borderColor: taskData.status === status ? "transparent" : "rgba(0,0,0,0.08)",
                       }}
+                      disabled={Boolean(statusChangingTo)}
                       onClick={() => handleStatusChange(status)}
                     >
-                      {getTaskStatusLabel(status)}
+                      {statusChangingTo === status ? "Updating..." : getTaskStatusLabel(status)}
                     </button>
                   ))}
                 </div>

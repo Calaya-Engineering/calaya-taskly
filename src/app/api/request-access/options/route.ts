@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const { searchParams } = new URL(req.url);
+    const parsedHodLimit = Number.parseInt(searchParams.get("hodLimit") || "200", 10);
+    const hodLimit = Number.isFinite(parsedHodLimit) ? Math.min(Math.max(parsedHodLimit, 1), 500) : 200;
     const [departments, hodUsers] = await Promise.all([
       prisma.department.findMany({
         orderBy: { name: "asc" },
@@ -11,6 +14,7 @@ export async function GET() {
       prisma.user.findMany({
         where: { role: "HOD" },
         orderBy: [{ name: "asc" }, { email: "asc" }],
+        take: hodLimit,
         select: {
           id: true,
           name: true,

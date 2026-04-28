@@ -312,7 +312,7 @@ export default function AdminUsers() {
             title="Filters"
             subtitle="Filter by department and switch between table or card view"
             action={
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap justify-end">
                 {selectedIds.size > 0 && (
                   <button
                     onClick={handleDeleteSelected}
@@ -389,7 +389,7 @@ export default function AdminUsers() {
               className="mt-5 overflow-auto"
               style={{ maxHeight: `${TABLE_VIEWPORT_HEIGHT}px` }}
             >
-              <table className="w-full text-sm min-w-[900px]">
+              <table className="w-full text-sm min-w-[760px]">
                 <thead>
                   <tr className="border-b border-gray-200">
                     <th className="w-10 px-5 py-3">
@@ -432,6 +432,7 @@ export default function AdminUsers() {
                           : u.department || "—"}
                       </td>
                       <td className="px-5 py-3 text-right">
+                        <div className="inline-flex items-center justify-end gap-2 flex-wrap">
                         <button
                           onClick={() => openEdit(u)}
                           className="px-3 py-1.5 rounded-xl text-[12px] font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition inline-flex items-center gap-1 mr-2"
@@ -448,6 +449,7 @@ export default function AdminUsers() {
                           <DeleteIcon className="w-3.5 h-3.5" />
                           Delete
                         </button>
+                        </div>
                       </td>
                     </tr>
                   ))}

@@ -10,6 +10,7 @@ import { fetchWithAuth } from "@/lib/api";
 import { useSSE } from "@/hooks/useSSE";
 import { TASK_STATUS_PENDING_MD_APPROVAL } from "@/lib/task-approval";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
+import { LoadingButton } from "@/components/ui/loading-button";
 const Card = ({ className = "", children, ...props }: any) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`} {...props}>{children}</div>
 );
@@ -46,6 +47,7 @@ export default function MDApprovalBulk() {
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
   const [bulkComment, setBulkComment] = useState('');
   const [selectAll, setSelectAll] = useState(false);
+  const [bulkAction, setBulkAction] = useState<"approve" | "reject" | null>(null);
 
   const fetchApprovals = useCallback(async () => {
     try {
@@ -99,7 +101,8 @@ export default function MDApprovalBulk() {
   };
 
   const handleBulkApprove = async () => {
-    if (selectedItems.length === 0) return;
+    if (selectedItems.length === 0 || bulkAction) return;
+    setBulkAction("approve");
     toast.info(`Processing ${selectedItems.length} approvals...`);
     try {
       const promises = selectedItems.map(id =>
@@ -115,11 +118,14 @@ export default function MDApprovalBulk() {
       fetchApprovals();
     } catch {
       toast.error("An error occurred during bulk approval");
+    } finally {
+      setBulkAction(null);
     }
   };
 
   const handleBulkReject = async () => {
-    if (selectedItems.length === 0) return;
+    if (selectedItems.length === 0 || bulkAction) return;
+    setBulkAction("reject");
     toast.info(`Processing ${selectedItems.length} rejections...`);
     try {
       const promises = selectedItems.map(id =>
@@ -135,6 +141,8 @@ export default function MDApprovalBulk() {
       fetchApprovals();
     } catch {
       toast.error("An error occurred during bulk rejection");
+    } finally {
+      setBulkAction(null);
     }
   };
 
@@ -203,17 +211,29 @@ export default function MDApprovalBulk() {
                 </h3>
                 <p className="text-sm text-gray-500 mt-1">Add a comment for all selected approvals</p>
               </div>
-              <div className="flex gap-3">
-                <button
+              <div className="flex gap-3 flex-wrap">
+                <LoadingButton
+                  type="button"
                   onClick={handleBulkApprove}
+                  isLoading={bulkAction === "approve"}
+                  loadingText="Approving..."
+                  disabled={bulkAction !== null}
                   className="px-6 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition"
                   style={{ backgroundColor: '#10B981' }}
-                >{renderNodeWithIcons("\n                  ✓ Approve All\n                ")}</button>
-                <button
+                >
+                  {renderNodeWithIcons("\n                  ✓ Approve All\n                ")}
+                </LoadingButton>
+                <LoadingButton
+                  type="button"
                   onClick={handleBulkReject}
+                  isLoading={bulkAction === "reject"}
+                  loadingText="Rejecting..."
+                  disabled={bulkAction !== null}
                   className="px-6 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition"
                   style={{ backgroundColor: 'var(--accent-red)' }}
-                >{renderNodeWithIcons("\n                  ✗ Reject All\n                ")}</button>
+                >
+                  {renderNodeWithIcons("\n                  ✗ Reject All\n                ")}
+                </LoadingButton>
               </div>
             </div>
             <div className="mt-4">
@@ -237,6 +257,7 @@ export default function MDApprovalBulk() {
               action={
                 <button
                   onClick={toggleSelectAll}
+                  disabled={bulkAction !== null}
                   className="text-sm font-semibold px-4 py-2 rounded-xl hover:bg-gray-50 transition"
                   style={{ color: 'var(--primary-blue)' }}
                 >

@@ -274,6 +274,9 @@ model Notification {
   @@index([recipientId])
   @@index([createdAt])
   @@index([read])
+  @@index([recipientId, read, createdAt])
+  @@index([actionType, targetId, recipientId])
+  @@index([emailStatus, emailAttempts, createdAt])
   @@index([actorId], map: "Notification_actorId_fkey")
 }
 

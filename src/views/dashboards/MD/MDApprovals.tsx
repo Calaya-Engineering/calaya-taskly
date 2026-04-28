@@ -16,6 +16,7 @@ import {
   getTaskApprovalNextStep,
   getTaskStatusLabel,
 } from "@/lib/task-approval";
+import { LoadingButton } from "@/components/ui/loading-button";
 
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children, ...props }: any) => (
@@ -68,6 +69,7 @@ export default function MDApprovals() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeDocTab, setActiveDocTab] = useState("details");
   const [reviewedDocs, setReviewedDocs] = useState<any>({});
+  const [decisionAction, setDecisionAction] = useState<"approve" | "reject" | null>(null);
 
   const fetchApprovals = useCallback(async () => {
     try {
@@ -179,8 +181,9 @@ export default function MDApprovals() {
   };
 
   const handleApprove = async () => {
-    if (!selectedApproval) return;
+    if (!selectedApproval || decisionAction) return;
     const sel = selectedApproval as any;
+    setDecisionAction("approve");
     try {
       const res = await fetchWithAuth(`/api/tasks/${sel.dbId}`, {
         method: "PATCH",
@@ -196,13 +199,15 @@ export default function MDApprovals() {
     } catch {
       toast.error("An error occurred");
     }
+    setDecisionAction(null);
     closeModal();
   };
 
   const handleReject = async () => {
-    if (!selectedApproval) return;
+    if (!selectedApproval || decisionAction) return;
     const sel = selectedApproval as any;
     const reason = comment.trim() || "No reason provided";
+    setDecisionAction("reject");
     try {
       const res = await fetchWithAuth(`/api/tasks/${sel.dbId}`, {
         method: "PATCH",
@@ -218,6 +223,7 @@ export default function MDApprovals() {
     } catch {
       toast.error("An error occurred");
     }
+    setDecisionAction(null);
     closeModal();
   };
 
@@ -386,8 +392,26 @@ export default function MDApprovals() {
                     placeholder="Decision comments..."
                  />
                  <div className="flex gap-4">
-                   <button onClick={handleApprove} className="flex-1 bg-green-600 text-white font-bold py-3 rounded-xl">Approve</button>
-                   <button onClick={handleReject} className="flex-1 bg-red-600 text-white font-bold py-3 rounded-xl">Reject</button>
+                   <LoadingButton
+                     type="button"
+                     onClick={handleApprove}
+                     isLoading={decisionAction === "approve"}
+                     loadingText="Approving..."
+                     disabled={decisionAction !== null}
+                     className="flex-1 bg-green-600 text-white font-bold py-3 rounded-xl"
+                   >
+                     Approve
+                   </LoadingButton>
+                   <LoadingButton
+                     type="button"
+                     onClick={handleReject}
+                     isLoading={decisionAction === "reject"}
+                     loadingText="Rejecting..."
+                     disabled={decisionAction !== null}
+                     className="flex-1 bg-red-600 text-white font-bold py-3 rounded-xl"
+                   >
+                     Reject
+                   </LoadingButton>
                  </div>
               </div>
            </Card>

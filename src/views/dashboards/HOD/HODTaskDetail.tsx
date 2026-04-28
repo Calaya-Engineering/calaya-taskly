@@ -80,58 +80,6 @@ const taskAssigneeLabel = (task) =>
     ? task.assignments[0].user?.name || task.assignments[0].user?.email || "—"
     : `${task?.assignments?.length} assignees`;
 
-/* ---------- Status Changing Modal ---------- */
-const StatusChangingModal = ({ status }: { status: string }) => {
-  const label = status.replace(/_/g, " ");
-  const labelFormatted = label.charAt(0).toUpperCase() + label.slice(1).toLowerCase();
-  return (
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 9999,
-        backgroundColor: "rgba(0, 0, 0, 0.45)",
-        backdropFilter: "blur(4px)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <div
-        style={{
-          background: "#fff",
-          borderRadius: "20px",
-          padding: "40px 48px",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "20px",
-          boxShadow: "0 24px 64px rgba(0,0,0,0.18)",
-          minWidth: "280px",
-        }}
-      >
-        {/* Spinner */}
-        <div
-          style={{
-            width: "52px",
-            height: "52px",
-            borderRadius: "50%",
-            border: "4px solid rgba(44, 75, 155, 0.15)",
-            borderTopColor: "var(--primary-blue)",
-            animation: "hod-task-spin 0.75s linear infinite",
-          }}
-        />
-        <style>{`@keyframes hod-task-spin { to { transform: rotate(360deg); } }`}</style>
-        <p style={{ fontWeight: 700, fontSize: "16px", color: "var(--primary-blue)", margin: 0, textAlign: "center" }}>
-          Changing task to{" "}
-          <span style={{ color: "var(--secondary-blue)" }}>{labelFormatted}</span>
-        </p>
-        <p style={{ fontSize: "13px", color: "#6b7280", margin: 0 }}>Please wait…</p>
-      </div>
-    </div>
-  );
-};
-
 const getUserDepartment = (user?: AssignmentUser): string | undefined => {
   if (user?.department) return user.department;
   const managed = user?.managedDepartmentRelations;
@@ -268,7 +216,7 @@ export default function HODTaskDetail() {
   }, [fetchTask]);
 
   const handleStatusChange = async (newStatus) => {
-    if (!taskData) return;
+    if (!taskData || statusChangingTo) return;
     setStatusChangingTo(newStatus);
     try {
       const res = await fetchWithAuth(`/api/tasks/${taskId}`, {
@@ -352,7 +300,6 @@ export default function HODTaskDetail() {
 
   return (
     <Layout menuItems={HODMenuItems} userRole="HOD">
-      {statusChangingTo && <StatusChangingModal status={statusChangingTo} />}
       <div className="space-y-6">
         {/* Hero Header */}
         <Card className="overflow-hidden">
@@ -542,9 +489,10 @@ export default function HODTaskDetail() {
                         backgroundColor: taskData.status === status ? "var(--secondary-blue)" : undefined,
                         borderColor: taskData.status === status ? "transparent" : "rgba(0,0,0,0.08)",
                       }}
+                      disabled={Boolean(statusChangingTo)}
                       onClick={() => handleStatusChange(status)}
                     >
-                      {status.replace("_", " ")}
+                      {statusChangingTo === status ? "Updating..." : status.replace("_", " ")}
                     </button>
                   ))}
                 </div>

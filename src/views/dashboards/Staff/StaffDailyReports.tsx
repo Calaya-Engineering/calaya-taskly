@@ -185,6 +185,8 @@ export default function StaffDailyReports() {
   const tableViewportRef = useRef<HTMLDivElement | null>(null);
   const [previewReportId, setPreviewReportId] = useState<number | null>(null);
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
+  const [activeDownloadId, setActiveDownloadId] = useState<string | null>(null);
+  const [activePdfId, setActivePdfId] = useState<string | null>(null);
 
   const staffDepartment = staffProfile.department || DEFAULT_STAFF_PROFILE.department;
   const staffName = staffProfile.name || DEFAULT_STAFF_PROFILE.name;
@@ -485,20 +487,28 @@ export default function StaffDailyReports() {
   };
 
   const handleDownload = async (report: DailyReportItem) => {
+    if (activeDownloadId || activePdfId) return;
+    setActiveDownloadId(report.id);
     try {
       await downloadDailyReport(report);
     } catch (error) {
       console.error("Failed to download daily report:", error);
       toast.error(error instanceof Error ? error.message : "Failed to download report");
+    } finally {
+      setActiveDownloadId(null);
     }
   };
 
   const handleDownloadPdf = async (report: DailyReportItem) => {
+    if (activeDownloadId || activePdfId) return;
+    setActivePdfId(report.id);
     try {
       await downloadDailyReport(report, { format: "pdf" });
     } catch (error) {
       console.error("Failed to download daily report PDF:", error);
       toast.error(error instanceof Error ? error.message : "Failed to download PDF");
+    } finally {
+      setActivePdfId(null);
     }
   };
 
@@ -721,18 +731,20 @@ export default function StaffDailyReports() {
                         <button
                           type="button"
                           onClick={() => handleDownload(report)}
+                          disabled={Boolean(activeDownloadId || activePdfId)}
                           className="px-3 py-1.5 rounded-xl text-[11px] font-semibold text-white active:scale-[0.99] transition"
                           style={{ backgroundColor: "var(--secondary-blue)" }}
                         >
-                          Download
+                          {activeDownloadId === report.id ? "Downloading..." : "Download"}
                         </button>
                         <button
                           type="button"
                           onClick={() => handleDownloadPdf(report)}
+                          disabled={Boolean(activeDownloadId || activePdfId)}
                           className="px-3 py-1.5 rounded-xl text-[11px] font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
                           style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}
                         >
-                          PDF
+                          {activePdfId === report.id ? "Generating..." : "PDF"}
                         </button>
                         <button
                           type="button"
