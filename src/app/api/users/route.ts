@@ -4,6 +4,7 @@ import { getAuthFromRequest } from "@/lib/jwt";
 import { hashPassword } from "@/lib/password";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
 import { getManagedDepartmentNamesByEmail, getValidatedDepartmentRecords } from "@/lib/hod-departments";
+import { createNotification } from "@/lib/notifications";
 
 const HOD_ALLOWED_ROLES = ["Staff", "Personnel", "Corp Member"];
 
@@ -100,36 +101,63 @@ export async function GET(req: NextRequest) {
       where.department = { in: hodManagedDepartments };
     }
 
-    const users = await prisma.user.findMany({
-      where,
-      take: limit,
-      skip: offset,
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        role: true,
-        department: true,
-        managedDepartmentRelations: {
-          select: {
-            department: {
-              select: {
-                id: true,
-                name: true,
+    try {
+      const users = await prisma.user.findMany({
+        where,
+        take: limit,
+        skip: offset,
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          role: true,
+          department: true,
+          managedDepartmentRelations: {
+            select: {
+              department: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+              },
+            },
+            orderBy: {
+              department: {
+                name: "asc",
               },
             },
           },
-          orderBy: {
-            department: {
-              name: "asc",
-            },
-          },
         },
-      },
-      orderBy: [{ role: "asc" }, { email: "asc" }],
-    });
+        orderBy: [{ role: "asc" }, { email: "asc" }],
+      });
 
-    return NextResponse.json(users.map(serializeUser));
+      return NextResponse.json(users.map(serializeUser));
+    } catch (relationError) {
+      // Backward-compatible fallback for databases missing HOD relation tables/columns.
+      console.warn("Users query fell back to basic projection:", relationError);
+      const users = await prisma.user.findMany({
+        where,
+        take: limit,
+        skip: offset,
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          role: true,
+          department: true,
+        },
+        orderBy: [{ role: "asc" }, { email: "asc" }],
+      });
+
+      return NextResponse.json(
+        users.map((user) => ({
+          ...user,
+          primaryDepartment: user.department || null,
+          managedDepartments: [],
+          managedDepartmentIds: [],
+        }))
+      );
+    }
   } catch (error) {
     console.error("Error fetching users:", error);
     const message = error instanceof Error ? error.message : String(error);
