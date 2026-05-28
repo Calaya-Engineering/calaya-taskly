@@ -8,6 +8,7 @@ import { toast } from "@/lib/toast";
 import { fetchWithAuth } from "@/lib/api";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 import { getTaskStatusLabel } from "@/lib/task-approval";
+import MentionInput from "@/components/MentionInput";
 
 interface AssignmentUser {
   name?: string | null;
@@ -237,6 +238,8 @@ export default function StaffTaskDetail() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("overview");
   const [statusChangingTo, setStatusChangingTo] = useState<string | null>(null);
+  const [completeModalOpen, setCompleteModalOpen] = useState(false);
+  const [completeNote, setCompleteNote] = useState("");
 
   const fetchTask = useCallback(async () => {
     if (!taskId) return;
@@ -259,14 +262,14 @@ export default function StaffTaskDetail() {
     fetchTask();
   }, [fetchTask]);
 
-  const handleStatusChange = async (newStatus: string) => {
+  const handleStatusChange = async (newStatus: string, comment?: string) => {
     if (!taskData || statusChangingTo) return;
     setStatusChangingTo(newStatus);
     try {
       const res = await fetchWithAuth(`/api/tasks/${taskId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: newStatus }),
+        body: JSON.stringify({ status: newStatus, ...(comment ? { comment } : {}) }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
@@ -275,6 +278,8 @@ export default function StaffTaskDetail() {
       }
       setTaskData(data);
       toast.success(`Task status updated to ${getTaskStatusLabel(data.status || newStatus)}`);
+      setCompleteModalOpen(false);
+      setCompleteNote("");
     } catch {
       toast.error("Failed to update status");
     } finally {
@@ -357,7 +362,7 @@ export default function StaffTaskDetail() {
 
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
-                  onClick={() => handleStatusChange("COMPLETED")}
+                  onClick={() => setCompleteModalOpen(true)}
                   disabled={Boolean(statusChangingTo)}
                   className="px-5 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition"
                   style={{ backgroundColor: "var(--secondary-blue)" }}
@@ -523,6 +528,46 @@ export default function StaffTaskDetail() {
           </Card>
         )}
       </div>
+
+      {completeModalOpen ? (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl w-full max-w-lg p-6 border border-gray-200">
+            <h3 className="text-lg font-extrabold mb-1" style={{ color: "var(--primary-blue)" }}>
+              Mark task complete
+            </h3>
+            <p className="text-sm text-gray-500 mb-4">
+              Optionally leave a note — type <code>@</code> to tag colleagues. They'll be notified.
+            </p>
+            <MentionInput
+              value={completeNote}
+              onChange={setCompleteNote}
+              placeholder="What did you finish? Tag anyone who should know with @"
+              minRows={4}
+            />
+            <div className="mt-5 flex items-center justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setCompleteModalOpen(false);
+                  setCompleteNote("");
+                }}
+                className="px-4 py-2 rounded-2xl border border-gray-200 bg-white text-sm font-semibold hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={Boolean(statusChangingTo)}
+                onClick={() => handleStatusChange("COMPLETED", completeNote.trim() || undefined)}
+                className="px-5 py-2.5 rounded-2xl text-sm font-semibold text-white transition active:scale-[0.99] disabled:opacity-60"
+                style={{ backgroundColor: "var(--secondary-blue)" }}
+              >
+                {statusChangingTo === "COMPLETED" ? "Marking…" : "Mark Complete"}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </Layout>
   );
 }

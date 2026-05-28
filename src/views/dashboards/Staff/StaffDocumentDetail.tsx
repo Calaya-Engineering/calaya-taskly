@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
 import { StaffMenuItems } from "@/utils/menus";
-import { fetchWithAuth, getAuthToken } from "@/lib/api";
+import { fetchWithAuth } from "@/lib/api";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
@@ -131,18 +131,9 @@ export default function StaffDocumentDetail() {
     { version: '1.0', date: document?.uploadedDate || '-', uploadedBy: document?.uploadedBy || '-', changes: 'Initial upload' },
   ];
 
-  const downloadHistory = [];
   const comments = [];
 
-  const handleDownload = () => {
-    if (!document?.dbId) {
-      toast.info("No file available for download");
-      return;
-    }
-    const token = getAuthToken();
-    const url = `/api/documents/${document.dbId}/download${token ? `?token=${token}` : ""}`;
-    window.open(url, "_blank");
-  };
+  // Download disabled for staff — view-only access.
 
   const handlePreview = () => {
     toast.info(`Previewing ${document.title}`);
@@ -231,17 +222,10 @@ export default function StaffDocumentDetail() {
               <div className="flex flex-col sm:flex-row gap-2">
                 <button
                   onClick={handlePreview}
-                  className={btnOutline}
-                  style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}
-                >
-                  Preview
-                </button>
-                <button
-                  onClick={handleDownload}
                   className={btnSolid}
                   style={{ backgroundColor: "var(--secondary-blue)" }}
                 >
-                  Download
+                  Preview
                 </button>
               </div>
             </div>
@@ -371,14 +355,6 @@ export default function StaffDocumentDetail() {
                         </div>
                         <p className="text-sm text-gray-600 mb-2">Uploaded by: {version.uploadedBy}</p>
                         <p className="text-sm text-gray-700 mb-4">Changes: {version.changes}</p>
-                        {version.version !== document.version && (
-                          <button
-                            className="px-4 py-2 rounded-2xl text-sm font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
-                            style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}
-                          >
-                            Download This Version
-                          </button>
-                        )}
                       </div>
                     ))}
                   </div>
@@ -459,14 +435,6 @@ export default function StaffDocumentDetail() {
 
               <div className="mt-4 space-y-2">
                 <button
-                  onClick={handleDownload}
-                  className="w-full px-4 py-3 rounded-2xl border bg-white hover:bg-gray-50 active:scale-[0.99] transition flex items-center justify-between"
-                  style={{ borderColor: "rgba(109,198,223,0.55)", color: "var(--secondary-blue)" }}
-                >
-                  <span className="font-semibold">Download Document</span>
-                  <span>⬇️</span>
-                </button>
-                <button
                   onClick={handlePreview}
                   className="w-full px-4 py-3 rounded-2xl border bg-white hover:bg-gray-50 active:scale-[0.99] transition flex items-center justify-between"
                   style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}
@@ -482,34 +450,6 @@ export default function StaffDocumentDetail() {
                   <span className="font-semibold">Share Document</span>
                   <span>{renderNodeWithIcons("📤")}</span>
                 </button>
-              </div>
-            </Card>
-
-            {/* Document Stats */}
-            <Card className="p-6">
-              <SectionTitle title="Document Statistics" />
-
-              <div className="mt-4 space-y-4">
-                <div className="text-center p-5 rounded-2xl border border-gray-200/70">
-                  <p className="text-3xl font-extrabold" style={{ color: "var(--primary-blue)" }}>
-                    {document.downloads}
-                  </p>
-                  <p className="text-sm text-gray-500 mt-1">Total Downloads</p>
-                </div>
-
-                <div className="pt-4 border-t border-gray-200/70">
-                  <h4 className="text-sm font-extrabold mb-3" style={{ color: "var(--primary-blue)" }}>
-                    Recent Downloads
-                  </h4>
-                  <div className="space-y-2">
-                    {downloadHistory.slice(0, 3).map((download, index) => (
-                      <div key={index} className="flex items-center justify-between text-sm">
-                        <span className="text-gray-700">{download.user}</span>
-                        <span className="text-xs text-gray-500">{download.date}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
               </div>
             </Card>
 

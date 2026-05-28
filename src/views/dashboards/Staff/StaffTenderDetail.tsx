@@ -10,6 +10,7 @@ import { toast } from "@/lib/toast";
 import { fetchWithAuth, getAuthToken } from "@/lib/api";
 import { formatFileSize, parseFileSize } from "@/lib/file-size";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
+import TenderComments from "@/components/TenderComments";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -206,11 +207,11 @@ export default function StaffTenderDetail() {
 
               <div className="flex flex-col sm:flex-row gap-2">
                 <button
-                  onClick={handleDownloadAll}
+                  onClick={() => setActiveTab("comments")}
                   className={btnSolid}
                   style={{ backgroundColor: "var(--secondary-blue)" }}
                 >
-                  Download All
+                  Open Comments
                 </button>
                 <button
                   onClick={() => toast.info("Tender information shared")}
@@ -243,7 +244,7 @@ export default function StaffTenderDetail() {
               {[
                 { id: "details", label: "Tender Details" },
                 { id: "requirements", label: "Requirements" },
-                { id: "documents", label: `Documents (${tender?.documents?.length || 0})` },
+                { id: "comments", label: `Comments${tender?.commentsCount ? ` (${tender.commentsCount})` : ""}` },
               ].map((t) => (
                 <button
                   key={t.id}
@@ -390,48 +391,11 @@ export default function StaffTenderDetail() {
           ) : (
             <Card className="p-6">
               <SectionTitle
-                title="Tender Documents"
-                subtitle={`${tender.documents?.length || 0} files available`}
-                action={
-                  <button
-                    onClick={handleDownloadAll}
-                    className="px-5 py-2.5 rounded-2xl font-semibold text-white active:scale-[0.99] transition"
-                    style={{ backgroundColor: "var(--accent-red)" }}
-                  >
-                    Download All (ZIP)
-                  </button>
-                }
+                title="Tender Discussion"
+                subtitle="Comments are visible to everyone. Tag people with @"
               />
-
-              <div className="mt-6 grid grid-cols-1 gap-3">
-                {(tender.documents || []).map((doc) => (
-                  <div key={doc.id} className="p-4 rounded-2xl border border-gray-200/70 transition">
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-start gap-3">
-                        <div className="w-10 h-10 rounded-2xl bg-blue-50 flex items-center justify-center text-xl">{renderNodeWithIcons("📄")}</div>
-                        <div>
-                          <p className="font-extrabold text-gray-900">{doc.name || doc.title}</p>
-                          <div className="flex flex-wrap items-center gap-2 mt-1 text-xs text-gray-500">
-                            <span>Uploaded by: {doc.uploadedBy || doc.uploadedByRole}</span>
-                            <span>•</span>
-                            <span>{fmtDate(doc.date || doc.uploadedAt)}</span>
-                            <span>•</span>
-                            <span>{doc.size || doc.fileSize}</span>
-                            <span>•</span>
-                            <span>{doc.pages || "—"} pages</span>
-                          </div>
-                        </div>
-                      </div>
-                      <button
-                        onClick={() => handleDownload(doc)}
-                        className="px-4 py-2 rounded-2xl text-sm font-semibold text-white active:scale-[0.99] transition"
-                        style={{ backgroundColor: "var(--secondary-blue)" }}
-                      >
-                        Download
-                      </button>
-                    </div>
-                  </div>
-                ))}
+              <div className="mt-6">
+                <TenderComments tenderId={(tender?.dbId ?? tender?.id) as any} />
               </div>
             </Card>
           )

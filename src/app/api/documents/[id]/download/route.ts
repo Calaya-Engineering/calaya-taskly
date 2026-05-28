@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
+import { recordAudit, getRequestIp } from "@/lib/audit";
+
+const DOWNLOAD_BLOCKED_ROLES = ["Staff", "Personnel", "Corp Member"];
+const PRIVILEGED_DOCUMENT_ROLES = ["MD", "Admin"];
 
 function parseDocId(id: string): number | null {
     const num = parseInt(id, 10);
@@ -74,6 +78,13 @@ export async function GET(
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    if (DOWNLOAD_BLOCKED_ROLES.includes(auth.role)) {
+        return NextResponse.json(
+            { error: "Your role can view documents but not download them. Contact your HOD or MD if you need the file." },
+            { status: 403 }
+        );
+    }
+
     const { id } = await params;
     const docId = parseDocId(id);
     if (docId == null) {
@@ -86,6 +97,10 @@ export async function GET(
         });
 
         if (!doc) {
+            return NextResponse.json({ error: "Document not found" }, { status: 404 });
+        }
+
+        if (doc.isPrivate && !PRIVILEGED_DOCUMENT_ROLES.includes(auth.role)) {
             return NextResponse.json({ error: "Document not found" }, { status: 404 });
         }
 
@@ -149,6 +164,15 @@ export async function GET(
             entity: "document",
             action: "downloaded",
             entityId: docId,
+        });
+
+        void recordAudit({
+            action: "DOCUMENT_DOWNLOADED",
+            actor: { email: auth.email, role: auth.role },
+            targetType: "DOCUMENT",
+            targetId: docId,
+            summary: `Downloaded document "${doc.title}"`,
+            ipAddress: getRequestIp(req),
         });
 
         // Determine filename and extension — prefer the original stored title/filename

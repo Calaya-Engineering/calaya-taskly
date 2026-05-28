@@ -41,6 +41,11 @@ model User {
   managedDepartmentRelations DepartmentHod[]    @relation("HodAssignments")
   dailyReportsSubmitted      DailyReport[]      @relation("SubmittedDailyReports")
   sectionSeen                UserSectionSeen[]
+  eventAcknowledgements      EventAcknowledgement[]
+  tenderComments             TenderComment[]
+  auditLogs                  AuditLog[]
+  mentionsReceived           Mention[]          @relation("MentionRecipient")
+  mentionsMade               Mention[]          @relation("MentionActor")
 }
 
 model AccessRequest {
@@ -103,6 +108,7 @@ model Task {
   updatedAt        DateTime         @updatedAt
   createdBy        User             @relation("CreatedBy", fields: [createdById], references: [id])
   assignments      TaskAssignment[]
+  acknowledgements EventAcknowledgement[]
 
   @@index([createdById])
   @@index([status])
@@ -125,6 +131,7 @@ model Tender {
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   documents   Document[]
+  comments    TenderComment[]
 
   @@index([status])
   @@index([department])
@@ -132,25 +139,91 @@ model Tender {
 }
 
 model Document {
-  id         Int      @id @default(autoincrement())
-  title      String
-  type       String
-  department String
-  uploadedBy String
-  scope      String
-  fileSize   String?
-  fileUrl    String?  @db.Text
-  downloads  Int      @default(0)
-  tenderId   Int?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  tender     Tender?  @relation(fields: [tenderId], references: [id])
+  id          Int      @id @default(autoincrement())
+  title       String
+  type        String
+  department  String
+  uploadedBy  String
+  scope       String
+  isPrivate   Boolean  @default(false)
+  description String?  @db.Text
+  fileSize    String?
+  fileUrl     String?  @db.Text
+  downloads   Int      @default(0)
+  tenderId    Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  tender      Tender?  @relation(fields: [tenderId], references: [id])
 
   @@index([type])
   @@index([department])
   @@index([scope])
+  @@index([isPrivate])
   @@index([createdAt])
   @@index([tenderId])
+}
+
+model EventAcknowledgement {
+  id             Int      @id @default(autoincrement())
+  taskId         Int
+  userId         Int
+  acknowledgedAt DateTime @default(now())
+  task           Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([taskId, userId])
+  @@index([taskId])
+  @@index([userId])
+}
+
+model TenderComment {
+  id        Int      @id @default(autoincrement())
+  tenderId  Int
+  userId    Int
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  tender    Tender   @relation(fields: [tenderId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([tenderId])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model AuditLog {
+  id         Int      @id @default(autoincrement())
+  userId     Int?
+  userEmail  String?
+  userRole   String?
+  action     String
+  targetType String?
+  targetId   Int?
+  summary    String?  @db.Text
+  metadata   String?  @db.Text
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([action])
+  @@index([targetType, targetId])
+  @@index([createdAt])
+}
+
+model Mention {
+  id                Int      @id @default(autoincrement())
+  mentionedUserId   Int
+  actorUserId       Int?
+  sourceType        String
+  sourceId          Int
+  context           String?  @db.Text
+  createdAt         DateTime @default(now())
+  mentionedUser     User     @relation("MentionRecipient", fields: [mentionedUserId], references: [id], onDelete: Cascade)
+  actorUser         User?    @relation("MentionActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  @@index([mentionedUserId])
+  @@index([sourceType, sourceId])
+  @@index([createdAt])
 }
 
 model DailyReport {

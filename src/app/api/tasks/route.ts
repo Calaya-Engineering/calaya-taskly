@@ -6,6 +6,7 @@ import { emitAnnouncementEvent } from "@/lib/announcement-events";
 import { createNotification } from "@/lib/notifications";
 import { getEventAudience } from "@/lib/notification-audiences";
 import { notifyTaskAssignments } from "@/lib/task-notifications";
+import { recordAudit, getRequestIp } from "@/lib/audit";
 import {
   assertHodAssigneeAccess,
   assertHodDepartmentAccess,
@@ -278,6 +279,32 @@ export async function POST(req: NextRequest) {
     emitTaskEvent({ type: "task:created", taskId: task.id });
     for (const a of task.assignments) {
       emitTaskEvent({ type: "task:assigned", taskId: task.id, userId: a.userId });
+    }
+
+    void recordAudit({
+      action: task.type === "MEETING" || task.type === "EVENT" ? "EVENT_CREATED" : "TASK_CREATED",
+      actor: { email: auth.email, role: auth.role },
+      targetType: task.type === "MEETING" || task.type === "EVENT" ? "EVENT" : "TASK",
+      targetId: task.id,
+      summary: `Created ${task.type?.toLowerCase() || "task"}: "${task.title}"`,
+      metadata: {
+        type: task.type,
+        priority: task.priority,
+        department: task.department,
+        assignments: task.assignments.length,
+      },
+      ipAddress: getRequestIp(req),
+    });
+    if (task.assignments.length > 0) {
+      void recordAudit({
+        action: "TASK_ASSIGNED",
+        actor: { email: auth.email, role: auth.role },
+        targetType: "TASK",
+        targetId: task.id,
+        summary: `Assigned task "${task.title}" to ${task.assignments.length} user(s)`,
+        metadata: { userIds: task.assignments.map((a) => a.userId) },
+        ipAddress: getRequestIp(req),
+      });
     }
 
     if (task.assignments.length > 0) {

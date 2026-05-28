@@ -21,6 +21,7 @@ export const AdminMenuItems = [
   { label: "Roles", path: "/admin-dashboard/roles", icon: <UserIcon />, group: "Management" },
   { label: "Accounts", path: "/admin-dashboard/accounts", icon: <UserIcon />, group: "Management" },
   { label: "Departments", path: "/admin-dashboard/departments", icon: <BuildingIcon />, group: "Management" },
+  { label: "Audit Log", path: "/admin-dashboard/audit-log", icon: <AlertIcon />, group: "Compliance" },
 ];
 
 export const HODMenuItems = [
@@ -70,6 +71,7 @@ export const MDMenuItems = [
   { label: "Announcements", path: "/md-dashboard/announcements", icon: <AnnouncementIcon />, group: "Communications" },
   { label: "Approvals", path: "/md-dashboard/approvals", icon: <ApprovalIcon />, group: "Workflow" },
   { label: "Escalations/Overdue", path: "/md-dashboard/escalations", icon: <AlertIcon />, group: "Workflow" },
+  { label: "Audit Log", path: "/md-dashboard/audit-log", icon: <AlertIcon />, group: "Compliance" },
   { label: "Notifications", path: "/md-dashboard/notifications", icon: <BellIcon />, group: "Account" },
   { label: "Profile", path: "/md-dashboard/profile", icon: <UserIcon />, group: "Account" },
 ];

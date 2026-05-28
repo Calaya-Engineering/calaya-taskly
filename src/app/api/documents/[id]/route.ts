@@ -4,8 +4,10 @@ import { getAuthFromRequest } from "@/lib/jwt";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
 import { createNotification } from "@/lib/notifications";
 import { getDisplayNameForUserValue } from "@/lib/user-display";
+import { recordAudit, getRequestIp } from "@/lib/audit";
 
 const DOCUMENT_RECIPIENT_ROLES = ["HOD", "Staff", "Personnel", "Corp Member", "Secretary"];
+const PRIVILEGED_DOCUMENT_ROLES = ["MD", "Admin"];
 
 function parseDocId(id: string): number | null {
   const num = parseInt(id, 10);
@@ -40,6 +42,9 @@ export async function GET(
     if (!doc) {
       return NextResponse.json({ error: "Document not found" }, { status: 404 });
     }
+    if (doc.isPrivate && !PRIVILEGED_DOCUMENT_ROLES.includes(auth.role)) {
+      return NextResponse.json({ error: "Document not found" }, { status: 404 });
+    }
 
     createNotification({
       actorEmail: auth.email,
@@ -58,6 +63,8 @@ export async function GET(
       date: doc.createdAt,
       size: doc.fileSize || "—",
       scope: doc.scope,
+      isPrivate: doc.isPrivate,
+      description: doc.description ?? "",
       downloads: doc.downloads,
       fileUrl: doc.fileUrl,
     });
@@ -120,7 +127,7 @@ export async function PATCH(
     }
 
     const updateData: Record<string, unknown> = {};
-    const { title, type, department, scope, fileSize, fileUrl, uploadedBy } = body;
+    const { title, type, department, scope, fileSize, fileUrl, uploadedBy, isPrivate, description } = body;
     if (typeof title === "string" && title.trim()) updateData.title = title.trim();
     if (typeof type === "string" && type.trim()) updateData.type = type.trim();
     if (typeof department === "string" && department.trim()) updateData.department = department.trim();
@@ -128,10 +135,17 @@ export async function PATCH(
     if (typeof fileSize === "string") updateData.fileSize = fileSize.trim() || null;
     if (typeof fileUrl === "string") updateData.fileUrl = fileUrl.trim() || null;
     if (typeof uploadedBy === "string" && uploadedBy.trim()) updateData.uploadedBy = uploadedBy.trim();
+    if (typeof isPrivate === "boolean") updateData.isPrivate = isPrivate;
+    if (typeof description === "string") updateData.description = description.trim() || null;
 
     if (Object.keys(updateData).length === 0) {
       return NextResponse.json({ error: "No valid fields to update" }, { status: 400 });
     }
+
+    const previous = await prisma.document.findUnique({
+      where: { id: docId },
+      select: { isPrivate: true, title: true },
+    });
 
     const doc = await prisma.document.update({
       where: { id: docId },
@@ -144,6 +158,31 @@ export async function PATCH(
       action: "updated",
       entityId: doc.id,
     });
+
+    void recordAudit({
+      action: "DOCUMENT_UPDATED",
+      actor: { email: auth.email, role: auth.role },
+      targetType: "DOCUMENT",
+      targetId: doc.id,
+      summary: `Updated document "${doc.title}"`,
+      metadata: { fields: Object.keys(updateData) },
+      ipAddress: getRequestIp(req),
+    });
+    if (
+      previous &&
+      typeof updateData.isPrivate === "boolean" &&
+      previous.isPrivate !== updateData.isPrivate
+    ) {
+      void recordAudit({
+        action: "DOCUMENT_PRIVACY_CHANGED",
+        actor: { email: auth.email, role: auth.role },
+        targetType: "DOCUMENT",
+        targetId: doc.id,
+        summary: `Document "${doc.title}" privacy set to ${updateData.isPrivate ? "PRIVATE" : "non-private"}`,
+        metadata: { from: previous.isPrivate, to: updateData.isPrivate },
+        ipAddress: getRequestIp(req),
+      });
+    }
 
     createNotification({
       actorEmail: auth.email,
@@ -172,6 +211,8 @@ export async function PATCH(
       date: doc.createdAt,
       size: doc.fileSize || "—",
       scope: doc.scope,
+      isPrivate: doc.isPrivate,
+      description: doc.description ?? "",
       downloads: doc.downloads,
       fileUrl: doc.fileUrl ?? null,
     });

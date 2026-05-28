@@ -8,6 +8,7 @@ import Layout from "@/components/Layout";
 import { StaffMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
+import EventAcknowledgement from "@/components/EventAcknowledgement";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -710,59 +711,11 @@ export default function StaffEventDetail() {
 
           {/* SIDE */}
           <div className="space-y-6">
-            {/* RSVP Status */}
+            {/* Acknowledgement */}
             <Card className="p-6">
-              <SectionTitle title="Your RSVP Status" />
-
-              <div className="mt-4 space-y-4">
-                <div className={`p-5 rounded-2xl border text-center ${rsvpStatus === 'ACCEPTED' ? 'border-emerald-200 bg-emerald-50' :
-                    rsvpStatus === 'TENTATIVE' ? 'border-amber-200 bg-amber-50' :
-                      rsvpStatus === 'DECLINED' ? 'border-red-200 bg-red-50' : 'border-gray-200 bg-gray-50'
-                  }`}>
-                  <p className="text-sm text-gray-600">Current Status</p>
-                  <p className={`text-xl font-extrabold mt-1 ${rsvpStatus === 'ACCEPTED' ? 'text-emerald-700' :
-                      rsvpStatus === 'TENTATIVE' ? 'text-amber-700' :
-                        rsvpStatus === 'DECLINED' ? 'text-red-700' : 'text-gray-700'
-                    }`}>
-                    {rsvpStatus}
-                  </p>
-                </div>
-
-                <div className="pt-4 border-t border-gray-200/70">
-                  <p className="text-sm font-semibold text-gray-700 mb-3">Update Your Response:</p>
-                  <div className="space-y-2">
-                    <button
-                      onClick={() => handleRSVP('ACCEPTED')}
-                      className={`w-full px-4 py-3 rounded-2xl text-sm font-semibold transition active:scale-[0.99] ${rsvpStatus === 'ACCEPTED'
-                          ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200'
-                          : 'border bg-white hover:bg-gray-50'
-                        }`}
-                      style={rsvpStatus !== 'ACCEPTED' ? { borderColor: "rgba(16,185,129,0.35)", color: "#10B981" } : {}}
-                    >
-                      Accept
-                    </button>
-                    <button
-                      onClick={() => handleRSVP('TENTATIVE')}
-                      className={`w-full px-4 py-3 rounded-2xl text-sm font-semibold transition active:scale-[0.99] ${rsvpStatus === 'TENTATIVE'
-                          ? 'bg-amber-50 text-amber-700 ring-1 ring-amber-200'
-                          : 'border bg-white hover:bg-gray-50'
-                        }`}
-                      style={rsvpStatus !== 'TENTATIVE' ? { borderColor: "rgba(245,158,11,0.35)", color: "#F59E0B" } : {}}
-                    >
-                      Tentative
-                    </button>
-                    <button
-                      onClick={() => handleRSVP('DECLINED')}
-                      className={`w-full px-4 py-3 rounded-2xl text-sm font-semibold transition active:scale-[0.99] ${rsvpStatus === 'DECLINED'
-                          ? 'bg-red-50 text-red-700 ring-1 ring-red-200'
-                          : 'border bg-white hover:bg-gray-50'
-                        }`}
-                      style={rsvpStatus !== 'DECLINED' ? { borderColor: "rgba(239,68,68,0.35)", color: "#EF4444" } : {}}
-                    >
-                      Decline
-                    </button>
-                  </div>
-                </div>
+              <SectionTitle title="Acknowledge" subtitle="Confirm you've seen this" />
+              <div className="mt-4">
+                <EventAcknowledgement taskId={eventId as string} showList />
               </div>
             </Card>
 

@@ -4,6 +4,7 @@ import { getAuthFromRequest } from "@/lib/jwt";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
 import { createNotification } from "@/lib/notifications";
 import { getTenderAudience } from "@/lib/notification-audiences";
+import { recordAudit, getRequestIp } from "@/lib/audit";
 import {
   buildUserDisplayLookup,
   getDisplayNameForUserValue,
@@ -161,7 +162,7 @@ export async function GET(req: NextRequest) {
             }
           : {}),
         _count: {
-          select: { documents: true },
+          select: { documents: true, comments: true },
         },
       },
     });
@@ -216,6 +217,7 @@ export async function GET(req: NextRequest) {
             }))
           : t._count.documents,
         documentsCount: t._count.documents,
+        commentsCount: t._count.comments,
         submissions: includeDocuments
           ? tenderDocuments.filter((document) => isSubmissionDocument(document.type)).length
           : 0,
@@ -286,6 +288,16 @@ export async function POST(req: NextRequest) {
       entity: "tender",
       action: "created",
       entityId: tender.id,
+    });
+
+    void recordAudit({
+      action: "TENDER_CREATED",
+      actor: { email: auth.email, role: auth.role },
+      targetType: "TENDER",
+      targetId: tender.id,
+      summary: `Created tender "${tender.title}" (${tender.referenceNo})`,
+      metadata: { closingDate: tender.closingDate, department: tender.department },
+      ipAddress: getRequestIp(req),
     });
 
     createNotification({

@@ -12,6 +12,7 @@ import { toast } from "@/lib/toast";
 import { fetchWithAuth } from "@/lib/api";
 import { formatFileSize } from "@/lib/file-size";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
+import MentionInput from "@/components/MentionInput";
 
 
 const documentTypes = [
@@ -108,6 +109,7 @@ export default function MDCreateDocument() {
     documentType: "",
     department: "",
     scope: "PRIVATE",
+    isPrivate: false,
     selectedDepartments: [],
     selectedHODs: [],
     selectedUsers: [],
@@ -243,6 +245,8 @@ export default function MDCreateDocument() {
           type: formData.documentType,
           department: formData.department,
           scope: formData.scope,
+          isPrivate: formData.isPrivate,
+          description: formData.description?.trim() || undefined,
           fileSize: fileSizeText,
           fileUrl,
           uploadedBy: null,
@@ -413,14 +417,40 @@ export default function MDCreateDocument() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Description</label>
-                      <textarea
-                        rows={5}
-                        className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-100"
-                        placeholder="Describe the document content..."
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Description
+                        <span className="ml-2 text-xs font-normal text-gray-400">
+                          Type @ to mention someone — they'll be notified.
+                        </span>
+                      </label>
+                      <MentionInput
                         value={formData.description}
-                        onChange={(e) => setFormData((p) => ({ ...p, description: e.target.value }))}
+                        onChange={(next) => setFormData((p) => ({ ...p, description: next }))}
+                        placeholder="Describe the document content. Use @ to tag colleagues."
+                        minRows={5}
                       />
+                    </div>
+
+                    <div className="rounded-2xl border border-amber-200 bg-amber-50/60 p-4">
+                      <label className="flex items-start gap-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          className="mt-1 h-4 w-4 rounded border-amber-300"
+                          checked={formData.isPrivate}
+                          onChange={(e) =>
+                            setFormData((p) => ({ ...p, isPrivate: e.target.checked }))
+                          }
+                        />
+                        <div>
+                          <div className="text-sm font-extrabold text-amber-800">
+                            Mark as private
+                          </div>
+                          <div className="text-xs text-amber-700/90 mt-1">
+                            When checked, only MD and Admin can see or open this document. Useful for board minutes,
+                            legal correspondence, salary letters, etc.
+                          </div>
+                        </div>
+                      </label>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import EntityQuickActions from "@/components/EntityQuickActions";
+import EventAcknowledgement from "@/components/EventAcknowledgement";
 import Layout from "@/components/Layout";
 import { MDMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
@@ -777,6 +778,15 @@ export default function MDEventDetail() {
             </div>
           </Card>
         ) : null}
+
+        {/* Acknowledgements (staff who confirmed seeing the event) */}
+        <div className="rounded-2xl border border-gray-200/70 bg-white p-6">
+          <h3 className="text-lg font-extrabold mb-1" style={{ color: "var(--primary-blue)" }}>
+            Acknowledgements
+          </h3>
+          <p className="text-sm text-gray-500 mb-4">Staff who have confirmed they've seen this event.</p>
+          <EventAcknowledgement taskId={eventId as string} showList isManager />
+        </div>
 
         {/* Quick Actions (MD style buttons) */}
         <EntityQuickActions

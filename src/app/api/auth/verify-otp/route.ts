@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifyOtp } from "../otp-store";
 import { signAuthToken } from "@/lib/jwt";
 import { DEMO_CREDENTIALS, getRouteForRole } from "@/lib/auth-config";
+import { recordAudit, getRequestIp } from "@/lib/audit";
 
 export async function POST(req: NextRequest) {
   try {
@@ -42,6 +43,13 @@ export async function POST(req: NextRequest) {
     }
 
     const token = await signAuthToken({ email: user.email, role: user.role });
+
+    void recordAudit({
+      action: "USER_LOGIN",
+      actor: { email: user.email, role: user.role },
+      summary: `Login successful for ${user.email}`,
+      ipAddress: getRequestIp(req),
+    });
 
     return NextResponse.json({
       success: true,

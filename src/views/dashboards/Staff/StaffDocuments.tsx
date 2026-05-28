@@ -175,17 +175,7 @@ export default function StaffDocuments() {
     return { total, publicCount, departmentCount, totalDownloads };
   }, [documentsData]);
 
-  const handleDownload = (doc, e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!doc.id) {
-      toast.info("No file available for download");
-      return;
-    }
-    const token = getAuthToken();
-    const url = `/api/documents/${doc.id}/download${token ? `?token=${token}` : ""}`;
-    window.open(url, "_blank");
-  };
+  // Staff are view-only — downloads are disabled per company policy.
 
   const clearFilters = () => {
     setFilter('all');
@@ -222,7 +212,7 @@ export default function StaffDocuments() {
                 <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
                   Documents
                 </h1>
-                <p className="text-gray-600 mt-2">Access and download documents relevant to your work.</p>
+                <p className="text-gray-600 mt-2">Browse documents relevant to your work. Tap a card to view details.</p>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-2">
@@ -355,28 +345,17 @@ export default function StaffDocuments() {
 
               <div className="flex items-center justify-between pt-4 border-t border-gray-200/70">
                 <div className="flex items-center gap-2 text-sm text-gray-500">
-                  <span>⬇️ {doc.downloads}</span>
                   {doc.tasks.length > 0 && (
-                    <>
-                      <span className="text-gray-300">•</span>
-                      <span>{renderNodeWithIcons("📋 ")}{doc.tasks.length} task{doc.tasks.length > 1 ? 's' : ''}</span>
-                    </>
+                    <span>{renderNodeWithIcons("📋 ")}{doc.tasks.length} task{doc.tasks.length > 1 ? 's' : ''}</span>
                   )}
                 </div>
 
                 <div className="flex gap-2">
-                  <button
-                    onClick={(e) => handleDownload(doc, e)}
-                    className="px-4 py-2 rounded-2xl text-sm font-semibold text-white active:scale-[0.99] transition"
-                    style={{ backgroundColor: "var(--secondary-blue)" }}
-                  >
-                    Download
-                  </button>
                   <Link
                     href={`/staff-dashboard/document/${doc.id}`}
                     onClick={(e) => e.stopPropagation()}
-                    className="px-4 py-2 rounded-2xl text-sm font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
-                    style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}
+                    className="px-4 py-2 rounded-2xl text-sm font-semibold text-white active:scale-[0.99] transition"
+                    style={{ backgroundColor: "var(--secondary-blue)" }}
                   >
                     View
                   </Link>
@@ -431,7 +410,7 @@ export default function StaffDocuments() {
         */}
 
         {/* QUICK STATS */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card className="p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -474,19 +453,6 @@ export default function StaffDocuments() {
             </div>
           </Card>
 
-          <Card className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs text-gray-500 font-semibold">Total Downloads</p>
-                <p className="text-3xl font-extrabold mt-2" style={{ color: "#10B981" }}>
-                  {stats.totalDownloads}
-                </p>
-              </div>
-              <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "rgba(16,185,129,0.1)" }}>
-                <span style={{ color: "#10B981" }} className="text-xl">⬇️</span>
-              </div>
-            </div>
-          </Card>
         </div>
       </div>
     </Layout>

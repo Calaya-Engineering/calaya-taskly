@@ -21,6 +21,8 @@ import {
   notifyTaskAssignments,
   notifyTaskUpdated,
 } from "@/lib/task-notifications";
+import { recordAudit, getRequestIp } from "@/lib/audit";
+import { processMentions, stripMentionTokens } from "@/lib/mentions";
 
 const taskInclude = {
   createdBy: { select: { id: true, email: true, name: true, role: true } },
@@ -266,6 +268,49 @@ export async function PATCH(
       previousStatus,
       nextStatus: task.status,
     });
+
+    if (previousStatus !== task.status) {
+      void recordAudit({
+        action:
+          task.status === "COMPLETED"
+            ? "TASK_COMPLETED"
+            : task.status === "PENDING"
+              ? "TASK_UPDATED"
+              : "TASK_UPDATED",
+        actor: { email: auth.email, role: auth.role },
+        targetType: "TASK",
+        targetId: task.id,
+        summary: `Task "${task.title}" status changed: ${previousStatus} → ${task.status}${
+          comment?.trim() ? ` — ${stripMentionTokens(comment).slice(0, 200)}` : ""
+        }`,
+        metadata: { previousStatus, nextStatus: task.status },
+        ipAddress: getRequestIp(req),
+      });
+    } else if (contentChangedKeys.size > 0) {
+      void recordAudit({
+        action: "TASK_UPDATED",
+        actor: { email: auth.email, role: auth.role },
+        targetType: "TASK",
+        targetId: task.id,
+        summary: `Task "${task.title}" updated`,
+        metadata: { fields: Array.from(contentChangedKeys) },
+        ipAddress: getRequestIp(req),
+      });
+    }
+
+    if (comment?.trim()) {
+      void processMentions({
+        text: comment,
+        sourceType: "TASK_COMPLETION",
+        sourceId: task.id,
+        actor: { email: auth.email, role: auth.role, name: auth.name as string | undefined },
+        notificationActionType: "MENTION_TASK",
+        notificationMessage: `${auth.name || auth.email.split("@")[0]} mentioned you on task "${task.title}"`,
+        emailSubject: `Mentioned on task — ${task.title}`,
+        linkPath: `/open/item?type=task&id=${task.id}`,
+        context: stripMentionTokens(comment).slice(0, 200),
+      });
+    }
 
     // Put all meetings/events in the announcement table as well
     if (task.type === "MEETING" || task.type === "EVENT") {

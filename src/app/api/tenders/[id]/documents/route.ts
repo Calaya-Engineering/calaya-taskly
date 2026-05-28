@@ -113,9 +113,25 @@ function normalizeUploadCandidates(input: unknown) {
 }
 
 /**
- * POST /api/tenders/[id]/documents - Upload one or more tender workspace documents
+ * POST /api/tenders/[id]/documents - DISABLED.
+ *
+ * Per stakeholder decision, tenders no longer accept document uploads — only comments.
+ * Use POST /api/tenders/[id]/comments instead.
  */
 export async function POST(
+  _req: NextRequest,
+  _ctx: { params: Promise<{ id: string }> },
+) {
+  return NextResponse.json(
+    {
+      error:
+        "Tender document uploads are disabled. Please use the tender comments thread to share updates.",
+    },
+    { status: 410 },
+  );
+}
+
+async function _disabledPost(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {

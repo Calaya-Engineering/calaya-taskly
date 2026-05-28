@@ -8,6 +8,7 @@ import { MDMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
 import { fetchWithAuth, getAuthToken } from "@/lib/api";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
+import TenderComments from "@/components/TenderComments";
 
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -174,14 +175,6 @@ export default function MDTenderDetail() {
                     </button>
                   </Link>
 
-                  <Link href={`/md-dashboard/tender-documents/${tenderData.dbId}`}>
-                    <button
-                      className="px-5 py-3 rounded-2xl font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
-                      style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}
-                    >
-                      Manage Documents
-                    </button>
-                  </Link>
                 </div>
               ) : null}
             </div>
@@ -254,47 +247,12 @@ export default function MDTenderDetail() {
 
             <Card className="p-6">
               <SectionTitle
-                title="Tender Documents"
-                subtitle="Documents currently attached to this tender"
-                right={
-                  tenderData.documents?.length ? (
-                    <Link href={`/md-dashboard/tender-documents/${tenderData.dbId}`} className="text-sm font-semibold hover:underline" style={{ color: "var(--primary-blue)" }}>
-                      Open document manager
-                    </Link>
-                  ) : null
-                }
+                title="Tender Discussion"
+                subtitle="Comments are visible to everyone. Tag people with @"
               />
-
-              {tenderData.documents?.length ? (
-                <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {tenderData.documents.map((doc) => (
-                    <div key={doc.id} className="p-4 rounded-2xl border border-gray-200/70 bg-white transition">
-                      <div className="flex items-start gap-3">
-                        <div className="w-11 h-11 rounded-2xl bg-blue-50 flex items-center justify-center text-xl">{renderNodeWithIcons("📄")}</div>
-                        <div className="min-w-0 flex-1">
-                          <h4 className="font-extrabold text-sm text-gray-900 truncate">{doc.name}</h4>
-                          <p className="text-xs text-gray-500 mt-1">{doc.size}</p>
-                          <p className="text-xs text-gray-400 mt-1">Uploaded: {doc.uploadedAt}</p>
-                        </div>
-                      </div>
-
-                      <div className="mt-4">
-                        <button
-                          onClick={() => handleDownload(doc)}
-                          className="w-full px-3 py-2 rounded-2xl text-xs font-semibold text-white active:scale-[0.99] transition"
-                          style={{ backgroundColor: "var(--secondary-blue)" }}
-                        >
-                          Download
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="mt-6 rounded-2xl border border-gray-200/70 p-8 text-center text-gray-500">
-                  No documents have been attached to this tender yet.
-                </div>
-              )}
+              <div className="mt-6">
+                <TenderComments tenderId={tenderData.dbId} />
+              </div>
             </Card>
           </>
         )}

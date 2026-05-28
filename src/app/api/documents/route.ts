@@ -4,8 +4,11 @@ import { getAuthFromRequest } from "@/lib/jwt";
 import { createNotification } from "@/lib/notifications";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
 import { buildUserDisplayLookup, getDisplayNameForUserValue } from "@/lib/user-display";
+import { recordAudit, getRequestIp } from "@/lib/audit";
+import { processMentions, stripMentionTokens } from "@/lib/mentions";
 
 const DOCUMENT_RECIPIENT_ROLES = ["HOD", "Staff", "Personnel", "Corp Member", "Secretary"];
+const PRIVILEGED_DOCUMENT_ROLES = ["MD", "Admin"];
 
 /**
  * GET /api/documents - List documents (MD, HOD, Secretary, Staff - authenticated)
@@ -34,6 +37,9 @@ export async function GET(req: NextRequest) {
       const offset = Number.isFinite(parsedOffset) ? Math.max(parsedOffset, 0) : 0;
 
       const where: any = { NOT: [{ type: "Report" }, { scope: "TENDER" }] };
+      if (!PRIVILEGED_DOCUMENT_ROLES.includes(auth.role)) {
+        where.isPrivate = false;
+      }
       if (type && type !== "All Types") where.type = type;
       if (scope && scope !== "All Scopes") where.scope = scope;
       if (department && department !== "all") {
@@ -68,6 +74,8 @@ export async function GET(req: NextRequest) {
           department: true,
           uploadedBy: true,
           scope: true,
+          isPrivate: true,
+          description: true,
           fileSize: true,
           fileUrl: true,
           downloads: true,
@@ -88,6 +96,9 @@ export async function GET(req: NextRequest) {
         date: d.createdAt,
         size: d.fileSize || "—",
         scope: d.scope,
+        isPrivate: d.isPrivate,
+        description: d.description ?? "",
+        descriptionDisplay: stripMentionTokens(d.description),
         downloads: d.downloads,
         fileUrl: d.fileUrl ?? null,
       }));
@@ -127,7 +138,7 @@ export async function POST(req: NextRequest) {
     try {
       const body = await req.json().catch(() => ({}));
       const authName = typeof auth.name === "string" ? auth.name.trim() : "";
-      const { title, type, department, scope, fileSize, fileUrl, uploadedBy } = body as {
+      const { title, type, department, scope, fileSize, fileUrl, uploadedBy, isPrivate, description } = body as {
         title?: string;
         type?: string;
         department?: string;
@@ -135,6 +146,8 @@ export async function POST(req: NextRequest) {
         fileSize?: string;
         fileUrl?: string;
         uploadedBy?: string;
+        isPrivate?: boolean;
+        description?: string;
       };
 
       if (!title || typeof title !== "string" || !title.trim()) {
@@ -150,12 +163,18 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: "Scope is required" }, { status: 400 });
       }
 
+      const normalizedDescription =
+        typeof description === "string" && description.trim() ? description : null;
+      const markedPrivate = Boolean(isPrivate);
+
       const doc = await prisma.document.create({
         data: {
           title: title.trim(),
           type: type.trim(),
           department: department.trim(),
           scope: scope.trim(),
+          isPrivate: markedPrivate,
+          description: normalizedDescription,
           uploadedBy:
             (uploadedBy && typeof uploadedBy === "string"
               ? uploadedBy.trim()
@@ -166,6 +185,30 @@ export async function POST(req: NextRequest) {
         },
       });
 
+      void recordAudit({
+        action: "DOCUMENT_UPLOADED",
+        actor: { email: auth.email, role: auth.role },
+        targetType: "DOCUMENT",
+        targetId: doc.id,
+        summary: `Uploaded document "${doc.title}" (${doc.type}, scope: ${doc.scope}${markedPrivate ? ", PRIVATE" : ""})`,
+        metadata: { department: doc.department, scope: doc.scope, isPrivate: markedPrivate },
+        ipAddress: getRequestIp(req),
+      });
+
+      if (normalizedDescription) {
+        void processMentions({
+          text: normalizedDescription,
+          sourceType: "DOCUMENT",
+          sourceId: doc.id,
+          actor: { email: auth.email, role: auth.role, name: authName },
+          notificationActionType: "MENTION_DOCUMENT",
+          notificationMessage: `${authName || auth.email.split("@")[0]} mentioned you in document: ${doc.title}`,
+          emailSubject: `You were mentioned in document — ${doc.title}`,
+          linkPath: `/open/item?type=document&id=${doc.id}`,
+          context: stripMentionTokens(normalizedDescription).slice(0, 200),
+        });
+      }
+
       emitRealtimeEvent({
         type: "document:created",
         entity: "document",
@@ -173,23 +216,39 @@ export async function POST(req: NextRequest) {
         entityId: doc.id,
       });
 
-      // Fire and forget notification
-      createNotification({
-        actorEmail: auth.email,
-        actionType: 'UPLOAD_DOCUMENT',
-        targetId: doc.id,
-        message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) uploaded a document: ${doc.title}`,
-        recipients: {
-          roles: DOCUMENT_RECIPIENT_ROLES,
-          ...(doc.scope.toUpperCase().includes("ALL") || doc.scope.toUpperCase().includes("COMPANY")
-            ? {}
-            : { departments: [doc.department] }),
-          includeActor: false,
-        },
-        sendEmail: true,
-        emailSubject: `Document Uploaded — ${doc.title}`,
-        linkPath: `/open/item?type=document&id=${doc.id}`,
-      });
+      // Private documents are only visible to MD/Admin — restrict notifications likewise.
+      if (markedPrivate) {
+        createNotification({
+          actorEmail: auth.email,
+          actionType: "UPLOAD_DOCUMENT",
+          targetId: doc.id,
+          message: `${auth.name || auth.email.split("@")[0]} (${auth.role}) uploaded a PRIVATE document: ${doc.title}`,
+          recipients: {
+            roles: ["MD", "Admin"],
+            includeActor: false,
+          },
+          sendEmail: true,
+          emailSubject: `Private Document Uploaded — ${doc.title}`,
+          linkPath: `/open/item?type=document&id=${doc.id}`,
+        });
+      } else {
+        createNotification({
+          actorEmail: auth.email,
+          actionType: 'UPLOAD_DOCUMENT',
+          targetId: doc.id,
+          message: `${auth.name || auth.email.split('@')[0]} (${auth.role}) uploaded a document: ${doc.title}`,
+          recipients: {
+            roles: DOCUMENT_RECIPIENT_ROLES,
+            ...(doc.scope.toUpperCase().includes("ALL") || doc.scope.toUpperCase().includes("COMPANY")
+              ? {}
+              : { departments: [doc.department] }),
+            includeActor: false,
+          },
+          sendEmail: true,
+          emailSubject: `Document Uploaded — ${doc.title}`,
+          linkPath: `/open/item?type=document&id=${doc.id}`,
+        });
+      }
 
       return NextResponse.json({
         id: `DOC-${String(doc.id).padStart(3, "0")}`,
@@ -201,6 +260,8 @@ export async function POST(req: NextRequest) {
         date: doc.createdAt,
         size: doc.fileSize || "—",
         scope: doc.scope,
+        isPrivate: doc.isPrivate,
+        description: doc.description ?? "",
         downloads: doc.downloads,
       });
     } catch (error: any) {

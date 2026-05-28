@@ -68,6 +68,7 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const role = searchParams.get("role");
+    const search = searchParams.get("search")?.trim() || "";
     const requestedDepartments = searchParams.getAll("department").map((value) => value.trim()).filter(Boolean);
     const parsedLimit = Number.parseInt(searchParams.get("limit") || "100", 10);
     const parsedOffset = Number.parseInt(searchParams.get("offset") || "0", 10);
@@ -80,8 +81,18 @@ export async function GET(req: NextRequest) {
       return NextResponse.json([]);
     }
 
-    const where: { role?: string; department?: string | { in: string[] } | null } = {};
+    const where: {
+      role?: string;
+      department?: string | { in: string[] } | null;
+      OR?: any[];
+    } = {};
     if (role) where.role = role;
+    if (search) {
+      where.OR = [
+        { name: { contains: search } },
+        { email: { contains: search } },
+      ];
+    }
 
     if (requestedDepartments.length > 0) {
       const allowedDepartments = isHod
