@@ -41,10 +41,10 @@ export default function MentionText({ text, className = "" }: Props) {
         part.type === "mention" ? (
           <span
             key={idx}
-            className="inline-flex items-center px-1.5 py-0.5 mx-0.5 rounded-md font-semibold text-[12px]"
+            className="inline-flex items-center px-1.5 py-0.5 rounded-md font-semibold text-[12px]"
             style={{
-              backgroundColor: "var(--primary-blue-100)",
-              color: "var(--primary-blue)",
+              backgroundColor: "rgba(44,75,155,0.10)",
+              color: "var(--primary-blue, #2C4B9B)",
             }}
             title={part.userId ? `User #${part.userId}` : undefined}
           >

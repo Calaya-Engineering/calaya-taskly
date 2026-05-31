@@ -171,88 +171,69 @@ export default function SecretaryDashboard() {
     <Layout menuItems={SecretaryMenuItems} userRole="Secretary">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* HERO */}
-        <section className="ct-card p-6 md:p-8">
-          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-5">
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="ct-pill" style={{ background: "var(--tile-blue-bg)", color: "var(--tile-blue-fg)" }}>
-                  <span className="inline-flex items-center gap-1.5">
-                    <CalendarIcon /> {today}
-                  </span>
-                </span>
-              </div>
-              <h1
-                className="text-[28px] md:text-[34px] font-bold tracking-tight leading-[1.1]"
-                style={{ color: "var(--text-primary)", letterSpacing: "-0.025em" }}
-              >
-                Welcome Back, Secretary <span aria-hidden="true">👋</span>
-              </h1>
-              <p
-                className="mt-2 text-[15px]"
-                style={{ color: "var(--text-secondary)", maxWidth: "62ch" }}
-              >
-                Manage daily reports, documents, and tender tracking for the company.
-              </p>
-            </div>
+        <Card className="overflow-hidden">
+          <div
+            className="p-6 md:p-8"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(44,75,155,0.10) 0%, rgba(109,198,223,0.18) 50%, rgba(237,50,55,0.06) 100%)",
+            }}
+          >
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <Pill><span className="inline-flex items-center gap-1.5"><CalendarIcon /> {today}</span></Pill>
+                </div>
 
-            <div className="flex flex-col sm:flex-row gap-2">
-              <Link href="/secretary-dashboard/upload-report">
-                <button className="ct-btn" style={{ backgroundColor: "var(--accent-red)", color: "#fff" }}>
-                  Upload Daily Report
-                </button>
-              </Link>
-              <Link href="/secretary-dashboard/task-reports">
-                <button className="ct-btn ct-btn-secondary">View Task Reports</button>
-              </Link>
+                <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
+                  Welcome, Secretary
+                </h1>
+                <p className="text-gray-600 mt-2 max-w-2xl">
+                  Manage daily reports, documents, and tender tracking for the company
+                </p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-2">
+                <Link href="/secretary-dashboard/upload-report">
+                  <button className={btnSolid} style={{ backgroundColor: "var(--accent-red)" }}>
+                    Upload Daily Report
+                  </button>
+                </Link>
+                <Link href="/secretary-dashboard/task-reports">
+                  <button className={btnOutline} style={{ borderColor: "var(--secondary-blue)", color: "var(--primary-blue)" }}>
+                    View Task Reports
+                  </button>
+                </Link>
+              </div>
             </div>
           </div>
-        </section>
+        </Card>
 
         {/* STATS GRID */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
-          {stats.map((stat, index) => {
-            const palette = [
-              { bg: "var(--tile-blue-bg)",   fg: "var(--tile-blue-fg)" },
-              { bg: "var(--tile-orange-bg)", fg: "var(--tile-orange-fg)" },
-              { bg: "var(--tile-green-bg)",  fg: "var(--tile-green-fg)" },
-              { bg: "var(--tile-purple-bg)", fg: "var(--tile-purple-fg)" },
-            ];
-            const tone = palette[index % palette.length];
-            return (
-              <Link key={index} href={stat.link} className="block">
-                <div className="ct-card ct-card-hover p-5">
-                  <div className="flex items-start justify-between gap-3">
-                    <span
-                      className="ct-stat-icon [&_svg]:w-5 [&_svg]:h-5"
-                      style={{ backgroundColor: tone.bg, color: tone.fg }}
-                      aria-hidden="true"
-                    >
-                      {stat.icon}
-                    </span>
-                  </div>
-                  <div className="mt-3">
-                    <div
-                      className="text-[30px] font-bold leading-none tracking-tight"
-                      style={{ color: "var(--text-primary)", letterSpacing: "-0.025em" }}
-                    >
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {stats.map((stat, index) => (
+            <Link key={index} href={stat.link} className="block">
+              <Card className="p-6 shadow-none transition cursor-pointer">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-xs text-gray-500 font-semibold">{stat.title}</p>
+                    <p className="text-3xl font-extrabold mt-2" style={{ color: stat.color }}>
                       {stat.value}
-                    </div>
-                    <div
-                      className="text-[12px] mt-1.5 font-medium"
-                      style={{ color: "var(--text-tertiary)" }}
-                    >
-                      {stat.title}
-                    </div>
+                    </p>
                   </div>
-                  <div className="mt-4">
-                    <span className="ct-pill" style={{ background: tone.bg, color: tone.fg }}>
-                      {stat.change} from last month
-                    </span>
+                  <div
+                    className="w-12 h-12 rounded-2xl flex items-center justify-center [&_svg]:w-6 [&_svg]:h-6"
+                    style={{ backgroundColor: `${stat.color}18`, color: stat.color }}
+                  >
+                    {stat.icon}
                   </div>
                 </div>
-              </Link>
-            );
-          })}
+                <div className="mt-4">
+                  <Pill tone={stat.tone}>{stat.change} from last month</Pill>
+                </div>
+              </Card>
+            </Link>
+          ))}
         </div>
 
         {/* QUICK ACTIONS */}

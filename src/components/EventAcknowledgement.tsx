@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Check } from "lucide-react";
 import { fetchWithAuth } from "@/lib/api";
 import { toast } from "@/lib/toast";
 
@@ -42,12 +41,7 @@ type Props = {
   itemLabel?: string;
 };
 
-export default function EventAcknowledgement({
-  taskId,
-  showList = false,
-  isManager = false,
-  itemLabel = "event",
-}: Props) {
+export default function EventAcknowledgement({ taskId, showList = false, isManager = false, itemLabel = "event" }: Props) {
   const [state, setState] = useState<State | null>(null);
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -78,9 +72,7 @@ export default function EventAcknowledgement({
     if (!numericId) return;
     setSubmitting(true);
     try {
-      const res = await fetchWithAuth(`/api/tasks/${numericId}/acknowledge`, {
-        method: "POST",
-      });
+      const res = await fetchWithAuth(`/api/tasks/${numericId}/acknowledge`, { method: "POST" });
       if (res.ok) {
         const data = await res.json();
         toast.success(data.isNew ? "Acknowledged" : "Already acknowledged");
@@ -100,25 +92,13 @@ export default function EventAcknowledgement({
   const me = state?.acknowledgedByMe ?? false;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <div className="flex items-center justify-between gap-3">
-        <div className="min-w-0">
-          <div
-            className="text-[22px] font-bold tracking-tight leading-none"
-            style={{ color: "var(--text-primary)", letterSpacing: "-0.02em" }}
-          >
-            {count}
-            <span
-              className="text-[13px] font-medium ml-1.5"
-              style={{ color: "var(--text-tertiary)" }}
-            >
-              acknowledged
-            </span>
+        <div>
+          <div className="text-sm font-extrabold text-gray-900">
+            {count} acknowledged
           </div>
-          <div
-            className="text-[12px] mt-1.5"
-            style={{ color: "var(--text-tertiary)" }}
-          >
+          <div className="text-xs text-gray-500">
             {me
               ? `You've acknowledged this ${itemLabel}.`
               : `Confirm you've seen this ${itemLabel}.`}
@@ -128,75 +108,36 @@ export default function EventAcknowledgement({
           type="button"
           onClick={handleAcknowledge}
           disabled={submitting || me}
-          className="ct-btn"
-          style={{
-            backgroundColor: me ? "var(--tile-green-fg)" : "var(--primary-blue)",
-            color: "#fff",
-            paddingLeft: 18,
-            paddingRight: 18,
-          }}
+          className="px-4 py-2 rounded-2xl text-sm font-semibold text-white transition active:scale-[0.99] disabled:opacity-60"
+          style={{ backgroundColor: me ? "#10B981" : "var(--primary-blue)" }}
         >
-          {me ? (
-            <>
-              <Check className="h-4 w-4" /> Acknowledged
-            </>
-          ) : submitting ? (
-            "Saving…"
-          ) : (
-            "Acknowledge"
-          )}
+          {me ? "Acknowledged ✓" : submitting ? "Saving…" : "Acknowledge"}
         </button>
       </div>
 
       {(showList || isManager) && state && state.acknowledgements.length > 0 && (
-        <div
-          className="pt-4"
-          style={{ borderTop: "1px solid var(--separator)" }}
-        >
-          <div
-            className="text-[10px] font-semibold uppercase tracking-[0.08em] mb-3"
-            style={{ color: "var(--text-tertiary)" }}
-          >
+        <div className="mt-2 pt-3 border-t border-gray-200/70">
+          <div className="text-xs font-semibold text-gray-500 mb-2">
             Acknowledged by
           </div>
-          <ul className="space-y-2 max-h-72 overflow-y-auto scrollbar-hide">
+          <ul className="space-y-1 max-h-64 overflow-y-auto">
             {state.acknowledgements.map((a) => (
               <li
                 key={a.id}
-                className="flex items-center justify-between gap-2 py-1.5"
+                className="flex items-center justify-between text-sm py-1"
               >
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <span
-                    className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0"
-                    style={{
-                      backgroundColor: "var(--tile-blue-bg)",
-                      color: "var(--tile-blue-fg)",
-                    }}
-                  >
-                    {(a.name || "?").slice(0, 2).toUpperCase()}
+                <div className="flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center text-[10px] font-bold text-gray-600">
+                    {(a.name || "?").slice(0, 1).toUpperCase()}
                   </span>
-                  <div className="min-w-0">
-                    <div
-                      className="text-[13px] font-semibold truncate"
-                      style={{ color: "var(--text-primary)" }}
-                    >
-                      {a.name}
-                    </div>
-                    {a.role && (
-                      <div
-                        className="text-[10px] uppercase tracking-wider"
-                        style={{ color: "var(--text-tertiary)" }}
-                      >
-                        {a.role}
-                        {a.department ? ` · ${a.department}` : ""}
-                      </div>
-                    )}
-                  </div>
+                  <span className="font-medium text-gray-900">{a.name}</span>
+                  {a.role && (
+                    <span className="text-[10px] uppercase tracking-wide text-gray-400">
+                      {a.role}
+                    </span>
+                  )}
                 </div>
-                <span
-                  className="text-[11px] shrink-0"
-                  style={{ color: "var(--text-tertiary)" }}
-                >
+                <span className="text-xs text-gray-500">
                   {formatDate(a.acknowledgedAt)}
                 </span>
               </li>
@@ -206,9 +147,7 @@ export default function EventAcknowledgement({
       )}
 
       {loading && !state && (
-        <div className="text-xs" style={{ color: "var(--text-tertiary)" }}>
-          Loading…
-        </div>
+        <div className="text-xs text-gray-400">Loading…</div>
       )}
     </div>
   );

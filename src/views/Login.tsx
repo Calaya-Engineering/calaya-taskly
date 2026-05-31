@@ -79,28 +79,12 @@ export default function Login() {
   };
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center p-4"
-      style={{
-        background:
-          "radial-gradient(80% 60% at 20% 0%, rgba(109,198,223,0.35) 0%, rgba(44,75,155,0) 60%), radial-gradient(60% 50% at 100% 100%, rgba(237,50,55,0.18) 0%, rgba(44,75,155,0) 60%), #2C4B9B",
-      }}
-    >
+    <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: "#2C4B9B" }}>
       {/* Success Notification */}
       {showSuccess && (
-        <div
-          className="fixed top-4 right-4 px-5 py-3 z-50"
-          style={{
-            background: "var(--surface-card)",
-            color: "var(--tile-green-fg)",
-            borderRadius: "var(--radius-lg)",
-            border: "1px solid var(--separator)",
-            boxShadow: "var(--shadow-lg)",
-            animation: "ct-fade-up 280ms var(--ease-apple) both",
-          }}
-        >
-          <div className="flex items-center gap-2 text-sm font-semibold">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg z-50 animate-fade-in">
+          <div className="flex items-center">
+            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             {successMessage}
@@ -109,18 +93,8 @@ export default function Login() {
       )}
 
       {/* Main Container */}
-      <div
-        className="w-full max-w-4xl overflow-hidden flex flex-col md:flex-row"
-        style={{
-          background: "rgba(255, 255, 255, 0.96)",
-          backdropFilter: "saturate(180%) blur(20px)",
-          borderRadius: "var(--radius-2xl)",
-          boxShadow: "var(--shadow-xl)",
-          border: "1px solid rgba(255, 255, 255, 0.4)",
-          animation: "ct-scale-in 360ms var(--ease-spring) both",
-        }}
-      >
-        <div className="h-1 md:hidden bg-[#2C4B9B]"></div>
+      <div className="w-full max-w-4xl bg-white/95 backdrop-blur-sm rounded-2xl overflow-hidden transition-all duration-300 flex flex-col md:flex-row">
+        <div className="h-2 md:hidden bg-[#2C4B9B]"></div>
 
         {/* Left Side - Login Form */}
         <div className="w-full md:w-1/2 p-8 md:p-10">
