@@ -72,12 +72,18 @@ function StatCard({
   );
 }
 
+type PendingDecision = {
+  request: AccessRequest;
+  decision: "APPROVED" | "DENIED";
+} | null;
+
 export default function AdminAccessRequests() {
   const [requests, setRequests] = useState<AccessRequest[]>([]);
   const [statusFilter, setStatusFilter] = useState("PENDING");
   const [loading, setLoading] = useState(true);
   const [activeId, setActiveId] = useState<number | null>(null);
   const [notes, setNotes] = useState<Record<number, string>>({});
+  const [pendingDecision, setPendingDecision] = useState<PendingDecision>(null);
 
   const loadRequests = async () => {
     setLoading(true);
@@ -110,10 +116,13 @@ export default function AdminAccessRequests() {
     [requests],
   );
 
-  const handleDecision = async (request: AccessRequest, decision: "APPROVED" | "DENIED") => {
-    if (!confirm(`${decision === "APPROVED" ? "Approve" : "Deny"} ${request.fullName}'s access request?`)) {
-      return;
-    }
+  const requestDecision = (request: AccessRequest, decision: "APPROVED" | "DENIED") => {
+    setPendingDecision({ request, decision });
+  };
+
+  const confirmDecision = async () => {
+    if (!pendingDecision) return;
+    const { request, decision } = pendingDecision;
 
     setActiveId(request.id);
     try {
@@ -132,6 +141,7 @@ export default function AdminAccessRequests() {
 
       toast.success(decision === "APPROVED" ? "Access request approved" : "Access request denied");
       setNotes((prev) => ({ ...prev, [request.id]: "" }));
+      setPendingDecision(null);
       await loadRequests();
     } catch (error) {
       console.error("Failed to review access request:", error);
@@ -262,7 +272,7 @@ export default function AdminAccessRequests() {
                         <div className="mt-5 flex flex-col gap-3 sm:flex-row">
                           <button
                             type="button"
-                            onClick={() => handleDecision(request, "APPROVED")}
+                            onClick={() => requestDecision(request, "APPROVED")}
                             disabled={isBusy || Boolean(request.existingUserId)}
                             className="rounded-2xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
                           >
@@ -270,7 +280,7 @@ export default function AdminAccessRequests() {
                           </button>
                           <button
                             type="button"
-                            onClick={() => handleDecision(request, "DENIED")}
+                            onClick={() => requestDecision(request, "DENIED")}
                             disabled={isBusy}
                             className="rounded-2xl bg-rose-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-rose-700 disabled:cursor-not-allowed disabled:opacity-60"
                           >
@@ -290,6 +300,183 @@ export default function AdminAccessRequests() {
           )}
         </div>
       </div>
+
+      {pendingDecision ? (
+        <DecisionModal
+          request={pendingDecision.request}
+          decision={pendingDecision.decision}
+          reviewNote={notes[pendingDecision.request.id] ?? pendingDecision.request.reviewNote ?? ""}
+          onChangeNote={(value) =>
+            setNotes((prev) => ({ ...prev, [pendingDecision.request.id]: value }))
+          }
+          isBusy={activeId === pendingDecision.request.id}
+          onCancel={() => setPendingDecision(null)}
+          onConfirm={confirmDecision}
+        />
+      ) : null}
     </AdminLayout>
+  );
+}
+
+function DecisionModal({
+  request,
+  decision,
+  reviewNote,
+  onChangeNote,
+  isBusy,
+  onCancel,
+  onConfirm,
+}: {
+  request: AccessRequest;
+  decision: "APPROVED" | "DENIED";
+  reviewNote: string;
+  onChangeNote: (value: string) => void;
+  isBusy: boolean;
+  onCancel: () => void;
+  onConfirm: () => void;
+}) {
+  const isApprove = decision === "APPROVED";
+  const accent = isApprove
+    ? {
+        ring: "ring-emerald-100",
+        chip: "border-emerald-200 bg-emerald-50 text-emerald-700",
+        iconBg: "bg-emerald-100 text-emerald-700",
+        cta: "bg-emerald-600 hover:bg-emerald-700",
+        title: "Approve access request",
+        subtitle: "An account will be created and the applicant will be emailed.",
+        confirmLabel: "Approve & create account",
+        icon: (
+          <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20 6 9 17l-5-5" />
+          </svg>
+        ),
+      }
+    : {
+        ring: "ring-rose-100",
+        chip: "border-rose-200 bg-rose-50 text-rose-700",
+        iconBg: "bg-rose-100 text-rose-700",
+        cta: "bg-rose-600 hover:bg-rose-700",
+        title: "Deny access request",
+        subtitle: "The applicant will be notified that their request was declined.",
+        confirmLabel: "Deny request",
+        icon: (
+          <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M18 6 6 18M6 6l12 12" />
+          </svg>
+        ),
+      };
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="access-decision-title"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
+    >
+      <button
+        type="button"
+        aria-label="Close"
+        onClick={isBusy ? undefined : onCancel}
+        className="absolute inset-0 h-full w-full cursor-default bg-slate-900/40 backdrop-blur-sm"
+      />
+
+      <div
+        className={`relative w-full max-w-lg overflow-hidden rounded-[28px] bg-white shadow-[0_24px_60px_rgba(15,23,42,0.18)] ring-1 ${accent.ring}`}
+      >
+        <div className="flex items-start gap-4 px-7 pt-7">
+          <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${accent.iconBg}`}>
+            {accent.icon}
+          </div>
+          <div className="flex-1 min-w-0">
+            <h2
+              id="access-decision-title"
+              className="text-2xl font-bold tracking-tight text-[#20243b]"
+              style={{ fontFamily: "Sora, sans-serif" }}
+            >
+              {accent.title}
+            </h2>
+            <p className="mt-1 text-sm text-slate-500">{accent.subtitle}</p>
+          </div>
+          <button
+            type="button"
+            onClick={onCancel}
+            disabled={isBusy}
+            aria-label="Close dialog"
+            className="ml-2 inline-flex h-9 w-9 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 disabled:opacity-50"
+          >
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <div className="mt-6 px-7">
+          <div className="rounded-2xl border border-slate-200 bg-[#f8f9fc] p-5">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400">Applicant</p>
+            <p className="mt-1 text-lg font-semibold text-slate-900">{request.fullName}</p>
+            <p className="text-sm text-slate-500">{request.email}</p>
+
+            <div className="mt-4 flex flex-wrap gap-2">
+              <span className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold ${accent.chip}`}>
+                {request.requestedRole}
+              </span>
+              <span className="inline-flex items-center rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
+                {request.department}
+              </span>
+              {request.hodName ? (
+                <span className="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600">
+                  HOD: {request.hodName}
+                </span>
+              ) : null}
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-5 px-7">
+          <label htmlFor="decision-note" className="block text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400">
+            Review note (optional)
+          </label>
+          <textarea
+            id="decision-note"
+            value={reviewNote}
+            onChange={(e) => onChangeNote(e.target.value)}
+            rows={3}
+            disabled={isBusy}
+            placeholder={
+              isApprove
+                ? "Add any context for the applicant — included in the approval email."
+                : "Tell the applicant why their request was denied — included in the email."
+            }
+            className="mt-2 min-h-[96px] w-full rounded-2xl border-[1.5px] border-slate-200 bg-white px-4 py-3 text-sm leading-relaxed text-slate-700 outline-none transition focus:border-[#1a2f8a] disabled:cursor-not-allowed disabled:opacity-80"
+          />
+        </div>
+
+        <div className="mt-7 flex flex-col-reverse gap-3 border-t border-slate-100 bg-slate-50/60 px-7 py-5 sm:flex-row sm:justify-end">
+          <button
+            type="button"
+            onClick={onCancel}
+            disabled={isBusy}
+            className="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={onConfirm}
+            disabled={isBusy}
+            className={`inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-2.5 text-sm font-semibold text-white transition disabled:cursor-not-allowed disabled:opacity-60 ${accent.cta}`}
+          >
+            {isBusy ? (
+              <>
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                Processing…
+              </>
+            ) : (
+              accent.confirmLabel
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }

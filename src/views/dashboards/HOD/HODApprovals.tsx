@@ -509,9 +509,10 @@ export default function HODApprovals() {
                       isLoading={decisionAction === "approve"}
                       loadingText="Approving..."
                       disabled={decisionAction !== null}
-                      className="flex-1 bg-green-500 text-white font-bold py-3 rounded-xl hover:bg-green-600 transition"
+                      className="flex-1 inline-flex items-center justify-center gap-2 bg-green-500 text-white font-bold py-3 px-4 rounded-xl hover:bg-green-600 transition whitespace-nowrap"
                     >
-                      {renderNodeWithIcons("\n                      ✓ Approve & complete\n                    ")}
+                      <span aria-hidden>✓</span>
+                      <span>Approve &amp; complete</span>
                     </LoadingButton>
                     <LoadingButton
                       type="button"
@@ -519,9 +520,10 @@ export default function HODApprovals() {
                       isLoading={decisionAction === "reject"}
                       loadingText="Rejecting..."
                       disabled={decisionAction !== null}
-                      className="flex-1 bg-red-500 text-white font-bold py-3 rounded-xl hover:bg-red-600 transition"
+                      className="flex-1 inline-flex items-center justify-center gap-2 bg-red-500 text-white font-bold py-3 px-4 rounded-xl hover:bg-red-600 transition whitespace-nowrap"
                     >
-                      {renderNodeWithIcons("\n                      ✗ Reject\n                    ")}
+                      <span aria-hidden>✗</span>
+                      <span>Reject</span>
                     </LoadingButton>
                   </div>
                 </div>

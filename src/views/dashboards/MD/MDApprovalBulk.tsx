@@ -218,10 +218,11 @@ export default function MDApprovalBulk() {
                   isLoading={bulkAction === "approve"}
                   loadingText="Approving..."
                   disabled={bulkAction !== null}
-                  className="px-6 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition"
+                  className="px-6 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition inline-flex items-center justify-center gap-2 whitespace-nowrap"
                   style={{ backgroundColor: '#10B981' }}
                 >
-                  {renderNodeWithIcons("\n                  ✓ Approve All\n                ")}
+                  <span aria-hidden>✓</span>
+                  <span>Approve All</span>
                 </LoadingButton>
                 <LoadingButton
                   type="button"
@@ -229,10 +230,11 @@ export default function MDApprovalBulk() {
                   isLoading={bulkAction === "reject"}
                   loadingText="Rejecting..."
                   disabled={bulkAction !== null}
-                  className="px-6 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition"
+                  className="px-6 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition inline-flex items-center justify-center gap-2 whitespace-nowrap"
                   style={{ backgroundColor: 'var(--accent-red)' }}
                 >
-                  {renderNodeWithIcons("\n                  ✗ Reject All\n                ")}
+                  <span aria-hidden>✗</span>
+                  <span>Reject All</span>
                 </LoadingButton>
               </div>
             </div>
