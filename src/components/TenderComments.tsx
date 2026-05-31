@@ -99,10 +99,25 @@ export default function TenderComments({ tenderId }: Props) {
   };
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
+      {/* Composer */}
       <div>
-        <div className="text-sm text-gray-500 mb-2">
-          Comments are visible to all authenticated users. Type <code>@</code> to mention someone.
+        <div
+          className="text-[12px] mb-2"
+          style={{ color: "var(--text-tertiary)" }}
+        >
+          Comments are visible to all authenticated users. Type{" "}
+          <kbd
+            className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold"
+            style={{
+              background: "var(--surface-page)",
+              border: "1px solid var(--separator-strong)",
+              color: "var(--text-secondary)",
+            }}
+          >
+            @
+          </kbd>{" "}
+          to mention someone.
         </div>
         <MentionInput
           value={draft}
@@ -115,57 +130,87 @@ export default function TenderComments({ tenderId }: Props) {
             type="button"
             onClick={handleSubmit}
             disabled={submitting || !draft.trim()}
-            className="px-5 py-2.5 rounded-2xl text-sm font-semibold text-white transition active:scale-[0.99] disabled:opacity-60"
-            style={{ backgroundColor: "var(--primary-blue)" }}
+            className="ct-btn ct-btn-primary"
           >
             {submitting ? "Posting…" : "Post comment"}
           </button>
         </div>
       </div>
 
+      {/* Thread */}
       <div className="space-y-3">
         {loading && comments.length === 0 ? (
-          <div className="text-sm text-gray-400 text-center py-6">Loading comments…</div>
+          <div
+            className="text-[13px] text-center py-8"
+            style={{ color: "var(--text-tertiary)" }}
+          >
+            Loading comments…
+          </div>
         ) : comments.length === 0 ? (
-          <div className="text-center py-10 text-gray-500">
+          <div
+            className="text-center py-12"
+            style={{ color: "var(--text-tertiary)" }}
+          >
             <div className="text-3xl mb-2">💬</div>
-            <div className="text-sm">No comments yet. Be the first to start the conversation.</div>
+            <div className="text-[14px]">
+              No comments yet. Start the conversation.
+            </div>
           </div>
         ) : (
           comments.map((c) => (
-            <div
+            <article
               key={c.id}
-              className="p-4 rounded-2xl border border-gray-200/70 bg-white"
+              className="ct-card-flat p-4"
+              style={{ animation: "ct-fade-up 320ms var(--ease-apple) both" }}
             >
               <div className="flex items-start gap-3">
                 <div
-                  className="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-extrabold shrink-0"
-                  style={{ backgroundColor: "var(--secondary-blue)" }}
+                  className="w-9 h-9 rounded-full flex items-center justify-center text-white text-[11px] font-bold shrink-0"
+                  style={{ backgroundColor: "var(--primary-blue)" }}
                   title={c.email || undefined}
                 >
                   {initials(c.name)}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap mb-1">
-                    <span className="text-sm font-extrabold text-gray-900">{c.name}</span>
+                    <span
+                      className="text-[13px] font-semibold"
+                      style={{ color: "var(--text-primary)" }}
+                    >
+                      {c.name}
+                    </span>
                     {c.role && (
-                      <span className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold">
+                      <span
+                        className="text-[10px] uppercase tracking-[0.08em] font-semibold"
+                        style={{ color: "var(--text-tertiary)" }}
+                      >
                         {c.role}
                       </span>
                     )}
                     {c.department && (
-                      <span className="text-[10px] text-gray-400">• {c.department}</span>
+                      <span
+                        className="text-[10px]"
+                        style={{ color: "var(--text-tertiary)" }}
+                      >
+                        · {c.department}
+                      </span>
                     )}
-                    <span className="text-xs text-gray-400 ml-auto">
+                    <span
+                      className="text-[11px] ml-auto"
+                      style={{ color: "var(--text-tertiary)" }}
+                    >
                       {formatDateTime(c.createdAt)}
                     </span>
                   </div>
-                  <div className="text-sm text-gray-700 whitespace-pre-wrap break-words">
+                  <div
+                    className="text-[14px] whitespace-pre-wrap break-words"
+                    style={{ color: "var(--text-primary)", lineHeight: 1.55 }}
+                  >
                     <MentionText text={c.content} />
                   </div>
                 </div>
               </div>
-            </div>
+            </article>
           ))
         )}
       </div>

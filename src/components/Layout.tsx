@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
-import { MenuIcon, CloseMenuIcon } from "@/lib/icons";
+import { MenuIcon, CloseMenuIcon, BellIcon } from "@/lib/icons";
 import { LayoutSidebar } from "@/components/LayoutSidebar";
 import { getRouteForRole } from "@/lib/auth-config";
 
@@ -18,6 +18,22 @@ export interface MenuItem {
 }
 
 const LayoutContext = createContext<boolean>(false);
+
+/**
+ * Derive a humane page title from the URL path.
+ * "/staff-dashboard/documents" -> "Documents"
+ * "/md-dashboard"              -> "Dashboard"
+ */
+function deriveTitle(pathname: string): string {
+  if (!pathname) return "Dashboard";
+  const segments = pathname.split("/").filter(Boolean);
+  if (segments.length <= 1) return "Dashboard";
+  const last = segments[segments.length - 1] || "";
+  return last
+    .replace(/-/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase())
+    .replace(/\bId\b/g, "Detail");
+}
 
 export default function Layout({
   children,
@@ -55,7 +71,6 @@ export default function Layout({
       if (!isAuthenticated) {
         router.replace("/login");
       } else if (user && userRole && user.role !== userRole) {
-        // Prevent accidental access to wrong dashboard segments
         const correctRoute = getRouteForRole(user.role);
         router.replace(correctRoute);
       }
@@ -71,6 +86,16 @@ export default function Layout({
     []
   );
 
+  const pageTitle = useMemo(() => deriveTitle(pathname || ""), [pathname]);
+  const displayName = (user as any)?.name || (user as any)?.email?.split("@")[0] || userRole;
+  const initials =
+    (displayName as string)
+      ?.split(" ")
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((p: string) => p[0]?.toUpperCase())
+      .join("") || "C";
+
   if (isInsideLayout) {
     return <>{children}</>;
   }
@@ -85,56 +110,97 @@ export default function Layout({
   return (
     <LayoutContext.Provider value={true}>
       <div
-        className="min-h-screen bg-gray-50 text-gray-900"
+        className="min-h-screen text-[color:var(--text-primary)]"
         style={{
-          "--primary-blue": "#2C4B9B",
-          "--secondary-blue": "#6DC6DF",
-          "--accent-red": "#ED3237",
-        } as React.CSSProperties}
+          backgroundColor: "var(--surface-page)",
+        }}
       >
-        {/* Top Bar */}
+        {/* ---------- Top Bar ---------- */}
         <header className="fixed top-0 left-0 right-0 z-50">
-          <div className="h-16 bg-white/80 backdrop-blur border-b border-gray-200">
-            <div className="h-full px-4 md:px-6 flex items-center justify-between">
-              {/* Left */}
-              <div className="flex items-center gap-3">
+          <div className="ct-glass h-16">
+            <div className="h-full pl-4 pr-4 md:pl-6 md:pr-6 flex items-center justify-between gap-4">
+              {/* Left: hamburger (mobile) + logo + page title */}
+              <div className="flex items-center gap-3 min-w-0">
                 <button
                   onClick={() => setSidebarOpen((s) => !s)}
-                  className="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-xl hover:bg-gray-100 active:scale-[0.98] transition"
+                  className="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-2xl hover:bg-[var(--surface-hover)] active:scale-[0.97] transition"
                   aria-label="Toggle sidebar"
                 >
-                  <span style={{ color: "var(--primary-blue)" }} className="w-6 h-6 flex items-center justify-center">
+                  <span
+                    style={{ color: "var(--primary-blue)" }}
+                    className="w-6 h-6 flex items-center justify-center"
+                  >
                     {sidebarOpen ? <CloseMenuIcon size={24} /> : <MenuIcon size={24} />}
                   </span>
                 </button>
 
-                {/* Brand */}
-                <Link href="/login" className="flex items-center gap-3 group">
-                  <div className="relative h-9 w-auto min-w-[120px]">
+                {/* Brand on mobile, hide on desktop — sidebar handles the brand */}
+                <Link
+                  href={getRouteForRole(userRole)}
+                  className="flex items-center gap-2 md:hidden"
+                  aria-label="Calaya home"
+                >
+                  <div className="relative h-8 w-auto">
                     <Image
                       src="/calaya-logo.png"
                       alt="Calaya Engineering Services"
-                      height={36}
-                      width={140}
-                      className="h-9 w-auto object-contain object-left"
+                      height={32}
+                      width={120}
+                      className="h-8 w-auto object-contain object-left"
+                      priority
                     />
                   </div>
-
-                  <span
-                    className="ml-2 hidden sm:inline-flex items-center px-2.5 py-1 text-[11px] font-semibold rounded-full"
-                    style={{ backgroundColor: "var(--accent-red)", color: "white" }}
-                  >
-                    {userRole}
-                  </span>
                 </Link>
+
+                {/* Page title (desktop only) — sits inline with the chrome */}
+                <div className="hidden md:flex md:items-center md:gap-2 md:pl-[16rem]">
+                  <h1
+                    className="text-[20px] font-semibold tracking-tight truncate"
+                    style={{
+                      color: "var(--text-primary)",
+                      letterSpacing: "-0.015em",
+                    }}
+                  >
+                    {pageTitle}
+                  </h1>
+                </div>
               </div>
 
-              {/* Right */}
-              <div className="flex items-center gap-2 md:gap-3">
+              {/* Right: profile cluster + notifications + logout */}
+              <div className="flex items-center gap-1.5 md:gap-2">
+                <button
+                  type="button"
+                  className="hidden md:inline-flex w-10 h-10 items-center justify-center rounded-2xl hover:bg-[var(--surface-hover)] active:scale-[0.97] transition"
+                  aria-label="Notifications"
+                  onClick={() => router.push(getRouteForRole(userRole) + "/notifications")}
+                >
+                  <BellIcon size={20} />
+                </button>
+
+                <div className="hidden md:flex items-center gap-2 px-2 py-1 rounded-2xl border border-[color:var(--separator-strong)] bg-white/70">
+                  <div
+                    className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold"
+                    style={{ backgroundColor: "var(--primary-blue)" }}
+                  >
+                    {initials}
+                  </div>
+                  <div className="hidden lg:flex flex-col leading-tight pr-1">
+                    <span className="text-[12px] font-semibold text-[color:var(--text-primary)] truncate max-w-[10rem]">
+                      {displayName}
+                    </span>
+                    <span className="text-[10px] text-[color:var(--text-tertiary)] uppercase tracking-wider">
+                      {userRole}
+                    </span>
+                  </div>
+                </div>
+
                 <button
                   onClick={handleLogoutClick}
-                  className="h-10 px-4 rounded-2xl text-sm font-semibold text-white active:scale-[0.99] transition"
-                  style={{ backgroundColor: "var(--accent-red)" }}
+                  className="ct-btn"
+                  style={{
+                    backgroundColor: "var(--accent-red)",
+                    color: "#fff",
+                  }}
                 >
                   Logout
                 </button>
@@ -161,21 +227,50 @@ export default function Layout({
 
         {/* Content */}
         <main className="pt-16 md:pl-64">
-          <div className="p-4 md:p-6">
+          <div className="px-4 py-6 md:px-8 md:py-8">
             <div className="max-w-[1400px] mx-auto">{children}</div>
           </div>
         </main>
 
         {/* Logout Confirmation Modal */}
         {showLogoutModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div
+            className="fixed inset-0 z-[100] flex items-center justify-center"
+            style={{ animation: "ct-fade-in 200ms var(--ease-apple) both" }}
+          >
             <div className="absolute inset-0 bg-black/40" onClick={handleCancelLogout} />
-            <div className="relative z-10 w-full max-w-sm rounded-2xl bg-white p-6 shadow-lg">
-              <h2 className="text-lg font-semibold mb-2" style={{ color: "var(--primary-blue)" }}>System log out?</h2>
-              <p className="text-sm text-gray-600 mb-4">Are you sure you want to log out of your session?</p>
-              <div className="flex justify-end gap-3">
-                <button onClick={handleCancelLogout} className="px-4 py-2 rounded-xl text-sm font-medium border border-gray-300 text-gray-700 hover:bg-gray-100">No</button>
-                <button onClick={handleConfirmLogout} className="px-4 py-2 rounded-xl text-sm font-semibold text-white" style={{ backgroundColor: "var(--accent-red)" }}>Yes</button>
+            <div
+              className="relative z-10 w-full max-w-sm mx-4 p-7"
+              style={{
+                background: "var(--surface-card)",
+                borderRadius: "var(--radius-2xl)",
+                boxShadow: "var(--shadow-xl)",
+                animation: "ct-scale-in 220ms var(--ease-spring) both",
+              }}
+            >
+              <h2
+                className="text-[20px] font-bold tracking-tight mb-1"
+                style={{ color: "var(--text-primary)" }}
+              >
+                Sign out?
+              </h2>
+              <p className="text-sm mb-6" style={{ color: "var(--text-secondary)" }}>
+                You'll need to sign back in to access your dashboard.
+              </p>
+              <div className="flex justify-end gap-2">
+                <button
+                  onClick={handleCancelLogout}
+                  className="ct-btn ct-btn-secondary"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleConfirmLogout}
+                  className="ct-btn"
+                  style={{ backgroundColor: "var(--accent-red)", color: "#fff" }}
+                >
+                  Sign out
+                </button>
               </div>
             </div>
           </div>

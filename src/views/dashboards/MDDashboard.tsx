@@ -267,89 +267,108 @@ export default function MDDashboard() {
 
   return (
     <div className="space-y-6">
-        {/* Hero */}
-        <Card className="overflow-hidden">
-          <div
-            className="p-6 md:p-8"
-            style={{
-              background:
-                "linear-gradient(135deg, rgba(44,75,155,0.10) 0%, rgba(109,198,223,0.18) 50%, rgba(237,50,55,0.06) 100%)",
-            }}
-          >
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
-              <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <Pill>Executive Overview</Pill>
-                  <Pill tone="success">System Healthy</Pill>
-                </div>
-
-                <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
-                  Welcome, Managing Director
-                </h1>
-                <p className="text-gray-600 mt-2 max-w-2xl">
-                  Overview of all company operations, escalations, and performance at a glance.
-                </p>
+        {/* HERO */}
+        <section className="ct-card p-6 md:p-8">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-5">
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-2 mb-3">
+                <span className="ct-pill" style={{ background: "var(--tile-blue-bg)", color: "var(--tile-blue-fg)" }}>
+                  Executive Overview
+                </span>
+                <span className="ct-pill" style={{ background: "var(--tile-green-bg)", color: "var(--tile-green-fg)" }}>
+                  System Healthy
+                </span>
               </div>
+              <h1
+                className="text-[28px] md:text-[34px] font-bold tracking-tight leading-[1.1]"
+                style={{ color: "var(--text-primary)", letterSpacing: "-0.025em" }}
+              >
+                Welcome Back, Managing Director <span aria-hidden="true">👋</span>
+              </h1>
+              <p
+                className="mt-2 text-[15px]"
+                style={{ color: "var(--text-secondary)", maxWidth: "62ch" }}
+              >
+                Overview of all company operations, escalations, and performance at a glance.
+              </p>
+            </div>
 
-              <div className="flex flex-col sm:flex-row gap-3">
-                <Link href="/md-dashboard/create-task">
-                  <button
-                    className="w-full sm:w-auto px-5 py-3 rounded-2xl font-semibold active:scale-[0.99] transition"
-                    style={{ backgroundColor: "var(--accent-red)", color: "white" }}
-                  >
-                    Create Task
-                  </button>
-                </Link>
-                <Link href="/md-dashboard/create-document">
-                  <button
-                    className="w-full sm:w-auto px-5 py-3 rounded-2xl font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
-                    style={{ borderColor: "rgba(109, 198, 223, 0.7)", color: "var(--primary-blue)" }}
-                  >
-                    Upload Document
-                  </button>
-                </Link>
-              </div>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Link href="/md-dashboard/create-task">
+                <button
+                  className="ct-btn w-full sm:w-auto"
+                  style={{ backgroundColor: "var(--accent-red)", color: "#fff" }}
+                >
+                  Create Task
+                </button>
+              </Link>
+              <Link href="/md-dashboard/create-document">
+                <button className="ct-btn ct-btn-secondary w-full sm:w-auto">
+                  Upload Document
+                </button>
+              </Link>
             </div>
           </div>
-        </Card>
+        </section>
 
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6">
-          {stats.map((stat) => (
-            <Link key={stat.title} href={stat.link} className="group">
-              <Card className="p-5 shadow-none hover:-translate-y-0.5 transition-all">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="text-sm text-gray-500">{stat.title}</p>
-                    <p className="text-3xl font-extrabold tracking-tight mt-1">{stat.value}</p>
-                    <p className="text-sm mt-3" style={{ color: stat.color }}>
-                      {stat.change} <span className="text-gray-500">from last month</span>
-                    </p>
+        {/* STATS */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-5">
+          {stats.map((stat, idx) => {
+            const palette = [
+              { bg: "var(--tile-blue-bg)",   fg: "var(--tile-blue-fg)" },
+              { bg: "var(--tile-green-bg)",  fg: "var(--tile-green-fg)" },
+              { bg: "var(--tile-orange-bg)", fg: "var(--tile-orange-fg)" },
+              { bg: "var(--tile-purple-bg)", fg: "var(--tile-purple-fg)" },
+            ];
+            const tone = palette[idx % palette.length];
+            return (
+              <Link key={stat.title} href={stat.link} className="block">
+                <div className="ct-card ct-card-hover p-5">
+                  <div className="flex items-start justify-between gap-3">
+                    <span
+                      className="ct-stat-icon"
+                      style={{ backgroundColor: tone.bg, color: tone.fg }}
+                      aria-hidden="true"
+                    >
+                      <ChartIcon size={20} />
+                    </span>
                   </div>
-
+                  <div className="mt-3">
+                    <div
+                      className="text-[30px] font-bold leading-none tracking-tight"
+                      style={{ color: "var(--text-primary)", letterSpacing: "-0.025em" }}
+                    >
+                      {stat.value}
+                    </div>
+                    <div
+                      className="text-[12px] mt-1.5 font-medium"
+                      style={{ color: "var(--text-tertiary)" }}
+                    >
+                      {stat.title}
+                    </div>
+                  </div>
                   <div
-                    className="w-12 h-12 rounded-2xl flex items-center justify-center "
-                    style={{ backgroundColor: `${stat.color}18` }}
-                    aria-hidden="true"
+                    className="mt-4 h-1.5 rounded-full overflow-hidden"
+                    style={{ backgroundColor: "var(--surface-page)" }}
                   >
-                    <span style={{ color: stat.color }}>
-                      <ChartIcon size={24} />
+                    <div
+                      className="h-full rounded-full transition-all"
+                      style={{ width: stat.bar, backgroundColor: tone.fg }}
+                    />
+                  </div>
+                  <div
+                    className="mt-3 text-[12px] font-medium"
+                    style={{ color: tone.fg }}
+                  >
+                    {stat.change}{" "}
+                    <span style={{ color: "var(--text-tertiary)" }}>
+                      from last month
                     </span>
                   </div>
                 </div>
-
-                <div className="mt-4 h-2 rounded-full bg-gray-100 overflow-hidden">
-                  <div
-                    className="h-full rounded-full"
-                    style={{
-                      width: stat.bar,
-                      background: stat.color,
-                    }}
-                  />
-                </div>
-              </Card>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </div>
 
         {/* Quick Actions */}

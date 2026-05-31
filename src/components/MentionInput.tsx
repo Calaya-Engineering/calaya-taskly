@@ -52,7 +52,6 @@ export default function MentionInput({
   const [highlight, setHighlight] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  // Lazy-load + filter users when the menu is open.
   useEffect(() => {
     if (!open) return;
     let cancelled = false;
@@ -95,7 +94,6 @@ export default function MentionInput({
 
   const updateMenuFromCursor = useCallback(
     (text: string, cursor: number) => {
-      // Walk backwards from cursor to find a @ that starts the mention query.
       let i = cursor - 1;
       let chars: string[] = [];
       while (i >= 0) {
@@ -104,7 +102,6 @@ export default function MentionInput({
           const before = text[i - 1];
           if (i === 0 || !before || /\s|[(\[{,;:!?]/.test(before)) {
             const q = chars.reverse().join("");
-            // Cap query length / disallow newlines to keep the menu responsive.
             if (/\n/.test(q) || q.length > 30) {
               closeMenu();
               return;
@@ -196,16 +193,29 @@ export default function MentionInput({
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         onBlur={() => {
-          // Slight delay so option clicks can register.
           window.setTimeout(closeMenu, 120);
         }}
         rows={minRows}
         placeholder={placeholder}
         aria-label={ariaLabel}
-        className="w-full px-4 py-3 rounded-2xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100 text-sm"
+        className="ct-input resize-y"
+        style={{
+          minHeight: `${(minRows ?? 3) * 24 + 24}px`,
+          fontSize: "14px",
+          lineHeight: 1.6,
+        }}
       />
       {showMenu && (
-        <div className="absolute z-30 left-0 right-0 mt-1 max-h-64 overflow-y-auto rounded-2xl border border-gray-200 bg-white shadow-lg">
+        <div
+          className="absolute z-30 left-0 right-0 mt-2 max-h-72 overflow-y-auto p-1.5"
+          style={{
+            background: "var(--surface-card)",
+            border: "1px solid var(--separator-strong)",
+            borderRadius: "var(--radius-lg)",
+            boxShadow: "var(--shadow-lg)",
+            animation: "ct-scale-in 160ms var(--ease-apple) both",
+          }}
+        >
           {options.map((u, idx) => {
             const name = u.name || u.email.split("@")[0];
             return (
@@ -217,22 +227,31 @@ export default function MentionInput({
                   insertMention(u);
                 }}
                 onMouseEnter={() => setHighlight(idx)}
-                className={`w-full text-left px-3 py-2 flex items-center gap-2 ${
-                  idx === highlight ? "bg-blue-50" : "hover:bg-gray-50"
-                }`}
+                className="w-full text-left px-2.5 py-2 flex items-center gap-2.5 rounded-xl transition"
+                style={{
+                  background:
+                    idx === highlight ? "var(--primary-blue-100)" : "transparent",
+                }}
               >
                 <div
-                  className="w-7 h-7 rounded-full flex items-center justify-center text-white text-[10px] font-bold"
-                  style={{ backgroundColor: "var(--secondary-blue, #3b82f6)" }}
+                  className="w-8 h-8 rounded-full flex items-center justify-center text-white text-[11px] font-bold shrink-0"
+                  style={{ backgroundColor: "var(--primary-blue)" }}
                 >
                   {name.slice(0, 2).toUpperCase()}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-semibold text-gray-900 truncate">
+                  <div
+                    className="text-[13px] font-semibold truncate"
+                    style={{ color: "var(--text-primary)" }}
+                  >
                     {name}
                   </div>
-                  <div className="text-xs text-gray-500 truncate">
-                    {u.role || "—"}{u.department ? ` · ${u.department}` : ""}
+                  <div
+                    className="text-[11px] truncate"
+                    style={{ color: "var(--text-tertiary)" }}
+                  >
+                    {u.role || "—"}
+                    {u.department ? ` · ${u.department}` : ""}
                   </div>
                 </div>
               </button>
@@ -241,7 +260,16 @@ export default function MentionInput({
         </div>
       )}
       {visibleHint && !showMenu && (
-        <div className="absolute z-30 left-0 right-0 mt-1 rounded-2xl border border-gray-200 bg-white px-3 py-2 text-xs text-gray-500 shadow">
+        <div
+          className="absolute z-30 left-0 right-0 mt-2 px-3 py-2 text-xs"
+          style={{
+            background: "var(--surface-card)",
+            border: "1px solid var(--separator-strong)",
+            borderRadius: "var(--radius-md)",
+            color: "var(--text-tertiary)",
+            boxShadow: "var(--shadow-sm)",
+          }}
+        >
           {visibleHint}
         </div>
       )}

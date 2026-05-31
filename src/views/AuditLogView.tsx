@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { fetchWithAuth } from "@/lib/api";
+import { Card, PageHero, Pill, SectionHeading } from "@/components/ui/design";
 
 type AuditEntry = {
   id: number;
@@ -44,14 +45,18 @@ const fmt = (iso: string) => {
   }
 };
 
-const actionTone = (action: string) => {
-  if (action.includes("DELETED")) return "bg-red-50 text-red-700 ring-red-100";
-  if (action.includes("PRIVACY")) return "bg-amber-50 text-amber-700 ring-amber-100";
-  if (action.includes("DOWNLOADED")) return "bg-emerald-50 text-emerald-700 ring-emerald-100";
-  if (action.includes("LOGIN")) return "bg-sky-50 text-sky-700 ring-sky-100";
+type Tone = "default" | "blue" | "green" | "orange" | "red" | "purple" | "cyan" | "pink";
+
+const actionTone = (action: string): Tone => {
+  if (action.includes("DELETED")) return "red";
+  if (action.includes("PRIVACY")) return "orange";
+  if (action.includes("DOWNLOADED")) return "green";
+  if (action.includes("LOGIN")) return "cyan";
+  if (action.includes("ACKNOWLEDGED")) return "green";
   if (action.includes("CREATED") || action.includes("UPLOADED") || action.includes("POSTED"))
-    return "bg-blue-50 text-blue-700 ring-blue-100";
-  return "bg-gray-50 text-gray-700 ring-gray-200";
+    return "blue";
+  if (action.includes("UPDATED")) return "purple";
+  return "default";
 };
 
 export default function AuditLogView() {
@@ -101,14 +106,23 @@ export default function AuditLogView() {
   const page = Math.floor(offset / PAGE_SIZE) + 1;
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6 p-1">
-      <div className="rounded-2xl border border-gray-200/70 bg-white p-6">
-        <h1 className="text-2xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
-          Audit Log
-        </h1>
-        <p className="text-sm text-gray-500 mt-1">
-          Every key action across the system. Filter to investigate a user, target type, or time window.
-        </p>
+    <div className="space-y-6">
+      <PageHero
+        eyebrow={<Pill tone="cyan">Compliance</Pill>}
+        title="Audit Log"
+        subtitle="Every key action across the system. Filter to investigate a user, target type, or time window."
+        meta={
+          <div className="ct-pill" style={{ background: "var(--surface-page)" }}>
+            {total} entries
+          </div>
+        }
+      />
+
+      <Card padding="md">
+        <SectionHeading
+          title="Filters"
+          subtitle="Narrow the log to a specific period, user, or target."
+        />
 
         <div className="mt-5 grid grid-cols-1 md:grid-cols-5 gap-3">
           <input
@@ -118,7 +132,7 @@ export default function AuditLogView() {
               setFilters((f) => ({ ...f, action: e.target.value }));
             }}
             placeholder="Action (e.g. DOCUMENT_UPLOADED)"
-            className="px-3 py-2 rounded-2xl border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-100"
+            className="ct-input"
           />
           <input
             value={filters.userEmail}
@@ -127,7 +141,7 @@ export default function AuditLogView() {
               setFilters((f) => ({ ...f, userEmail: e.target.value }));
             }}
             placeholder="User email contains…"
-            className="px-3 py-2 rounded-2xl border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-100"
+            className="ct-input"
           />
           <select
             value={filters.targetType}
@@ -135,7 +149,7 @@ export default function AuditLogView() {
               setOffset(0);
               setFilters((f) => ({ ...f, targetType: e.target.value }));
             }}
-            className="px-3 py-2 rounded-2xl border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-100"
+            className="ct-input"
           >
             <option value="">All target types</option>
             <option value="DOCUMENT">Document</option>
@@ -151,7 +165,7 @@ export default function AuditLogView() {
               setOffset(0);
               setFilters((f) => ({ ...f, from: e.target.value }));
             }}
-            className="px-3 py-2 rounded-2xl border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-100"
+            className="ct-input"
           />
           <input
             type="date"
@@ -160,59 +174,103 @@ export default function AuditLogView() {
               setOffset(0);
               setFilters((f) => ({ ...f, to: e.target.value }));
             }}
-            className="px-3 py-2 rounded-2xl border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-100"
+            className="ct-input"
           />
         </div>
-      </div>
+      </Card>
 
-      <div className="rounded-2xl border border-gray-200/70 bg-white overflow-hidden">
+      <Card padding="none">
         <div className="overflow-x-auto">
-          <table className="min-w-full text-sm">
-            <thead className="bg-gray-50 text-gray-600 uppercase text-[10px] tracking-wider">
+          <table className="min-w-full text-[13px]">
+            <thead
+              style={{
+                background: "var(--surface-muted)",
+                color: "var(--text-tertiary)",
+              }}
+            >
               <tr>
-                <th className="px-4 py-3 text-left">When</th>
-                <th className="px-4 py-3 text-left">Who</th>
-                <th className="px-4 py-3 text-left">Action</th>
-                <th className="px-4 py-3 text-left">Summary</th>
-                <th className="px-4 py-3 text-left">Target</th>
-                <th className="px-4 py-3 text-left">IP</th>
+                <th className="px-5 py-3 text-left text-[10px] uppercase tracking-[0.08em] font-semibold">
+                  When
+                </th>
+                <th className="px-5 py-3 text-left text-[10px] uppercase tracking-[0.08em] font-semibold">
+                  Who
+                </th>
+                <th className="px-5 py-3 text-left text-[10px] uppercase tracking-[0.08em] font-semibold">
+                  Action
+                </th>
+                <th className="px-5 py-3 text-left text-[10px] uppercase tracking-[0.08em] font-semibold">
+                  Summary
+                </th>
+                <th className="px-5 py-3 text-left text-[10px] uppercase tracking-[0.08em] font-semibold">
+                  Target
+                </th>
+                <th className="px-5 py-3 text-left text-[10px] uppercase tracking-[0.08em] font-semibold">
+                  IP
+                </th>
               </tr>
             </thead>
             <tbody>
               {loading && entries.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-4 py-10 text-center text-gray-500">
+                  <td
+                    colSpan={6}
+                    className="px-5 py-12 text-center"
+                    style={{ color: "var(--text-tertiary)" }}
+                  >
                     Loading…
                   </td>
                 </tr>
               ) : entries.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-4 py-10 text-center text-gray-500">
+                  <td
+                    colSpan={6}
+                    className="px-5 py-12 text-center"
+                    style={{ color: "var(--text-tertiary)" }}
+                  >
                     No audit entries match the current filters.
                   </td>
                 </tr>
               ) : (
                 entries.map((e) => (
-                  <tr key={e.id} className="border-t border-gray-200/70 align-top">
-                    <td className="px-4 py-3 whitespace-nowrap text-gray-600">{fmt(e.createdAt)}</td>
-                    <td className="px-4 py-3 whitespace-nowrap">
-                      <div className="font-semibold text-gray-900">
+                  <tr
+                    key={e.id}
+                    className="align-top"
+                    style={{ borderTop: "1px solid var(--separator)" }}
+                  >
+                    <td
+                      className="px-5 py-3 whitespace-nowrap"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      {fmt(e.createdAt)}
+                    </td>
+                    <td className="px-5 py-3 whitespace-nowrap">
+                      <div
+                        className="font-semibold"
+                        style={{ color: "var(--text-primary)" }}
+                      >
                         {e.user.name || e.user.email?.split("@")[0] || "—"}
                       </div>
-                      <div className="text-xs text-gray-500">
+                      <div
+                        className="text-[11px]"
+                        style={{ color: "var(--text-tertiary)" }}
+                      >
                         {e.user.email}
                         {e.user.role ? ` · ${e.user.role}` : ""}
                       </div>
                     </td>
-                    <td className="px-4 py-3">
-                      <span
-                        className={`inline-flex items-center px-2 py-1 rounded-full text-[10px] font-bold ring-1 ${actionTone(e.action)}`}
-                      >
-                        {e.action}
-                      </span>
+                    <td className="px-5 py-3">
+                      <Pill tone={actionTone(e.action)}>{e.action}</Pill>
                     </td>
-                    <td className="px-4 py-3 text-gray-700">{e.summary || "—"}</td>
-                    <td className="px-4 py-3 whitespace-nowrap text-gray-600">
+                    <td
+                      className="px-5 py-3"
+                      style={{ color: "var(--text-primary)" }}
+                    >
+                      {e.summary || "—"}
+                    </td>
+                    <td
+                      className="px-5 py-3 whitespace-nowrap"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
                       {e.targetType ? (
                         <>
                           {e.targetType}
@@ -222,7 +280,10 @@ export default function AuditLogView() {
                         "—"
                       )}
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-500">
+                    <td
+                      className="px-5 py-3 whitespace-nowrap text-[11px]"
+                      style={{ color: "var(--text-tertiary)" }}
+                    >
                       {e.ipAddress || "—"}
                     </td>
                   </tr>
@@ -232,7 +293,13 @@ export default function AuditLogView() {
           </table>
         </div>
 
-        <div className="flex items-center justify-between p-4 border-t border-gray-200/70 text-sm text-gray-500">
+        <div
+          className="flex items-center justify-between px-5 py-4 text-[12px]"
+          style={{
+            borderTop: "1px solid var(--separator)",
+            color: "var(--text-tertiary)",
+          }}
+        >
           <div>
             {total === 0
               ? "0 entries"
@@ -243,24 +310,26 @@ export default function AuditLogView() {
               type="button"
               disabled={offset === 0}
               onClick={() => setOffset((o) => Math.max(0, o - PAGE_SIZE))}
-              className="px-3 py-1.5 rounded-xl border border-gray-200 bg-white disabled:opacity-50"
+              className="ct-btn ct-btn-secondary"
+              style={{ padding: "6px 14px", fontSize: 12 }}
             >
               Prev
             </button>
-            <span className="text-xs text-gray-500">
+            <span className="text-[11px]">
               Page {page} / {Math.max(1, totalPages)}
             </span>
             <button
               type="button"
               disabled={offset + PAGE_SIZE >= total}
               onClick={() => setOffset((o) => o + PAGE_SIZE)}
-              className="px-3 py-1.5 rounded-xl border border-gray-200 bg-white disabled:opacity-50"
+              className="ct-btn ct-btn-secondary"
+              style={{ padding: "6px 14px", fontSize: 12 }}
             >
               Next
             </button>
           </div>
         </div>
-      </div>
+      </Card>
     </div>
   );
 }

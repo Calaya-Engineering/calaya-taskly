@@ -2,69 +2,121 @@
 
 import Link from "next/link";
 import AdminLayout from "@/components/AdminLayout";
-import { Card, SectionTitle, Pill } from "@/components/dashboard-ui";
-import { UserIcon, BuildingIcon } from "@/lib/icons";
+import { UserIcon, BuildingIcon, AlertIcon } from "@/lib/icons";
 
 export default function AdminDashboard() {
   const quickLinks = [
-    { label: "Users", desc: "Manage user accounts", icon: <UserIcon />, path: "/admin-dashboard/users" },
-    { label: "Roles", desc: "Manage system roles", icon: <UserIcon />, path: "/admin-dashboard/roles" },
-    { label: "Accounts", desc: "User account management", icon: <UserIcon />, path: "/admin-dashboard/accounts" },
-    { label: "Departments", desc: "Manage departments", icon: <BuildingIcon />, path: "/admin-dashboard/departments" },
+    {
+      label: "Users",
+      desc: "Manage user accounts",
+      icon: <UserIcon />,
+      path: "/admin-dashboard/users",
+      tone: { bg: "var(--tile-blue-bg)", fg: "var(--tile-blue-fg)" },
+    },
+    {
+      label: "Roles",
+      desc: "Manage system roles",
+      icon: <UserIcon />,
+      path: "/admin-dashboard/roles",
+      tone: { bg: "var(--tile-orange-bg)", fg: "var(--tile-orange-fg)" },
+    },
+    {
+      label: "Accounts",
+      desc: "User account management",
+      icon: <UserIcon />,
+      path: "/admin-dashboard/accounts",
+      tone: { bg: "var(--tile-green-bg)", fg: "var(--tile-green-fg)" },
+    },
+    {
+      label: "Departments",
+      desc: "Manage departments",
+      icon: <BuildingIcon />,
+      path: "/admin-dashboard/departments",
+      tone: { bg: "var(--tile-purple-bg)", fg: "var(--tile-purple-fg)" },
+    },
+    {
+      label: "Audit Log",
+      desc: "Compliance & system activity",
+      icon: <AlertIcon />,
+      path: "/admin-dashboard/audit-log",
+      tone: { bg: "var(--tile-pink-bg)", fg: "var(--tile-pink-fg)" },
+    },
   ];
 
   return (
     <AdminLayout>
       <div className="space-y-6">
-        {/* Hero - matches MDDashboard */}
-        <Card className="overflow-hidden">
-          <div
-            className="p-6 md:p-8"
-            style={{
-              background:
-                "linear-gradient(135deg, rgba(44,75,155,0.10) 0%, rgba(109,198,223,0.18) 50%, rgba(237,50,55,0.06) 100%)",
-            }}
-          >
-            <div className="flex items-center gap-2 mb-2">
-              <Pill>Admin</Pill>
-              <Pill tone="success">System Management</Pill>
+        {/* HERO */}
+        <section className="ct-card p-6 md:p-8">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-5">
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2 mb-3 flex-wrap">
+                <span className="ct-pill" style={{ background: "var(--tile-blue-bg)", color: "var(--tile-blue-fg)" }}>
+                  Admin
+                </span>
+                <span className="ct-pill" style={{ background: "var(--tile-green-bg)", color: "var(--tile-green-fg)" }}>
+                  System Management
+                </span>
+              </div>
+              <h1
+                className="text-[28px] md:text-[34px] font-bold tracking-tight leading-[1.1]"
+                style={{ color: "var(--text-primary)", letterSpacing: "-0.025em" }}
+              >
+                Admin Dashboard <span aria-hidden="true">👋</span>
+              </h1>
+              <p
+                className="mt-2 text-[15px]"
+                style={{ color: "var(--text-secondary)", maxWidth: "62ch" }}
+              >
+                Manage users, roles, accounts, and departments across the system.
+              </p>
             </div>
-            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
-              Admin Dashboard
-            </h1>
-            <p className="text-gray-600 mt-2 max-w-2xl">
-              Manage users, roles, accounts, and departments across the system.
-            </p>
           </div>
-        </Card>
+        </section>
 
-        {/* Quick Actions - matches MDDashboard Quick Actions grid */}
-        <Card className="p-6">
-          <SectionTitle title="Quick Actions" subtitle="Manage system configuration and users" />
-          <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        {/* QUICK ACTIONS */}
+        <section className="ct-card p-6">
+          <div>
+            <h2 className="ct-section-title">Quick Actions</h2>
+            <p className="ct-section-subtitle">Manage system configuration and users</p>
+          </div>
+          <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
             {quickLinks.map((item) => (
-              <Link key={item.path} href={item.path} className="group">
-                <div className="p-5 rounded-2xl border border-gray-200/80 bg-white hover:bg-gray-50 transition">
+              <Link key={item.path} href={item.path} className="block">
+                <div className="ct-card ct-card-hover p-5">
                   <div className="flex items-center justify-between">
-                    <div
-                      className="w-11 h-11 rounded-2xl flex items-center justify-center"
-                      style={{ backgroundColor: "rgba(109, 198, 223, 0.18)", color: "var(--primary-blue)" }}
+                    <span
+                      className="ct-stat-icon"
+                      style={{ backgroundColor: item.tone.bg, color: item.tone.fg }}
                     >
                       {item.icon}
-                    </div>
-                    <span className="text-xs text-gray-500 group-hover:text-gray-700 transition">Open →</span>
+                    </span>
+                    <span
+                      className="text-[11px]"
+                      style={{ color: "var(--text-tertiary)" }}
+                    >
+                      Open →
+                    </span>
                   </div>
                   <div className="mt-4">
-                    <div className="font-extrabold" style={{ color: "var(--primary-blue)" }}>
+                    <div
+                      className="text-[16px] font-bold tracking-tight"
+                      style={{ color: "var(--text-primary)", letterSpacing: "-0.015em" }}
+                    >
                       {item.label}
                     </div>
-                    <div className="text-sm text-gray-500 mt-1">{item.desc}</div>
+                    <div
+                      className="text-[13px] mt-1"
+                      style={{ color: "var(--text-tertiary)" }}
+                    >
+                      {item.desc}
+                    </div>
                   </div>
                 </div>
               </Link>
             ))}
           </div>
-        </Card>
+        </section>
       </div>
     </AdminLayout>
   );

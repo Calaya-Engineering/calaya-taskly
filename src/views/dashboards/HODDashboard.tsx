@@ -395,79 +395,75 @@ export default function HODDashboard() {
   /* ─────────────────────────────────────────────────────────── */
   return (
     <div className="space-y-6">
-        {/* Hero */}
-        <Card className="overflow-hidden">
-          <div
-            className="p-6 md:p-8"
-            style={{
-              background:
-                "linear-gradient(135deg, rgba(44,75,155,0.10) 0%, rgba(109,198,223,0.18) 50%, rgba(237,50,55,0.06) 100%)",
-            }}
-          >
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
-              <div>
-                <div className="flex items-center gap-2 mb-2 flex-wrap">
-                  <Pill>Department Overview</Pill>
-                  {loading ? (
-                    <Pill>Loading…</Pill>
-                  ) : escalatedCount > 0 ? (
-                    <Pill tone="danger">{renderNodeWithIcons("⚠ ")}{escalatedCount} Escalated</Pill>
-                  ) : (
-                    <Pill tone="success">All Clear</Pill>
-                  )}
-                  {selectedDepartment === "all" && managedDepartments.length > 1 ? (
-                    <Pill tone="purple">All Assigned Departments</Pill>
-                  ) : myDept ? (
-                    <Pill tone="purple">{selectedDepartment === "all" ? myDept : selectedDepartment}</Pill>
-                  ) : null}
-                </div>
-
-                <h1
-                  className="text-2xl md:text-3xl font-extrabold tracking-tight"
-                  style={{ color: "var(--primary-blue)" }}
-                >
-                  Welcome{me?.name ? `, ${me.name}` : ""}
-                </h1>
-                <p className="text-gray-600 mt-2 max-w-2xl">
-                  Manage your assigned department tasks, monitor performance, and oversee operations at a glance.
-                </p>
-              </div>
-
-              <div className="flex flex-wrap gap-2">
-                {managedDepartments.length > 1 ? (
-                  <select
-                    value={selectedDepartment}
-                    onChange={(e) => setSelectedDepartment(e.target.value)}
-                    className="px-4 py-3 rounded-2xl border bg-white hover:bg-gray-50 transition"
-                    style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}
-                  >
-                    <option value="all">All Assigned Departments</option>
-                    {managedDepartments.map((departmentName) => (
-                      <option key={departmentName} value={departmentName}>
-                        {departmentName}
-                      </option>
-                    ))}
-                  </select>
+        {/* HERO */}
+        <section className="ct-card p-6 md:p-8">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-5">
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2 mb-3 flex-wrap">
+                <span className="ct-pill" style={{ background: "var(--tile-blue-bg)", color: "var(--tile-blue-fg)" }}>
+                  Department Overview
+                </span>
+                {loading ? (
+                  <span className="ct-pill">Loading…</span>
+                ) : escalatedCount > 0 ? (
+                  <span className="ct-pill" style={{ background: "var(--accent-red-100)", color: "var(--accent-red)" }}>
+                    {renderNodeWithIcons("⚠ ")}{escalatedCount} Escalated
+                  </span>
+                ) : (
+                  <span className="ct-pill" style={{ background: "var(--tile-green-bg)", color: "var(--tile-green-fg)" }}>
+                    All Clear
+                  </span>
+                )}
+                {selectedDepartment === "all" && managedDepartments.length > 1 ? (
+                  <span className="ct-pill" style={{ background: "var(--tile-purple-bg)", color: "var(--tile-purple-fg)" }}>
+                    All Assigned Departments
+                  </span>
+                ) : myDept ? (
+                  <span className="ct-pill" style={{ background: "var(--tile-purple-bg)", color: "var(--tile-purple-fg)" }}>
+                    {selectedDepartment === "all" ? myDept : selectedDepartment}
+                  </span>
                 ) : null}
-                <button
-                  onClick={() => fetchAll()}
-                  className="px-5 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition"
-                  style={{ backgroundColor: "var(--primary-blue)" }}
-                >
-                  ↻ Refresh
-                </button>
-                <Link href="/hod-dashboard/tasks">
-                  <button
-                    className="px-5 py-3 rounded-2xl font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
-                    style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}
-                  >
-                    View All Tasks
-                  </button>
-                </Link>
               </div>
+
+              <h1
+                className="text-[28px] md:text-[34px] font-bold tracking-tight leading-[1.1]"
+                style={{ color: "var(--text-primary)", letterSpacing: "-0.025em" }}
+              >
+                Welcome Back{me?.name ? `, ${me.name}` : ""} <span aria-hidden="true">👋</span>
+              </h1>
+              <p
+                className="mt-2 text-[15px]"
+                style={{ color: "var(--text-secondary)", maxWidth: "62ch" }}
+              >
+                Manage your assigned department tasks, monitor performance, and oversee operations at a glance.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {managedDepartments.length > 1 ? (
+                <select
+                  value={selectedDepartment}
+                  onChange={(e) => setSelectedDepartment(e.target.value)}
+                  className="ct-input"
+                  style={{ minWidth: 220 }}
+                >
+                  <option value="all">All Assigned Departments</option>
+                  {managedDepartments.map((departmentName) => (
+                    <option key={departmentName} value={departmentName}>
+                      {departmentName}
+                    </option>
+                  ))}
+                </select>
+              ) : null}
+              <button onClick={() => fetchAll()} className="ct-btn ct-btn-primary">
+                ↻ Refresh
+              </button>
+              <Link href="/hod-dashboard/tasks">
+                <button className="ct-btn ct-btn-secondary">View All Tasks</button>
+              </Link>
             </div>
           </div>
-        </Card>
+        </section>
 
         {/* Stats Grid */}
         <div className="space-y-3">
@@ -489,41 +485,66 @@ export default function HODDashboard() {
               </span>
             )}
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
-          {stats.map((stat) => (
-            <Link key={stat.title} href={stat.link} className="group">
-              <Card className="p-5 shadow-none hover:-translate-y-0.5 transition-all">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="text-sm text-gray-500">{stat.title}</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-5">
+          {stats.map((stat, idx) => {
+            const palette = [
+              { bg: "var(--tile-blue-bg)",   fg: "var(--tile-blue-fg)" },
+              { bg: "var(--tile-orange-bg)", fg: "var(--tile-orange-fg)" },
+              { bg: "var(--tile-purple-bg)", fg: "var(--tile-purple-fg)" },
+              { bg: "var(--tile-green-bg)",  fg: "var(--tile-green-fg)" },
+              { bg: "var(--tile-pink-bg)",   fg: "var(--tile-pink-fg)" },
+              { bg: "var(--tile-cyan-bg)",   fg: "var(--tile-cyan-fg)" },
+            ];
+            const tone = palette[idx % palette.length];
+            return (
+              <Link key={stat.title} href={stat.link} className="block">
+                <div className="ct-card ct-card-hover p-5">
+                  <div className="flex items-start justify-between gap-3">
+                    <span
+                      className="ct-stat-icon"
+                      style={{ backgroundColor: tone.bg, color: tone.fg }}
+                      aria-hidden="true"
+                    >
+                      {renderNodeWithIcons(stat.icon)}
+                    </span>
+                  </div>
+                  <div className="mt-3">
                     {loading ? (
                       <SkeletonBar />
                     ) : (
-                      <p className="text-3xl font-extrabold tracking-tight mt-1">{stat.value}</p>
+                      <div
+                        className="text-[30px] font-bold leading-none tracking-tight"
+                        style={{ color: "var(--text-primary)", letterSpacing: "-0.025em" }}
+                      >
+                        {stat.value}
+                      </div>
                     )}
-                    <p className="text-sm mt-3" style={{ color: stat.color }}>
-                      {stat.sub}
-                    </p>
+                    <div
+                      className="text-[12px] mt-1.5 font-medium"
+                      style={{ color: "var(--text-tertiary)" }}
+                    >
+                      {stat.title}
+                    </div>
                   </div>
-
                   <div
-                    className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0"
-                    style={{ backgroundColor: `${stat.color}18` }}
-                    aria-hidden="true"
+                    className="mt-4 h-1.5 rounded-full overflow-hidden"
+                    style={{ backgroundColor: "var(--surface-page)" }}
                   >
-                    <span style={{ color: stat.color }}>{renderNodeWithIcons(stat.icon)}</span>
+                    <div
+                      className="h-full rounded-full transition-all duration-700"
+                      style={{ width: loading ? "0%" : stat.bar, backgroundColor: tone.fg }}
+                    />
+                  </div>
+                  <div
+                    className="mt-3 text-[12px] font-medium"
+                    style={{ color: tone.fg }}
+                  >
+                    {stat.sub}
                   </div>
                 </div>
-
-                <div className="mt-4 h-2 rounded-full bg-gray-100 overflow-hidden">
-                  <div
-                    className="h-full rounded-full transition-all duration-700"
-                    style={{ width: loading ? "0%" : stat.bar, background: stat.color }}
-                  />
-                </div>
-              </Card>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
           </div>
         </div>
 
