@@ -581,11 +581,15 @@ export default function StaffSubmitReport() {
             />
 
             <div className="mt-6 space-y-4 max-h-[500px] overflow-y-auto pr-2">
-              {submittedReports.length === 0 && (
+              {loading ? (
+                <div className="rounded-2xl border border-dashed border-gray-200 p-6 text-center text-sm text-gray-500">
+                  Loading your saved reports...
+                </div>
+              ) : submittedReports.length === 0 ? (
                 <div className="rounded-2xl border border-dashed border-gray-200 p-6 text-center text-sm text-gray-500">
                   No saved reports yet. Your submitted reports will appear here after they are stored.
                 </div>
-              )}
+              ) : null}
               {submittedReports.map((report) => (
                 <div
                   key={report.id}

@@ -178,6 +178,7 @@ export default function HODDailyReports({ reportKind = "daily" }: { reportKind?:
   const [viewMode, setViewMode] = useState('list');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [managedDepartments, setManagedDepartments] = useState<string[]>([]);
+  const [departmentsLoaded, setDepartmentsLoaded] = useState(false);
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [tableScrollTop, setTableScrollTop] = useState(0);
@@ -214,14 +215,17 @@ export default function HODDailyReports({ reportKind = "daily" }: { reportKind?:
         const departments = Array.isArray(me?.managedDepartments) && me.managedDepartments.length > 0
           ? me.managedDepartments
           : String(me?.department ?? "").trim() ? [String(me.department).trim()] : [];
-        if (departments.length === 0) return;
         setManagedDepartments(departments);
-        setSelectedDepartments((prev) => {
-          const next = prev.filter((item) => departments.includes(item));
-          return next.length > 0 ? next : [departments[0]];
-        });
+        if (departments.length > 0) {
+          setSelectedDepartments((prev) => {
+            const next = prev.filter((item) => departments.includes(item));
+            return next.length > 0 ? next : [departments[0]];
+          });
+        }
       } catch (err) {
         console.error("Failed to load HOD department:", err);
+      } finally {
+        setDepartmentsLoaded(true);
       }
     }
 
@@ -233,6 +237,10 @@ export default function HODDailyReports({ reportKind = "daily" }: { reportKind?:
       setRefreshing(true);
     } else {
       setLoading(true);
+    }
+
+    if (!departmentsLoaded) {
+      return;
     }
 
     if (managedDepartments.length === 0) {
@@ -257,7 +265,7 @@ export default function HODDailyReports({ reportKind = "daily" }: { reportKind?:
       setLoading(false);
       setRefreshing(false);
     }
-  }, [managedDepartments, reportKind]);
+  }, [departmentsLoaded, managedDepartments, reportKind]);
 
   useEffect(() => { getReports("initial"); }, [getReports]);
 
