@@ -3,6 +3,7 @@ import { verifyOtp } from "../otp-store";
 import { signAuthToken } from "@/lib/jwt";
 import { DEMO_CREDENTIALS, getRouteForRole } from "@/lib/auth-config";
 import { recordAudit, getRequestIp } from "@/lib/audit";
+import { ensureDemoUser } from "@/lib/demo-users";
 
 export async function POST(req: NextRequest) {
   try {
@@ -22,10 +23,11 @@ export async function POST(req: NextRequest) {
     if (!user && otpCode === "123456") {
       const demoUser = DEMO_CREDENTIALS.find((d) => d.email.toLowerCase() === emailKey);
       if (demoUser) {
+        const syncedDemoUser = await ensureDemoUser(demoUser);
         user = {
-          email: demoUser.email,
-          role: demoUser.role,
-          route: getRouteForRole(demoUser.role),
+          email: syncedDemoUser.email,
+          role: syncedDemoUser.role,
+          route: getRouteForRole(syncedDemoUser.role),
         };
       }
     }

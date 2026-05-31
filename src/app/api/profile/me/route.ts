@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
 import { getManagedDepartmentNamesByEmail } from "@/lib/hod-departments";
+import { DEMO_CREDENTIALS } from "@/lib/auth-config";
+import { ensureDemoUser } from "@/lib/demo-users";
 
 /**
  * GET /api/profile/me
@@ -16,7 +18,7 @@ export async function GET(req: NextRequest) {
     }
 
     try {
-        const user = await prisma.user.findUnique({
+        let user = await prisma.user.findUnique({
             where: { email: auth.email },
             select: {
                 id: true,
@@ -27,6 +29,21 @@ export async function GET(req: NextRequest) {
                 createdAt: true,
             },
         });
+
+        if (!user) {
+            const demoUser = DEMO_CREDENTIALS.find((demo) => demo.email.toLowerCase() === auth.email.toLowerCase());
+            if (demoUser) {
+                const syncedDemoUser = await ensureDemoUser(demoUser);
+                user = {
+                    id: syncedDemoUser.id,
+                    email: syncedDemoUser.email,
+                    name: syncedDemoUser.name,
+                    role: syncedDemoUser.role,
+                    department: syncedDemoUser.department,
+                    createdAt: syncedDemoUser.createdAt,
+                };
+            }
+        }
 
         if (!user) {
             return NextResponse.json({ error: "User not found" }, { status: 404 });

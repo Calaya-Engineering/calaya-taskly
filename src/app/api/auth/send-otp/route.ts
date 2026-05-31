@@ -3,6 +3,7 @@ import { DEMO_CREDENTIALS, getRouteForRole, ADMIN_EMAIL, ADMIN_PASSWORD } from "
 import { prisma } from "@/lib/prisma";
 import { verifyPassword } from "@/lib/password";
 import { signAuthToken } from "@/lib/jwt";
+import { ensureDemoUser } from "@/lib/demo-users";
 
 export async function POST(req: NextRequest) {
   try {
@@ -64,14 +65,15 @@ export async function POST(req: NextRequest) {
     }
 
     // OTP email verification is temporarily bypassed for demo users too.
-    const token = await signAuthToken({ email: demoUser.email, role: demoUser.role });
+    const syncedDemoUser = await ensureDemoUser(demoUser);
+    const token = await signAuthToken({ email: syncedDemoUser.email, role: syncedDemoUser.role });
 
     return NextResponse.json({
       success: true,
       skipOtp: true,
       token,
-      role: demoUser.role,
-      route: demoUser.route,
+      role: syncedDemoUser.role,
+      route: getRouteForRole(syncedDemoUser.role),
     });
   } catch (error: any) {
     console.error("Error in send-otp route:", error);
