@@ -9,6 +9,7 @@ import { MDMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
 import { fetchWithAuth } from "@/lib/api";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
+import EventAcknowledgement from "@/components/EventAcknowledgement";
 /* ---------- UI helpers ---------- */
 interface AssignmentUser {
   name?: string;
@@ -467,6 +468,13 @@ export default function MDTaskDetail() {
                   />
 
                   <InfoRow label="Visibility" value={taskData.visibility || "—"} />
+                </div>
+              </Card>
+
+              <Card className="p-6">
+                <SectionTitle title="Seen Status" subtitle="Confirm you've seen this task" />
+                <div className="mt-4">
+                  <EventAcknowledgement taskId={taskData.id} itemLabel="task" showList isManager />
                 </div>
               </Card>
 

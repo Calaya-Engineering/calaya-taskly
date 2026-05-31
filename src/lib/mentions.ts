@@ -6,6 +6,7 @@ const MENTION_TOKEN_RE = /@\[([^|\]]+)\|(\d+)\]/g;
 export type MentionSourceType =
   | "DOCUMENT"
   | "TASK_COMPLETION"
+  | "TENDER_CREATED"
   | "TENDER_COMMENT"
   | "DAILY_REPORT"
   | "ANNOUNCEMENT";

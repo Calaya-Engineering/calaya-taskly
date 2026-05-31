@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import EntityQuickActions from "@/components/EntityQuickActions";
 import EventAcknowledgement from "@/components/EventAcknowledgement";
+import EventRSVP from "@/components/EventRSVP";
 import Layout from "@/components/Layout";
 import { MDMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
@@ -154,7 +155,6 @@ export default function MDEventDetail() {
   const router = useRouter();
 
   const [activeTab, setActiveTab] = useState("overview"); // overview | attendees | documents | comments
-  const [rsvpStatus, setRsvpStatus] = useState("ACCEPTED");
 
   const [comments, setComments] = useState(initialComments);
   const [newComment, setNewComment] = useState("");
@@ -163,7 +163,7 @@ export default function MDEventDetail() {
   const [editingComment, setEditingComment] = useState(null);
   const [editContent, setEditContent] = useState("");
 
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<number | string | null>(null);
 
   // demo current user
   const currentUser = useMemo(
@@ -183,11 +183,6 @@ export default function MDEventDetail() {
   }, []);
 
   const liveCommentsCount = useMemo(() => comments.filter((c) => !c.isDeleted).length, [comments]);
-
-  const handleRsvpChange = (status) => {
-    setRsvpStatus(status);
-    toast.info(`RSVP status changed to ${status}`);
-  };
 
   const handleAddComment = () => {
     if (!newComment.trim()) return;
@@ -407,33 +402,7 @@ export default function MDEventDetail() {
             <div className="lg:col-span-1 space-y-6">
               {/* RSVP */}
               <Card className="p-6">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-extrabold" style={{ color: "var(--primary-blue)" }}>
-                    Your RSVP
-                  </h3>
-                  <Pill tone={rsvpTone(rsvpStatus)}>{rsvpStatus}</Pill>
-                </div>
-
-                <div className="mt-4 grid grid-cols-1 gap-2">
-                  {["ACCEPTED", "TENTATIVE", "DECLINED"].map((s) => {
-                    const active = rsvpStatus === s;
-                    return (
-                      <button
-                        key={s}
-                        onClick={() => handleRsvpChange(s)}
-                        className={`px-4 py-2.5 rounded-2xl text-sm font-semibold border transition ${active ? "text-white" : "bg-white hover:bg-gray-50"
-                          }`}
-                        style={{
-                          backgroundColor: active ? "var(--primary-blue)" : undefined,
-                          borderColor: active ? "transparent" : "rgba(44, 75, 155, 0.25)",
-                          color: active ? "white" : "var(--primary-blue)",
-                        }}
-                      >
-                        {s}
-                      </button>
-                    );
-                  })}
-                </div>
+                <EventRSVP eventId={eventId as string} />
               </Card>
 
               {/* Attendance summary */}
@@ -791,7 +760,7 @@ export default function MDEventDetail() {
         {/* Quick Actions (MD style buttons) */}
         <EntityQuickActions
           entityType={eventData.eventType === "MEETING" ? "meeting" : "event"}
-          entityId={eventId}
+          entityId={String(eventId ?? "")}
           title={eventData.title}
           sectionTitle="Event Actions"
           sectionSubtitle="Common actions you may want to perform"

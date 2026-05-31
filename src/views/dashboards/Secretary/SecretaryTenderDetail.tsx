@@ -10,6 +10,8 @@ import { toast } from "@/lib/toast";
 import { fetchWithAuth, getAuthToken } from "@/lib/api";
 import { formatFileSize, parseFileSize } from "@/lib/file-size";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
+import TenderComments from "@/components/TenderComments";
+import TenderAcknowledgement from "@/components/TenderAcknowledgement";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -35,7 +37,7 @@ const Pill = ({ children, tone = "default" }) => {
   );
 };
 
-const SectionTitle = ({ title, subtitle, action }) => (
+const SectionTitle = ({ title, subtitle, action = null }) => (
   <div className="flex items-start justify-between gap-3">
     <div>
       <h2 className="text-lg md:text-xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
@@ -251,6 +253,7 @@ export default function SecretaryTenderDetail() {
                 { id: "details", label: "Details" },
                 { id: "requirements", label: "Requirements" },
                 { id: "documents", label: `Documents (${tender?.documents?.length || 0})` },
+                { id: "comments", label: `Comments${tender?.commentsCount ? ` (${tender.commentsCount})` : ""}` },
               ].map((t) => (
                 <button
                   key={t.id}
@@ -433,7 +436,7 @@ export default function SecretaryTenderDetail() {
                 </div>
               </div>
             </Card>
-          ) : (
+          ) : activeTab === "documents" ? (
             <Card className="p-6">
               <SectionTitle
                 title="Tender Documents"
@@ -482,11 +485,24 @@ export default function SecretaryTenderDetail() {
                 ))}
               </div>
             </Card>
+          ) : (
+            <Card className="p-6">
+              <SectionTitle
+                title="Tender Discussion"
+                subtitle="Comments are visible to everyone. Tag people with @"
+              />
+              <div className="mt-6">
+                <TenderComments tenderId={(tender?.dbId ?? tender?.id) as any} />
+              </div>
+            </Card>
           )
         )}
 
         {/* Secretary Responsibilities */}
         <Card className="p-6 bg-blue-50/30">
+          <div className="mb-6">
+            <TenderAcknowledgement tenderId={(tender?.dbId ?? tender?.id) as any} />
+          </div>
           <SectionTitle title="Secretary Responsibilities" />
           <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
             {[

@@ -9,6 +9,7 @@ import { fetchWithAuth } from "@/lib/api";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 import { getTaskStatusLabel } from "@/lib/task-approval";
 import MentionInput from "@/components/MentionInput";
+import EventAcknowledgement from "@/components/EventAcknowledgement";
 
 interface AssignmentUser {
   name?: string | null;
@@ -479,6 +480,13 @@ export default function StaffTaskDetail() {
                   />
                   <InfoRow label="Visibility" value={taskData.visibility || "—"} />
                   <InfoRow label="Last Updated" value={fmtDateTime(taskData.updatedAt)} />
+                </div>
+              </Card>
+
+              <Card className="p-6">
+                <SectionTitle title="Seen Status" subtitle="Confirm you've seen this task" />
+                <div className="mt-4">
+                  <EventAcknowledgement taskId={taskData.id} itemLabel="task" />
                 </div>
               </Card>
 

@@ -10,58 +10,9 @@ import {
   getDisplayNameForUserValue,
   getRoleForUserValue,
 } from "@/lib/user-display";
+import { processMentions, stripMentionTokens } from "@/lib/mentions";
 
 const DEFAULT_TENDER_DEPARTMENT = "Company-wide";
-
-type TenderDocumentInput = {
-  title?: unknown;
-  fileUrl?: unknown;
-  fileSize?: unknown;
-  fileType?: unknown;
-};
-
-type NormalizedTenderDocument = {
-  title: string;
-  type: string;
-  department: string;
-  uploadedBy: string;
-  scope: string;
-  fileSize: string;
-  fileUrl: string;
-};
-
-function normalizeTenderDocuments(input: unknown, uploadedBy: string) {
-  if (!Array.isArray(input)) return [];
-
-  return input
-    .map((doc) => {
-      const candidate = (doc ?? {}) as TenderDocumentInput;
-      const fileUrl = typeof candidate.fileUrl === "string" ? candidate.fileUrl.trim() : "";
-      if (!fileUrl) return null;
-
-      const title =
-        typeof candidate.title === "string" && candidate.title.trim()
-          ? candidate.title.trim()
-          : "Tender Document";
-
-      return {
-        title,
-        type:
-          typeof candidate.fileType === "string" && candidate.fileType.trim()
-            ? candidate.fileType.trim()
-            : "Tender Document",
-        department: DEFAULT_TENDER_DEPARTMENT,
-        uploadedBy,
-        scope: "TENDER",
-        fileSize:
-          typeof candidate.fileSize === "string" && candidate.fileSize.trim()
-            ? candidate.fileSize.trim()
-            : "—",
-        fileUrl,
-      };
-    })
-    .filter((doc): doc is NormalizedTenderDocument => doc !== null);
-}
 
 function inferUploadedByRole(uploadedBy: string, userLookup: Map<string, { name: string | null; role: string | null }>) {
   const resolvedRole = getRoleForUserValue(uploadedBy, userLookup);
@@ -104,7 +55,6 @@ export async function GET(req: NextRequest) {
 
     const { searchParams } = req.nextUrl;
     const status = searchParams.get("status");
-    const department = searchParams.get("department");
     const search = searchParams.get("search")?.trim() || "";
     const compact = searchParams.get("compact") === "true";
     const includeDocuments = searchParams.get("includeDocuments") === "true";
@@ -115,19 +65,8 @@ export async function GET(req: NextRequest) {
 
     const where: any = {};
     if (status && status !== "all") where.status = status;
-    if (department && department !== "all") {
-      where.department = department;
-    } else {
-      const departments = searchParams.get("departments");
-      if (departments) {
-        const list = departments
-          .split(",")
-          .map((d) => d.trim())
-          .filter(Boolean);
-        if (list.length === 1) where.department = list[0];
-        else if (list.length > 1) where.department = { in: list };
-      }
-    }
+    // Tenders are intentionally company-visible. Department filters are ignored here
+    // so staff, HODs, MD, and secretary roles see the same tender list.
     if (search) {
       where.OR = [
         { title: { contains: search } },
@@ -250,8 +189,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { title, description, closingDate, referenceNo, status, documents } = body;
-    const authName = typeof auth.name === "string" ? auth.name.trim() : "";
+    const { title, description, closingDate, referenceNo, status } = body;
 
     if (!title || !closingDate || !description) {
       return NextResponse.json(
@@ -259,9 +197,6 @@ export async function POST(req: NextRequest) {
         { status: 400 },
       );
     }
-
-    const uploaderName = authName || auth.email.split("@")[0] || "Unknown";
-    const tenderDocuments = normalizeTenderDocuments(documents, uploaderName);
 
     const tender = await prisma.tender.create({
       data: {
@@ -273,13 +208,6 @@ export async function POST(req: NextRequest) {
         closingDate: new Date(closingDate),
         createdBy: auth.email || "Unknown",
         status: typeof status === "string" && status.trim() ? status : "OPEN",
-        ...(tenderDocuments.length > 0
-          ? {
-              documents: {
-                create: tenderDocuments,
-              },
-            }
-          : {}),
       },
     });
 
@@ -305,10 +233,22 @@ export async function POST(req: NextRequest) {
       actionType: "CREATE_TENDER",
       targetId: tender.id,
       message: `${auth.name || auth.email.split("@")[0]} (${auth.role}) created a new tender: ${tender.title}`,
-      recipients: getTenderAudience([tender.department || DEFAULT_TENDER_DEPARTMENT]),
+      recipients: getTenderAudience(),
       sendEmail: true,
       emailSubject: `Tender Created — ${tender.title}`,
       linkPath: `/open/item?type=tender&id=${tender.id}`,
+    });
+
+    void processMentions({
+      text: description,
+      sourceType: "TENDER_CREATED",
+      sourceId: tender.id,
+      actor: { email: auth.email, role: auth.role, name: auth.name as string | undefined },
+      notificationActionType: "MENTION_TENDER_CREATED",
+      notificationMessage: `${auth.name || auth.email.split("@")[0]} mentioned you in tender "${tender.title}"`,
+      emailSubject: `Mentioned in tender — ${tender.title}`,
+      linkPath: `/open/item?type=tender&id=${tender.id}`,
+      context: stripMentionTokens(description).slice(0, 200),
     });
 
     return NextResponse.json(tender);

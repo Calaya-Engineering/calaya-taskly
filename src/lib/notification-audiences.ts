@@ -81,7 +81,6 @@ export function getEventAudience(params: {
 }
 
 export function getTenderAudience(departments?: string[] | null) {
-  return getDashboardAudience({
-    departments: unique(departments || []),
-  });
+  const scopedDepartments = unique(departments || []);
+  return scopedDepartments.length ? getDashboardAudience({ departments: scopedDepartments }) : getDashboardAudience();
 }

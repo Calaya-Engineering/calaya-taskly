@@ -3,12 +3,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Layout from "@/components/Layout";
-import FileUploadSection from "@/components/FileUploadSection";
 import { HODMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
 import { fetchWithAuth } from "@/lib/api";
-import { formatFileSize } from "@/lib/file-size";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
+import MentionInput from "@/components/MentionInput";
 
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -43,7 +42,7 @@ const SectionTitle = ({ title, subtitle }) => (
   </div>
 );
 
-const FieldLabel = ({ children, required }) => (
+const FieldLabel = ({ children, required = false }) => (
   <label className="block text-sm font-extrabold text-gray-700 mb-2">
     {children} {required ? <span className="text-red-500">*</span> : null}
   </label>
@@ -51,8 +50,13 @@ const FieldLabel = ({ children, required }) => (
 
 const inputBase =
   "w-full px-4 py-3 rounded-2xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100";
-const textareaBase =
-  "w-full px-4 py-3 rounded-2xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100";
+
+type ExistingTenderDocument = {
+  id: string | number;
+  name?: string;
+  size?: string;
+  uploadedAt?: string;
+};
 
 function toDateInput(value) {
   if (!value) return "";
@@ -68,8 +72,7 @@ export default function HODCreateTender() {
   const isEditMode = !!tenderId;
   const [loading, setLoading] = useState(isEditMode);
   const [saving, setSaving] = useState(false);
-  const [documents, setDocuments] = useState([]);
-  const [existingDocuments, setExistingDocuments] = useState([]);
+  const [existingDocuments, setExistingDocuments] = useState<ExistingTenderDocument[]>([]);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -133,49 +136,6 @@ export default function HODCreateTender() {
     setFormData((prev) => ({ ...prev, [field]: event.target.value }));
   };
 
-  const handleFileUpload = (event) => {
-    const files = Array.from(event.target.files || []);
-    if (!files.length) return;
-    setDocuments((prev) => [...prev, ...files]);
-    event.target.value = "";
-  };
-
-  const removeDocument = (index) => {
-    setDocuments((prev) => prev.filter((_, currentIndex) => currentIndex !== index));
-  };
-
-  async function uploadTenderDocuments() {
-    if (documents.length === 0) return [];
-
-    const uploadedDocuments = [];
-    for (const file of documents) {
-      const uploadFormData = new FormData();
-      uploadFormData.append("file", file);
-
-      const uploadRes = await fetchWithAuth("/api/upload/cloudinary", {
-        method: "POST",
-        body: uploadFormData,
-      });
-      const uploadData = await uploadRes.json().catch(() => null);
-
-      const uploadedUrl = uploadData?.secureUrl || uploadData?.url;
-
-      if (!uploadRes.ok || !uploadedUrl) {
-        throw new Error(uploadData?.error || `Failed to upload ${file.name}`);
-      }
-
-      const extension = file.name.includes(".") ? file.name.split(".").pop()?.toUpperCase() : "FILE";
-      uploadedDocuments.push({
-        title: file.name,
-        fileUrl: uploadedUrl,
-        fileSize: formatFileSize(file.size),
-        fileType: extension ? `${extension} Document` : "Tender Document",
-      });
-    }
-
-    return uploadedDocuments;
-  }
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (saving) return;
@@ -186,13 +146,11 @@ export default function HODCreateTender() {
 
     setSaving(true);
     try {
-      const uploadedDocuments = await uploadTenderDocuments();
       const payload = {
         title: formData.title.trim(),
         description: formData.description.trim(),
         closingDate: formData.closingDate,
         status: formData.status,
-        documents: uploadedDocuments,
       };
 
       const res = await fetchWithAuth(isEditMode ? `/api/tenders/${tenderId}` : "/api/tenders", {
@@ -307,28 +265,14 @@ export default function HODCreateTender() {
 
                   <div className="md:col-span-2">
                     <FieldLabel required>Description</FieldLabel>
-                    <textarea
-                      rows={8}
-                      required
-                      className={textareaBase}
-                      placeholder="Describe the scope of work, key deliverables, and any context suppliers should know."
+                    <MentionInput
                       value={formData.description}
-                      onChange={handleChange("description")}
+                      onChange={(value) => setFormData((prev) => ({ ...prev, description: value }))}
+                      placeholder="Describe the scope of work, key deliverables, and tag anyone who should review this with @."
+                      minRows={8}
                     />
                   </div>
 
-                  <div className="md:col-span-2">
-                    <FileUploadSection
-                      inputId="hod-tender-document-upload"
-                      files={documents}
-                      onFileChange={handleFileUpload}
-                      onRemoveFile={removeDocument}
-                      title="Documents"
-                      accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.zip,.jpg,.jpeg,.png"
-                      helperText="Files will upload to Cloudinary when you save this tender."
-                      selectedTitle="Documents Ready to Upload"
-                    />
-                  </div>
                 </div>
 
                 {isEditMode && existingDocuments.length > 0 ? (
@@ -352,7 +296,7 @@ export default function HODCreateTender() {
 
                 <div className="mt-8 pt-6 border-t border-gray-200/70 flex flex-col sm:flex-row justify-between gap-3">
                   <div className="text-sm text-gray-500">
-                    Any selected documents will be uploaded to Cloudinary and linked to this tender when you save.
+                    Tender file uploads are disabled. Use the tender comments thread for updates.
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-3">

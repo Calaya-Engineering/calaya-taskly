@@ -38,9 +38,10 @@ type Props = {
   showList?: boolean;
   /** If true, current user is treated as the creator/manager (sees the full list) */
   isManager?: boolean;
+  itemLabel?: string;
 };
 
-export default function EventAcknowledgement({ taskId, showList = false, isManager = false }: Props) {
+export default function EventAcknowledgement({ taskId, showList = false, isManager = false, itemLabel = "event" }: Props) {
   const [state, setState] = useState<State | null>(null);
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -99,8 +100,8 @@ export default function EventAcknowledgement({ taskId, showList = false, isManag
           </div>
           <div className="text-xs text-gray-500">
             {me
-              ? "You've acknowledged this event."
-              : "Confirm you've seen this event."}
+              ? `You've acknowledged this ${itemLabel}.`
+              : `Confirm you've seen this ${itemLabel}.`}
           </div>
         </div>
         <button

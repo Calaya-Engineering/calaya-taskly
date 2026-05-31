@@ -11,6 +11,7 @@ import { fetchWithAuth, getAuthToken } from "@/lib/api";
 import { formatFileSize, parseFileSize } from "@/lib/file-size";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 import TenderComments from "@/components/TenderComments";
+import TenderAcknowledgement from "@/components/TenderAcknowledgement";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -36,7 +37,7 @@ const Pill = ({ children, tone = "default" }) => {
   );
 };
 
-const SectionTitle = ({ title, subtitle, action }) => (
+const SectionTitle = ({ title, subtitle, action = null }) => (
   <div className="flex items-start justify-between gap-3">
     <div>
       <h2 className="text-lg md:text-xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
@@ -318,6 +319,10 @@ export default function StaffTenderDetail() {
                     </div>
                   </div>
                 </div>
+              </Card>
+
+              <Card className="lg:col-span-1 p-6">
+                <TenderAcknowledgement tenderId={(tender?.dbId ?? tender?.id) as any} />
               </Card>
 
               <Card className="lg:col-span-1 p-6">

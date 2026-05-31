@@ -8,7 +8,6 @@ import Layout from "@/components/Layout";
 import { HODMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
 import { fetchWithAuth, getAuthToken } from "@/lib/api";
-import { formatFileSize } from "@/lib/file-size";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 const MANAGED_DEPARTMENTS = ["Technical", "Workshop", "HSE"];
 
@@ -110,13 +109,6 @@ export default function HODTenderDocuments() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [departmentFilter, setDepartmentFilter] = useState("all");
-  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [uploadFormData, setUploadFormData] = useState({
-    files: [] as File[],
-  });
-
   const [tenders, setTenders] = useState<Tender[]>([]);
   const [departmentsList, setDepartmentsList] = useState<Department[]>([]);
   const [loading, setLoading] = useState(true);
@@ -125,7 +117,6 @@ export default function HODTenderDocuments() {
     department: MANAGED_DEPARTMENTS[0] || "",
     managedDepartments: MANAGED_DEPARTMENTS,
   });
-  const [selectedUploadDepartment, setSelectedUploadDepartment] = useState(MANAGED_DEPARTMENTS[0] || "");
 
   const fetchTenders = useCallback(async () => {
     try {
@@ -225,7 +216,6 @@ export default function HODTenderDocuments() {
           department,
           managedDepartments,
         });
-        setSelectedUploadDepartment((currentDepartment) => currentDepartment || department || managedDepartments[0] || "");
       } catch (error) {
         console.error("Failed to load current user:", error);
       }
@@ -305,86 +295,6 @@ export default function HODTenderDocuments() {
       }
     } else {
       toast.error("You can only delete documents you have uploaded");
-    }
-  };
-
-  const handleFileChange = (e) => {
-    const files = Array.from(e.target.files || []);
-    if (!files.length) return;
-    setUploadFormData({
-      ...uploadFormData,
-      files,
-    });
-  };
-
-  const resetUploadForm = () => {
-    setUploadFormData({
-      files: [],
-    });
-  };
-
-  const handleUploadDocument = async (e) => {
-    e.preventDefault();
-    if (!uploadFormData.files.length) return toast.warning("Please select at least one file");
-    if (!selectedTender) return toast.warning("Please select a tender first");
-    if (!selectedUploadDepartment) return toast.warning("Please choose a department section");
-
-    setIsUploading(true);
-    setUploadProgress(0);
-
-    try {
-      const uploadedDocuments = [];
-
-      for (const [index, file] of uploadFormData.files.entries()) {
-        setUploadProgress(Math.round((index / uploadFormData.files.length) * 70));
-
-        const uploadPayload = new FormData();
-        uploadPayload.append("file", file);
-
-        const uploadRes = await fetchWithAuth("/api/upload/cloudinary", {
-          method: "POST",
-          body: uploadPayload,
-        });
-        const uploadData = await uploadRes.json().catch(() => null);
-
-        if (!uploadRes.ok || !(uploadData?.secureUrl || uploadData?.url)) {
-          throw new Error(uploadData?.error || `Failed to upload ${file.name}`);
-        }
-
-        uploadedDocuments.push({
-          title: file.name,
-          type: "Tender Document",
-          fileUrl: uploadData.secureUrl || uploadData.url,
-          fileSize: formatFileSize(file.size),
-          department: selectedUploadDepartment,
-        });
-      }
-
-      const createRes = await fetchWithAuth(`/api/tenders/${selectedTender.id}/documents`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          department: selectedUploadDepartment,
-          documents: uploadedDocuments,
-        }),
-      });
-      const createdDocument = await createRes.json().catch(() => null);
-
-      if (!createRes.ok) {
-        throw new Error(createdDocument?.error || "Failed to save tender document");
-      }
-
-      setUploadProgress(100);
-      await fetchTenders();
-      toast.success(`${uploadFormData.files.length} document(s) uploaded to the ${selectedUploadDepartment} section`);
-      setIsUploadModalOpen(false);
-      resetUploadForm();
-    } catch (error) {
-      console.error("Failed to upload tender document:", error);
-      toast.error(error instanceof Error ? error.message : "Failed to upload document");
-    } finally {
-      setIsUploading(false);
-      setUploadProgress(0);
     }
   };
 
@@ -606,13 +516,6 @@ export default function HODTenderDocuments() {
                       </div>
 
                       <div className="flex gap-2">
-                        <button
-                          onClick={() => setIsUploadModalOpen(true)}
-                          className="px-5 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition"
-                          style={{ backgroundColor: "var(--accent-red)" }}
-                        >
-                          + Upload Document
-                        </button>
                         <Link href={`/hod-dashboard/tender/${selectedTender.id}`}>
                           <button
                             className="px-5 py-3 rounded-2xl font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
@@ -798,132 +701,6 @@ export default function HODTenderDocuments() {
         </div>
       </div>
 
-      {/* Upload Document Modal */}
-      {isUploadModalOpen && selectedTender && (
-        <div className="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-          <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onClick={() => setIsUploadModalOpen(false)}></div>
-
-            <div className="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden border border-gray-200 transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
-              <div className="bg-white px-6 pt-6 pb-4 sm:p-8">
-                <div className="flex justify-between items-start mb-6">
-                  <div>
-                    <h3 className="text-2xl font-extrabold" style={{ color: "var(--primary-blue)" }}>
-                      Upload Tender Documents
-                    </h3>
-                    <p className="text-gray-600 mt-2">Add one or more documents to {selectedTender.title}</p>
-                    <div className="mt-2 flex items-center gap-2">
-                      <Pill tone={getDepartmentTone(selectedUploadDepartment || currentUser.department)}>{selectedUploadDepartment || currentUser.department}</Pill>
-                      <Pill tone="info">Department Section</Pill>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => setIsUploadModalOpen(false)}
-                    className="text-gray-400 hover:text-gray-500 focus:outline-none"
-                  >
-                    <span className="text-2xl">&times;</span>
-                  </button>
-                </div>
-
-                <form onSubmit={handleUploadDocument} className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-extrabold text-gray-700 mb-2">Section</label>
-                    <select
-                      value={selectedUploadDepartment}
-                      onChange={(e) => setSelectedUploadDepartment(e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-100"
-                    >
-                      {currentUser.managedDepartments.map((department) => (
-                        <option key={department} value={department}>
-                          {department}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-extrabold text-gray-700 mb-2">
-                      Files <span className="text-red-500">*</span>
-                    </label>
-                    <div className="rounded-2xl border-2 border-dashed border-gray-300 p-8 text-center hover:border-blue-400 transition">
-                      <input
-                        type="file"
-                        id="hod-document-upload"
-                        multiple
-                        onChange={handleFileChange}
-                        className="hidden"
-                      />
-                      <label htmlFor="hod-document-upload" className="cursor-pointer">
-                        <div
-                          className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center"
-                          style={{ backgroundColor: "rgba(109, 198, 223, 0.12)" }}
-                        >
-                          <span className="text-3xl">{renderNodeWithIcons("📎")}</span>
-                        </div>
-                        {uploadFormData.files.length ? (
-                          <div>
-                            <p className="font-extrabold text-gray-900">{uploadFormData.files.length} file(s) selected</p>
-                            <div className="mt-2 space-y-1 text-sm text-gray-500">
-                              {uploadFormData.files.slice(0, 4).map((file) => (
-                                <p key={`${file.name}-${file.size}`}>{file.name}</p>
-                              ))}
-                              {uploadFormData.files.length > 4 ? <p>and {uploadFormData.files.length - 4} more...</p> : null}
-                            </div>
-                          </div>
-                        ) : (
-                          <div>
-                            <p className="text-gray-800 font-extrabold mb-2">
-                              Click to upload or drag and drop
-                            </p>
-                            <p className="text-sm text-gray-500">
-                              PDF, DOC, XLSX and other large files
-                            </p>
-                          </div>
-                        )}
-                      </label>
-                    </div>
-                  </div>
-
-                  {isUploading && (
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span>Uploading documents...</span>
-                        <span>{uploadProgress}%</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div
-                          className="h-2 rounded-full transition-all duration-300"
-                          style={{ width: `${uploadProgress}%`, backgroundColor: "var(--primary-blue)" }}
-                        />
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="flex justify-end gap-4 pt-6 border-t border-gray-200/70">
-                    <button
-                      type="button"
-                      onClick={() => setIsUploadModalOpen(false)}
-                      className="px-6 py-3 rounded-2xl font-semibold border bg-white hover:bg-gray-50 active:scale-[0.99] transition"
-                      style={{ borderColor: "rgba(44,75,155,0.35)", color: "var(--primary-blue)" }}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={isUploading}
-                      className={`px-6 py-3 rounded-2xl font-semibold text-white active:scale-[0.99] transition ${isUploading ? "opacity-75 cursor-not-allowed" : ""
-                        }`}
-                      style={{ backgroundColor: "var(--accent-red)" }}
-                    >
-                      {isUploading ? "Uploading..." : "Upload Documents"}
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </Layout>
   );
 }

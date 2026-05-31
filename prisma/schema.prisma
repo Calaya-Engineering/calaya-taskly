@@ -42,7 +42,9 @@ model User {
   dailyReportsSubmitted      DailyReport[]      @relation("SubmittedDailyReports")
   sectionSeen                UserSectionSeen[]
   eventAcknowledgements      EventAcknowledgement[]
+  eventResponses             EventResponse[]
   tenderComments             TenderComment[]
+  tenderAcknowledgements     TenderAcknowledgement[]
   auditLogs                  AuditLog[]
   mentionsReceived           Mention[]          @relation("MentionRecipient")
   mentionsMade               Mention[]          @relation("MentionActor")
@@ -109,6 +111,7 @@ model Task {
   createdBy        User             @relation("CreatedBy", fields: [createdById], references: [id])
   assignments      TaskAssignment[]
   acknowledgements EventAcknowledgement[]
+  eventResponses   EventResponse[]
 
   @@index([createdById])
   @@index([status])
@@ -132,6 +135,7 @@ model Tender {
   updatedAt   DateTime   @updatedAt
   documents   Document[]
   comments    TenderComment[]
+  acknowledgements TenderAcknowledgement[]
 
   @@index([status])
   @@index([department])
@@ -173,6 +177,35 @@ model EventAcknowledgement {
 
   @@unique([taskId, userId])
   @@index([taskId])
+  @@index([userId])
+}
+
+model EventResponse {
+  id          Int      @id @default(autoincrement())
+  taskId      Int
+  userId      Int
+  response    String
+  respondedAt DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  task        Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([taskId, userId])
+  @@index([taskId])
+  @@index([userId])
+  @@index([response])
+}
+
+model TenderAcknowledgement {
+  id             Int      @id @default(autoincrement())
+  tenderId       Int
+  userId         Int
+  acknowledgedAt DateTime @default(now())
+  tender         Tender   @relation(fields: [tenderId], references: [id], onDelete: Cascade)
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([tenderId, userId])
+  @@index([tenderId])
   @@index([userId])
 }
 

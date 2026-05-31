@@ -9,6 +9,7 @@ import { StaffMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 import EventAcknowledgement from "@/components/EventAcknowledgement";
+import EventRSVP from "@/components/EventRSVP";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -34,7 +35,7 @@ const Pill = ({ children, tone = "default" }) => {
   );
 };
 
-const SectionTitle = ({ title, subtitle, action }) => (
+const SectionTitle = ({ title, subtitle = null, action = null }: any) => (
   <div className="flex items-start justify-between gap-3">
     <div>
       <h2 className="text-lg md:text-xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
@@ -109,7 +110,7 @@ const fmtShortDateTime = (dateString) => {
 };
 
 const getDuration = (start, end) => {
-  const diff = new Date(end) - new Date(start);
+  const diff = new Date(end).getTime() - new Date(start).getTime();
   const hours = diff / (1000 * 60 * 60);
   return Math.round(hours * 10) / 10;
 };
@@ -187,7 +188,7 @@ export default function StaffEventDetail() {
   const [isInternalComment, setIsInternalComment] = useState(false);
   const [editingComment, setEditingComment] = useState(null);
   const [editContent, setEditContent] = useState('');
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<number | string | null>(null);
 
   // Mock current user
   const currentUser = {
@@ -604,7 +605,7 @@ export default function StaffEventDetail() {
                           onChange={(e) => setNewComment(e.target.value)}
                           placeholder="Ask a question or share your thoughts about this event..."
                           className={textareaBase}
-                          rows="3"
+                          rows={3}
                         />
                         <div className="mt-3 flex items-center justify-between">
                           <label className="flex items-center gap-2 cursor-pointer">
@@ -653,7 +654,7 @@ export default function StaffEventDetail() {
                                   value={editContent}
                                   onChange={(e) => setEditContent(e.target.value)}
                                   className={textareaBase}
-                                  rows="3"
+                                  rows={3}
                                 />
                                 <div className="mt-2 flex gap-2">
                                   <button
@@ -711,6 +712,13 @@ export default function StaffEventDetail() {
 
           {/* SIDE */}
           <div className="space-y-6">
+            <Card className="p-6">
+              <SectionTitle title="RSVP" subtitle="Let the organizer know if you will attend" />
+              <div className="mt-4">
+                <EventRSVP eventId={eventId as string} />
+              </div>
+            </Card>
+
             {/* Acknowledgement */}
             <Card className="p-6">
               <SectionTitle title="Acknowledge" subtitle="Confirm you've seen this" />

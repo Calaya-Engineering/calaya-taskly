@@ -9,6 +9,7 @@ import Layout from "@/components/Layout";
 import { HODMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
+import EventRSVP from "@/components/EventRSVP";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -35,7 +36,7 @@ const Pill = ({ children, tone = "default" }) => {
   );
 };
 
-const SectionTitle = ({ title, subtitle, action }) => (
+const SectionTitle = ({ title, subtitle = null, action = null }: any) => (
   <div className="flex items-start justify-between gap-3">
     <div>
       <h2 className="text-lg md:text-xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
@@ -171,13 +172,12 @@ export default function HODEventDetail() {
   const router = useRouter();
 
   const [activeTab, setActiveTab] = useState('overview');
-  const [rsvpStatus, setRsvpStatus] = useState('ACCEPTED');
   const [comments, setComments] = useState(initialComments);
   const [newComment, setNewComment] = useState('');
   const [isInternalComment, setIsInternalComment] = useState(false);
   const [editingComment, setEditingComment] = useState(null);
   const [editContent, setEditContent] = useState('');
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<number | string | null>(null);
 
   const currentUser = {
     id: 1,
@@ -193,11 +193,6 @@ export default function HODEventDetail() {
   }, []);
 
   const liveCommentsCount = useMemo(() => comments.filter((c) => !c.isDeleted).length, [comments]);
-
-  const handleRsvpChange = (status) => {
-    setRsvpStatus(status);
-    toast.info(`RSVP status changed to ${status}`);
-  };
 
   const handleAddComment = () => {
     if (!newComment.trim()) return;
@@ -409,33 +404,7 @@ export default function HODEventDetail() {
             <div className="lg:col-span-1 space-y-6">
               {/* RSVP */}
               <Card className="p-6">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-extrabold" style={{ color: "var(--primary-blue)" }}>
-                    Your RSVP
-                  </h3>
-                  <Pill tone={rsvpTone(rsvpStatus)}>{rsvpStatus}</Pill>
-                </div>
-
-                <div className="mt-4 grid grid-cols-1 gap-2">
-                  {["ACCEPTED", "TENTATIVE", "DECLINED"].map((s) => {
-                    const active = rsvpStatus === s;
-                    return (
-                      <button
-                        key={s}
-                        onClick={() => handleRsvpChange(s)}
-                        className={`px-4 py-2.5 rounded-2xl text-sm font-semibold border transition ${active ? "text-white" : "bg-white hover:bg-gray-50"
-                          }`}
-                        style={{
-                          backgroundColor: active ? "var(--primary-blue)" : undefined,
-                          borderColor: active ? "transparent" : "rgba(44, 75, 155, 0.25)",
-                          color: active ? "white" : "var(--primary-blue)",
-                        }}
-                      >
-                        {s}
-                      </button>
-                    );
-                  })}
-                </div>
+                <EventRSVP eventId={eventId as string} />
               </Card>
 
               {/* Attendance summary */}
@@ -782,7 +751,7 @@ export default function HODEventDetail() {
         {/* Quick Actions */}
         <EntityQuickActions
           entityType={eventData.eventType === "MEETING" ? "meeting" : "event"}
-          entityId={eventId}
+          entityId={String(eventId ?? "")}
           title={eventData.title}
           sectionTitle="Event Actions"
           sectionSubtitle="Common actions you may want to perform"

@@ -5,10 +5,8 @@ import { createNotification } from "@/lib/notifications";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
 import { recordAudit, getRequestIp } from "@/lib/audit";
 
-const ACKNOWLEDGEABLE_TYPES = new Set(["EVENT", "MEETING", "TRAINING"]);
-
 /**
- * GET /api/tasks/[id]/acknowledge — list acknowledgements for an event/meeting.
+ * GET /api/tasks/[id]/acknowledge — list acknowledgements for a task/event.
  */
 export async function GET(
   req: NextRequest,
@@ -90,13 +88,6 @@ export async function POST(
     });
     if (!task) return NextResponse.json({ error: "Event not found" }, { status: 404 });
 
-    if (!ACKNOWLEDGEABLE_TYPES.has((task.type || "").toUpperCase())) {
-      return NextResponse.json(
-        { error: "Acknowledgement is only available for events, meetings, or trainings" },
-        { status: 400 }
-      );
-    }
-
     const me = await prisma.user.findUnique({
       where: { email: auth.email.toLowerCase() },
       select: { id: true, name: true, email: true },
@@ -135,10 +126,10 @@ export async function POST(
           actorEmail: auth.email,
           actionType: "EVENT_ACKNOWLEDGED",
           targetId: taskId,
-          message: `${me.name || me.email.split("@")[0]} acknowledged your ${task.type?.toLowerCase() || "event"}: ${task.title}`,
+          message: `${me.name || me.email.split("@")[0]} acknowledged your ${task.type?.toLowerCase() || "task"}: ${task.title}`,
           recipients: { userIds: [task.createdById], includeActor: false },
           sendEmail: false,
-          linkPath: `/open/item?type=event&id=${taskId}`,
+          linkPath: `/open/item?type=${task.type === "EVENT" || task.type === "MEETING" ? "event" : "task"}&id=${taskId}`,
         });
       }
     }
@@ -149,8 +140,8 @@ export async function POST(
       isNew: isNewAck,
     });
   } catch (err) {
-    console.error("Error acknowledging event:", err);
-    return NextResponse.json({ error: "Failed to acknowledge event" }, { status: 500 });
+    console.error("Error acknowledging task/event:", err);
+    return NextResponse.json({ error: "Failed to acknowledge item" }, { status: 500 });
   }
 }
 

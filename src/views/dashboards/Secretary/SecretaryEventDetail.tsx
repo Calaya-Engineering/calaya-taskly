@@ -9,6 +9,7 @@ import Layout from "@/components/Layout";
 import { SecretaryMenuItems } from "@/utils/menus";
 import { toast } from "@/lib/toast";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
+import EventRSVP from "@/components/EventRSVP";
 /* ---------- UI helpers ---------- */
 const Card = ({ className = "", children }) => (
   <div className={`bg-white border border-gray-200/70 rounded-2xl shadow-none ${className}`}>{children}</div>
@@ -34,7 +35,7 @@ const Pill = ({ children, tone = "default" }) => {
   );
 };
 
-const SectionTitle = ({ title, subtitle, action }) => (
+const SectionTitle = ({ title, subtitle = null, action = null }: any) => (
   <div className="flex items-start justify-between gap-3">
     <div>
       <h2 className="text-lg md:text-xl font-extrabold tracking-tight" style={{ color: "var(--primary-blue)" }}>
@@ -108,7 +109,7 @@ const fmtShortDateTime = (dateString) => {
 };
 
 const getDuration = (start, end) => {
-  const diff = new Date(end) - new Date(start);
+  const diff = new Date(end).getTime() - new Date(start).getTime();
   const hours = diff / (1000 * 60 * 60);
   return Math.round(hours * 10) / 10;
 };
@@ -180,13 +181,12 @@ export default function SecretaryEventDetail() {
   const eventId = params.eventId;
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('details');
-  const [rsvpStatus, setRsvpStatus] = useState('ACCEPTED');
   const [comments, setComments] = useState(initialComments);
   const [newComment, setNewComment] = useState('');
   const [isInternalComment, setIsInternalComment] = useState(false);
   const [editingComment, setEditingComment] = useState(null);
   const [editContent, setEditContent] = useState('');
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<number | string | null>(null);
 
   // Mock current user
   const currentUser = {
@@ -291,11 +291,6 @@ export default function SecretaryEventDetail() {
     setShowDeleteConfirm(null);
   };
 
-  const handleRSVP = (status) => {
-    setRsvpStatus(status);
-    toast.success(`RSVP status updated to ${status}`);
-  };
-
   const joinMeeting = () => {
     if (event.meetingLink) {
       window.open(event.meetingLink, '_blank');
@@ -338,7 +333,6 @@ export default function SecretaryEventDetail() {
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2 mb-2">
                     <Pill tone={typeTone(event.type)}>{event.type}</Pill>
-                    <Pill tone={rsvpTone(rsvpStatus)}>{rsvpStatus}</Pill>
                     <Pill tone="default">{event.scope}</Pill>
                   </div>
 
@@ -566,7 +560,7 @@ export default function SecretaryEventDetail() {
                           onChange={(e) => setNewComment(e.target.value)}
                           placeholder="Add a comment or question about this event..."
                           className={textareaBase}
-                          rows="3"
+                          rows={3}
                         />
                         <div className="mt-3 flex items-center justify-between">
                           <label className="flex items-center gap-2 cursor-pointer">
@@ -615,7 +609,7 @@ export default function SecretaryEventDetail() {
                                   value={editContent}
                                   onChange={(e) => setEditContent(e.target.value)}
                                   className={textareaBase}
-                                  rows="3"
+                                  rows={3}
                                 />
                                 <div className="mt-2 flex gap-2">
                                   <button
@@ -675,57 +669,9 @@ export default function SecretaryEventDetail() {
           <div className="space-y-6">
             {/* RSVP Status */}
             <Card className="p-6">
-              <SectionTitle title="Your RSVP Status" />
-
-              <div className="mt-4 space-y-4">
-                <div className={`p-5 rounded-2xl border text-center ${rsvpStatus === 'ACCEPTED' ? 'border-emerald-200 bg-emerald-50' :
-                    rsvpStatus === 'TENTATIVE' ? 'border-amber-200 bg-amber-50' :
-                      rsvpStatus === 'DECLINED' ? 'border-red-200 bg-red-50' : 'border-gray-200 bg-gray-50'
-                  }`}>
-                  <p className="text-sm text-gray-600">Current Status</p>
-                  <p className={`text-xl font-extrabold mt-1 ${rsvpStatus === 'ACCEPTED' ? 'text-emerald-700' :
-                      rsvpStatus === 'TENTATIVE' ? 'text-amber-700' :
-                        rsvpStatus === 'DECLINED' ? 'text-red-700' : 'text-gray-700'
-                    }`}>
-                    {rsvpStatus}
-                  </p>
-                </div>
-
-                <div className="pt-4 border-t border-gray-200/70">
-                  <p className="text-sm font-semibold text-gray-700 mb-3">Update Your Response:</p>
-                  <div className="space-y-2">
-                    <button
-                      onClick={() => handleRSVP('ACCEPTED')}
-                      className={`w-full px-4 py-3 rounded-2xl text-sm font-semibold transition active:scale-[0.99] ${rsvpStatus === 'ACCEPTED'
-                          ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200'
-                          : 'border bg-white hover:bg-gray-50'
-                        }`}
-                      style={rsvpStatus !== 'ACCEPTED' ? { borderColor: "rgba(16,185,129,0.35)", color: "#10B981" } : {}}
-                    >
-                      Accept
-                    </button>
-                    <button
-                      onClick={() => handleRSVP('TENTATIVE')}
-                      className={`w-full px-4 py-3 rounded-2xl text-sm font-semibold transition active:scale-[0.99] ${rsvpStatus === 'TENTATIVE'
-                          ? 'bg-amber-50 text-amber-700 ring-1 ring-amber-200'
-                          : 'border bg-white hover:bg-gray-50'
-                        }`}
-                      style={rsvpStatus !== 'TENTATIVE' ? { borderColor: "rgba(245,158,11,0.35)", color: "#F59E0B" } : {}}
-                    >
-                      Tentative
-                    </button>
-                    <button
-                      onClick={() => handleRSVP('DECLINED')}
-                      className={`w-full px-4 py-3 rounded-2xl text-sm font-semibold transition active:scale-[0.99] ${rsvpStatus === 'DECLINED'
-                          ? 'bg-red-50 text-red-700 ring-1 ring-red-200'
-                          : 'border bg-white hover:bg-gray-50'
-                        }`}
-                      style={rsvpStatus !== 'DECLINED' ? { borderColor: "rgba(239,68,68,0.35)", color: "#EF4444" } : {}}
-                    >
-                      Decline
-                    </button>
-                  </div>
-                </div>
+              <SectionTitle title="Your RSVP Status" subtitle="Respond yes or no for your attendance." />
+              <div className="mt-4">
+                <EventRSVP eventId={eventId as string} />
               </div>
             </Card>
 
@@ -799,7 +745,7 @@ export default function SecretaryEventDetail() {
             {/* Quick Actions */}
             <EntityQuickActions
               entityType={event.type === "MEETING" ? "meeting" : "event"}
-              entityId={eventId}
+              entityId={String(eventId ?? "")}
               title={event.title}
               currentStartDate={event.startAt}
               currentEndDate={event.endAt}
