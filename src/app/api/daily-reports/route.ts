@@ -3,166 +3,50 @@ import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { createNotification } from "@/lib/notifications";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
-import { getManagedDepartmentNamesByEmail } from "@/lib/hod-departments";
 import { buildDailyReportSummary, normalizeDailyReportStatus } from "@/lib/daily-reports";
-
-function toUtcDayBounds(date: string) {
-  const start = new Date(`${date}T00:00:00.000Z`);
-  const end = new Date(`${date}T23:59:59.999Z`);
-  return { start, end };
-}
+import { listDailyReportsQuerySchema } from "@/lib/schemas/daily-report.schema";
+import { listDailyReports } from "@/lib/services/daily-report.service";
 
 export async function GET(req: NextRequest) {
-  const auth = await getAuthFromRequest(req);
-  if (!auth) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   try {
-    const { searchParams } = req.nextUrl;
-    const department = searchParams.get("department");
-    const departments = searchParams.get("departments");
-    const date = searchParams.get("date");
-    const limitParam = searchParams.get("limit");
-    const offsetParam = searchParams.get("offset");
-    const parsedLimit = limitParam ? parseInt(limitParam, 10) : Number.NaN;
-    const parsedOffset = offsetParam ? parseInt(offsetParam, 10) : Number.NaN;
-    const limit = Number.isFinite(parsedLimit) ? Math.min(Math.max(parsedLimit, 1), 500) : 200;
-    const offset = Number.isFinite(parsedOffset) ? Math.max(parsedOffset, 0) : 0;
-    const linkedTaskOnly = searchParams.get("linkedTask") === "true";
-    const reportType = String(searchParams.get("reportType") || "").toLowerCase();
-
-    let managedDepartmentNames =
-      auth.role === "HOD" ? await getManagedDepartmentNamesByEmail(auth.email) : [];
-
-    if (auth.role === "HOD" && managedDepartmentNames.length === 0) {
-      const hodUser = await prisma.user.findUnique({
-        where: { email: auth.email.trim().toLowerCase() },
-        select: { department: true },
-      });
-      const fallback = hodUser?.department?.trim();
-      if (fallback) {
-        managedDepartmentNames = [fallback];
-      }
+    const auth = await getAuthFromRequest(req);
+    if (!auth) {
+      return NextResponse.json(
+        { data: null, error: { code: "UNAUTHORIZED", message: "Unauthorized" }, meta: null },
+        { status: 401 },
+      );
     }
 
-    const where: any = {};
-
-    if (auth.role === "HOD") {
-      if (managedDepartmentNames.length === 0) {
-        return NextResponse.json([]);
-      }
-      where.department = { in: managedDepartmentNames };
+    const parsed = listDailyReportsQuerySchema.safeParse(
+      Object.fromEntries(req.nextUrl.searchParams.entries()),
+    );
+    if (!parsed.success) {
+      return NextResponse.json(
+        {
+          data: null,
+          error: { code: "VALIDATION_ERROR", message: parsed.error.flatten() },
+          meta: null,
+        },
+        { status: 400 },
+      );
     }
 
-    if (department && department.toLowerCase() !== "all") {
-      if (auth.role === "HOD" && !managedDepartmentNames.includes(department)) {
-        return NextResponse.json([]);
-      }
-      where.department = department;
-    } else if (departments) {
-      const requestedDepartments = departments
-        .split(",")
-        .map((value) => value.trim())
-        .filter(Boolean);
-      const filteredDepartments = auth.role === "HOD"
-        ? requestedDepartments.filter((value) => managedDepartmentNames.includes(value))
-        : requestedDepartments;
-
-      if (filteredDepartments.length === 0 && auth.role === "HOD") {
-        return NextResponse.json([]);
-      }
-
-      if (filteredDepartments.length === 1) {
-        where.department = filteredDepartments[0];
-      } else if (filteredDepartments.length > 1) {
-        where.department = { in: filteredDepartments };
-      }
-    }
-
-    if (date) {
-      const { start, end } = toUtcDayBounds(date);
-      where.reportDate = { gte: start, lte: end };
-    }
-
-    if (linkedTaskOnly) {
-      where.entries = {
-        some: {
-          target: { contains: "Task ID:" },
-        },
-      };
-    } else if (reportType === "general") {
-      where.entries = {
-        none: {
-          target: { contains: "Task ID:" },
-        },
-      };
-      where.submittedByRole = "STAFF";
-    } else if (reportType === "daily") {
-      where.entries = {
-        none: {
-          target: { contains: "Task ID:" },
-        },
-      };
-      where.submittedByRole = { not: "STAFF" };
-    } else if (reportType === "task") {
-      where.entries = {
-        some: {
-          target: { contains: "Task ID:" },
-        },
-      };
-    }
-
-    const reports = await prisma.dailyReport.findMany({
-      where,
-      orderBy: [{ reportDate: "desc" }, { submittedAt: "desc" }, { id: "desc" }],
-      skip: offset,
-      take: limit,
-      select: {
-        id: true,
-        title: true,
-        department: true,
-        submittedBy: true,
-        status: true,
-        summary: true,
-        payloadSource: true,
-        attachmentUrl: true,
-        attachmentName: true,
-        downloads: true,
-        reportDate: true,
-        submittedAt: true,
-        entries: {
-          select: { id: true },
-        },
-      },
+    const result = await listDailyReports(parsed.data, {
+      email: auth.email,
+      role: auth.role,
     });
 
-    const formatted = reports.map((report) => ({
-      id: `RPT-${String(report.id).padStart(4, "0")}`,
-      dbId: report.id,
-      title: report.title,
-      date: report.reportDate.toISOString().split("T")[0],
-      department: report.department,
-      submittedBy: report.submittedBy,
-      submittedAt: report.submittedAt.toISOString(),
-      entries: [],
-      entriesUrl: report.payloadSource,
-      fileSize: buildDailyReportSummary(report.entries.length, report.summary),
-      fileType: "Report",
-      status: normalizeDailyReportStatus(report.status),
-      downloads: report.downloads,
-      fileUrl: report.attachmentUrl || report.payloadSource || null,
-      attachmentUrl: report.attachmentUrl,
-      attachmentName: report.attachmentName,
-    }));
-
-    return NextResponse.json(formatted, {
+    return NextResponse.json({
+      data: result.data,
+      error: null,
+      meta: { total: result.total, page: result.page, limit: result.limit },
+    }, {
       headers: { "Cache-Control": "no-store, max-age=0" },
     });
   } catch (error: any) {
     console.error("Error fetching daily reports:", error?.message ?? error);
     return NextResponse.json(
-      { error: error?.message || "Failed to fetch daily reports" },
+      { data: null, error: { code: "INTERNAL_ERROR", message: "Failed to fetch daily reports" }, meta: null },
       { status: 500 }
     );
   }

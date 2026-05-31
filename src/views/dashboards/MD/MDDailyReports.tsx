@@ -6,7 +6,7 @@ import { useMemo, useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import { MDMenuItems } from "@/utils/menus";
-import { fetchWithAuth } from "@/lib/api";
+import { fetchWithAuth, readApiData } from "@/lib/api";
 import { toast } from "@/lib/toast";
 import DailyReportPreviewModal from "@/components/DailyReportPreviewModal";
 import { downloadDailyReport } from "@/lib/daily-report-download";
@@ -94,7 +94,7 @@ const toISO = (d) => {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 };
 
-const REPORT_BATCH_SIZE = 500;
+const REPORT_BATCH_SIZE = 100;
 
 const normalizeReportRecord = (report) => ({
   id: String(report?.id ?? ""),
@@ -130,28 +130,15 @@ export default function MDDailyReports({ reportKind = "daily" }: { reportKind?: 
         }
       }
       try {
-        const allReports = [];
-        let offset = 0;
-        let hasMore = true;
-
-        while (hasMore) {
-          const resp = await fetchWithAuth(
-            `/api/daily-reports?reportType=${reportKind}&limit=${REPORT_BATCH_SIZE}&offset=${offset}`
-          );
-          if (!resp.ok) {
-            throw new Error("Failed to fetch reports");
-          }
-
-          const data = await resp.json();
-          const batch = Array.isArray(data) ? data : [];
-          allReports.push(...batch);
-          hasMore = batch.length === REPORT_BATCH_SIZE;
-          offset += batch.length;
-
-          if (batch.length === 0) {
-            hasMore = false;
-          }
+        const resp = await fetchWithAuth(
+          `/api/daily-reports?reportType=${reportKind}&limit=${REPORT_BATCH_SIZE}&offset=0`
+        );
+        if (!resp.ok) {
+          throw new Error("Failed to fetch reports");
         }
+
+        const data = await readApiData(resp);
+        const allReports = Array.isArray(data) ? data : [];
 
         if (!cancelled) {
           const mapped = allReports.map(normalizeReportRecord);

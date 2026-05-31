@@ -68,5 +68,13 @@ export async function fetchWithAuth(
   }
 }
 
+export async function readApiData<T = unknown>(response: Response): Promise<T> {
+  const payload = await response.json();
+  if (payload && typeof payload === "object" && "data" in payload) {
+    return (payload as { data: T }).data;
+  }
+  return payload as T;
+}
+
 /** Get the current auth token (for manual use). */
 export { getToken as getAuthToken };

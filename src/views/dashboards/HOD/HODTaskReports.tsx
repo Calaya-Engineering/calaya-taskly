@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import { HODMenuItems } from "@/utils/menus";
-import { fetchWithAuth } from "@/lib/api";
+import { fetchWithAuth, readApiData } from "@/lib/api";
 import { useSSE } from "@/hooks/useSSE";
 import DailyReportPreviewModal from "@/components/DailyReportPreviewModal";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
@@ -22,7 +22,7 @@ interface ReportRow {
   attachmentName?: string | null;
 }
 
-const TASK_REPORTS_LIMIT = 120;
+const TASK_REPORTS_LIMIT = 100;
 const REFRESH_THROTTLE_MS = 2000;
 
 const Card = ({ className = "", children }: { className?: string; children: React.ReactNode }) => (
@@ -105,7 +105,7 @@ export default function HODTaskReports() {
         `/api/daily-reports?linkedTask=true&limit=${TASK_REPORTS_LIMIT}`
       );
       if (resp.ok) {
-        const data = await resp.json();
+        const data = await readApiData<ReportRow[]>(resp);
         setReports(Array.isArray(data) ? data : []);
       } else {
         setReports([]);

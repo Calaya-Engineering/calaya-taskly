@@ -5,7 +5,7 @@ import { useState, useMemo, useEffect, type ReactNode } from "react";
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import { StaffMenuItems } from "@/utils/menus";
-import { fetchWithAuth } from "@/lib/api";
+import { fetchWithAuth, readApiData } from "@/lib/api";
 import { formatFileSize } from "@/lib/file-size";
 import { downloadDailyReport } from "@/lib/daily-report-download";
 import { toast } from "@/lib/toast";
@@ -199,10 +199,10 @@ export default function StaffSubmitReport() {
 
         if (nextProfile.department && nextProfile.department !== DEFAULT_STAFF_PROFILE.department) {
           const reportsRes = await fetchWithAuth(
-            `/api/daily-reports?department=${encodeURIComponent(nextProfile.department)}&limit=200`
+            `/api/daily-reports?department=${encodeURIComponent(nextProfile.department)}&limit=100`
           );
           if (reportsRes.ok) {
-            const data = await reportsRes.json();
+            const data = await readApiData<any[]>(reportsRes);
             const ownReports = Array.isArray(data)
               ? data
                   .filter((report) => String(report?.submittedBy ?? "") === nextProfile.name)
@@ -300,7 +300,7 @@ export default function StaffSubmitReport() {
           ],
         }),
       });
-      const reportData = await reportRes.json().catch(() => null);
+      const reportData = await readApiData<any>(reportRes).catch(() => null);
       if (!reportRes.ok) {
         toast.error(reportData?.error || "Failed to save report");
         return;

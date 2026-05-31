@@ -6,7 +6,7 @@ import { useMemo, useState, useEffect } from "react";
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import { SecretaryMenuItems } from "@/utils/menus";
-import { fetchWithAuth } from "@/lib/api";
+import { fetchWithAuth, readApiData } from "@/lib/api";
 import { toast } from "@/lib/toast";
 import DailyReportPreviewModal from "@/components/DailyReportPreviewModal";
 import { downloadDailyReport } from "@/lib/daily-report-download";
@@ -120,9 +120,9 @@ export default function SecretaryReportsArchive() {
   useEffect(() => {
     async function getReports() {
       try {
-        const resp = await fetchWithAuth("/api/daily-reports?limit=500");
+        const resp = await fetchWithAuth("/api/daily-reports?limit=100");
         if (resp.ok) {
-          const data = await resp.json();
+          const data = await readApiData<any[]>(resp);
           const mapped = data.map(d => ({
             id: d.id,
             dbId: d.dbId,

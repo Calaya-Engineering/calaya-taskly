@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import { StaffMenuItems } from "@/utils/menus";
-import { fetchWithAuth } from "@/lib/api";
+import { fetchWithAuth, readApiData } from "@/lib/api";
 import { toast } from "@/lib/toast";
 import DailyReportPreviewModal from "@/components/DailyReportPreviewModal";
 import { downloadDailyReport } from "@/lib/daily-report-download";
@@ -198,7 +198,7 @@ export default function StaffDailyReports() {
         const [deptRes, meRes, reportsRes] = await Promise.all([
           fetchWithAuth("/api/departments"),
           fetchWithAuth("/api/me"),
-          fetchWithAuth("/api/daily-reports?limit=300"),
+          fetchWithAuth("/api/daily-reports?limit=100"),
         ]);
 
         if (deptRes.ok) {
@@ -215,7 +215,7 @@ export default function StaffDailyReports() {
         }
 
         if (reportsRes.ok) {
-          const data = await reportsRes.json();
+          const data = await readApiData<any[]>(reportsRes);
           setDailyReports(Array.isArray(data) ? data.map(normalizeDailyReport) : []);
         }
       } catch (err) {
@@ -439,7 +439,7 @@ export default function StaffDailyReports() {
         }),
       });
 
-      const data = await resp.json().catch(() => null);
+      const data = await readApiData<any>(resp).catch(() => null);
       if (!resp.ok) {
         toast.error(data?.error || "Failed to submit daily report");
         return;

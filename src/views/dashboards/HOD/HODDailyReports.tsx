@@ -5,7 +5,7 @@ import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import { HODMenuItems } from "@/utils/menus";
-import { fetchWithAuth } from "@/lib/api";
+import { fetchWithAuth, readApiData } from "@/lib/api";
 import { toast } from "@/lib/toast";
 import { useSSE } from "@/hooks/useSSE";
 import DailyReportPreviewModal from "@/components/DailyReportPreviewModal";
@@ -245,10 +245,10 @@ export default function HODDailyReports({ reportKind = "daily" }: { reportKind?:
     try {
       const departments = encodeURIComponent(managedDepartments.join(','));
       const resp = await fetchWithAuth(
-        `/api/daily-reports?departments=${departments}&reportType=${reportKind}&limit=500`
+        `/api/daily-reports?departments=${departments}&reportType=${reportKind}&limit=100`
       );
       if (resp.ok) {
-        const data = await resp.json();
+        const data = await readApiData<DailyReport[]>(resp);
         setDailyReports(Array.isArray(data) ? data : []);
       }
     } catch (err) {
