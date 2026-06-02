@@ -54,6 +54,26 @@ export function isManagingDirectorRole(role: string): boolean {
   return getRouteForRole(role) === "/md-dashboard";
 }
 
+/**
+ * Departments treated as "management" for the purpose of routing a
+ * Managing Director user to /md-dashboard. Matching is case-insensitive
+ * and tolerant of "-"/"_" and extra whitespace.
+ *
+ * Add new aliases here as departments evolve — the verify-otp / send-otp
+ * routes and Layout all share this list, so a single addition propagates.
+ */
+const MANAGEMENT_DEPARTMENT_ALIASES = new Set([
+  "management",
+  "management department",
+  "managing",
+  "managing department",
+  "executive",
+  "executive office",
+  "executive department",
+  "office of the md",
+  "office of the managing director",
+]);
+
 export function isManagementDepartment(department?: string | null): boolean {
   const normalized = String(department || "")
     .trim()
@@ -61,7 +81,13 @@ export function isManagementDepartment(department?: string | null): boolean {
     .replace(/[_-]+/g, " ")
     .replace(/\s+/g, " ");
 
-  return normalized === "management" || normalized === "management department";
+  if (!normalized) return false;
+  if (MANAGEMENT_DEPARTMENT_ALIASES.has(normalized)) return true;
+
+  // Catch-all: anything starting with "manag" (Management, Managing,
+  // Managements, etc.) — keeps the door open for future department renames
+  // without another deploy.
+  return normalized.startsWith("manag");
 }
 
 export function isHodRole(role: string): boolean {
