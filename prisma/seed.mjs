@@ -75,11 +75,11 @@ async function main() {
   const passwordHash = hashPassword("admin123");
   await prisma.user.upsert({
     where: { email: "izuchukwuonuoha6@gmail.com" },
-    update: { password: passwordHash, role: "MD" },
+    update: { password: passwordHash, role: "Managing Director" },
     create: {
       email: "izuchukwuonuoha6@gmail.com",
       password: passwordHash,
-      role: "MD",
+      role: "Managing Director",
     },
   });
   console.log("Seeded MD user: izuchukwuonuoha6@gmail.com");

@@ -8,6 +8,7 @@ import { AUTH_TOKEN_KEY } from "@/lib/auth-config";
 type AuthUser = {
   email: string;
   role: string;
+  route?: string;
 };
 
 type AuthContextValue = {
@@ -28,6 +29,7 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 type DecodedToken = {
   email: string;
   role: string;
+  route?: string;
   exp?: number;
 };
 
@@ -53,7 +55,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      setUser({ email: decoded.email, role: decoded.role });
+      setUser({ email: decoded.email, role: decoded.role, route: decoded.route });
     } catch {
       window.sessionStorage.removeItem(AUTH_TOKEN_KEY);
     } finally {
@@ -93,7 +95,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         window.sessionStorage.removeItem(AUTH_TOKEN_KEY);
         return;
       }
-      setUser({ email: decoded.email, role: decoded.role });
+      setUser({ email: decoded.email, role: decoded.role, route: decoded.route });
     } catch {
       window.sessionStorage.removeItem(AUTH_TOKEN_KEY);
     }
@@ -128,5 +130,4 @@ export function useAuth() {
   }
   return ctx;
 }
-
 

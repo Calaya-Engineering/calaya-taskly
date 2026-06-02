@@ -19,6 +19,10 @@ export interface MenuItem {
 
 const LayoutContext = createContext<boolean>(false);
 
+function canAccessDashboard(user: { role: string; route?: string }, dashboardRole: string) {
+  return (user.route || getRouteForRole(user.role)) === getRouteForRole(dashboardRole);
+}
+
 export default function Layout({
   children,
   menuItems = [],
@@ -54,9 +58,9 @@ export default function Layout({
     if (!loading) {
       if (!isAuthenticated) {
         router.replace("/login");
-      } else if (user && userRole && user.role !== userRole) {
+      } else if (user && userRole && !canAccessDashboard(user, userRole)) {
         // Prevent accidental access to wrong dashboard segments
-        const correctRoute = getRouteForRole(user.role);
+        const correctRoute = user.route || getRouteForRole(user.role);
         router.replace(correctRoute);
       }
     }

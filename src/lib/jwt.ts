@@ -13,12 +13,18 @@ function getSecret() {
 export type AuthTokenPayload = JWTPayload & {
   email: string;
   role: string;
+  route?: string;
 };
 
-export async function signAuthToken(payload: { email: string; role: string }) {
+export async function signAuthToken(payload: { email: string; role: string; route?: string }) {
   const secret = getSecret();
+  const tokenPayload: AuthTokenPayload = {
+    email: payload.email,
+    role: payload.role,
+    ...(payload.route ? { route: payload.route } : {}),
+  };
 
-  return new SignJWT({ email: payload.email, role: payload.role })
+  return new SignJWT(tokenPayload)
     .setProtectedHeader({ alg: "HS256", typ: "JWT" })
     .setIssuedAt()
     .setExpirationTime("1h")

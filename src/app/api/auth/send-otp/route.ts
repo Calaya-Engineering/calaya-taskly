@@ -5,6 +5,15 @@ import { verifyPassword } from "@/lib/password";
 import { signAuthToken } from "@/lib/jwt";
 import { ensureDemoUser } from "@/lib/demo-users";
 
+async function getDashboardRouteForRole(role: string) {
+  const roleRecord = await prisma.role.findFirst({
+    where: { name: role },
+    select: { dashboardRoute: true },
+  });
+
+  return roleRecord?.dashboardRoute || getRouteForRole(role);
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -22,12 +31,13 @@ export async function POST(req: NextRequest) {
         where: { email: emailLower },
       });
       if (dbAdmin && verifyPassword(password, dbAdmin.password)) {
-        const token = await signAuthToken({ email: dbAdmin.email, role: dbAdmin.role });
+        const route = await getDashboardRouteForRole(dbAdmin.role);
+        const token = await signAuthToken({ email: dbAdmin.email, role: dbAdmin.role, route });
         return NextResponse.json({
           success: true,
           skipOtp: true,
           token,
-          route: getRouteForRole(dbAdmin.role),
+          route,
         });
       }
     }
@@ -44,14 +54,15 @@ export async function POST(req: NextRequest) {
       }
 
       // OTP email verification is temporarily bypassed.
-      const token = await signAuthToken({ email: dbUser.email, role: dbUser.role });
+      const route = await getDashboardRouteForRole(dbUser.role);
+      const token = await signAuthToken({ email: dbUser.email, role: dbUser.role, route });
 
       return NextResponse.json({
         success: true,
         skipOtp: true,
         token,
         role: dbUser.role,
-        route: getRouteForRole(dbUser.role),
+        route,
       });
     }
 
@@ -66,14 +77,15 @@ export async function POST(req: NextRequest) {
 
     // OTP email verification is temporarily bypassed for demo users too.
     const syncedDemoUser = await ensureDemoUser(demoUser);
-    const token = await signAuthToken({ email: syncedDemoUser.email, role: syncedDemoUser.role });
+    const route = await getDashboardRouteForRole(syncedDemoUser.role);
+    const token = await signAuthToken({ email: syncedDemoUser.email, role: syncedDemoUser.role, route });
 
     return NextResponse.json({
       success: true,
       skipOtp: true,
       token,
       role: syncedDemoUser.role,
-      route: getRouteForRole(syncedDemoUser.role),
+      route,
     });
   } catch (error: any) {
     console.error("Error in send-otp route:", error);

@@ -52,7 +52,7 @@ const DEMO_PASSWORD = "demo123";
  */
 const ROLES = [
   { name: "Admin", dashboardRoute: "/admin-dashboard" },
-  { name: "MD", dashboardRoute: "/md-dashboard" },
+  { name: "Managing Director", dashboardRoute: "/md-dashboard" },
   { name: "HOD", dashboardRoute: "/hod-dashboard" },
   { name: "Staff", dashboardRoute: "/staff-dashboard" },
 ];

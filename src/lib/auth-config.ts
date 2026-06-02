@@ -15,15 +15,49 @@ export type AuthUserInfo = {
   route: string;
 };
 
-/** Map role to dashboard route. */
+function normalizeRoleKey(role: string): string {
+  return String(role || "")
+    .trim()
+    .toLowerCase()
+    .replace(/[_-]+/g, " ")
+    .replace(/\s+/g, " ");
+}
+
+const FALLBACK_ROLE_ROUTES: Record<string, string> = {
+  admin: "/admin-dashboard",
+  superadmin: "/admin-dashboard",
+  "super admin": "/admin-dashboard",
+  md: "/md-dashboard",
+  "managing director": "/md-dashboard",
+  hod: "/hod-dashboard",
+  "head of department": "/hod-dashboard",
+  staff: "/staff-dashboard",
+  personnel: "/staff-dashboard",
+  "corp member": "/staff-dashboard",
+  secretary: "/secretary-dashboard",
+  "secretary admin officer": "/secretary-dashboard",
+  "secretary/admin officer": "/secretary-dashboard",
+};
+
+/** Fallback map for role names when a DB dashboardRoute is unavailable. */
 export function getRouteForRole(role: string): string {
-  const map: Record<string, string> = {
-    Admin: "/admin-dashboard",
-    MD: "/md-dashboard",
-    HOD: "/hod-dashboard",
-    Staff: "/staff-dashboard",
-  };
-  return map[role] ?? "/staff-dashboard";
+  return FALLBACK_ROLE_ROUTES[normalizeRoleKey(role)] ?? "/staff-dashboard";
+}
+
+export function canAccessDashboardRole(userRole: string, dashboardRole: string): boolean {
+  return getRouteForRole(userRole) === getRouteForRole(dashboardRole);
+}
+
+export function isManagingDirectorRole(role: string): boolean {
+  return getRouteForRole(role) === "/md-dashboard";
+}
+
+export function isHodRole(role: string): boolean {
+  return getRouteForRole(role) === "/hod-dashboard";
+}
+
+export function isStaffDashboardRole(role: string): boolean {
+  return getRouteForRole(role) === "/staff-dashboard";
 }
 
 /** Admin credentials - no OTP required. */
@@ -34,9 +68,7 @@ export const ADMIN_PASSWORD = "admin123";
 // These are intentionally non-secret and only for demo environments.
 export const DEMO_CREDENTIALS: DemoCredential[] = [
   { email: "admin@calaya.com", password: "admin123", role: "Admin", route: "/admin-dashboard" },
-  { email: "izuchukwuonuoha6@gmail.com", password: "admin123", role: "MD", route: "/md-dashboard" },
+  { email: "izuchukwuonuoha6@gmail.com", password: "admin123", role: "Managing Director", route: "/md-dashboard" },
   { email: "izuchukwuonuoha6+HOD@gmail.com", password: "admin123", role: "HOD", route: "/hod-dashboard" },
   { email: "staff@calaya.com", password: "demo123", role: "Staff", route: "/staff-dashboard" },
 ];
-
-

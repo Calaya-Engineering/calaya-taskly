@@ -4,6 +4,16 @@ import { signAuthToken } from "@/lib/jwt";
 import { DEMO_CREDENTIALS, getRouteForRole } from "@/lib/auth-config";
 import { recordAudit, getRequestIp } from "@/lib/audit";
 import { ensureDemoUser } from "@/lib/demo-users";
+import { prisma } from "@/lib/prisma";
+
+async function getDashboardRouteForRole(role: string) {
+  const roleRecord = await prisma.role.findFirst({
+    where: { name: role },
+    select: { dashboardRoute: true },
+  });
+
+  return roleRecord?.dashboardRoute || getRouteForRole(role);
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -27,7 +37,7 @@ export async function POST(req: NextRequest) {
         user = {
           email: syncedDemoUser.email,
           role: syncedDemoUser.role,
-          route: getRouteForRole(syncedDemoUser.role),
+          route: await getDashboardRouteForRole(syncedDemoUser.role),
         };
       }
     }
@@ -44,7 +54,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid OTP. Please check the code and try again." }, { status: 401 });
     }
 
-    const token = await signAuthToken({ email: user.email, role: user.role });
+    const route = await getDashboardRouteForRole(user.role);
+    const token = await signAuthToken({ email: user.email, role: user.role, route });
 
     void recordAudit({
       action: "USER_LOGIN",
@@ -57,7 +68,7 @@ export async function POST(req: NextRequest) {
       success: true,
       token,
       role: user.role,
-      route: user.route,
+      route,
     });
   } catch (error) {
     // eslint-disable-next-line no-console

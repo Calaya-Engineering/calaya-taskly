@@ -23,7 +23,7 @@ export default function Login() {
 
   // Demo login credentials
   const demoCredentials = [
-    { email: "izuchukwuonuoha6@gmail.com", password: "admin123", role: "MD", route: "/md-dashboard" },
+    { email: "izuchukwuonuoha6@gmail.com", password: "admin123", role: "Managing Director", route: "/md-dashboard" },
     { email: "izuchukwuonuoha6+HOD@gmail.com", password: "admin123", role: "HOD", route: "/hod-dashboard" },
     { email: "staff@calaya.com", password: "demo123", role: "Staff", route: "/staff-dashboard" },
     { email: "personnel@calaya.com", password: "demo123", role: "Personnel", route: "/staff-dashboard" },
