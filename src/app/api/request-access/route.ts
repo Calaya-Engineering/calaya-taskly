@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { ACCESS_REQUEST_ROLE_OPTIONS, normalizeRequestedRole } from "@/lib/access-requests";
+import {
+  HOD_DASHBOARD_ROUTE,
+  isRequestableRole,
+  normalizeRequestedRole,
+} from "@/lib/access-requests";
 
 function isMissingAccessRequestTable(error: unknown) {
   if (!error || typeof error !== "object") return false;
@@ -36,7 +40,8 @@ export async function POST(req: NextRequest) {
 
     const normalizedEmail = String(email || "").trim().toLowerCase();
     const normalizedDepartment = String(department || "").trim();
-    const normalizedRole = normalizeRequestedRole(String(role || "").trim());
+    const requestedRoleName = String(role || "").trim();
+    const normalizedRole = normalizeRequestedRole(requestedRoleName);
     const parsedHodId = Number(hodId);
 
     if (!String(fullName || "").trim()) {
@@ -51,9 +56,6 @@ export async function POST(req: NextRequest) {
     if (!normalizedDepartment) {
       return NextResponse.json({ error: "Department is required" }, { status: 400 });
     }
-    if (!normalizedRole || !ACCESS_REQUEST_ROLE_OPTIONS.map(normalizeRequestedRole).includes(normalizedRole)) {
-      return NextResponse.json({ error: "A valid role is required" }, { status: 400 });
-    }
     if (!Number.isFinite(parsedHodId) || parsedHodId <= 0) {
       return NextResponse.json({ error: "Please select an HOD" }, { status: 400 });
     }
@@ -61,7 +63,21 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Reason is required" }, { status: 400 });
     }
 
-    const [existingUser, existingPendingRequest, hod] = await Promise.all([
+    const roleNameCandidates = Array.from(new Set([requestedRoleName, normalizedRole].filter(Boolean)));
+
+    if (roleNameCandidates.length === 0) {
+      return NextResponse.json({ error: "A valid role is required" }, { status: 400 });
+    }
+
+    const [requestedRoleRecord, hodRoles, existingUser, existingPendingRequest, hod] = await Promise.all([
+      prisma.role.findFirst({
+        where: { name: { in: roleNameCandidates } },
+        select: { id: true, name: true, dashboardRoute: true },
+      }),
+      prisma.role.findMany({
+        where: { dashboardRoute: HOD_DASHBOARD_ROUTE },
+        select: { name: true },
+      }),
       prisma.user.findUnique({ where: { email: normalizedEmail }, select: { id: true } }),
       prisma.accessRequest.findFirst({
         where: {
@@ -89,6 +105,10 @@ export async function POST(req: NextRequest) {
       }),
     ]);
 
+    if (!requestedRoleRecord || !isRequestableRole(requestedRoleRecord)) {
+      return NextResponse.json({ error: "A valid role is required" }, { status: 400 });
+    }
+
     if (existingUser) {
       return NextResponse.json({ error: "A user with this email already exists" }, { status: 409 });
     }
@@ -97,7 +117,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "A pending request already exists for this email" }, { status: 409 });
     }
 
-    if (!hod || hod.role !== "HOD") {
+    const hodRoleNames = new Set(hodRoles.map((role) => role.name));
+    if (!hod || !hodRoleNames.has(hod.role)) {
       return NextResponse.json({ error: "Selected HOD was not found" }, { status: 400 });
     }
 
@@ -118,7 +139,7 @@ export async function POST(req: NextRequest) {
         email: normalizedEmail,
         phone: String(phone).trim(),
         department: normalizedDepartment,
-        requestedRole: normalizedRole,
+        requestedRole: requestedRoleRecord.name,
         jobTitle: String(jobTitle || "").trim() || null,
         hodId: hod.id,
         hodName: hod.name?.trim() || hod.email.split("@")[0],

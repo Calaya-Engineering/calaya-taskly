@@ -3,23 +3,16 @@ import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { hashPassword } from "@/lib/password";
 import { createNotification, sendAccessRequestDecisionEmail } from "@/lib/notifications";
-import { generateTemporaryPassword } from "@/lib/access-requests";
-
-function requireAdmin(auth: { role: string } | null) {
-  if (!auth || auth.role !== "Admin") {
-    return NextResponse.json({ error: "Admin access required" }, { status: 403 });
-  }
-
-  return null;
-}
+import { generateTemporaryPassword, isRequestableRole } from "@/lib/access-requests";
 
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   const auth = await getAuthFromRequest(req);
-  const adminError = requireAdmin(auth);
-  if (adminError) return adminError;
+  if (!auth || auth.role !== "Admin") {
+    return NextResponse.json({ error: "Admin access required" }, { status: 403 });
+  }
 
   const { id } = await params;
   const accessRequestId = parseInt(id, 10);
@@ -48,7 +41,7 @@ export async function PATCH(
       return NextResponse.json({ error: "This request has already been reviewed" }, { status: 409 });
     }
 
-    const actorName = auth.name?.trim() || auth.email.split("@")[0];
+    const actorName = auth.email.split("@")[0];
 
     if (decision === "DENIED") {
       const updated = await prisma.accessRequest.update({
@@ -85,6 +78,18 @@ export async function PATCH(
       return NextResponse.json({ error: "A user with this email already exists" }, { status: 409 });
     }
 
+    const requestedRole = await prisma.role.findFirst({
+      where: { name: requestRecord.requestedRole },
+      select: { id: true, name: true, dashboardRoute: true },
+    });
+
+    if (!requestedRole || !isRequestableRole(requestedRole)) {
+      return NextResponse.json(
+        { error: "Requested role is no longer available" },
+        { status: 400 },
+      );
+    }
+
     const temporaryPassword = generateTemporaryPassword();
     const passwordHash = hashPassword(temporaryPassword);
 
@@ -94,7 +99,7 @@ export async function PATCH(
           email: requestRecord.email.toLowerCase(),
           password: passwordHash,
           name: requestRecord.fullName,
-          role: requestRecord.requestedRole,
+          role: requestedRole.name,
           department: requestRecord.department,
         },
         select: {

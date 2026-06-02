@@ -6,6 +6,25 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "@/lib/toast";
 
+type DepartmentOption = {
+  id: number;
+  name: string;
+};
+
+type RoleOption = {
+  id: number;
+  name: string;
+  dashboardRoute: string;
+};
+
+type HodOption = {
+  id: number;
+  name: string;
+  email: string;
+  departments: string[];
+  label: string;
+};
+
 export default function RequestAccess() {
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -22,17 +41,10 @@ export default function RequestAccess() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [departments, setDepartments] = useState([]);
-  const [hods, setHods] = useState([]);
+  const [departments, setDepartments] = useState<DepartmentOption[]>([]);
+  const [roles, setRoles] = useState<RoleOption[]>([]);
+  const [hods, setHods] = useState<HodOption[]>([]);
   const [optionsLoading, setOptionsLoading] = useState(true);
-
-  // Role options based on your database schema
-  const roles = [
-    "Staff",
-    "Personnel",
-    "Corp Member",
-    "Secretary/Admin Officer"
-  ];
 
   useEffect(() => {
     const loadOptions = async () => {
@@ -44,10 +56,11 @@ export default function RequestAccess() {
         }
 
         setDepartments(Array.isArray(data?.departments) ? data.departments : []);
+        setRoles(Array.isArray(data?.roles) ? data.roles : []);
         setHods(Array.isArray(data?.hods) ? data.hods : []);
       } catch (error) {
         console.error("Failed to load request access options:", error);
-        toast.error("Failed to load departments and HOD list");
+        toast.error("Failed to load access request options");
       } finally {
         setOptionsLoading(false);
       }
@@ -295,7 +308,6 @@ export default function RequestAccess() {
                   style={{
                     borderColor: "#6DC6DF",
                     backgroundColor: "#f8fafc",
-                    focusRingColor: "#2C4B9B",
                   }}
                   required
                 />
@@ -316,7 +328,6 @@ export default function RequestAccess() {
                   style={{
                     borderColor: "#6DC6DF",
                     backgroundColor: "#f8fafc",
-                    focusRingColor: "#2C4B9B",
                   }}
                   required
                 />
@@ -337,7 +348,6 @@ export default function RequestAccess() {
                   style={{
                     borderColor: "#6DC6DF",
                     backgroundColor: "#f8fafc",
-                    focusRingColor: "#2C4B9B",
                   }}
                   required
                 />
@@ -356,13 +366,12 @@ export default function RequestAccess() {
                   style={{
                     borderColor: "#6DC6DF",
                     backgroundColor: "#f8fafc",
-                    focusRingColor: "#2C4B9B",
                   }}
                   required
                 >
                   <option value="">Select Department</option>
-                  {departments.map((dept, index) => (
-                    <option key={dept.id || index} value={dept.name || dept}>{dept.name || dept}</option>
+                  {departments.map((dept) => (
+                    <option key={dept.id} value={dept.name}>{dept.name}</option>
                   ))}
                 </select>
               </div>
@@ -380,13 +389,21 @@ export default function RequestAccess() {
                   style={{
                     borderColor: "#6DC6DF",
                     backgroundColor: "#f8fafc",
-                    focusRingColor: "#2C4B9B",
                   }}
                   required
+                  disabled={optionsLoading || roles.length === 0}
                 >
-                  <option value="">Select Role</option>
-                  {roles.map((role, index) => (
-                    <option key={index} value={role}>{role}</option>
+                  <option value="">
+                    {optionsLoading
+                      ? "Loading roles..."
+                      : roles.length > 0
+                        ? "Select Role"
+                        : "No requestable roles available"}
+                  </option>
+                  {roles.map((role) => (
+                    <option key={role.id} value={role.name}>
+                      {role.name}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -406,7 +423,6 @@ export default function RequestAccess() {
                   style={{
                     borderColor: "#6DC6DF",
                     backgroundColor: "#f8fafc",
-                    focusRingColor: "#2C4B9B",
                   }}
                 />
               </div>
@@ -425,7 +441,6 @@ export default function RequestAccess() {
                 style={{
                   borderColor: "#6DC6DF",
                   backgroundColor: "#f8fafc",
-                  focusRingColor: "#2C4B9B",
                 }}
                 required
                 disabled={optionsLoading || filteredHods.length === 0}
@@ -455,12 +470,11 @@ export default function RequestAccess() {
                 value={formData.reason}
                 onChange={handleChange}
                 placeholder="Please explain why you need access to Calaya..."
-                rows="4"
+                rows={4}
                 className="w-full rounded-xl border-2 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200"
                 style={{
                   borderColor: "#6DC6DF",
                   backgroundColor: "#f8fafc",
-                  focusRingColor: "#2C4B9B",
                 }}
                 required
               ></textarea>

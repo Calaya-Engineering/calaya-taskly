@@ -1,43 +1,57 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { HOD_DASHBOARD_ROUTE, isRequestableRole } from "@/lib/access-requests";
 
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const parsedHodLimit = Number.parseInt(searchParams.get("hodLimit") || "200", 10);
     const hodLimit = Number.isFinite(parsedHodLimit) ? Math.min(Math.max(parsedHodLimit, 1), 500) : 200;
-    const [departments, hodUsers] = await Promise.all([
+    const [departments, roles, hodRoles] = await Promise.all([
       prisma.department.findMany({
         orderBy: { name: "asc" },
         select: { id: true, name: true },
       }),
-      prisma.user.findMany({
-        where: { role: "HOD" },
-        orderBy: [{ name: "asc" }, { email: "asc" }],
-        take: hodLimit,
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          department: true,
-          managedDepartmentRelations: {
-            select: {
-              department: {
-                select: { name: true },
-              },
-            },
-            orderBy: {
-              department: {
-                name: "asc",
-              },
-            },
-          },
-        },
+      prisma.role.findMany({
+        orderBy: { name: "asc" },
+        select: { id: true, name: true, dashboardRoute: true },
+      }),
+      prisma.role.findMany({
+        where: { dashboardRoute: HOD_DASHBOARD_ROUTE },
+        select: { name: true },
       }),
     ]);
 
+    const hodRoleNames = hodRoles.map((role) => role.name);
+    const hodUsers = hodRoleNames.length
+      ? await prisma.user.findMany({
+          where: { role: { in: hodRoleNames } },
+          orderBy: [{ name: "asc" }, { email: "asc" }],
+          take: hodLimit,
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            department: true,
+            managedDepartmentRelations: {
+              select: {
+                department: {
+                  select: { name: true },
+                },
+              },
+              orderBy: {
+                department: {
+                  name: "asc",
+                },
+              },
+            },
+          },
+        })
+      : [];
+
     return NextResponse.json({
       departments,
+      roles: roles.filter(isRequestableRole),
       hods: hodUsers.map((hod) => {
         const departmentsForHod = Array.from(
           new Set(

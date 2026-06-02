@@ -1,11 +1,17 @@
 import crypto from "crypto";
 
-export const ACCESS_REQUEST_ROLE_OPTIONS = [
-  "Staff",
-  "Personnel",
-  "Corp Member",
-  "Secretary/Admin Officer",
+export const HOD_DASHBOARD_ROUTE = "/hod-dashboard";
+export const NON_REQUESTABLE_DASHBOARD_ROUTES = [
+  "/admin-dashboard",
+  "/md-dashboard",
+  HOD_DASHBOARD_ROUTE,
 ] as const;
+
+export function isRequestableRole(role: { dashboardRoute: string }) {
+  return !NON_REQUESTABLE_DASHBOARD_ROUTES.includes(
+    role.dashboardRoute as (typeof NON_REQUESTABLE_DASHBOARD_ROUTES)[number],
+  );
+}
 
 export function normalizeRequestedRole(role: string) {
   const normalized = String(role || "").trim();
