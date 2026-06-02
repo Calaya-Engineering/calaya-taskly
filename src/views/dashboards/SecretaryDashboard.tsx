@@ -1,10 +1,11 @@
 "use client";
 
 // pages/dashboards/SecretaryDashboard.jsx
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import Layout from '../../components/Layout';
-import { SecretaryMenuItems } from '@/utils/menus';
+import { fetchWithAuth } from "@/lib/api";
+import { useSSE } from "@/hooks/useSSE";
+import DashboardSkeleton from "@/components/DashboardSkeleton";
 import { renderNodeWithIcons } from "@/components/ui/lucide-icon-text";
 import {
   ChartIcon,
@@ -59,81 +60,227 @@ const btnBase = "px-5 py-3 rounded-2xl font-semibold active:scale-[0.99] transit
 const btnOutline = `${btnBase} border bg-white hover:bg-gray-50`;
 const btnSolid = `${btnBase} text-white`;
 
+const fmtRelative = (iso?: string | null) => {
+  if (!iso) return "Just now";
+  const then = new Date(iso).getTime();
+  const diff = Date.now() - then;
+  if (!Number.isFinite(diff) || diff < 0) return "Just now";
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return "Just now";
+  if (mins < 60) return `${mins} min ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  const days = Math.floor(hrs / 24);
+  if (days < 7) return `${days}d ago`;
+  return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+};
+
+const fmtShortDate = (iso?: string | null) => {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return "—";
+  return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+};
+
+const isThisMonth = (iso?: string | null) => {
+  if (!iso) return false;
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return false;
+  const now = new Date();
+  return d.getUTCMonth() === now.getUTCMonth() && d.getUTCFullYear() === now.getUTCFullYear();
+};
+
 export default function SecretaryDashboard() {
-  const today = new Date().toLocaleDateString('en-US', { 
-    weekday: 'long', 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric' 
+  const today = new Date().toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
   });
 
-  // Mock data for stats
-  const stats = useMemo(() => [
-    { 
-      title: 'Reports This Month', 
-      value: '22', 
-      change: '+8%', 
-      tone: 'info', 
-      icon: <ChartIcon />, 
-      link: '/secretary-dashboard/reports-archive',
-      color: 'var(--primary-blue)'
-    },
-    { 
-      title: 'Pending Uploads', 
-      value: '3', 
-      change: '-1%', 
-      tone: 'warn', 
-      icon: <ClockIcon />, 
-      link: '/secretary-dashboard/upload-report',
-      color: '#F59E0B'
-    },
-    { 
-      title: 'Total Downloads', 
-      value: '156', 
-      change: '+15%', 
-      tone: 'success', 
-      icon: <DownloadIcon />, 
-      link: '/secretary-dashboard/reports-archive',
-      color: '#10B981'
-    },
-    { 
-      title: 'New Announcements', 
-      value: '3', 
-      change: '+1%', 
-      tone: 'purple', 
-      icon: <MegaphoneIcon />, 
-      link: '/secretary-dashboard/announcements',
-      color: '#8B5CF6'
-    },
-  ], []);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [reports, setReports] = useState<any[]>([]);
+  const [announcements, setAnnouncements] = useState<any[]>([]);
+  const [tenders, setTenders] = useState<any[]>([]);
+  const [tasks, setTasks] = useState<any[]>([]);
+  const [notifications, setNotifications] = useState<any[]>([]);
 
-  const recentReports = [
-    { date: '2024-12-12', title: 'Daily Operations Report', downloads: 24, type: 'Daily', status: 'uploaded' },
-    { date: '2024-12-11', title: 'Safety & Compliance Report', downloads: 18, type: 'Weekly', status: 'uploaded' },
-    { date: '2024-12-10', title: 'Weekly Progress Report', downloads: 32, type: 'Weekly', status: 'uploaded' },
-    { date: '2024-12-09', title: 'Equipment Status Report', downloads: 15, type: 'Daily', status: 'pending' },
-  ];
+  const refreshLockRef = useRef(0);
 
-  const recentAnnouncements = [
-    { title: 'Year-End Holiday Schedule', department: 'HR', priority: 'important', time: '2 hours ago', read: true },
-    { title: 'System Maintenance Notice', department: 'IT', priority: 'important', time: '1 day ago', read: true },
-    { title: 'Safety Protocol Updates', department: 'HSE', priority: 'urgent', time: '2 days ago', read: false },
-    { title: 'Monthly Performance Review', department: 'HR', priority: 'normal', time: '3 days ago', read: true },
-  ];
+  const fetchDashboard = useCallback(async (soft = false) => {
+    if (!soft) setLoading(true);
+    setError("");
+    try {
+      const [reportsRes, announcementsRes, tendersRes, tasksRes, notificationsRes] = await Promise.allSettled([
+        fetchWithAuth("/api/daily-reports?limit=50").then((r) => (r.ok ? r.json() : null)),
+        fetchWithAuth("/api/announcements?limit=10").then((r) => (r.ok ? r.json() : [])),
+        fetchWithAuth("/api/tenders?limit=50").then((r) => (r.ok ? r.json() : [])),
+        fetchWithAuth("/api/tasks?limit=30").then((r) => (r.ok ? r.json() : [])),
+        fetchWithAuth("/api/notifications?limit=20").then((r) => (r.ok ? r.json() : [])),
+      ]);
 
-  const recentTaskReports = [
-    { task: 'TASK-2024-00123', user: 'John Doe', department: 'Technical', date: 'Today', status: 'Submitted' },
-    { task: 'TASK-2024-00124', user: 'Sarah Smith', department: 'Workshop', date: 'Yesterday', status: 'Pending Review' },
-    { task: 'TASK-2024-00125', user: 'Mike Johnson', department: 'Logistics', date: 'Dec 11', status: 'Approved' },
-    { task: 'TASK-2024-00126', user: 'Lisa Wang', department: 'HSE', date: 'Dec 10', status: 'Submitted' },
-  ];
+      const reportsData =
+        reportsRes.status === "fulfilled" && reportsRes.value && Array.isArray(reportsRes.value.data)
+          ? reportsRes.value.data
+          : [];
+      setReports(reportsData);
+      setAnnouncements(announcementsRes.status === "fulfilled" && Array.isArray(announcementsRes.value) ? announcementsRes.value : []);
+      setTenders(tendersRes.status === "fulfilled" && Array.isArray(tendersRes.value) ? tendersRes.value : []);
+      setTasks(tasksRes.status === "fulfilled" && Array.isArray(tasksRes.value) ? tasksRes.value : []);
+      setNotifications(notificationsRes.status === "fulfilled" && Array.isArray(notificationsRes.value) ? notificationsRes.value : []);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to load dashboard");
+    } finally {
+      if (!soft) setLoading(false);
+    }
+  }, []);
 
-  const recentActivity = [
-    { user: 'Admin Dept', action: 'uploaded new tender', time: '10 min ago', link: '/secretary-dashboard/tenders' },
-    { user: 'Technical Dept', action: 'submitted task report TASK-2024-00123', time: '30 min ago', link: '/secretary-dashboard/task-reports' },
-    { user: 'Managing Director', action: 'downloaded daily report', time: '1 hour ago', link: '/secretary-dashboard/reports-archive' },
-    { user: 'HR Department', action: 'published new announcement', time: '2 hours ago', link: '/secretary-dashboard/announcements' },
-  ];
+  useEffect(() => {
+    fetchDashboard(false);
+  }, [fetchDashboard]);
+
+  useSSE("/api/realtime/events", (ev) => {
+    if (!ev?.type || ev.type === "ping") return;
+    if (
+      !ev.type.startsWith("document:") &&
+      !ev.type.startsWith("tender:") &&
+      !ev.type.startsWith("task:") &&
+      !ev.type.startsWith("announcement:") &&
+      !ev.type.startsWith("notification:") &&
+      !ev.type.startsWith("daily-report:")
+    ) {
+      return;
+    }
+    const now = Date.now();
+    if (now - refreshLockRef.current < 1500) return;
+    refreshLockRef.current = now;
+    fetchDashboard(true);
+  });
+
+  const stats = useMemo(() => {
+    const reportsThisMonth = reports.filter((r) => isThisMonth(r.reportDate || r.submittedAt || r.createdAt)).length;
+    const pendingUploads = reports.filter((r) => String(r.status || "").toUpperCase() === "PENDING").length;
+    const totalDownloads = reports.reduce((sum, r) => sum + (Number(r.downloads) || 0), 0);
+    const newAnnouncementsCount = announcements.filter((a) => isThisMonth(a.createdAt || a.date)).length;
+
+    return [
+      {
+        title: 'Reports This Month',
+        value: String(reportsThisMonth),
+        change: `${reports.length} total`,
+        tone: 'info' as const,
+        icon: <ChartIcon />,
+        link: '/secretary-dashboard/reports-archive',
+        color: 'var(--primary-blue)',
+      },
+      {
+        title: 'Pending Uploads',
+        value: String(pendingUploads),
+        change: pendingUploads === 0 ? 'All caught up' : 'Need review',
+        tone: pendingUploads === 0 ? 'success' as const : 'warn' as const,
+        icon: <ClockIcon />,
+        link: '/secretary-dashboard/upload-report',
+        color: '#F59E0B',
+      },
+      {
+        title: 'Total Downloads',
+        value: String(totalDownloads),
+        change: 'Across all reports',
+        tone: 'success' as const,
+        icon: <DownloadIcon />,
+        link: '/secretary-dashboard/reports-archive',
+        color: '#10B981',
+      },
+      {
+        title: 'New Announcements',
+        value: String(newAnnouncementsCount),
+        change: `${announcements.length} total`,
+        tone: 'purple' as const,
+        icon: <MegaphoneIcon />,
+        link: '/secretary-dashboard/announcements',
+        color: '#8B5CF6',
+      },
+    ];
+  }, [reports, announcements]);
+
+  const recentReports = useMemo(
+    () =>
+      reports
+        .slice(0, 4)
+        .map((r) => ({
+          id: r.id,
+          date: r.reportDate || r.submittedAt || r.createdAt,
+          title: r.title || `Daily Report — ${r.department || "Unassigned"}`,
+          downloads: Number(r.downloads) || 0,
+          type: 'Daily',
+          status: String(r.status || 'UPLOADED').toLowerCase() === 'pending' ? 'pending' : 'uploaded',
+        })),
+    [reports],
+  );
+
+  const recentAnnouncements = useMemo(
+    () =>
+      announcements.slice(0, 4).map((a) => ({
+        id: a.id,
+        title: a.title || "Announcement",
+        department: a.department || "All Company",
+        priority: String(a.priority || 'NORMAL').toLowerCase(),
+        time: fmtRelative(a.createdAt || a.date),
+        read: Boolean(a.read),
+      })),
+    [announcements],
+  );
+
+  const recentTaskReports = useMemo(
+    () =>
+      tasks
+        .filter((t) => String(t.type || 'TASK').toUpperCase() === 'TASK')
+        .slice(0, 4)
+        .map((t) => {
+          const assignee = Array.isArray(t.assignments) && t.assignments.length > 0 ? t.assignments[0]?.user : null;
+          const statusRaw = String(t.status || 'PENDING').replace(/_/g, ' ');
+          return {
+            id: t.id,
+            task: t.title || `TASK-${t.id}`,
+            user: assignee?.name || assignee?.email?.split('@')[0] || t.createdBy?.name || 'Unassigned',
+            department: t.department || assignee?.department || 'Unassigned',
+            date: fmtRelative(t.updatedAt || t.createdAt),
+            status: statusRaw === 'COMPLETED' ? 'Approved' : statusRaw === 'PENDING' ? 'Pending Review' : 'Submitted',
+          };
+        }),
+    [tasks],
+  );
+
+  const recentActivity = useMemo(() => {
+    return notifications.slice(0, 4).map((n) => {
+      const actorName =
+        n.actor?.name ||
+        n.actorName ||
+        (typeof n.message === 'string' ? (n.message.split(' (')[0] || 'System') : 'System');
+      const cleanMessage =
+        typeof n.message === 'string' && n.message.includes(') ')
+          ? n.message.split(') ').slice(1).join(') ')
+          : n.message || 'updated the system';
+      return {
+        id: n.id,
+        user: actorName,
+        action: cleanMessage,
+        time: fmtRelative(n.createdAt),
+        link: n.linkPath || '/secretary-dashboard/notifications',
+      };
+    });
+  }, [notifications]);
+
+  const systemStats = useMemo(() => {
+    const totalTendersThisYear = tenders.filter((t) => {
+      const d = new Date(t.createdAt || t.issuedDate || 0);
+      return !isNaN(d.getTime()) && d.getUTCFullYear() === new Date().getUTCFullYear();
+    }).length;
+    const totalReportDownloads = reports.reduce((sum, r) => sum + (Number(r.downloads) || 0), 0);
+    const totalTaskReports = tasks.length;
+    return { totalTendersThisYear, totalReportDownloads, totalTaskReports };
+  }, [tenders, reports, tasks]);
 
   const getReportStatusTone = (status) => {
     return status === 'uploaded' ? 'success' : 'warn';
@@ -167,9 +314,24 @@ export default function SecretaryDashboard() {
     }
   };
 
+  if (loading && reports.length === 0 && tenders.length === 0 && tasks.length === 0) {
+    return <DashboardSkeleton />;
+  }
+
   return (
-    <Layout menuItems={SecretaryMenuItems} userRole="Secretary">
-      <div className="max-w-7xl mx-auto space-y-6">
+    <div className="max-w-7xl mx-auto space-y-6">
+        {error && (
+          <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            {error}
+            <button
+              type="button"
+              onClick={() => fetchDashboard(false)}
+              className="ml-3 font-semibold underline hover:no-underline"
+            >
+              Retry
+            </button>
+          </div>
+        )}
         {/* HERO */}
         <Card className="overflow-hidden">
           <div
@@ -462,20 +624,19 @@ export default function SecretaryDashboard() {
 
           <div className="mt-5 grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="p-6 rounded-2xl border border-gray-200/70 text-center transition">
-              <p className="text-3xl font-extrabold" style={{ color: '#8B5CF6' }}>45</p>
+              <p className="text-3xl font-extrabold" style={{ color: '#8B5CF6' }}>{systemStats.totalTendersThisYear}</p>
               <p className="text-sm text-gray-500 mt-2">Total Tenders This Year</p>
             </div>
             <div className="p-6 rounded-2xl border border-gray-200/70 text-center transition">
-              <p className="text-3xl font-extrabold text-emerald-600">892</p>
+              <p className="text-3xl font-extrabold text-emerald-600">{systemStats.totalReportDownloads}</p>
               <p className="text-sm text-gray-500 mt-2">Report Downloads</p>
             </div>
             <div className="p-6 rounded-2xl border border-gray-200/70 text-center transition">
-              <p className="text-3xl font-extrabold text-amber-600">156</p>
+              <p className="text-3xl font-extrabold text-amber-600">{systemStats.totalTaskReports}</p>
               <p className="text-sm text-gray-500 mt-2">Task Reports Submitted</p>
             </div>
           </div>
         </Card>
       </div>
-    </Layout>
   );
 }

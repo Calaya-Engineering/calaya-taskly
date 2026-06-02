@@ -21,6 +21,7 @@ export const AdminMenuItems = [
   { label: "Roles", path: "/admin-dashboard/roles", icon: <UserIcon />, group: "Management" },
   { label: "Accounts", path: "/admin-dashboard/accounts", icon: <UserIcon />, group: "Management" },
   { label: "Departments", path: "/admin-dashboard/departments", icon: <BuildingIcon />, group: "Management" },
+  { label: "Access Requests", path: "/admin-dashboard/access-requests", icon: <UserIcon />, group: "Compliance" },
   { label: "Audit Log", path: "/admin-dashboard/audit-log", icon: <AlertIcon />, group: "Compliance" },
 ];
 

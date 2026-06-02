@@ -60,24 +60,48 @@ export default function MDDashboard() {
   const [tendersData, setTendersData] = useState<any[]>([]);
   const [notifications, setNotifications] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const lastRefetchRef = useRef(0);
 
   const fetchData = useCallback(async (soft = false) => {
     if (!soft) setLoading(true);
+    setError("");
     try {
-      const [tRes, aRes, tenRes, nRes] = await Promise.all([
-        fetchWithAuth("/api/tasks?limit=1000"),
-        fetchWithAuth("/api/announcements?limit=5"),
-        fetchWithAuth("/api/tenders?limit=5"),
-        fetchWithAuth("/api/notifications?limit=5")
+      const [tasksRes, announcementsRes, tendersRes, notificationsRes] = await Promise.allSettled([
+        fetchWithAuth("/api/tasks?limit=1000").then((r) => (r.ok ? r.json() : Promise.reject(new Error("Failed to load tasks")))),
+        fetchWithAuth("/api/announcements?limit=5").then((r) => (r.ok ? r.json() : [])),
+        fetchWithAuth("/api/tenders?limit=5").then((r) => (r.ok ? r.json() : [])),
+        fetchWithAuth("/api/notifications?limit=5").then((r) => (r.ok ? r.json() : [])),
       ]);
 
-      if (tRes.ok) setTasksData(await tRes.json());
-      if (aRes.ok) setRawAnnouncements(await aRes.json());
-      if (tenRes.ok) setTendersData(await tenRes.json());
-      if (nRes.ok) setNotifications(await nRes.json());
+      const failures: string[] = [];
+      if (tasksRes.status === "fulfilled" && Array.isArray(tasksRes.value)) {
+        setTasksData(tasksRes.value);
+      } else if (tasksRes.status === "rejected") {
+        failures.push("tasks");
+      }
+      if (announcementsRes.status === "fulfilled" && Array.isArray(announcementsRes.value)) {
+        setRawAnnouncements(announcementsRes.value);
+      } else if (announcementsRes.status === "rejected") {
+        failures.push("announcements");
+      }
+      if (tendersRes.status === "fulfilled" && Array.isArray(tendersRes.value)) {
+        setTendersData(tendersRes.value);
+      } else if (tendersRes.status === "rejected") {
+        failures.push("tenders");
+      }
+      if (notificationsRes.status === "fulfilled" && Array.isArray(notificationsRes.value)) {
+        setNotifications(notificationsRes.value);
+      } else if (notificationsRes.status === "rejected") {
+        failures.push("notifications");
+      }
+
+      if (failures.length > 0) {
+        setError(`Some sections could not be loaded: ${failures.join(", ")}.`);
+      }
     } catch (err) {
       console.error("Failed to fetch MD dashboard data:", err);
+      setError(err instanceof Error ? err.message : "Failed to load dashboard");
     } finally {
       if (!soft) setLoading(false);
     }
@@ -267,6 +291,18 @@ export default function MDDashboard() {
 
   return (
     <div className="space-y-6">
+        {error && (
+          <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            {error}
+            <button
+              type="button"
+              onClick={() => fetchData(false)}
+              className="ml-3 font-semibold underline hover:no-underline"
+            >
+              Retry
+            </button>
+          </div>
+        )}
         {/* Hero */}
         <Card className="overflow-hidden">
           <div

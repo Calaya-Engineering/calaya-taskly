@@ -157,11 +157,13 @@ export default function HODDashboard() {
   const [tenders, setTenders] = useState<TenderItem[]>([]);
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [selectedDepartment, setSelectedDepartment] = useState("all");
 
   /* ── Fetch all dashboard data ── */
   const fetchAll = useCallback(async () => {
+    setError("");
     try {
       const [meRes, tasksRes, tendersRes, notifsRes] = await Promise.allSettled([
         fetchWithAuth("/api/me").then((r) => (r.ok ? r.json() : null)),
@@ -180,8 +182,18 @@ export default function HODDashboard() {
       setTenders(tendersData);
       setNotifications(notifsData);
       setLastUpdated(new Date());
+
+      const failures: string[] = [];
+      if (meRes.status === "rejected") failures.push("profile");
+      if (tasksRes.status === "rejected") failures.push("tasks");
+      if (tendersRes.status === "rejected") failures.push("tenders");
+      if (notifsRes.status === "rejected") failures.push("notifications");
+      if (failures.length > 0) {
+        setError(`Some sections could not be loaded: ${failures.join(", ")}.`);
+      }
     } catch (e) {
       console.error("HOD dashboard fetch error:", e);
+      setError(e instanceof Error ? e.message : "Failed to load dashboard");
     } finally {
       setLoading(false);
     }
@@ -395,6 +407,18 @@ export default function HODDashboard() {
   /* ─────────────────────────────────────────────────────────── */
   return (
     <div className="space-y-6">
+        {error && (
+          <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            {error}
+            <button
+              type="button"
+              onClick={() => fetchAll()}
+              className="ml-3 font-semibold underline hover:no-underline"
+            >
+              Retry
+            </button>
+          </div>
+        )}
         {/* Hero */}
         <Card className="overflow-hidden">
           <div
