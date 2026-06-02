@@ -5,6 +5,7 @@ import { emitRealtimeEvent } from "@/lib/realtime-events";
 import { createNotification } from "@/lib/notifications";
 import { getTenderAudience } from "@/lib/notification-audiences";
 import { recordAudit, getRequestIp } from "@/lib/audit";
+import { isManagingDirectorRole } from "@/lib/auth-config";
 import {
   buildUserDisplayLookup,
   getDisplayNameForUserValue,
@@ -184,7 +185,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const auth = await getAuthFromRequest(req);
-    if (!auth || !["MD", "HOD"].includes(auth.role)) {
+    if (!auth || (!isManagingDirectorRole(auth.role) && auth.role !== "HOD")) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 

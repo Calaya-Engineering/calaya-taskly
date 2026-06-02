@@ -1,8 +1,9 @@
 import { getManagedDepartmentNamesByUserId } from "@/lib/hod-departments";
 import { prisma } from "@/lib/prisma";
 import { collectTaskDepartmentKeys } from "@/lib/task-display";
+import { isManagingDirectorRole } from "@/lib/auth-config";
 
-const FULL_TASK_ACCESS_ROLES = new Set(["ADMIN", "MD", "SECRETARY"]);
+const FULL_TASK_ACCESS_ROLES = new Set(["ADMIN", "SECRETARY"]);
 const STAFF_LIKE_ROLES = new Set(["STAFF", "PERSONNEL", "CORP MEMBER"]);
 const HOD_ROLE = "HOD";
 const HOD_FORWARDABLE_ROLES = new Set([HOD_ROLE, ...STAFF_LIKE_ROLES]);
@@ -38,7 +39,7 @@ function getAssignmentUserIdSet(task: TaskAccessTask) {
 }
 
 export function hasFullTaskAccess(role?: string | null) {
-  return FULL_TASK_ACCESS_ROLES.has(normalizeRole(role));
+  return FULL_TASK_ACCESS_ROLES.has(normalizeRole(role)) || isManagingDirectorRole(role || "");
 }
 
 export function isHodRole(role?: string | null) {

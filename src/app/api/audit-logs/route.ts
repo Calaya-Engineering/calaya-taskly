@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
-
-const VIEWABLE_ROLES = new Set(["MD", "Admin"]);
+import { isManagingDirectorRole } from "@/lib/auth-config";
 
 /**
  * GET /api/audit-logs — list audit log entries.
@@ -20,7 +19,7 @@ const VIEWABLE_ROLES = new Set(["MD", "Admin"]);
 export async function GET(req: NextRequest) {
   const auth = await getAuthFromRequest(req);
   if (!auth) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  if (!VIEWABLE_ROLES.has(auth.role)) {
+  if (auth.role !== "Admin" && !isManagingDirectorRole(auth.role)) {
     return NextResponse.json({ error: "MD or Admin access required" }, { status: 403 });
   }
 

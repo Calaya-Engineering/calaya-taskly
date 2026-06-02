@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { notifyUsers } from "@/lib/notifications";
+import { isManagingDirectorRole } from "@/lib/auth-config";
 import {
   TASK_STATUS_PENDING_HOD_APPROVAL,
   TASK_STATUS_PENDING_MD_APPROVAL,
@@ -81,8 +82,14 @@ async function getActorByEmail(email: string) {
 }
 
 async function getMdApprovers() {
+  const mdRoles = await prisma.role.findMany({
+    where: { dashboardRoute: "/md-dashboard" },
+    select: { name: true },
+  });
+  const mdRoleNames = mdRoles.map((role) => role.name);
+
   return prisma.user.findMany({
-    where: { role: "MD" },
+    where: mdRoleNames.length > 0 ? { role: { in: mdRoleNames } } : { role: "MD" },
     select: { id: true, email: true, name: true, role: true, department: true },
   });
 }
@@ -131,7 +138,7 @@ export async function notifyTaskAssignments(params: {
 
   const stakeholderIds = new Set(recipients.map((recipient) => recipient.id));
 
-  if (actor.role === "MD") {
+  if (isManagingDirectorRole(actor.role)) {
     const departments = Array.from(
       new Set(
         [
@@ -203,7 +210,7 @@ export async function notifyTaskApprovalTransition(params: {
     const hodApprovers = await getHodApproversForDepartments(departments);
     const mdApprovers = await getMdApprovers();
     const approvalRecipients = hodApprovers.length > 0 ? [...hodApprovers] : [...mdApprovers];
-    if (params.task.createdBy?.role === "MD") {
+    if (isManagingDirectorRole(params.task.createdBy?.role || "")) {
       mdApprovers.forEach((md) => {
         if (!approvalRecipients.some((recipient) => recipient.id === md.id)) {
           approvalRecipients.push(md);

@@ -1,3 +1,5 @@
+import { isHodRole, isManagingDirectorRole } from "@/lib/auth-config";
+
 export const TASK_STATUS_PENDING_HOD_APPROVAL = "PENDING_HOD_APPROVAL";
 export const TASK_STATUS_PENDING_MD_APPROVAL = "PENDING_MD_APPROVAL";
 
@@ -28,26 +30,23 @@ export function isTaskClosed(status?: string | null) {
 
 /** Next status when a user marks a task complete (submit for approval / finalize). */
 export function getTaskSubmissionStatusForRole(role?: string | null) {
-  switch ((role || "").toUpperCase()) {
-    case "MD":
-      return "COMPLETED";
-    case "HOD":
-      // HOD sign-off is final; staff submissions do not wait for MD.
-      return "COMPLETED";
-    default:
-      return TASK_STATUS_PENDING_HOD_APPROVAL;
+  if (isManagingDirectorRole(role || "") || isHodRole(role || "")) {
+    return "COMPLETED";
   }
+
+  return TASK_STATUS_PENDING_HOD_APPROVAL;
 }
 
 export function getApprovalQueueStatusForRole(role?: string | null) {
-  switch ((role || "").toUpperCase()) {
-    case "HOD":
-      return TASK_STATUS_PENDING_HOD_APPROVAL;
-    case "MD":
-      return TASK_STATUS_PENDING_MD_APPROVAL;
-    default:
-      return null;
+  if (isHodRole(role || "")) {
+    return TASK_STATUS_PENDING_HOD_APPROVAL;
   }
+
+  if (isManagingDirectorRole(role || "")) {
+    return TASK_STATUS_PENDING_MD_APPROVAL;
+  }
+
+  return null;
 }
 
 export function getTaskStatusLabel(status?: string | null) {

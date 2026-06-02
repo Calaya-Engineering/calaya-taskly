@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { emitTaskEvent } from "@/lib/task-events";
 import { createNotification } from "@/lib/notifications";
+import { isManagingDirectorRole } from "@/lib/auth-config";
 
 /**
  * POST /api/tasks/[id]/escalate
@@ -19,7 +20,7 @@ export async function POST(
     }
 
     // Only HODs (and above) can escalate
-    if (!["HOD", "MD", "ADMIN"].includes(auth.role)) {
+    if (auth.role !== "HOD" && auth.role !== "ADMIN" && !isManagingDirectorRole(auth.role)) {
         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
@@ -109,7 +110,7 @@ export async function DELETE(
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    if (!["MD", "ADMIN"].includes(auth.role)) {
+    if (auth.role !== "ADMIN" && !isManagingDirectorRole(auth.role)) {
         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 

@@ -3,9 +3,13 @@ import { prisma } from "@/lib/prisma";
 import { getAuthFromRequest } from "@/lib/jwt";
 import { emitRealtimeEvent } from "@/lib/realtime-events";
 import { recordAudit, getRequestIp } from "@/lib/audit";
+import { isManagingDirectorRole } from "@/lib/auth-config";
 
 const DOWNLOAD_BLOCKED_ROLES = ["Staff", "Personnel", "Corp Member"];
-const PRIVILEGED_DOCUMENT_ROLES = ["MD", "Admin"];
+
+function hasPrivilegedDocumentAccess(role: string) {
+    return role === "Admin" || isManagingDirectorRole(role);
+}
 
 function parseDocId(id: string): number | null {
     const num = parseInt(id, 10);
@@ -100,7 +104,7 @@ export async function GET(
             return NextResponse.json({ error: "Document not found" }, { status: 404 });
         }
 
-        if (doc.isPrivate && !PRIVILEGED_DOCUMENT_ROLES.includes(auth.role)) {
+        if (doc.isPrivate && !hasPrivilegedDocumentAccess(auth.role)) {
             return NextResponse.json({ error: "Document not found" }, { status: 404 });
         }
 

@@ -6,9 +6,12 @@ import { emitRealtimeEvent } from "@/lib/realtime-events";
 import { buildUserDisplayLookup, getDisplayNameForUserValue } from "@/lib/user-display";
 import { recordAudit, getRequestIp } from "@/lib/audit";
 import { processMentions, stripMentionTokens } from "@/lib/mentions";
+import { isManagingDirectorRole } from "@/lib/auth-config";
 
 const DOCUMENT_RECIPIENT_ROLES = ["HOD", "Staff", "Personnel", "Corp Member", "Secretary"];
-const PRIVILEGED_DOCUMENT_ROLES = ["MD", "Admin"];
+function hasPrivilegedDocumentAccess(role: string) {
+  return role === "Admin" || isManagingDirectorRole(role);
+}
 
 /**
  * GET /api/documents - List documents (MD, HOD, Secretary, Staff - authenticated)
@@ -37,7 +40,7 @@ export async function GET(req: NextRequest) {
       const offset = Number.isFinite(parsedOffset) ? Math.max(parsedOffset, 0) : 0;
 
       const where: any = { NOT: [{ type: "Report" }, { scope: "TENDER" }] };
-      if (!PRIVILEGED_DOCUMENT_ROLES.includes(auth.role)) {
+      if (!hasPrivilegedDocumentAccess(auth.role)) {
         where.isPrivate = false;
       }
       if (type && type !== "All Types") where.type = type;
@@ -131,7 +134,7 @@ export async function POST(req: NextRequest) {
     if (!auth) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    if (auth.role !== "MD" && auth.role !== "HOD") {
+    if (!isManagingDirectorRole(auth.role) && auth.role !== "HOD") {
       return NextResponse.json({ error: "MD or HOD access required" }, { status: 403 });
     }
 

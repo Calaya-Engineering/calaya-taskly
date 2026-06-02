@@ -5,6 +5,7 @@ import { emitRealtimeEvent } from "@/lib/realtime-events";
 import { createNotification } from "@/lib/notifications";
 import { getTenderAudience } from "@/lib/notification-audiences";
 import { buildUserDisplayLookup, getDisplayNameForUserValue } from "@/lib/user-display";
+import { isManagingDirectorRole } from "@/lib/auth-config";
 
 const DEFAULT_TENDER_DEPARTMENT = "Company-wide";
 
@@ -105,7 +106,7 @@ export async function PATCH(
 ) {
     try {
         const auth = await getAuthFromRequest(req);
-        if (!auth || !["MD", "HOD"].includes(auth.role)) {
+        if (!auth || (!isManagingDirectorRole(auth.role) && auth.role !== "HOD")) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
@@ -171,7 +172,7 @@ export async function DELETE(
 ) {
     try {
         const auth = await getAuthFromRequest(req);
-        if (!auth || !["MD", "HOD"].includes(auth.role)) {
+        if (!auth || (!isManagingDirectorRole(auth.role) && auth.role !== "HOD")) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 

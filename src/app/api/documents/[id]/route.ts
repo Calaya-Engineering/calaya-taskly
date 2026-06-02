@@ -5,9 +5,13 @@ import { emitRealtimeEvent } from "@/lib/realtime-events";
 import { createNotification } from "@/lib/notifications";
 import { getDisplayNameForUserValue } from "@/lib/user-display";
 import { recordAudit, getRequestIp } from "@/lib/audit";
+import { isManagingDirectorRole } from "@/lib/auth-config";
 
 const DOCUMENT_RECIPIENT_ROLES = ["HOD", "Staff", "Personnel", "Corp Member", "Secretary"];
-const PRIVILEGED_DOCUMENT_ROLES = ["MD", "Admin"];
+
+function hasPrivilegedDocumentAccess(role: string) {
+  return role === "Admin" || isManagingDirectorRole(role);
+}
 
 function parseDocId(id: string): number | null {
   const num = parseInt(id, 10);
@@ -42,7 +46,7 @@ export async function GET(
     if (!doc) {
       return NextResponse.json({ error: "Document not found" }, { status: 404 });
     }
-    if (doc.isPrivate && !PRIVILEGED_DOCUMENT_ROLES.includes(auth.role)) {
+    if (doc.isPrivate && !hasPrivilegedDocumentAccess(auth.role)) {
       return NextResponse.json({ error: "Document not found" }, { status: 404 });
     }
 
@@ -122,7 +126,7 @@ export async function PATCH(
       });
     }
 
-    if (auth.role !== "MD" && auth.role !== "HOD") {
+    if (!isManagingDirectorRole(auth.role) && auth.role !== "HOD") {
       return NextResponse.json({ error: "MD or HOD access required" }, { status: 403 });
     }
 

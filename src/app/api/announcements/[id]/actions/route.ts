@@ -5,8 +5,13 @@ import { createNotification, notifyUsers } from "@/lib/notifications";
 import { emitAnnouncementEvent } from "@/lib/announcement-events";
 import { getAnnouncementAudience } from "@/lib/notification-audiences";
 import { countRecipientUsers } from "@/lib/notification-recipient-count";
+import { isManagingDirectorRole } from "@/lib/auth-config";
 
-const REPOST_ALLOWED_ROLES = new Set(["Admin", "MD", "HOD", "Secretary"]);
+const REPOST_ALLOWED_ROLES = new Set(["Admin", "HOD", "Secretary"]);
+
+function canRepost(role: string) {
+  return REPOST_ALLOWED_ROLES.has(role) || isManagingDirectorRole(role);
+}
 
 function parseAnnouncementId(value: string) {
   const id = parseInt(value, 10);
@@ -167,7 +172,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     }
 
     if (body.action === "repost") {
-      if (!REPOST_ALLOWED_ROLES.has(auth.role)) {
+      if (!canRepost(auth.role)) {
         return NextResponse.json({ error: "You do not have permission to repost announcements." }, { status: 403 });
       }
 
