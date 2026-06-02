@@ -48,6 +48,53 @@ model User {
   auditLogs                  AuditLog[]
   mentionsReceived           Mention[]          @relation("MentionRecipient")
   mentionsMade               Mention[]          @relation("MentionActor")
+  chatMemberships            ChatChannelMember[]
+  chatMessagesSent           ChatMessage[]      @relation("ChatMessageSender")
+}
+
+model ChatChannel {
+  id             Int                 @id @default(autoincrement())
+  type           String              // "DEPARTMENT" | "DIRECT"
+  name           String?
+  departmentName String?
+  /// Canonical key for direct-message dedup, e.g. "u:1:2" with sorted ids.
+  directKey      String?             @unique
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  members        ChatChannelMember[]
+  messages       ChatMessage[]
+
+  @@index([type])
+  @@index([departmentName])
+  @@index([updatedAt])
+}
+
+model ChatChannelMember {
+  id         Int          @id @default(autoincrement())
+  channelId  Int
+  userId     Int
+  joinedAt   DateTime     @default(now())
+  lastReadAt DateTime?
+  channel    ChatChannel  @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([channelId, userId])
+  @@index([userId])
+  @@index([channelId])
+}
+
+model ChatMessage {
+  id        Int          @id @default(autoincrement())
+  channelId Int
+  senderId  Int
+  content   String       @db.Text
+  createdAt DateTime     @default(now())
+  editedAt  DateTime?
+  channel   ChatChannel  @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  sender    User         @relation("ChatMessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([channelId, createdAt])
+  @@index([senderId])
 }
 
 model AccessRequest {

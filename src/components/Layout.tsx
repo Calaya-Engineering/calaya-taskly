@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { MenuIcon, CloseMenuIcon } from "@/lib/icons";
 import { LayoutSidebar } from "@/components/LayoutSidebar";
+import ChatLauncher from "@/components/ChatLauncher";
 import { getRouteForRole, isManagementDepartment } from "@/lib/auth-config";
 
 export interface MenuItem {
@@ -149,6 +150,7 @@ export default function Layout({
 
               {/* Right */}
               <div className="flex items-center gap-2 md:gap-3">
+                <ChatLauncher />
                 <button
                   onClick={handleLogoutClick}
                   className="h-10 px-4 rounded-2xl text-sm font-semibold text-white active:scale-[0.99] transition"
