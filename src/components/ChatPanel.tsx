@@ -37,6 +37,8 @@ type Channel = {
   updatedAt: string;
 };
 
+type MessageStatus = "sending" | "sent" | "failed";
+
 type Message = {
   id: number;
   content: string;
@@ -44,6 +46,10 @@ type Message = {
   editedAt: string | null;
   sender: { id: number; name: string; role: string | null };
   mine: boolean;
+  /** Client-side delivery state for optimistic UI. Server messages are always "sent". */
+  status?: MessageStatus;
+  /** Stable client key — survives the optimistic→server id swap. */
+  clientId?: string;
 };
 
 type PersonHit = {
@@ -156,6 +162,14 @@ export default function ChatPanel({ open, onClose, onUnreadChange }: Props) {
   const [error, setError] = useState("");
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const messagesScrollRef = useRef<HTMLDivElement | null>(null);
+  const composerRef = useRef<HTMLTextAreaElement | null>(null);
+  /**
+   * True when the user is within ~80px of the bottom. When false, incoming
+   * messages don't auto-scroll — they get a "new messages" pill instead.
+   */
+  const stickToBottomRef = useRef(true);
+  const [hasUnreadBelow, setHasUnreadBelow] = useState(false);
 
   /* ── Fetchers ─────────────────────────────── */
 
@@ -207,9 +221,45 @@ export default function ChatPanel({ open, onClose, onUnreadChange }: Props) {
     markRead(activeChannelId).then(() => fetchChannels());
   }, [activeChannelId, fetchMessages, markRead, fetchChannels]);
 
+  // Auto-scroll only when the user is already pinned to the bottom; otherwise
+  // surface a "new messages" pill so we don't yank them away from history.
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+    if (stickToBottomRef.current) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+      setHasUnreadBelow(false);
+    } else if (messages.length > 0) {
+      const last = messages[messages.length - 1];
+      if (!last.mine) setHasUnreadBelow(true);
+    }
   }, [messages]);
+
+  const handleMessagesScroll = useCallback(() => {
+    const el = messagesScrollRef.current;
+    if (!el) return;
+    const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+    stickToBottomRef.current = distanceFromBottom < 80;
+    if (stickToBottomRef.current) setHasUnreadBelow(false);
+  }, []);
+
+  const jumpToBottom = useCallback(() => {
+    stickToBottomRef.current = true;
+    setHasUnreadBelow(false);
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+  }, []);
+
+  // Auto-grow the composer as the user types.
+  useEffect(() => {
+    const el = composerRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = `${Math.min(el.scrollHeight, 160)}px`;
+  }, [draft]);
+
+  // Reset scroll anchor when switching channels.
+  useEffect(() => {
+    stickToBottomRef.current = true;
+    setHasUnreadBelow(false);
+  }, [activeChannelId]);
 
   useSSE(
     "/api/realtime/events",
@@ -273,8 +323,25 @@ export default function ChatPanel({ open, onClose, onUnreadChange }: Props) {
 
   const sendMessage = async () => {
     const content = draft.trim();
-    if (!content || activeChannelId == null || sending) return;
+    if (!content || activeChannelId == null) return;
+
+    // Optimistic UI: render the message instantly with status="sending".
+    const clientId = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    const optimistic: Message = {
+      id: -Date.now(), // negative so it can't collide with a server id
+      clientId,
+      content,
+      createdAt: new Date().toISOString(),
+      editedAt: null,
+      sender: { id: -1, name: "You", role: null },
+      mine: true,
+      status: "sending",
+    };
+    setMessages((prev) => [...prev, optimistic]);
+    setDraft("");
+    stickToBottomRef.current = true; // always glue to bottom on send
     setSending(true);
+
     try {
       const res = await fetchWithAuth(
         `/api/chat/channels/${activeChannelId}/messages`,
@@ -286,12 +353,64 @@ export default function ChatPanel({ open, onClose, onUnreadChange }: Props) {
       );
       if (res.ok) {
         const message: Message = await res.json();
-        setMessages((prev) => [...prev, { ...message, mine: true }]);
-        setDraft("");
+        // Reconcile: replace the optimistic row in place so the bubble
+        // doesn't jump or duplicate.
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.clientId === clientId
+              ? { ...message, mine: true, status: "sent", clientId }
+              : m,
+          ),
+        );
         fetchChannels();
+      } else {
+        setMessages((prev) =>
+          prev.map((m) => (m.clientId === clientId ? { ...m, status: "failed" } : m)),
+        );
       }
+    } catch {
+      setMessages((prev) =>
+        prev.map((m) => (m.clientId === clientId ? { ...m, status: "failed" } : m)),
+      );
     } finally {
       setSending(false);
+    }
+  };
+
+  const retryMessage = async (clientId: string) => {
+    const target = messages.find((m) => m.clientId === clientId);
+    if (!target || activeChannelId == null) return;
+    setMessages((prev) =>
+      prev.map((m) => (m.clientId === clientId ? { ...m, status: "sending" } : m)),
+    );
+    try {
+      const res = await fetchWithAuth(
+        `/api/chat/channels/${activeChannelId}/messages`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ content: target.content }),
+        },
+      );
+      if (res.ok) {
+        const message: Message = await res.json();
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.clientId === clientId
+              ? { ...message, mine: true, status: "sent", clientId }
+              : m,
+          ),
+        );
+        fetchChannels();
+      } else {
+        setMessages((prev) =>
+          prev.map((m) => (m.clientId === clientId ? { ...m, status: "failed" } : m)),
+        );
+      }
+    } catch {
+      setMessages((prev) =>
+        prev.map((m) => (m.clientId === clientId ? { ...m, status: "failed" } : m)),
+      );
     }
   };
 
@@ -325,8 +444,10 @@ export default function ChatPanel({ open, onClose, onUnreadChange }: Props) {
     <>
       <div
         onClick={onClose}
-        className={`fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm transition-opacity ${
-          open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        className={`fixed inset-0 z-[60] transition-all duration-300 ease-out ${
+          open
+            ? "opacity-100 pointer-events-auto bg-slate-900/40 backdrop-blur-md"
+            : "opacity-0 pointer-events-none bg-transparent backdrop-blur-0"
         }`}
         aria-hidden="true"
       />
@@ -334,10 +455,15 @@ export default function ChatPanel({ open, onClose, onUnreadChange }: Props) {
         role="dialog"
         aria-modal="true"
         aria-label="Chat"
-        className={`fixed inset-y-0 right-0 z-[61] bg-white shadow-2xl flex flex-col overflow-hidden transition-transform duration-200 ease-out
+        className={`fixed inset-y-0 right-0 z-[61] bg-white shadow-2xl flex flex-col overflow-hidden
           w-full sm:w-[440px] sm:border-l sm:border-gray-200
           ${open ? "translate-x-0" : "translate-x-full"}`}
-        style={{ height: "100dvh", maxHeight: "100dvh" }}
+        style={{
+          height: "100dvh",
+          maxHeight: "100dvh",
+          transition: "transform 320ms cubic-bezier(0.32, 0.72, 0, 1)",
+          willChange: "transform",
+        }}
       >
         {activeChannelId != null ? (
           <ConversationView
@@ -345,11 +471,17 @@ export default function ChatPanel({ open, onClose, onUnreadChange }: Props) {
             messages={messages}
             messagesLoading={messagesLoading}
             messagesEndRef={messagesEndRef}
+            messagesScrollRef={messagesScrollRef}
+            composerRef={composerRef}
+            hasUnreadBelow={hasUnreadBelow}
             draft={draft}
             sending={sending}
             onDraftChange={setDraft}
             onSend={sendMessage}
+            onRetry={retryMessage}
             onComposerKey={onComposerKey}
+            onMessagesScroll={handleMessagesScroll}
+            onJumpToBottom={jumpToBottom}
             onBack={() => setActiveChannelId(null)}
             onClose={onClose}
           />
@@ -749,11 +881,17 @@ function ConversationView({
   messages,
   messagesLoading,
   messagesEndRef,
+  messagesScrollRef,
+  composerRef,
+  hasUnreadBelow,
   draft,
   sending,
   onDraftChange,
   onSend,
+  onRetry,
   onComposerKey,
+  onMessagesScroll,
+  onJumpToBottom,
   onBack,
   onClose,
 }: {
@@ -761,11 +899,17 @@ function ConversationView({
   messages: Message[];
   messagesLoading: boolean;
   messagesEndRef: React.RefObject<HTMLDivElement | null>;
+  messagesScrollRef: React.RefObject<HTMLDivElement | null>;
+  composerRef: React.RefObject<HTMLTextAreaElement | null>;
+  hasUnreadBelow: boolean;
   draft: string;
   sending: boolean;
   onDraftChange: (v: string) => void;
   onSend: () => void;
+  onRetry: (clientId: string) => void;
   onComposerKey: (e: KeyboardEvent<HTMLTextAreaElement>) => void;
+  onMessagesScroll: () => void;
+  onJumpToBottom: () => void;
   onBack: () => void;
   onClose: () => void;
 }) {
@@ -842,32 +986,50 @@ function ConversationView({
       </div>
 
       {/* Messages */}
-      <MessageList
-        loading={messagesLoading}
-        messages={messages}
-        channelType={channel?.type}
-        messagesEndRef={messagesEndRef}
-      />
+      <div className="relative flex-1 min-h-0 flex flex-col">
+        <MessageList
+          loading={messagesLoading}
+          messages={messages}
+          channelType={channel?.type}
+          messagesEndRef={messagesEndRef}
+          messagesScrollRef={messagesScrollRef}
+          onScroll={onMessagesScroll}
+          onRetry={onRetry}
+        />
+        {hasUnreadBelow ? (
+          <button
+            type="button"
+            onClick={onJumpToBottom}
+            className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-full text-xs font-semibold text-white shadow-lg active:scale-[0.97] transition"
+            style={{ backgroundColor: "var(--primary-blue, #2C4B9B)" }}
+          >
+            New messages ↓
+          </button>
+        ) : null}
+      </div>
 
       {/* Composer */}
-      <div className="bg-white border-t border-gray-100 p-3">
-        <div className="flex items-end gap-2 rounded-3xl bg-gray-100 p-2">
+      <div className="shrink-0 bg-white border-t border-gray-100 p-3">
+        <div
+          className={`flex items-end gap-2 rounded-3xl bg-gray-100 p-2 transition focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-100`}
+        >
           <textarea
+            ref={composerRef}
             value={draft}
             onChange={(e) => onDraftChange(e.target.value)}
             onKeyDown={onComposerKey}
             rows={1}
             placeholder="Type a message"
-            disabled={sending}
-            className="flex-1 max-h-32 min-h-[36px] resize-none bg-transparent border-0 px-3 py-2 text-sm placeholder-gray-400 focus:outline-none disabled:opacity-60"
+            className="flex-1 max-h-40 min-h-[36px] resize-none bg-transparent border-0 px-3 py-2 text-sm placeholder-gray-400 focus:outline-none"
+            style={{ overflowY: "auto" }}
           />
           <button
             type="button"
             onClick={onSend}
             disabled={!draft.trim() || sending}
             aria-label="Send message"
-            className="shrink-0 h-9 w-9 rounded-full flex items-center justify-center text-white transition active:scale-[0.95] disabled:opacity-50"
-            style={{ backgroundColor: "var(--primary-blue)" }}
+            className="shrink-0 h-9 w-9 rounded-full flex items-center justify-center text-white transition-all duration-150 active:scale-[0.92] disabled:opacity-40 hover:brightness-110"
+            style={{ backgroundColor: "var(--primary-blue, #2C4B9B)" }}
           >
             <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="M22 2L11 13" />
@@ -891,11 +1053,17 @@ function MessageList({
   messages,
   channelType,
   messagesEndRef,
+  messagesScrollRef,
+  onScroll,
+  onRetry,
 }: {
   loading: boolean;
   messages: Message[];
   channelType?: "DEPARTMENT" | "DIRECT";
   messagesEndRef: React.RefObject<HTMLDivElement | null>;
+  messagesScrollRef: React.RefObject<HTMLDivElement | null>;
+  onScroll: () => void;
+  onRetry: (clientId: string) => void;
 }) {
   if (loading && messages.length === 0) {
     return (
@@ -924,7 +1092,9 @@ function MessageList({
 
   return (
     <div
-      className="flex-1 overflow-y-auto px-4 py-4 space-y-1"
+      ref={messagesScrollRef}
+      onScroll={onScroll}
+      className="flex-1 min-h-0 overflow-y-auto px-4 py-4 space-y-1"
       style={{ backgroundColor: "#f5f7fa" }}
     >
       {messages.map((m, idx) => {
@@ -971,24 +1141,51 @@ function MessageList({
                 </div>
               ) : null}
 
-              <div className={`max-w-[78%] ${m.mine ? "items-end" : "items-start"}`}>
+              <div className={`max-w-[78%] ${m.mine ? "items-end" : "items-start"} ct-msg-in`}>
                 <div
-                  className={`px-3.5 py-2 text-sm leading-relaxed whitespace-pre-wrap break-words shadow-sm ${
+                  className={`px-3.5 py-2 text-sm leading-relaxed whitespace-pre-wrap break-words shadow-sm transition-opacity ${
                     m.mine
                       ? "rounded-2xl rounded-br-md text-white"
                       : "rounded-2xl rounded-bl-md bg-white text-gray-900"
+                  } ${m.status === "sending" ? "opacity-75" : ""} ${
+                    m.status === "failed" ? "ring-2 ring-red-300" : ""
                   }`}
-                  style={m.mine ? { backgroundColor: "var(--primary-blue)" } : undefined}
+                  style={m.mine ? { backgroundColor: "var(--primary-blue, #2C4B9B)" } : undefined}
                 >
                   {m.content}
                 </div>
                 <div
-                  className={`text-[10px] text-gray-400 mt-0.5 ${
-                    m.mine ? "text-right pr-1" : "pl-1"
-                  }`}
+                  className={`text-[10px] mt-0.5 flex items-center gap-1 ${
+                    m.mine ? "justify-end pr-1" : "pl-1"
+                  } ${m.status === "failed" ? "text-red-500" : "text-gray-400"}`}
                 >
-                  {fmtTime(m.createdAt)}
-                  {m.mine ? <span className="ml-1 text-gray-400">· You</span> : null}
+                  <span>{fmtTime(m.createdAt)}</span>
+                  {m.mine ? (
+                    <>
+                      <span className="text-gray-300">·</span>
+                      {m.status === "sending" ? (
+                        <span className="inline-flex items-center gap-1">
+                          <span className="inline-block h-1.5 w-1.5 rounded-full bg-gray-400 animate-pulse" />
+                          Sending
+                        </span>
+                      ) : m.status === "failed" ? (
+                        <button
+                          type="button"
+                          onClick={() => m.clientId && onRetry(m.clientId)}
+                          className="font-bold underline hover:no-underline"
+                        >
+                          Failed — retry
+                        </button>
+                      ) : (
+                        <span className="inline-flex items-center gap-0.5 text-gray-400">
+                          <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <path d="M20 6L9 17l-5-5" />
+                          </svg>
+                          Sent
+                        </span>
+                      )}
+                    </>
+                  ) : null}
                 </div>
               </div>
             </div>
