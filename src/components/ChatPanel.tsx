@@ -334,9 +334,10 @@ export default function ChatPanel({ open, onClose, onUnreadChange }: Props) {
         role="dialog"
         aria-modal="true"
         aria-label="Chat"
-        className={`fixed top-0 right-0 z-[61] h-full bg-white shadow-2xl flex flex-col transition-transform duration-200 ease-out
+        className={`fixed inset-y-0 right-0 z-[61] bg-white shadow-2xl flex flex-col overflow-hidden transition-transform duration-200 ease-out
           w-full sm:w-[440px] sm:border-l sm:border-gray-200
           ${open ? "translate-x-0" : "translate-x-full"}`}
+        style={{ height: "100dvh", maxHeight: "100dvh" }}
       >
         {activeChannelId != null ? (
           <ConversationView
@@ -411,10 +412,10 @@ function ListView({
   return (
     <>
       {/* Header */}
-      <div className="px-5 pt-5 pb-3 flex items-center justify-between">
+      <div className="shrink-0 px-4 pt-4 pb-3 flex items-center justify-between border-b border-gray-100">
         <h2
-          className="text-2xl font-extrabold tracking-tight"
-          style={{ color: "var(--primary-blue)" }}
+          className="text-xl font-extrabold tracking-tight"
+          style={{ color: "var(--primary-blue, #2C4B9B)" }}
         >
           Messages
         </h2>
@@ -460,7 +461,7 @@ function ListView({
 
       {/* Filter pill row */}
       {view === "channels" ? (
-        <div className="px-5 pb-3">
+        <div className="shrink-0 px-4 pt-3 pb-2">
           <div className="relative">
             <span className="absolute inset-y-0 left-3 flex items-center text-gray-400">
               <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -479,15 +480,15 @@ function ListView({
       ) : null}
 
       {error ? (
-        <div className="mx-5 mb-3 rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-700">
+        <div className="shrink-0 mx-4 mb-3 rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-700">
           {error}
         </div>
       ) : null}
 
       {view === "channels" ? (
-        <>
+        <div className="flex-1 min-h-0 flex flex-col">
           {allChannelsCount > 0 ? (
-            <div className="px-5 pb-2 flex items-center gap-2 text-[11px] uppercase tracking-[0.14em] text-gray-400 font-semibold">
+            <div className="shrink-0 px-4 pb-1 pt-2 flex items-center gap-2 text-[11px] uppercase tracking-[0.14em] text-gray-400 font-semibold">
               <span>All conversations</span>
               <span className="text-gray-300">·</span>
               <span>{allChannelsCount}</span>
@@ -498,11 +499,16 @@ function ListView({
             onSelect={onSelectChannel}
             emptyMessage={
               allChannelsCount === 0
-                ? "No chats yet. Tap the search icon to find someone."
+                ? "No chats yet."
                 : "No chats match your search."
             }
+            emptyHint={
+              allChannelsCount === 0
+                ? "Tap the search icon above to find a colleague to message."
+                : undefined
+            }
           />
-        </>
+        </div>
       ) : (
         <SearchPanel
           query={searchQuery}
@@ -522,21 +528,36 @@ function ChannelList({
   channels,
   onSelect,
   emptyMessage,
+  emptyHint,
 }: {
   channels: Channel[];
   onSelect: (id: number) => void;
   emptyMessage?: string;
+  emptyHint?: string;
 }) {
   if (channels.length === 0) {
     return (
-      <div className="flex-1 flex items-center justify-center text-sm text-gray-500 p-8 text-center">
-        {emptyMessage || "Loading chats…"}
+      <div className="flex-1 min-h-0 flex flex-col items-center justify-center text-center px-6 py-10">
+        <div
+          className="h-14 w-14 rounded-2xl flex items-center justify-center mb-3"
+          style={{ backgroundColor: "rgba(44, 75, 155, 0.10)", color: "var(--primary-blue, #2C4B9B)" }}
+        >
+          <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+          </svg>
+        </div>
+        <div className="text-sm font-extrabold text-gray-900">
+          {emptyMessage || "No chats"}
+        </div>
+        {emptyHint ? (
+          <p className="text-xs text-gray-500 mt-1 max-w-[240px]">{emptyHint}</p>
+        ) : null}
       </div>
     );
   }
 
   return (
-    <ul className="flex-1 overflow-y-auto px-2 pb-3">
+    <ul className="flex-1 min-h-0 overflow-y-auto px-2 pb-3">
       {channels.map((c) => (
         <li key={c.id}>
           <button
@@ -629,7 +650,7 @@ function SearchPanel({
 }) {
   return (
     <div className="flex-1 min-h-0 flex flex-col">
-      <div className="px-5 pb-3">
+      <div className="shrink-0 px-4 pt-3 pb-2">
         <div className="relative">
           <span className="absolute inset-y-0 left-3 flex items-center text-gray-400">
             <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -646,15 +667,38 @@ function SearchPanel({
           />
         </div>
       </div>
-      <ul className="flex-1 overflow-y-auto px-2 pb-3">
+      <div className="flex-1 min-h-0 overflow-y-auto px-2 pb-3">
         {loading ? (
-          <li className="p-6 text-center text-sm text-gray-500">Searching…</li>
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <div className="h-7 w-7 rounded-full border-2 border-gray-200 border-t-[color:var(--primary-blue,#2C4B9B)] animate-spin mb-3" />
+            <div className="text-sm font-semibold text-gray-700">Searching…</div>
+          </div>
         ) : results.length === 0 ? (
-          <li className="p-6 text-center text-sm text-gray-500">
-            {query ? "No matches" : "Start typing to find someone"}
-          </li>
+          <div className="flex flex-col items-center justify-center text-center px-6 py-12">
+            <div
+              className="h-14 w-14 rounded-2xl flex items-center justify-center mb-3"
+              style={{
+                backgroundColor: "rgba(44, 75, 155, 0.10)",
+                color: "var(--primary-blue, #2C4B9B)",
+              }}
+            >
+              <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="8" />
+                <path d="M21 21l-4.35-4.35" />
+              </svg>
+            </div>
+            <div className="text-sm font-extrabold text-gray-900">
+              {query ? "No matches" : "Find someone to chat with"}
+            </div>
+            <p className="text-xs text-gray-500 mt-1 max-w-[240px]">
+              {query
+                ? "Try a different name, role, or department."
+                : "Search by name, role, or department to start a direct message."}
+            </p>
+          </div>
         ) : (
-          results.map((u) => (
+          <ul>
+            {results.map((u) => (
             <li key={u.id}>
               <button
                 type="button"
@@ -690,9 +734,10 @@ function SearchPanel({
                 </span>
               </button>
             </li>
-          ))
+            ))}
+          </ul>
         )}
-      </ul>
+      </div>
     </div>
   );
 }
