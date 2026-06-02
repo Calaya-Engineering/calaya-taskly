@@ -67,28 +67,69 @@ const initials = (name: string) =>
 const fmtTime = (iso: string) => {
   try {
     return new Date(iso).toLocaleTimeString("en-US", {
-      hour: "numeric",
+      hour: "2-digit",
       minute: "2-digit",
+      hour12: true,
     });
   } catch {
     return "";
   }
 };
 
-const fmtRelative = (iso: string) => {
+const fmtListTime = (iso: string) => {
   try {
-    const diff = Date.now() - new Date(iso).getTime();
-    const mins = Math.floor(diff / 60000);
-    if (mins < 1) return "now";
-    if (mins < 60) return `${mins}m`;
-    const hrs = Math.floor(mins / 60);
-    if (hrs < 24) return `${hrs}h`;
-    const days = Math.floor(hrs / 24);
-    if (days < 7) return `${days}d`;
-    return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    const d = new Date(iso);
+    const now = new Date();
+    const sameDay =
+      d.getFullYear() === now.getFullYear() &&
+      d.getMonth() === now.getMonth() &&
+      d.getDate() === now.getDate();
+    if (sameDay) {
+      return d.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      });
+    }
+    const oneDay = 86400000;
+    if (now.getTime() - d.getTime() < 7 * oneDay) {
+      return d.toLocaleDateString("en-US", { weekday: "short" });
+    }
+    return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
   } catch {
     return "";
   }
+};
+
+const dayKey = (iso: string) => {
+  const d = new Date(iso);
+  return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+};
+
+const formatDayHeader = (iso: string) => {
+  const d = new Date(iso);
+  const now = new Date();
+  const sameDay =
+    d.getFullYear() === now.getFullYear() &&
+    d.getMonth() === now.getMonth() &&
+    d.getDate() === now.getDate();
+  const yesterday = new Date(now.getTime() - 86400000);
+  const isYesterday =
+    d.getFullYear() === yesterday.getFullYear() &&
+    d.getMonth() === yesterday.getMonth() &&
+    d.getDate() === yesterday.getDate();
+
+  if (sameDay) {
+    return `Today, ${d.toLocaleDateString("en-US", { month: "short", day: "numeric" })}`;
+  }
+  if (isYesterday) {
+    return `Yesterday, ${d.toLocaleDateString("en-US", { month: "short", day: "numeric" })}`;
+  }
+  return d.toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "short",
+    day: "numeric",
+  });
 };
 
 /* ─── Component ──────────────────────────────────────────────────── */
@@ -111,6 +152,7 @@ export default function ChatPanel({ open, onClose, onUnreadChange }: Props) {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<PersonHit[]>([]);
   const [searchLoading, setSearchLoading] = useState(false);
+  const [listFilter, setListFilter] = useState("");
   const [error, setError] = useState("");
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
@@ -140,7 +182,6 @@ export default function ChatPanel({ open, onClose, onUnreadChange }: Props) {
       const res = await fetchWithAuth(`/api/chat/channels/${channelId}/messages?limit=50`);
       if (res.ok) {
         const data = await res.json();
-        // API returns newest-first; reverse for chronological display.
         const list: Message[] = Array.isArray(data.messages) ? [...data.messages].reverse() : [];
         setMessages(list);
       }
@@ -155,25 +196,21 @@ export default function ChatPanel({ open, onClose, onUnreadChange }: Props) {
 
   /* ── Lifecycle ────────────────────────────── */
 
-  // Load channels when panel opens.
   useEffect(() => {
     if (!open) return;
     fetchChannels();
   }, [open, fetchChannels]);
 
-  // Load messages whenever the active channel changes.
   useEffect(() => {
     if (activeChannelId == null) return;
     fetchMessages(activeChannelId);
     markRead(activeChannelId).then(() => fetchChannels());
   }, [activeChannelId, fetchMessages, markRead, fetchChannels]);
 
-  // Auto-scroll to the bottom on new messages.
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages]);
 
-  // Listen for new chat messages anywhere — refetch channels (+ messages if active).
   useSSE(
     "/api/realtime/events",
     (ev) => {
@@ -228,7 +265,7 @@ export default function ChatPanel({ open, onClose, onUnreadChange }: Props) {
         setView("channels");
       }
     } catch {
-      // toast?
+      /* noop */
     }
   };
 
@@ -251,7 +288,6 @@ export default function ChatPanel({ open, onClose, onUnreadChange }: Props) {
         const message: Message = await res.json();
         setMessages((prev) => [...prev, { ...message, mine: true }]);
         setDraft("");
-        // Channel list re-sorts on next refetch (SSE will trigger).
         fetchChannels();
       }
     } finally {
@@ -273,15 +309,23 @@ export default function ChatPanel({ open, onClose, onUnreadChange }: Props) {
     [channels, activeChannelId],
   );
 
+  const filteredChannels = useMemo(() => {
+    const q = listFilter.trim().toLowerCase();
+    if (!q) return channels;
+    return channels.filter((c) =>
+      [c.name, c.lastMessage?.content, c.counterpart?.role, c.counterpart?.department]
+        .filter(Boolean)
+        .some((value) => String(value).toLowerCase().includes(q)),
+    );
+  }, [channels, listFilter]);
+
   /* ── Render ───────────────────────────────── */
 
-  // Backdrop + slide-in panel. Hidden via translate when closed so the
-  // unmount doesn't lose state mid-conversation.
   return (
     <>
       <div
         onClick={onClose}
-        className={`fixed inset-0 z-[60] bg-black/30 backdrop-blur-sm transition-opacity ${
+        className={`fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm transition-opacity ${
           open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
         aria-hidden="true"
@@ -290,152 +334,189 @@ export default function ChatPanel({ open, onClose, onUnreadChange }: Props) {
         role="dialog"
         aria-modal="true"
         aria-label="Chat"
-        className={`fixed top-0 right-0 z-[61] h-full bg-white border-l border-gray-200 shadow-2xl flex flex-col transition-transform duration-200 ease-out
-          w-full sm:w-[420px]
+        className={`fixed top-0 right-0 z-[61] h-full bg-white shadow-2xl flex flex-col transition-transform duration-200 ease-out
+          w-full sm:w-[440px] sm:border-l sm:border-gray-200
           ${open ? "translate-x-0" : "translate-x-full"}`}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3">
-          <div className="flex items-center gap-2">
-            {activeChannelId != null ? (
-              <button
-                type="button"
-                onClick={() => setActiveChannelId(null)}
-                className="inline-flex items-center justify-center h-8 w-8 rounded-xl hover:bg-gray-100"
-                aria-label="Back to channels"
-              >
-                ←
-              </button>
-            ) : null}
-            <div>
-              <div className="text-sm font-extrabold" style={{ color: "var(--primary-blue)" }}>
-                {activeChannel
-                  ? activeChannel.name
-                  : view === "search"
-                    ? "Find people"
-                    : "Chats"}
-              </div>
-              <div className="text-[11px] text-gray-500">
-                {activeChannel
-                  ? activeChannel.type === "DEPARTMENT"
-                    ? `${activeChannel.memberCount} member${activeChannel.memberCount === 1 ? "" : "s"}`
-                    : activeChannel.counterpart?.role || ""
-                  : view === "search"
-                    ? "Search by name, role, or department"
-                    : "Department & direct messages"}
-              </div>
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="inline-flex items-center justify-center h-9 w-9 rounded-full hover:bg-gray-100 text-gray-500"
-            aria-label="Close chat"
-          >
-            ✕
-          </button>
-        </div>
-
-        {/* Tab strip (when no active channel) */}
-        {activeChannelId == null ? (
-          <div className="flex items-center gap-1 p-2 border-b border-gray-100">
-            <button
-              type="button"
-              onClick={() => setView("channels")}
-              className={`flex-1 h-9 rounded-xl text-sm font-semibold transition ${
-                view === "channels"
-                  ? "bg-blue-50 text-[color:var(--primary-blue)]"
-                  : "text-gray-500 hover:bg-gray-50"
-              }`}
-            >
-              My chats
-            </button>
-            <button
-              type="button"
-              onClick={() => setView("search")}
-              className={`flex-1 h-9 rounded-xl text-sm font-semibold transition ${
-                view === "search"
-                  ? "bg-blue-50 text-[color:var(--primary-blue)]"
-                  : "text-gray-500 hover:bg-gray-50"
-              }`}
-            >
-              Find people
-            </button>
-          </div>
-        ) : null}
-
-        {/* Body */}
-        <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
-          {error ? (
-            <div className="m-3 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
-              {error}
-            </div>
-          ) : null}
-
-          {activeChannelId == null && view === "channels" ? (
-            <ChannelList
-              channels={channels}
-              onSelect={setActiveChannelId}
-              emptyMessage={
-                channels.length === 0
-                  ? "No chats yet. Find someone to message."
-                  : ""
-              }
-            />
-          ) : null}
-
-          {activeChannelId == null && view === "search" ? (
-            <SearchPanel
-              query={searchQuery}
-              onQueryChange={setSearchQuery}
-              results={searchResults}
-              loading={searchLoading}
-              onPick={startDirect}
-            />
-          ) : null}
-
-          {activeChannelId != null ? (
-            <>
-              <MessageList
-                loading={messagesLoading}
-                messages={messages}
-                channelType={activeChannel?.type}
-              />
-              <div ref={messagesEndRef} />
-              <div className="border-t border-gray-200 bg-white p-3">
-                <textarea
-                  value={draft}
-                  onChange={(e) => setDraft(e.target.value)}
-                  onKeyDown={onComposerKey}
-                  rows={2}
-                  placeholder="Write a message…  (Enter to send · Shift+Enter for newline)"
-                  disabled={sending}
-                  className="w-full resize-none rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 disabled:opacity-60"
-                />
-                <div className="mt-2 flex items-center justify-between">
-                  <span className="text-[11px] text-gray-400">
-                    {draft.length}/4000
-                  </span>
-                  <button
-                    type="button"
-                    onClick={sendMessage}
-                    disabled={!draft.trim() || sending}
-                    className="px-4 py-2 rounded-2xl text-sm font-semibold text-white transition active:scale-[0.99] disabled:opacity-60"
-                    style={{ backgroundColor: "var(--primary-blue)" }}
-                  >
-                    {sending ? "Sending…" : "Send"}
-                  </button>
-                </div>
-              </div>
-            </>
-          ) : null}
-        </div>
+        {activeChannelId != null ? (
+          <ConversationView
+            channel={activeChannel}
+            messages={messages}
+            messagesLoading={messagesLoading}
+            messagesEndRef={messagesEndRef}
+            draft={draft}
+            sending={sending}
+            onDraftChange={setDraft}
+            onSend={sendMessage}
+            onComposerKey={onComposerKey}
+            onBack={() => setActiveChannelId(null)}
+            onClose={onClose}
+          />
+        ) : (
+          <ListView
+            view={view}
+            setView={setView}
+            error={error}
+            channels={filteredChannels}
+            allChannelsCount={channels.length}
+            listFilter={listFilter}
+            onListFilterChange={setListFilter}
+            onSelectChannel={setActiveChannelId}
+            onClose={onClose}
+            searchQuery={searchQuery}
+            onSearchQueryChange={setSearchQuery}
+            searchResults={searchResults}
+            searchLoading={searchLoading}
+            onPickPerson={startDirect}
+          />
+        )}
       </aside>
     </>
   );
 }
 
-/* ─── Sub-components ─────────────────────────────────────────────── */
+/* ─── List View ─────────────────────────────────────────────────── */
+
+function ListView({
+  view,
+  setView,
+  error,
+  channels,
+  allChannelsCount,
+  listFilter,
+  onListFilterChange,
+  onSelectChannel,
+  onClose,
+  searchQuery,
+  onSearchQueryChange,
+  searchResults,
+  searchLoading,
+  onPickPerson,
+}: {
+  view: "channels" | "search";
+  setView: (v: "channels" | "search") => void;
+  error: string;
+  channels: Channel[];
+  allChannelsCount: number;
+  listFilter: string;
+  onListFilterChange: (v: string) => void;
+  onSelectChannel: (id: number) => void;
+  onClose: () => void;
+  searchQuery: string;
+  onSearchQueryChange: (v: string) => void;
+  searchResults: PersonHit[];
+  searchLoading: boolean;
+  onPickPerson: (userId: number) => void;
+}) {
+  return (
+    <>
+      {/* Header */}
+      <div className="px-5 pt-5 pb-3 flex items-center justify-between">
+        <h2
+          className="text-2xl font-extrabold tracking-tight"
+          style={{ color: "var(--primary-blue)" }}
+        >
+          Messages
+        </h2>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setView("search")}
+            aria-label="New message"
+            className="h-9 w-9 rounded-full bg-gray-100 hover:bg-gray-200 active:scale-[0.97] transition flex items-center justify-center text-gray-500"
+          >
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M12 20h9" />
+              <path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            onClick={() => setView(view === "search" ? "channels" : "search")}
+            aria-label="Search"
+            className={`h-9 w-9 rounded-full active:scale-[0.97] transition flex items-center justify-center ${
+              view === "search"
+                ? "bg-blue-50 text-[color:var(--primary-blue)]"
+                : "bg-gray-100 hover:bg-gray-200 text-gray-500"
+            }`}
+          >
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="8" />
+              <path d="M21 21l-4.35-4.35" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close chat"
+            className="h-9 w-9 rounded-full bg-gray-100 hover:bg-gray-200 active:scale-[0.97] transition flex items-center justify-center text-gray-500"
+          >
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      {/* Filter pill row */}
+      {view === "channels" ? (
+        <div className="px-5 pb-3">
+          <div className="relative">
+            <span className="absolute inset-y-0 left-3 flex items-center text-gray-400">
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="8" />
+                <path d="M21 21l-4.35-4.35" />
+              </svg>
+            </span>
+            <input
+              value={listFilter}
+              onChange={(e) => onListFilterChange(e.target.value)}
+              placeholder="Search your chats"
+              className="w-full h-10 pl-9 pr-3 rounded-2xl bg-gray-100 border-0 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
+            />
+          </div>
+        </div>
+      ) : null}
+
+      {error ? (
+        <div className="mx-5 mb-3 rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-700">
+          {error}
+        </div>
+      ) : null}
+
+      {view === "channels" ? (
+        <>
+          {allChannelsCount > 0 ? (
+            <div className="px-5 pb-2 flex items-center gap-2 text-[11px] uppercase tracking-[0.14em] text-gray-400 font-semibold">
+              <span>All conversations</span>
+              <span className="text-gray-300">·</span>
+              <span>{allChannelsCount}</span>
+            </div>
+          ) : null}
+          <ChannelList
+            channels={channels}
+            onSelect={onSelectChannel}
+            emptyMessage={
+              allChannelsCount === 0
+                ? "No chats yet. Tap the search icon to find someone."
+                : "No chats match your search."
+            }
+          />
+        </>
+      ) : (
+        <SearchPanel
+          query={searchQuery}
+          onQueryChange={onSearchQueryChange}
+          results={searchResults}
+          loading={searchLoading}
+          onPick={onPickPerson}
+        />
+      )}
+    </>
+  );
+}
+
+/* ─── Channel rows ──────────────────────────────────────────────── */
 
 function ChannelList({
   channels,
@@ -455,38 +536,34 @@ function ChannelList({
   }
 
   return (
-    <ul className="flex-1 overflow-y-auto divide-y divide-gray-100">
+    <ul className="flex-1 overflow-y-auto px-2 pb-3">
       {channels.map((c) => (
         <li key={c.id}>
           <button
             type="button"
             onClick={() => onSelect(c.id)}
-            className="w-full flex items-start gap-3 p-3 hover:bg-gray-50 transition text-left"
+            className="w-full flex items-center gap-3 p-3 rounded-2xl hover:bg-gray-50 transition text-left"
           >
-            <div
-              className="h-10 w-10 rounded-full flex items-center justify-center text-white text-xs font-extrabold shrink-0"
-              style={{
-                backgroundColor:
-                  c.type === "DEPARTMENT"
-                    ? "var(--primary-blue)"
-                    : "var(--secondary-blue, #6DC6DF)",
-              }}
-            >
-              {c.type === "DEPARTMENT" ? "#" : initials(c.counterpart?.name || c.name)}
-            </div>
+            <ChannelAvatar channel={c} />
             <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-sm font-extrabold text-gray-900 truncate">
+              <div className="flex items-baseline justify-between gap-2">
+                <span className="text-[15px] font-extrabold text-gray-900 truncate">
                   {c.name}
                 </span>
-                <span className="text-[11px] text-gray-400 shrink-0">
-                  {c.lastMessage ? fmtRelative(c.lastMessage.createdAt) : ""}
+                <span className="text-[11px] text-gray-400 shrink-0 font-semibold">
+                  {c.lastMessage ? fmtListTime(c.lastMessage.createdAt) : ""}
                 </span>
               </div>
               <div className="flex items-center justify-between gap-2 mt-0.5">
-                <span className="text-xs text-gray-500 truncate">
+                <span
+                  className={`text-[13px] truncate ${
+                    c.unread > 0 ? "text-gray-800 font-semibold" : "text-gray-500"
+                  }`}
+                >
                   {c.lastMessage
-                    ? `${c.lastMessage.sender.name}: ${c.lastMessage.content}`
+                    ? c.type === "DEPARTMENT"
+                      ? `${c.lastMessage.sender.name}: ${c.lastMessage.content}`
+                      : c.lastMessage.content
                     : c.type === "DEPARTMENT"
                       ? "Department channel"
                       : c.counterpart?.role || "Direct message"}
@@ -508,6 +585,35 @@ function ChannelList({
   );
 }
 
+function ChannelAvatar({ channel }: { channel: Channel }) {
+  const isDept = channel.type === "DEPARTMENT";
+  const label = isDept
+    ? "#"
+    : initials(channel.counterpart?.name || channel.name);
+
+  const bg = isDept ? "var(--primary-blue)" : "var(--secondary-blue, #6DC6DF)";
+
+  return (
+    <div className="relative shrink-0">
+      <div
+        className="h-12 w-12 rounded-full flex items-center justify-center text-white text-sm font-extrabold"
+        style={{ backgroundColor: bg }}
+      >
+        {label}
+      </div>
+      {!isDept ? (
+        <span
+          className="absolute bottom-0.5 right-0.5 h-3 w-3 rounded-full ring-2 ring-white"
+          style={{ backgroundColor: "#22c55e" }}
+          aria-hidden="true"
+        />
+      ) : null}
+    </div>
+  );
+}
+
+/* ─── People Search ─────────────────────────────────────────────── */
+
 function SearchPanel({
   query,
   onQueryChange,
@@ -523,16 +629,24 @@ function SearchPanel({
 }) {
   return (
     <div className="flex-1 min-h-0 flex flex-col">
-      <div className="p-3 border-b border-gray-100">
-        <input
-          value={query}
-          onChange={(e) => onQueryChange(e.target.value)}
-          placeholder="Name, role, or department…"
-          className="w-full h-10 rounded-xl border border-gray-200 bg-white px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100"
-          autoFocus
-        />
+      <div className="px-5 pb-3">
+        <div className="relative">
+          <span className="absolute inset-y-0 left-3 flex items-center text-gray-400">
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="8" />
+              <path d="M21 21l-4.35-4.35" />
+            </svg>
+          </span>
+          <input
+            value={query}
+            onChange={(e) => onQueryChange(e.target.value)}
+            placeholder="Name, role, or department"
+            className="w-full h-10 pl-9 pr-3 rounded-2xl bg-gray-100 border-0 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
+            autoFocus
+          />
+        </div>
       </div>
-      <ul className="flex-1 overflow-y-auto divide-y divide-gray-100">
+      <ul className="flex-1 overflow-y-auto px-2 pb-3">
         {loading ? (
           <li className="p-6 text-center text-sm text-gray-500">Searching…</li>
         ) : results.length === 0 ? (
@@ -545,16 +659,23 @@ function SearchPanel({
               <button
                 type="button"
                 onClick={() => onPick(u.id)}
-                className="w-full flex items-center gap-3 p-3 hover:bg-gray-50 transition text-left"
+                className="w-full flex items-center gap-3 p-3 rounded-2xl hover:bg-gray-50 transition text-left"
               >
-                <div
-                  className="h-9 w-9 rounded-full flex items-center justify-center text-white text-xs font-extrabold shrink-0"
-                  style={{ backgroundColor: "var(--secondary-blue, #6DC6DF)" }}
-                >
-                  {initials(u.name)}
+                <div className="relative shrink-0">
+                  <div
+                    className="h-11 w-11 rounded-full flex items-center justify-center text-white text-sm font-extrabold"
+                    style={{ backgroundColor: "var(--secondary-blue, #6DC6DF)" }}
+                  >
+                    {initials(u.name)}
+                  </div>
+                  <span
+                    className="absolute bottom-0 right-0 h-3 w-3 rounded-full ring-2 ring-white"
+                    style={{ backgroundColor: "#22c55e" }}
+                    aria-hidden="true"
+                  />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-extrabold text-gray-900 truncate">
+                  <div className="text-[15px] font-extrabold text-gray-900 truncate">
                     {u.name}
                   </div>
                   <div className="text-xs text-gray-500 truncate">
@@ -562,7 +683,7 @@ function SearchPanel({
                   </div>
                 </div>
                 <span
-                  className="text-xs font-semibold"
+                  className="text-xs font-bold uppercase tracking-wider"
                   style={{ color: "var(--primary-blue)" }}
                 >
                   Chat
@@ -576,67 +697,260 @@ function SearchPanel({
   );
 }
 
+/* ─── Conversation View ──────────────────────────────────────────── */
+
+function ConversationView({
+  channel,
+  messages,
+  messagesLoading,
+  messagesEndRef,
+  draft,
+  sending,
+  onDraftChange,
+  onSend,
+  onComposerKey,
+  onBack,
+  onClose,
+}: {
+  channel: Channel | null;
+  messages: Message[];
+  messagesLoading: boolean;
+  messagesEndRef: React.RefObject<HTMLDivElement | null>;
+  draft: string;
+  sending: boolean;
+  onDraftChange: (v: string) => void;
+  onSend: () => void;
+  onComposerKey: (e: KeyboardEvent<HTMLTextAreaElement>) => void;
+  onBack: () => void;
+  onClose: () => void;
+}) {
+  const isDept = channel?.type === "DEPARTMENT";
+  const headerAvatar = isDept ? "#" : initials(channel?.counterpart?.name || channel?.name || "?");
+
+  return (
+    <>
+      {/* Conversation header */}
+      <div className="px-3 py-3 flex items-center gap-2 border-b border-gray-100 bg-white">
+        <button
+          type="button"
+          onClick={onBack}
+          aria-label="Back to messages"
+          className="h-9 w-9 rounded-full hover:bg-gray-100 active:scale-[0.97] transition flex items-center justify-center text-gray-500"
+        >
+          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M19 12H5" />
+            <path d="M12 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <div className="relative shrink-0">
+          <div
+            className="h-10 w-10 rounded-full flex items-center justify-center text-white text-xs font-extrabold"
+            style={{
+              backgroundColor: isDept
+                ? "var(--primary-blue)"
+                : "var(--secondary-blue, #6DC6DF)",
+            }}
+          >
+            {headerAvatar}
+          </div>
+          {!isDept ? (
+            <span
+              className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full ring-2 ring-white"
+              style={{ backgroundColor: "#22c55e" }}
+              aria-hidden="true"
+            />
+          ) : null}
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="text-sm font-extrabold text-gray-900 truncate">
+            {channel?.name || "Chat"}
+          </div>
+          <div className="text-[11px] text-gray-500 truncate">
+            {isDept
+              ? `${channel?.memberCount ?? 0} member${(channel?.memberCount ?? 0) === 1 ? "" : "s"} • Department channel`
+              : (
+                <>
+                  <span
+                    className="inline-flex items-center gap-1"
+                    style={{ color: "#22c55e" }}
+                  >
+                    <span className="inline-block h-1.5 w-1.5 rounded-full bg-current" />
+                    Active now
+                  </span>
+                  {channel?.counterpart?.role ? (
+                    <span className="text-gray-400"> · {channel.counterpart.role}</span>
+                  ) : null}
+                </>
+              )}
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close chat"
+          className="h-9 w-9 rounded-full bg-gray-100 hover:bg-gray-200 active:scale-[0.97] transition flex items-center justify-center text-gray-500"
+        >
+          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Messages */}
+      <MessageList
+        loading={messagesLoading}
+        messages={messages}
+        channelType={channel?.type}
+        messagesEndRef={messagesEndRef}
+      />
+
+      {/* Composer */}
+      <div className="bg-white border-t border-gray-100 p-3">
+        <div className="flex items-end gap-2 rounded-3xl bg-gray-100 p-2">
+          <textarea
+            value={draft}
+            onChange={(e) => onDraftChange(e.target.value)}
+            onKeyDown={onComposerKey}
+            rows={1}
+            placeholder="Type a message"
+            disabled={sending}
+            className="flex-1 max-h-32 min-h-[36px] resize-none bg-transparent border-0 px-3 py-2 text-sm placeholder-gray-400 focus:outline-none disabled:opacity-60"
+          />
+          <button
+            type="button"
+            onClick={onSend}
+            disabled={!draft.trim() || sending}
+            aria-label="Send message"
+            className="shrink-0 h-9 w-9 rounded-full flex items-center justify-center text-white transition active:scale-[0.95] disabled:opacity-50"
+            style={{ backgroundColor: "var(--primary-blue)" }}
+          >
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M22 2L11 13" />
+              <path d="M22 2l-7 20-4-9-9-4 20-7z" />
+            </svg>
+          </button>
+        </div>
+        <div className="mt-1.5 flex items-center justify-between text-[10px] text-gray-400 px-2">
+          <span>Enter to send · Shift+Enter for newline</span>
+          <span>{draft.length}/4000</span>
+        </div>
+      </div>
+    </>
+  );
+}
+
+/* ─── Message bubbles ───────────────────────────────────────────── */
+
 function MessageList({
   loading,
   messages,
   channelType,
+  messagesEndRef,
 }: {
   loading: boolean;
   messages: Message[];
   channelType?: "DEPARTMENT" | "DIRECT";
+  messagesEndRef: React.RefObject<HTMLDivElement | null>;
 }) {
   if (loading && messages.length === 0) {
     return (
-      <div className="flex-1 flex items-center justify-center text-sm text-gray-400">
+      <div
+        className="flex-1 flex items-center justify-center text-sm text-gray-400"
+        style={{ backgroundColor: "#f5f7fa" }}
+      >
         Loading messages…
       </div>
     );
   }
   if (messages.length === 0) {
     return (
-      <div className="flex-1 flex items-center justify-center text-sm text-gray-500 p-6 text-center">
-        No messages yet. Say hi 👋
+      <div
+        className="flex-1 flex flex-col items-center justify-center text-center p-8"
+        style={{ backgroundColor: "#f5f7fa" }}
+      >
+        <div className="text-4xl mb-2">👋</div>
+        <div className="text-sm font-extrabold text-gray-900">No messages yet</div>
+        <div className="text-xs text-gray-500 mt-1">
+          Start the conversation — say hi.
+        </div>
       </div>
     );
   }
+
   return (
-    <div className="flex-1 overflow-y-auto px-4 py-3 space-y-2">
+    <div
+      className="flex-1 overflow-y-auto px-4 py-4 space-y-1"
+      style={{ backgroundColor: "#f5f7fa" }}
+    >
       {messages.map((m, idx) => {
         const prev = messages[idx - 1];
-        const sameSender = prev && prev.sender.id === m.sender.id;
-        const showHeader = !sameSender && !m.mine;
+        const sameSender = prev && prev.sender.id === m.sender.id && prev.mine === m.mine;
+        const isDayBoundary = !prev || dayKey(prev.createdAt) !== dayKey(m.createdAt);
+        const showHeader = !sameSender && !m.mine && channelType === "DEPARTMENT";
+        const showAvatar = !sameSender && !m.mine;
 
         return (
-          <div
-            key={m.id}
-            className={`flex ${m.mine ? "justify-end" : "justify-start"}`}
-          >
-            <div className="max-w-[78%]">
-              {showHeader && channelType === "DEPARTMENT" ? (
-                <div className="text-[11px] text-gray-500 mb-0.5 ml-2">
-                  {m.sender.name}
-                  {m.sender.role ? ` · ${m.sender.role}` : ""}
+          <div key={m.id}>
+            {isDayBoundary ? (
+              <div className="flex justify-center my-3">
+                <span className="text-[11px] font-semibold text-gray-500 bg-white rounded-full px-3 py-1 shadow-sm">
+                  {formatDayHeader(m.createdAt)}
+                </span>
+              </div>
+            ) : null}
+
+            {showHeader ? (
+              <div className="text-[11px] text-gray-500 mb-1 ml-12">
+                {m.sender.name}
+                {m.sender.role ? (
+                  <span className="text-gray-400"> · {m.sender.role}</span>
+                ) : null}
+              </div>
+            ) : null}
+
+            <div
+              className={`flex items-end gap-2 ${m.mine ? "justify-end" : "justify-start"} ${
+                sameSender ? "mt-0.5" : "mt-2"
+              }`}
+            >
+              {!m.mine ? (
+                <div className="w-8 shrink-0">
+                  {showAvatar ? (
+                    <div
+                      className="h-8 w-8 rounded-full flex items-center justify-center text-white text-[10px] font-extrabold"
+                      style={{ backgroundColor: "var(--secondary-blue, #6DC6DF)" }}
+                    >
+                      {initials(m.sender.name)}
+                    </div>
+                  ) : null}
                 </div>
               ) : null}
-              <div
-                className={`rounded-2xl px-3.5 py-2 text-sm leading-relaxed whitespace-pre-wrap break-words ${
-                  m.mine
-                    ? "rounded-br-md text-white"
-                    : "rounded-bl-md bg-gray-100 text-gray-900"
-                }`}
-                style={m.mine ? { backgroundColor: "var(--primary-blue)" } : undefined}
-              >
-                {m.content}
-              </div>
-              <div
-                className={`text-[10px] text-gray-400 mt-0.5 ${m.mine ? "text-right mr-2" : "ml-2"}`}
-              >
-                {fmtTime(m.createdAt)}
+
+              <div className={`max-w-[78%] ${m.mine ? "items-end" : "items-start"}`}>
+                <div
+                  className={`px-3.5 py-2 text-sm leading-relaxed whitespace-pre-wrap break-words shadow-sm ${
+                    m.mine
+                      ? "rounded-2xl rounded-br-md text-white"
+                      : "rounded-2xl rounded-bl-md bg-white text-gray-900"
+                  }`}
+                  style={m.mine ? { backgroundColor: "var(--primary-blue)" } : undefined}
+                >
+                  {m.content}
+                </div>
+                <div
+                  className={`text-[10px] text-gray-400 mt-0.5 ${
+                    m.mine ? "text-right pr-1" : "pl-1"
+                  }`}
+                >
+                  {fmtTime(m.createdAt)}
+                  {m.mine ? <span className="ml-1 text-gray-400">· You</span> : null}
+                </div>
               </div>
             </div>
           </div>
         );
       })}
+      <div ref={messagesEndRef} />
     </div>
   );
 }
