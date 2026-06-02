@@ -14,14 +14,16 @@ export type AuthTokenPayload = JWTPayload & {
   email: string;
   role: string;
   route?: string;
+  department?: string | null;
 };
 
-export async function signAuthToken(payload: { email: string; role: string; route?: string }) {
+export async function signAuthToken(payload: { email: string; role: string; route?: string; department?: string | null }) {
   const secret = getSecret();
   const tokenPayload: AuthTokenPayload = {
     email: payload.email,
     role: payload.role,
     ...(payload.route ? { route: payload.route } : {}),
+    ...(payload.department ? { department: payload.department } : {}),
   };
 
   return new SignJWT(tokenPayload)

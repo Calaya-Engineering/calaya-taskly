@@ -7,7 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { MenuIcon, CloseMenuIcon } from "@/lib/icons";
 import { LayoutSidebar } from "@/components/LayoutSidebar";
-import { getRouteForRole } from "@/lib/auth-config";
+import { getRouteForRole, isManagementDepartment } from "@/lib/auth-config";
 
 export interface MenuItem {
   path?: string;
@@ -19,8 +19,22 @@ export interface MenuItem {
 
 const LayoutContext = createContext<boolean>(false);
 
-function canAccessDashboard(user: { role: string; route?: string }, dashboardRole: string) {
-  return (user.route || getRouteForRole(user.role)) === getRouteForRole(dashboardRole);
+function getUserDashboardRoute(user: { role: string; route?: string; department?: string | null }) {
+  const route = user.route || getRouteForRole(user.role);
+  if (route === "/md-dashboard" && !isManagementDepartment(user.department)) {
+    return "/staff-dashboard";
+  }
+
+  return route;
+}
+
+function canAccessDashboard(user: { role: string; route?: string; department?: string | null }, dashboardRole: string) {
+  const dashboardRoute = getRouteForRole(dashboardRole);
+  if (dashboardRoute === "/md-dashboard") {
+    return getUserDashboardRoute(user) === dashboardRoute && isManagementDepartment(user.department);
+  }
+
+  return getUserDashboardRoute(user) === dashboardRoute;
 }
 
 export default function Layout({
@@ -60,7 +74,7 @@ export default function Layout({
         router.replace("/login");
       } else if (user && userRole && !canAccessDashboard(user, userRole)) {
         // Prevent accidental access to wrong dashboard segments
-        const correctRoute = user.route || getRouteForRole(user.role);
+        const correctRoute = getUserDashboardRoute(user);
         router.replace(correctRoute);
       }
     }

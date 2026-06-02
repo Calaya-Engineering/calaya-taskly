@@ -20,12 +20,14 @@ export async function ensureDemoUser(demoUser: DemoCredential) {
     update: {
       role: demoUser.role,
       password: hashPassword(demoUser.password),
+      department: demoUser.department ?? null,
     },
     create: {
       email,
       password: hashPassword(demoUser.password),
       role: demoUser.role,
       name: displayNameFromEmail(email),
+      department: demoUser.department ?? null,
     },
   });
 }

@@ -58,6 +58,7 @@ const ROLES = [
 ];
 
 const DEPARTMENTS = [
+  "Management",
   "Technical",
   "Workshop",
   "Logistics",
@@ -111,6 +112,7 @@ async function main() {
       password: passwordHash,
       name: "System Admin",
       role: "Admin",
+      department: "Management",
     },
   });
   console.log("Seeded Admin user: admin@calaya.com");

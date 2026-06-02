@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyOtp } from "../otp-store";
 import { signAuthToken } from "@/lib/jwt";
-import { DEMO_CREDENTIALS, getRouteForRole } from "@/lib/auth-config";
+import { DEMO_CREDENTIALS, getRouteForRole, isManagementDepartment } from "@/lib/auth-config";
 import { recordAudit, getRequestIp } from "@/lib/audit";
 import { ensureDemoUser } from "@/lib/demo-users";
 import { prisma } from "@/lib/prisma";
@@ -13,6 +13,14 @@ async function getDashboardRouteForRole(role: string) {
   });
 
   return roleRecord?.dashboardRoute || getRouteForRole(role);
+}
+
+function getAllowedDashboardRoute(route: string, department?: string | null) {
+  if (route === "/md-dashboard" && !isManagementDepartment(department)) {
+    return "/staff-dashboard";
+  }
+
+  return route;
 }
 
 export async function POST(req: NextRequest) {
@@ -37,7 +45,11 @@ export async function POST(req: NextRequest) {
         user = {
           email: syncedDemoUser.email,
           role: syncedDemoUser.role,
-          route: await getDashboardRouteForRole(syncedDemoUser.role),
+          route: getAllowedDashboardRoute(
+            await getDashboardRouteForRole(syncedDemoUser.role),
+            syncedDemoUser.department,
+          ),
+          department: syncedDemoUser.department,
         };
       }
     }
@@ -54,8 +66,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid OTP. Please check the code and try again." }, { status: 401 });
     }
 
-    const route = await getDashboardRouteForRole(user.role);
-    const token = await signAuthToken({ email: user.email, role: user.role, route });
+    const route = getAllowedDashboardRoute(await getDashboardRouteForRole(user.role), user.department);
+    const token = await signAuthToken({
+      email: user.email,
+      role: user.role,
+      route,
+      department: user.department,
+    });
 
     void recordAudit({
       action: "USER_LOGIN",

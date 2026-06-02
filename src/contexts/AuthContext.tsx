@@ -9,6 +9,7 @@ type AuthUser = {
   email: string;
   role: string;
   route?: string;
+  department?: string | null;
 };
 
 type AuthContextValue = {
@@ -30,6 +31,7 @@ type DecodedToken = {
   email: string;
   role: string;
   route?: string;
+  department?: string | null;
   exp?: number;
 };
 
@@ -55,7 +57,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      setUser({ email: decoded.email, role: decoded.role, route: decoded.route });
+      setUser({ email: decoded.email, role: decoded.role, route: decoded.route, department: decoded.department });
     } catch {
       window.sessionStorage.removeItem(AUTH_TOKEN_KEY);
     } finally {
@@ -95,7 +97,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         window.sessionStorage.removeItem(AUTH_TOKEN_KEY);
         return;
       }
-      setUser({ email: decoded.email, role: decoded.role, route: decoded.route });
+      setUser({ email: decoded.email, role: decoded.role, route: decoded.route, department: decoded.department });
     } catch {
       window.sessionStorage.removeItem(AUTH_TOKEN_KEY);
     }
@@ -130,4 +132,3 @@ export function useAuth() {
   }
   return ctx;
 }
-

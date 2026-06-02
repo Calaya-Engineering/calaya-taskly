@@ -1,5 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { DEMO_CREDENTIALS, getRouteForRole, ADMIN_EMAIL, ADMIN_PASSWORD } from "@/lib/auth-config";
+import {
+  DEMO_CREDENTIALS,
+  getRouteForRole,
+  ADMIN_EMAIL,
+  ADMIN_PASSWORD,
+  isManagementDepartment,
+} from "@/lib/auth-config";
 import { prisma } from "@/lib/prisma";
 import { verifyPassword } from "@/lib/password";
 import { signAuthToken } from "@/lib/jwt";
@@ -12,6 +18,14 @@ async function getDashboardRouteForRole(role: string) {
   });
 
   return roleRecord?.dashboardRoute || getRouteForRole(role);
+}
+
+function getAllowedDashboardRoute(route: string, department?: string | null) {
+  if (route === "/md-dashboard" && !isManagementDepartment(department)) {
+    return "/staff-dashboard";
+  }
+
+  return route;
 }
 
 export async function POST(req: NextRequest) {
@@ -31,8 +45,13 @@ export async function POST(req: NextRequest) {
         where: { email: emailLower },
       });
       if (dbAdmin && verifyPassword(password, dbAdmin.password)) {
-        const route = await getDashboardRouteForRole(dbAdmin.role);
-        const token = await signAuthToken({ email: dbAdmin.email, role: dbAdmin.role, route });
+        const route = getAllowedDashboardRoute(await getDashboardRouteForRole(dbAdmin.role), dbAdmin.department);
+        const token = await signAuthToken({
+          email: dbAdmin.email,
+          role: dbAdmin.role,
+          route,
+          department: dbAdmin.department,
+        });
         return NextResponse.json({
           success: true,
           skipOtp: true,
@@ -54,8 +73,13 @@ export async function POST(req: NextRequest) {
       }
 
       // OTP email verification is temporarily bypassed.
-      const route = await getDashboardRouteForRole(dbUser.role);
-      const token = await signAuthToken({ email: dbUser.email, role: dbUser.role, route });
+      const route = getAllowedDashboardRoute(await getDashboardRouteForRole(dbUser.role), dbUser.department);
+      const token = await signAuthToken({
+        email: dbUser.email,
+        role: dbUser.role,
+        route,
+        department: dbUser.department,
+      });
 
       return NextResponse.json({
         success: true,
@@ -77,8 +101,16 @@ export async function POST(req: NextRequest) {
 
     // OTP email verification is temporarily bypassed for demo users too.
     const syncedDemoUser = await ensureDemoUser(demoUser);
-    const route = await getDashboardRouteForRole(syncedDemoUser.role);
-    const token = await signAuthToken({ email: syncedDemoUser.email, role: syncedDemoUser.role, route });
+    const route = getAllowedDashboardRoute(
+      await getDashboardRouteForRole(syncedDemoUser.role),
+      syncedDemoUser.department,
+    );
+    const token = await signAuthToken({
+      email: syncedDemoUser.email,
+      role: syncedDemoUser.role,
+      route,
+      department: syncedDemoUser.department,
+    });
 
     return NextResponse.json({
       success: true,

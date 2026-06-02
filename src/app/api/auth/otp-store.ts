@@ -71,7 +71,19 @@ export async function verifyOtp(email: string, otp: string): Promise<OtpVerifica
         where: { id: record.id },
         data: { retryAllowanceRemaining: record.retryAllowanceRemaining - 1 },
       });
-      return { status: "success", user: { email: record.email, role: record.userRole, route: record.userRoute } };
+      const user = await prisma.user.findUnique({
+        where: { email: record.email },
+        select: { department: true },
+      });
+      return {
+        status: "success",
+        user: {
+          email: record.email,
+          role: record.userRole,
+          route: record.userRoute,
+          department: user?.department ?? null,
+        },
+      };
     }
 
     await prisma.otpToken.delete({ where: { id: record.id } });
@@ -82,5 +94,17 @@ export async function verifyOtp(email: string, otp: string): Promise<OtpVerifica
     where: { id: record.id },
     data: { verifiedAt: now },
   });
-  return { status: "success", user: { email: record.email, role: record.userRole, route: record.userRoute } };
+  const user = await prisma.user.findUnique({
+    where: { email: record.email },
+    select: { department: true },
+  });
+  return {
+    status: "success",
+    user: {
+      email: record.email,
+      role: record.userRole,
+      route: record.userRoute,
+      department: user?.department ?? null,
+    },
+  };
 }
